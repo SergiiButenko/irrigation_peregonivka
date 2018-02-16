@@ -6,7 +6,7 @@ import logging
 import time
 from helpers import sqlite_database as database
 from helpers.common import *
-ANALOG_PIN = 16
+ANALOG_PIN = 4
 
 PINS = list(range(12, 28))
 
