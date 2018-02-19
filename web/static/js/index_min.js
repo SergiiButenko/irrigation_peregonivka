@@ -173,6 +173,14 @@ $(document).ready(function() {
             }
         });
     });
+
+    d3.selection.prototype.first = function() {
+        return d3.select(this[0][0]);
+    };
+    d3.selection.prototype.last = function() {
+        var last = this.size() - 1;
+        return d3.select(this[0][last]);
+    };
 });
 
 function branch_on(index, time_minutes, interval_quantity, time_wait) {
@@ -378,9 +386,9 @@ function draw_d3js(id, data) {
         dataset2[i] = { 'base_val': data['base'], 'hours': data['new'][i]['hours'] }
     }
 
-    xScale.domain(dataset.map(function(d) { return d.hours+""; }));
+    xScale.domain(dataset.map(function(d) { return d.hours + ""; }));
 
-    
+
     //var dataset = d3.range(n).map(function(d) { return { "y": d3.randomUniform(1)() } })
     //d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } })
 
