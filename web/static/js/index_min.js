@@ -414,14 +414,14 @@ function draw_d3js(id, data) {
         .attr("d", line); // 11. Calls the line generator 
 
     // 12. Appends a circle for each datapoint 
-    var tickLabels = svg.selectAll(".dot")
-    tickLabels.last()
-        .data(dataset)
-        .enter().append("circle") // Uses the enter().append() method
-        .attr("class", "dot") // Assign a class for styling
-        .attr("cx", function(d, i) { return xScale(d.hours) })
-        .attr("cy", function(d) { return yScale(d.val) })
-        .attr("r", 5);
+    // var tickLabels = svg.selectAll(".dot")
+    // tickLabels.last()
+    //     .data(dataset)
+    //     .enter().append("circle") // Uses the enter().append() method
+    //     .attr("class", "dot") // Assign a class for styling
+    //     .attr("cx", function(d, i) { return xScale(d.hours) })
+    //     .attr("cy", function(d) { return yScale(d.val) })
+    //     .attr("r", 5);
 }
 
 d3.selection.prototype.first = function() {
