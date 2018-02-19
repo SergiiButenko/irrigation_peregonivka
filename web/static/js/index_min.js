@@ -414,7 +414,7 @@ function draw_d3js(id, data) {
         .attr("d", line); // 11. Calls the line generator 
 
     // 12. Appends a circle for each datapoint 
-    svg.selectAll(".dot").last()
+    svg.selectAll(".dot")//.last()
         .data(dataset)
         .enter().append("circle") // Uses the enter().append() method
         .attr("class", "dot") // Assign a class for styling
