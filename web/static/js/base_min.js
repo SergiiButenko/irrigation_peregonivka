@@ -56,7 +56,7 @@ $(document).ready(function() {
     $(".plan").click(function() {
         var json = { 'rules': [] }
         var modal = $(this).closest("#plann_modal")
-        
+
         var branch_id = $(modal).find('#branch_select_plann_modal option:selected').val();
         var name = $(modal).find('#branch_select_plann_modal option:selected').text();
         var time = $(modal).find('#irrigation_minutes_plann_modal').val();
@@ -65,16 +65,16 @@ $(document).ready(function() {
         var date_start = $(modal).find('.irrigation_date_plann_modal').val();
         var time_start = $(modal).find('.irrigation_time_plann_modal').val();
         json['rules'].push({
-                "line_id": branch_id,
-                'line_name': name,
-                "time": time,
-                "intervals": interval,
-                "time_wait": time_wait,
-                "date_start": date_start,
-                'time_start': time_start,
-                'end_date': date_start,
-                'repeat_value': 4
-            });
+            "line_id": branch_id,
+            'line_name': name,
+            "time": time,
+            "intervals": interval,
+            "time_wait": time_wait,
+            "date_start": date_start,
+            'time_start': time_start,
+            'end_date': date_start,
+            'repeat_value': 4
+        });
 
         $.ajax({
             url: '/add_ongoing_rule',
@@ -145,6 +145,14 @@ $(document).ready(function() {
             $btn.attr('title', 'Drawer force closed')
         }
     })
+
+    d3.selection.prototype.first = function() {
+        return d3.select(this[0][0]);
+    };
+    d3.selection.prototype.last = function() {
+        var last = this.size() - 1;
+        return d3.select(this[0][last]);
+    };
 
 });
 
@@ -314,8 +322,8 @@ function set_branch_defaults(index, modal) {
     toogle_time_wait(interval, modal);
 }
 
-function reload_history(){
-    if(window.location.href.indexOf("history") > -1) {
-       window.location.reload();
+function reload_history() {
+    if (window.location.href.indexOf("history") > -1) {
+        window.location.reload();
     }
 }
