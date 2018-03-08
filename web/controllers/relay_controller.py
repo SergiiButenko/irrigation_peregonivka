@@ -29,9 +29,6 @@ def setup_relays():
             logging.info(key)
             for _group in m_group:
                 group = list(_group)
-                
-                logging.info(group[0])
-
                 group_id = group[0]
                 name = group[1]
                 s0 = group[2]
@@ -55,7 +52,7 @@ def setup_relays():
                 'multiplex': key
                 }
 
-        logging.info('row', grouped)
+        logging.info(grouped)
 
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
