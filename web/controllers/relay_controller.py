@@ -25,11 +25,32 @@ def setup_relays():
         groups = database.select(database.QUERY[mn()])
 
         grouped = {}
-        for key, group in groupby(groups, itemgetter(9)):
+        for key, m_group in groupby(groups, itemgetter(9)):
             logging.info(key)
-            for thing in group:
-                logging.info(list(thing))
-            grouped[key] = list([list(thing) for thing in group])
+            for group in m_group:
+                group_id = group[0]
+                name = group[1]
+                s0 = group[2]
+                s1 = group[3]
+                s3 = group[4]
+                s4 = group[5]
+                en = group[6]
+                pin = group[7]
+                pump_enabled = group[8]
+                
+                grouped[group_id] = {
+                'id': group_id,
+                'description': name,
+                's0': s0,
+                's1': s1,
+                's2': s2,
+                's3': s3,
+                's4': s4,
+                'en': en,
+                'pin': pin,
+                'pump_enabled': pump_enabled,
+                'multiplex': key
+                }
 
         logging.info('row', grouped)
 
