@@ -32,8 +32,8 @@ def setup_relays():
                 name = group[1]
                 s0 = group[2]
                 s1 = group[3]
-                s3 = group[4]
-                s4 = group[5]
+                s2 = group[4]
+                s3 = group[5]
                 en = group[6]
                 pin = group[7]
                 pump_enabled = group[8]
@@ -45,7 +45,6 @@ def setup_relays():
                 's1': s1,
                 's2': s2,
                 's3': s3,
-                's4': s4,
                 'en': en,
                 'pin': pin,
                 'pump_enabled': pump_enabled,
