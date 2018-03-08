@@ -29,6 +29,7 @@ def setup_relays():
             logging.info(key)
             for _group in m_group:
                 group = list(_group)
+                logging.info(group)
                 group_id = group[0]
                 name = group[1]
                 s0 = group[2]
