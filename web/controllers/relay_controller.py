@@ -62,7 +62,7 @@ def setup_relays():
             's3': row[4],
             'en': row[5], 
             'pump_enabled': row[6],
-            'pin', row[7],
+            'pin': row[7],
             'multiplex': row[8],
             'relay_num': row[9]
             }
