@@ -18,13 +18,14 @@ RAIN_BUCKET_ITERATION = 1
 EXCEPT_PINS = [1, 2, 3, PUMP_PIN, RAIN_PIN]
 BRANCHES = []
 
+BRANCH_GROUPS = {}
+LINES = {}
 
 def setup_relays():
     """Fill up settings array to save settings for branches."""
     try:
-        groups = database.select(database.QUERY[mn()])
+        groups = database.select(database.QUERY[mn() + '_groupes'])
 
-        grouped = {}
         for key, m_group in groupby(groups, itemgetter(9)):
             logging.info(key)
             for _group in m_group:
@@ -39,7 +40,7 @@ def setup_relays():
                 pin = group[7]
                 pump_enabled = group[8]
 
-                grouped[group_id] = {
+                BRANCH_GROUPS[group_id] = {
                 'id': group_id,
                 'description': name,
                 's0': s0,
@@ -50,12 +51,26 @@ def setup_relays():
                 'pin': pin,
                 'pump_enabled': pump_enabled,
                 'multiplex': key
-                }
+                }        
 
-        logging.info(grouped)
+        lines = database.select(database.QUERY[mn() + '_lines'])
+        for row in lines:
+            LINES[row[0]] = {
+            's0': row[1],
+            's1': row[2],
+            's2': row[3],
+            's3': row[4],
+            'en': row[5], 
+            'pump_enabled': row[6],
+            'pin', row[7],
+            'multiplex': row[8],
+            'relay_num': row[9]
+            }
 
+        logging.info(LINES)
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
+
 
 BRANCHES = [
     {'id': 1, 'relay_num': 1, 'state': -1, 'mode': GPIO.OUT},
