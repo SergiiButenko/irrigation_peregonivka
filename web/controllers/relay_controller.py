@@ -29,12 +29,11 @@ def setup_relays():
             grouped.append(list([list(thing) for thing in group]))
         for row in grouped:
             print(row)
+            
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
 
-
 setup_relays()
-
 
 BRANCHES = [
     {'id': 1, 'relay_num': 1, 'state': -1, 'mode': GPIO.OUT},

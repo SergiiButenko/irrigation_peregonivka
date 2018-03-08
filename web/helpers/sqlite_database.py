@@ -132,6 +132,8 @@ QUERY['get_settings'] = (
     "SELECT number, name, time, intervals, time_wait, start_time, "
     "line_type, base_url, pump_enabled, relay_num, pin, group_id FROM lines ORDER BY number")
 
+QUERY['setup_relays'] = "SELECT id, name, s0, s1, s2, s3, en, pump_enabled, pin, multiplex FROM line_group"
+
 QUERY['enable_rule_cancel_interval'] = "UPDATE life SET state={1} WHERE state=1 AND interval_id='{0}'"
 
 QUERY['rissing'] = "INSERT INTO rain (volume) VALUES ({0})"
