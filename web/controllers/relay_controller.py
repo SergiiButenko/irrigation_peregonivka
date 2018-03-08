@@ -28,7 +28,7 @@ def setup_relays():
         for key, group in groupby(groups, itemgetter(9)):
             grouped[key] = list([list(thing) for thing in group])
 
-        print('row', grouped)
+        logging.info('row', grouped)
 
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
