@@ -23,14 +23,12 @@ def setup_relays():
     """Fill up settings array to save settings for branches."""
     try:
         groups = database.select(database.QUERY[mn()])
-        # QUERY['get_settings'] = "SELECT number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled from lines where line_type='power_outlet' order by number"
-        groups.sort(key=itemgetter(9))
 
-        grouped = []
+        grouped = {}
         for key, group in groupby(groups, itemgetter(9)):
-            grouped.append(list([list(thing) for thing in group]))
-        for row in grouped:
-            print(row)
+            grouped[key] = list([list(thing) for thing in group])
+
+        print('row', grouped)
 
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
