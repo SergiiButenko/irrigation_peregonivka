@@ -29,7 +29,9 @@ def setup_relays():
             logging.info(key)
             for _group in m_group:
                 group = list(_group)
-                logging.info(group)
+                
+                logging.info(group[0])
+
                 group_id = group[0]
                 name = group[1]
                 s0 = group[2]
@@ -39,7 +41,7 @@ def setup_relays():
                 en = group[6]
                 pin = group[7]
                 pump_enabled = group[8]
-                
+
                 grouped[group_id] = {
                 'id': group_id,
                 'description': name,
