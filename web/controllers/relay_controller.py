@@ -33,8 +33,6 @@ def setup_relays():
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
 
-setup_relays()
-
 BRANCHES = [
     {'id': 1, 'relay_num': 1, 'state': -1, 'mode': GPIO.OUT},
     {'id': 1, 'relay_num': 1, 'state': -1, 'mode': GPIO.OUT},
@@ -68,6 +66,7 @@ def rissing(channel):
 
         database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
 
+setup_relays()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
