@@ -128,7 +128,9 @@ QUERY['temperature_2'] = (
     "INSERT INTO temperature_statistics (temperature_street, humidity_street, temperature_small_h_1_fl, humidity_small_h_1_fl, temperature_small_h_2_fl, humidity_small_h_2_fl, temperature_big_h_1_fl, humidity_big_h_1_fl, temperature_big_h_2_fl, humidity_big_h_2_fl) "
     "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')")
 
-QUERY['get_settings'] = "SELECT number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled FROM lines ORDER BY number"
+QUERY['get_settings'] = (
+    "SELECT number, name, time, intervals, time_wait, start_time, "
+    "line_type, base_url, pump_enabled, relay_num, pin, group_id FROM lines ORDER BY number")
 
 QUERY['enable_rule_cancel_interval'] = "UPDATE life SET state={1} WHERE state=1 AND interval_id='{0}'"
 
