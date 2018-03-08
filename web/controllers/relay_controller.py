@@ -3,6 +3,8 @@
 import logging
 import time
 import RPi.GPIO as GPIO
+from itertools import groupby
+from operator import itemgetter
 from helpers import sqlite_database as database
 from helpers.common import *
 
@@ -29,7 +31,7 @@ def setup_relays():
             grouped.append(list([list(thing) for thing in group]))
         for row in grouped:
             print(row)
-            
+
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
 
