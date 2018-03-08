@@ -27,7 +27,8 @@ def setup_relays():
         grouped = {}
         for key, m_group in groupby(groups, itemgetter(9)):
             logging.info(key)
-            for group in m_group:
+            for _group in m_group:
+                group = list(_group)
                 group_id = group[0]
                 name = group[1]
                 s0 = group[2]
