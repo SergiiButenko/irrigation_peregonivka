@@ -173,6 +173,7 @@ def form_pins_state():
     """Form returns arr of dicts."""
     try:
         for line_id, line in LINES.items():
+            logging.info(line)
             if line['multiplex'] == 0:
                 line['state'] = GPIO.input(line['pin'])
             elif GPIO.input(line['en']) == GPIO.LOW:
