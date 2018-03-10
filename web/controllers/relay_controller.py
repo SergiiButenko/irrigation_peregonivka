@@ -67,7 +67,7 @@ def rissing(channel):
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
 
-for line in LINES.items():
+for line_id, line in LINES.items():
     if line['multiplex'] == 0:
         GPIO.setup(line['pin'], GPIO.OUT, initial=GPIO.LOW)
     else:
@@ -142,20 +142,20 @@ def off(pin):
 def check_if_no_active():
     """Check if any of branches is active now."""
     try:
-        for branch_id, branch in LINES.items():
+        for line_id, line in LINES.items():
             # pump won't turn off, cause it stays on after branch off
-            if branch['is_except'] == 1:
+            if line['is_except'] == 1:
                 continue
 
-            if branch['multiplex'] == 0:
-                state = GPIO.input(branch['pin'])
+            if line['multiplex'] == 0:
+                state = GPIO.input(line['pin'])
                 if state == GPIO.HIGH:
-                    logging.info("branch {0} is active".format(branch['id']))
+                    logging.info("branch {0} is active".format(line['id']))
                     return False
             else:
-                state = GPIO.input(branch['en'])
+                state = GPIO.input(line['en'])
                 if state == GPIO.HIGH:
-                    logging.info("branch {0} is active".format(branch['id']))
+                    logging.info("EN pin of {0} group is active".format(line['group_id']))
                     return False
 
         logging.info("No active branch")

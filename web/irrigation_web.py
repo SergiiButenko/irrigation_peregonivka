@@ -766,7 +766,6 @@ def retry_branch_on(branch_id, time_min):
                         continue
                     else:
                         return response_off
-
             except Exception as e:
                 logging.error(e)
                 logging.error("Can't turn on {0} branch. Exception occured. {1} try out of 2".format(branch_id, attempt))
