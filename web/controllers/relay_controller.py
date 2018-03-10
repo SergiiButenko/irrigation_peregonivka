@@ -33,7 +33,7 @@ def setup_lines():
                 key = 'pump'
 
             LINES[key] = {
-                            'id': row[0]
+                            'id': row[0],
                             's0': row[1],
                             's1': row[2],
                             's2': row[3],
