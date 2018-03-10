@@ -16,82 +16,41 @@ RAIN_PIN = 21
 RAIN_BUCKET_ITERATION = 1
 # 1,2,3 goes to light activities
 EXCEPT_PINS = [1, 2, 3, PUMP_PIN, RAIN_PIN]
-BRANCHES = []
+
 
 BRANCH_GROUPS = {}
 LINES = {}
 
-def setup_relays():
+
+def setup_lines():
     """Fill up settings array to save settings for branches."""
     try:
-        groups = database.select(database.QUERY[mn() + '_groupes'])
-
-        for key, m_group in groupby(groups, itemgetter(9)):
-            logging.info(key)
-            for _group in m_group:
-                group = list(_group)
-                group_id = group[0]
-                name = group[1]
-                s0 = group[2]
-                s1 = group[3]
-                s2 = group[4]
-                s3 = group[5]
-                en = group[6]
-                pin = group[7]
-                pump_enabled = group[8]
-
-                BRANCH_GROUPS[group_id] = {
-                'id': group_id,
-                'description': name,
-                's0': s0,
-                's1': s1,
-                's2': s2,
-                's3': s3,
-                'en': en,
-                'pin': pin,
-                'pump_enabled': pump_enabled,
-                'multiplex': key
-                }        
-
         lines = database.select(database.QUERY[mn() + '_lines'])
         for row in lines:
-            LINES[row[0]] = {
-            's0': row[1],
-            's1': row[2],
-            's2': row[3],
-            's3': row[4],
-            'en': row[5], 
-            'pump_enabled': row[6],
-            'pin': row[7],
-            'multiplex': row[8],
-            'relay_num': row[9]
-            }
+            if row[10] != 1:
+                key = row[10]
+            else:
+                key = 'pump'
+
+            LINES[key] = {
+                            'id': row[0]
+                            's0': row[1],
+                            's1': row[2],
+                            's2': row[3],
+                            's3': row[4],
+                            'en': row[5],
+                            'pump_enabled': row[6],
+                            'pin': row[7],
+                            'multiplex': row[8],
+                            'relay_num': row[9],
+                            'is_pump': row[10],
+                            'is_except': row[11],
+                            'group_id': row[12],
+                            'state': -1}
 
         logging.info(LINES)
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
-
-
-BRANCHES = [
-    {'id': 1, 'relay_num': 1, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 1, 'relay_num': 1, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 2, 'relay_num': 2, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 3, 'relay_num': 3, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 4, 'relay_num': 4, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 5, 'relay_num': 5, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 6, 'relay_num': 6, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 7, 'relay_num': 7, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 8, 'relay_num': 8, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 9, 'relay_num': 9, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 10, 'relay_num': 10, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 11, 'relay_num': 11, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 12, 'relay_num': 12, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 13, 'relay_num': 13, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 14, 'relay_num': 14, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 15, 'relay_num': 15, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 16, 'relay_num': 16, 'state': -1, 'mode': GPIO.OUT},
-    {'id': 17, 'relay_num': PUMP_PIN, 'state': -1, 'mode': GPIO.OUT},
-]
 
 
 def rissing(channel):
@@ -105,20 +64,44 @@ def rissing(channel):
 
         database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
 
-setup_relays()
-
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
 
-for branch in BRANCHES:
-    GPIO.setup(branch['relay_num'], branch['mode'], initial=GPIO.LOW)
+for line in LINES.items():
+    if line['multiplex'] == 0:
+        GPIO.setup(line['pin'], GPIO.OUT, initial=GPIO.LOW)
+    else:
+        GPIO.setup(line['en'], GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(line['s0'], GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(line['s1'], GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(line['s2'], GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(line['s3'], GPIO.OUT, initial=GPIO.LOW)
 
 GPIO.setup(RAIN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(RAIN_PIN, GPIO.RISING, callback=rissing, bouncetime=200)
 
 
-def detect_pin(pin):
-    return '{0:04b}'.format(pin)
+def detect_pins(r_id):
+    return list('{0:04b}'.format(r_id))
+
+
+def decrypt_pins(bitlist):
+    out = 0
+    for bit in bitlist:
+        out = (out << 1) | int(bit)
+    return out
+
+
+def on_group(branch_id):
+    try:
+        en = LINES[branch_id]['en']
+        GPIO.output(en, GPIO.HIGH)
+
+        relay = LINES[branch_id]['relay']
+        for pin in detect_pins(relay):
+            on(pin)
+    except Exception as e:
+        raise e
 
 
 def on(pin):
@@ -130,7 +113,19 @@ def on(pin):
     except Exception as e:
         logging.error("Exception occured when turning on {0} pin. {1}".format(pin, e))
         GPIO.cleanup()
-        return -1
+        raise(e)
+
+
+def off_group(branch_id):
+    try:
+        en = LINES[branch_id]['en']
+        GPIO.output(en, GPIO.LOW)
+
+        relay = LINES[branch_id]['relay']
+        for pin in detect_pins(relay):
+            off(pin)
+    except Exception as e:
+        raise e
 
 
 def off(pin):
@@ -141,21 +136,27 @@ def off(pin):
     except Exception as e:
         logging.error("Exception occured when turning off {0} pin. {1}".format(pin, e))
         GPIO.cleanup()
-        return -1
+        raise(e)
 
 
 def check_if_no_active():
     """Check if any of branches is active now."""
     try:
-        for branch in BRANCHES:
+        for branch_id, branch in LINES.items():
             # pump won't turn off, cause it stays on after branch off
-            if branch['relay_num'] in EXCEPT_PINS:
+            if branch['is_except'] == 1:
                 continue
 
-            state = GPIO.input(branch['relay_num'])
-            if state == GPIO.HIGH:
-                logging.info("branch {0} is active".format(branch['id']))
-                return False
+            if branch['multiplex'] == 0:
+                state = GPIO.input(branch['pin'])
+                if state == GPIO.HIGH:
+                    logging.info("branch {0} is active".format(branch['id']))
+                    return False
+            else:
+                state = GPIO.input(branch['en'])
+                if state == GPIO.HIGH:
+                    logging.info("branch {0} is active".format(branch['id']))
+                    return False
 
         logging.info("No active branch")
         return True
@@ -168,8 +169,17 @@ def check_if_no_active():
 def form_pins_state():
     """Form returns arr of dicts."""
     try:
-        for branch in BRANCHES:
-            branch['state'] = GPIO.input(branch['relay_num'])
+        for line_id, line in LINES.items():
+            if line['mulptiplex'] == 0:
+                line['state'] = GPIO.input(line['pin'])
+            elif GPIO.input(line['en']) == GPIO.LOW:
+                line['state'] = 0
+            else:
+                s0 = GPIO.input(line['s0'])
+                s1 = GPIO.input(line['s1'])
+                s2 = GPIO.input(line['s2'])
+                s3 = GPIO.input(line['s3'])
+                line['state'] = GPIO.input(decrypt_pins([s0, s1, s2, s3]))
 
         logging.debug("Pins state are {0}".format(str(BRANCHES)))
 
@@ -190,12 +200,15 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
         logging.error("No branch alert time")
         return None
 
-    on(BRANCHES[branch_id]['relay_num'])
+    if LINES[branch_id]['multiplex'] == 1:
+        on_group(branch_id)
+    else:
+        on(branch_id)
 
-    if pump_enable is False:
+    if LINES[branch_id]['pump_enabled'] == 0:
         logging.info("Pump won't be turned on with {0} branch id".format(branch_id))
     else:
-        on(PUMP_PIN)
+        on(LINES['pump']['pin'])
         logging.info("Pump turned on with {0} branch id".format(branch_id))
 
     return form_pins_state()
@@ -209,7 +222,7 @@ def branch_off(branch_id=None, pump_enable=True):
 
     off(BRANCHES[branch_id]['relay_num'])
 
-    if pump_enable is True and check_if_no_active():
+    if LINES[branch_id]['pump_enabled'] == 1 and check_if_no_active():
         off(PUMP_PIN)
         logging.info("Pump turned off with {0} branch id".format(branch_id))
     else:
