@@ -25,11 +25,10 @@ LINES = {}
 def setup_lines():
     """Fill up settings array to save settings for branches."""
     try:
-        lines = database.select(database.QUERY[mn() + '_lines'])
-        logging.info(lines)        
+        lines = database.select(database.QUERY[mn() + '_lines'])             
         for row in lines:
             if row[10] != 1:
-                key = row[10]
+                key = row[0]
             else:
                 key = 'pump'
 
@@ -174,7 +173,7 @@ def form_pins_state():
     """Form returns arr of dicts."""
     try:
         for line_id, line in LINES.items():
-            if line['mulptiplex'] == 0:
+            if line['multiplex'] == 0:
                 line['state'] = GPIO.input(line['pin'])
             elif GPIO.input(line['en']) == GPIO.LOW:
                 line['state'] = 0
