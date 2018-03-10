@@ -26,6 +26,7 @@ def setup_lines():
     """Fill up settings array to save settings for branches."""
     try:
         lines = database.select(database.QUERY[mn() + '_lines'])
+        logging.info(lines)        
         for row in lines:
             if row[10] != 1:
                 key = row[10]
