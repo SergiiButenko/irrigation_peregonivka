@@ -65,6 +65,9 @@ def rissing(channel):
 
         database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
 
+
+setup_lines()
+
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
 
