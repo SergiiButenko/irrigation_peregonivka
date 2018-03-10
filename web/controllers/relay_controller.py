@@ -181,9 +181,9 @@ def form_pins_state():
                 s3 = GPIO.input(line['s3'])
                 line['state'] = GPIO.input(decrypt_pins([s0, s1, s2, s3]))
 
-        logging.debug("Pins state are {0}".format(str(BRANCHES)))
+        logging.debug("Pins state are {0}".format(str(LINES)))
 
-        return BRANCHES
+        return LINES
     except Exception as e:
         logging.error("Exception occured during forming of branches status. {0}".format(e))
         GPIO.cleanup()
