@@ -94,7 +94,6 @@ def get_relay_num(bitlist):
 def on(branch_id):
     """Set pin to high state."""
     try:
-        pin = LINES[branch_id]['pin']
         GPIO.output(pin, GPIO.HIGH)
         time.sleep(1)
         return GPIO.input(pin)
@@ -107,7 +106,6 @@ def on(branch_id):
 def off(branch_id):
     """Set pin to low state."""
     try:
-        pin = LINES[branch_id]['pin']
         GPIO.output(pin, GPIO.LOW)
         return GPIO.input(pin)
     except Exception as e:
@@ -132,7 +130,6 @@ def on_group(branch_id):
         }
 
         for pin, pin_state in pins.items():
-            logging.info(pin)
             if pin_state == 1:
                 on(pin)
                 logging.info("pin {0} enabled".format(pin))
@@ -233,7 +230,7 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
     if LINES[branch_id]['multiplex'] == 1:
         on_group(branch_id)
     else:
-        on(branch_id)
+        on(LINES[branch_id]['pin'])
 
     if LINES[branch_id]['pump_enabled'] == 0:
         logging.info("Pump won't be turned on with {0} branch id".format(branch_id))
@@ -254,7 +251,7 @@ def branch_off(branch_id=None, pump_enable=True):
         logging.info('is_multiplex true')
         off_group(branch_id)
     else:
-        off(branch_id)
+        off(LINES[branch_id]['pin'])
 
     if LINES[branch_id]['pump_enabled'] == 1 and check_if_no_active():
         off(LINES[branch_id]['pump_pin'])
