@@ -99,9 +99,11 @@ def on_group(branch_id):
     try:
         en = LINES[branch_id]['en']
         GPIO.output(en, GPIO.HIGH)
+        logging.info("EN pin {0} enabled".format(en))
 
-        relay = LINES[branch_id]['relay']
+        relay = LINES[branch_id]['relay_num']
         for pin in detect_pins(relay):
+            logging.info("pin {0} enabled".format(pin))
             on(pin)
     except Exception as e:
         raise e
@@ -207,7 +209,7 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
 
     logging.info('trying to enable {0} branch'.format(branch_id))
     if LINES[branch_id]['multiplex'] == 1:
-        logging.info(1)
+        logging.info('is_multiplex true')
         on_group(branch_id)
     else:
         logging.info(2)
