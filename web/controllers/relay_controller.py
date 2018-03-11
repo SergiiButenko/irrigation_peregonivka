@@ -203,14 +203,19 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
         logging.error("No branch alert time")
         return None
 
+    logging.info('trying to enabel')
     if LINES[branch_id]['multiplex'] == 1:
+        logging.info(1)
         on_group(branch_id)
     else:
+        logging.info(2)
         on(branch_id)
-
+    
+    logging.info(3)
     if LINES[branch_id]['pump_enabled'] == 0:
         logging.info("Pump won't be turned on with {0} branch id".format(branch_id))
     else:
+        logging.info(4)
         on(LINES['pump']['pin'])
         logging.info("Pump turned on with {0} branch id".format(branch_id))
 
