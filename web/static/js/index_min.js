@@ -89,6 +89,12 @@ $(document).ready(function() {
     // http://rosskevin.github.io/bootstrap-material-design/components/card/
 
     $(".btn-open-modal").click(function() {
+        var res = is_any_line_active(index);
+        if (res != null){
+            if (confirm(`Лінію ${res['line_name']} буде вимкено. Ви згодні?`)) return;
+            branch_off(res['id']);
+        }
+
         index = $(this).data('id');
         name = branch[index]['name'];
         time = branch[index]['default_time'];
@@ -181,12 +187,6 @@ function branch_on(index, time_minutes, interval_quantity, time_wait) {
         mode = 'single'
     } else {
         mode = 'interval'
-    }
-
-    var res = is_any_line_active(index);
-    if (res != null){
-        if (confirm(`Лінію ${res['line_name']} буде вимкено. Ви згодні?`)) return;
-        branch_off(res['id']);
     }
 
 
