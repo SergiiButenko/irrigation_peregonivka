@@ -103,8 +103,8 @@ def on_group(branch_id):
 
         relay = LINES[branch_id]['relay_num']
         for pin in detect_pins(relay):
+            on(int(pin))
             logging.info("pin {0} enabled".format(pin))
-            on(pin)
     except Exception as e:
         raise e
 
