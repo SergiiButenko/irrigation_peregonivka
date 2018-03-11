@@ -10,29 +10,10 @@ CREATE TABLE state_of_line (
     full_name text NOT NULL
 );
 
-CREATE TABLE day_of_week (
-    id INTEGER PRIMARY KEY,
-    num integer NOT NULL,
-    name text NOT NULL
-);
-
 CREATE TABLE rain (
     id INTEGER PRIMARY KEY,
     datetime time without time zone NOT NULL DEFAULT (datetime('now','localtime')),
     volume REAL NOT NULL
-);
-
-CREATE TABLE week_schedule (
-    id INTEGER PRIMARY KEY,
-    day_number integer NOT NULL,
-    line_id integer NOT NULL,
-    rule_id integer NOT NULL,
-    "time" time without time zone NOT NULL,
-    "interval" integer NOT NULL, 
-    active integer DEFAULT 1 NOT NULL,
-    FOREIGN KEY(day_number) REFERENCES day_of_week(num),
-    FOREIGN KEY(rule_id) REFERENCES type_of_rule(id),
-    FOREIGN KEY(line_id) REFERENCES lines(number)
 );
 
 CREATE TABLE moisture (
@@ -75,15 +56,35 @@ CREATE TABLE ongoing_rules (
     FOREIGN KEY(line_id) REFERENCES lines(number)
 );
 
+CREATE TABLE line_groups (
+id INTEGER PRIMARY KEY,
+name text NOT NULL, 
+s0 integer, 
+s1 integer, 
+s2 integer, 
+s3 integer, 
+en integer, 
+multiplex integer default 1);
+
 CREATE TABLE lines (
     id INTEGER PRIMARY KEY,
     number integer NOT NULL,
     name text NOT NULL,
     time integer NOT NULL DEFAULT 10,
     intervals integer NOT NULL DEFAULT 2,
-    time_wait integer NOT NULL DEFAULT 15,
-    start_time time without time zone NOT NULL DEFAULT '2017-06-29 18:34:00'
-);
+    time_wait integer NOT NULL DEFAULT 15, 
+    start_time time without time zone NOT NULL DEFAULT '2017-06-29 18:34:00', 
+    line_type text NOT NULL default 'irrigation', 
+    base_url text, 
+    pump_enabled integer NOT NULL DEFAULT 1,
+    relay_num integer, 
+    pin integer, 
+    group_id integer not null default 0, 
+    is_pump integer not null default 0, 
+    is_except integer not null default 0, 
+    pump_pin integer,
+    FOREIGN KEY(group_id) REFERENCES line_groups(id));
+
 
 CREATE TABLE state_of_rule (
     id INTEGER PRIMARY KEY,
@@ -94,28 +95,6 @@ CREATE TABLE state_of_rule (
 CREATE TABLE type_of_rule (
     id INTEGER PRIMARY KEY,
     name text NOT NULL
-);
-
-
-
-CREATE TABLE temperature_statistics (
-    id INTEGER PRIMARY KEY, 
-    
-    datetime time without time zone NOT NULL DEFAULT (datetime('now','localtime')),
-    temperature_street REAL DEFAULT 0, 
-    humidity_street REAL DEFAULT 0,
-
-    temperature_small_h_1_fl REAL DEFAULT 0, 
-    humidity_small_h_1_fl REAL DEFAULT 0,
-
-    temperature_small_h_2_fl REAL DEFAULT 0, 
-    humidity_small_h_2_fl REAL DEFAULT 0,
-
-    temperature_big_h_1_fl REAL DEFAULT 0, 
-    humidity_big_h_1_fl REAL DEFAULT 0,
-
-    temperature_big_h_2_fl REAL DEFAULT 0, 
-    humidity_big_h_2_fl REAL DEFAULT 0
 );
 
 CREATE TABLE ongoing_rules (
@@ -131,37 +110,6 @@ CREATE TABLE ongoing_rules (
     rule_id text, 
     FOREIGN KEY(line_id) REFERENCES lines(number)
 );
-
-
-CREATE TABLE lighting (
-    id INTEGER PRIMARY KEY, 
-    number integer NOT NULL, 
-    name text NOT NULL,
-    time integer NOT NULL
-);
-
-CREATE TABLE power_outlets (
-    id INTEGER PRIMARY KEY, 
-    number integer NOT NULL, 
-    name text NOT NULL,
-    time integer NOT NULL
-);
-
-
-CREATE TABLE power_statistics (
-    id INTEGER PRIMARY KEY, 
-    state integer NOT NULL, 
-    datetime time without time zone NOT NULL DEFAULT (datetime('now','localtime'))
-);
-
-
-INSERT INTO day_of_week (num, name) VALUES (0,'Воскресенье');
-INSERT INTO day_of_week (num, name) VALUES (1,'Понедельник');
-INSERT INTO day_of_week (num, name) VALUES (2,'Вторник');
-INSERT INTO day_of_week (num, name) VALUES (3,'Среда');
-INSERT INTO day_of_week (num, name) VALUES (4,'Четверг');
-INSERT INTO day_of_week (num, name) VALUES (5,'Пятница');
-INSERT INTO day_of_week (num, name) VALUES (6,'Суббота');
 
 INSERT INTO lines (number, name, time, intervals, time_wait) VALUES (15, 'Огурцы', 10, 2, 15);
 INSERT INTO lines (number, name, time, intervals, time_wait) VALUES (13, 'Клубника клумба', 10, 2, 15);
@@ -184,9 +132,29 @@ INSERT INTO state_of_rule (short_name, full_name) VALUES ('Canceled_by_humidity'
 INSERT INTO type_of_rule (name) VALUES ('Начать полив');
 INSERT INTO type_of_rule (name) VALUES ('Остановить полив');
 
-INSERT INTO week_schedule (day_number, line_id, rule_id, "time", "interval") VALUES (0, 1, 1, '17:00:00', 5);
-INSERT INTO week_schedule (day_number, line_id, rule_id, "time", "interval") VALUES (0, 2, 1, '18:30:00', 5);
-INSERT INTO week_schedule (day_number, line_id, rule_id, "time", "interval") VALUES (0, 3, 1, '20:00:00', 5);
-INSERT INTO week_schedule (day_number, line_id, rule_id, "time", "interval") VALUES (0, 5, 1, '16:00:00', 5);
-INSERT INTO week_schedule (day_number, line_id, rule_id, "time", "interval") VALUES (0, 4, 1, '23:55:00', 5);
-INSERT INTO week_schedule (day_number, line_id, rule_id, "time", "interval") VALUES (0, 2, 1, '00:01:00', 5);
+
+
+
+
+insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (1, 'Насос', null, null, null, null, null, 0);
+insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (2, 'Полив з бочки', 16, 17, 18, 19, 20, 1);
+insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (3, 'Полив з системи', null, null, null, null, null, 0);
+insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (4, 'Ліхтар', null, null, null, null, null, 0);
+
+
+
+
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (1, 1, 'Насос', 10, 2, 15, '2017-06-29 18:34:00', 'irrigation', '', 0, null, 12, 1, 1, 1, null);
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (2, 2, 'Огірки', 10, 2, 15, '2017-06-29 19:00:00', 'irrigation', '', 1, 1, null, 2, 0, 0, 12);
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (3, 3, 'Полуниця клумба', 10, 2, 15, '2017-06-29 20:00:00', 'irrigation', '', 1, 2, null, 2, 0, 0, 12);
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (4, 4, 'Полуниця альтанка', 10, 2, 15, '2017-06-29 21:00:00', 'irrigation', '', 1, 3, null, 2, 0, 0, 12);
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (5, 5, 'Томати', 10, 2, 15, '2017-06-29 06:00:00', 'irrigation', '', 1, 4, null, 2, 0, 0, 12);
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (6, 6, 'Малина', 10, 2, 15, '2017-06-29 22:00:00', 'irrigation', '', 1, 5, null, 2, 0, 0, 12);
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (7, 7, 'Ліхтар', 300, 1, 1, '2017-06-29 18:34:00', 'lighting', '', 0, null, 13, 4, 0, 1, null);
