@@ -91,7 +91,7 @@ def detect_pins(r_id):
 def decrypt_pins(bitlist):
     out = 0
     for bit in bitlist:
-        out = (out << 1) | int(bit)
+        out = (out << 1) | bit
     return out
 
 
@@ -173,7 +173,17 @@ def form_pins_state():
     """Form returns arr of dicts."""
     try:
         for line_id, line in LINES.items():
-            logging.info(line)
+            logging.info(line['multiplex'])
+            logging.info(line['pin'])
+            logging.info(line['en'])
+            logging.info(line['state'])
+            logging.info(line['s0'])
+            logging.info(line['s1'])
+            logging.info(line['s2'])
+            logging.info(line['s3'])
+
+
+
             if line['multiplex'] == 0:
                 line['state'] = GPIO.input(line['pin'])
             elif GPIO.input(line['en']) == GPIO.LOW:
@@ -191,7 +201,7 @@ def form_pins_state():
     except Exception as e:
         logging.error("Exception occured during forming of branches status. {0}".format(e))
         GPIO.cleanup()
-        return None
+        raise(e)
 
 
 def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
