@@ -46,6 +46,7 @@ def setup_lines():
                             'is_pump': row[10],
                             'is_except': row[11],
                             'group_id': row[12],
+                            'pump_pin': row[13],
                             'state': -1}
 
             if LINES[key]['multiplex'] == 1:
@@ -148,12 +149,19 @@ def off_group(branch_id):
         GPIO.output(en, GPIO.LOW)
         logging.info("EN pin disabled")
 
-        relay = LINES[branch_id]['relay']
-        for pin in detect_pins(relay):
+        pins = {
+        LINES[branch_id]['s0']: 0,
+        LINES[branch_id]['s1']: 0,
+        LINES[branch_id]['s2']: 0,
+        LINES[branch_id]['s3']: 0
+        }
+
+        for pin, pin_state in pins.items():
             off(pin)
-            logging.info(" in disabled")
+            logging.info("pin {0} disabled".format(pin))
+
     except Exception as e:
-        raise e
+        raise(e)
 
 
 def off(pin):
@@ -191,7 +199,7 @@ def check_if_no_active():
     except Exception as e:
         logging.error("Exception occured when checking active {0}".format(e))
         GPIO.cleanup()
-        raise e
+        raise(e)
 
 
 def form_pins_state():
@@ -241,7 +249,7 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
         logging.info("Pump won't be turned on with {0} branch id".format(branch_id))
     else:
         logging.info(4)
-        on(LINES['pump']['pin'])
+        on(LINES[branch_id]['pump_pin'])
         logging.info("Pump turned on with {0} branch id".format(branch_id))
 
     return form_pins_state()
@@ -253,10 +261,15 @@ def branch_off(branch_id=None, pump_enable=True):
         logging.error("No branch id")
         return None
 
-    off(BRANCHES[branch_id]['relay_num'])
+    if LINES[branch_id]['multiplex'] == 1:
+        logging.info('is_multiplex true')
+        off_group(branch_id)
+    else:
+        logging.info(2)
+        off(branch_id)
 
     if LINES[branch_id]['pump_enabled'] == 1 and check_if_no_active():
-        off(PUMP_PIN)
+        off(LINES[branch_id]['pump_pin'])
         logging.info("Pump turned off with {0} branch id".format(branch_id))
     else:
         logging.info("Pump won't be turned off with {0} branch id".format(branch_id))
