@@ -137,7 +137,7 @@ def update_rules():
 def index():
     """Index page."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['branch_id'] != 17 and item['line_type'] == 'irrigation':
             branch_list.append({
                 'id': item['branch_id'],
@@ -154,7 +154,7 @@ def index():
 def branch_settings():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'irrigation':
             branch_list.append({
                 'id': item['branch_id'],
@@ -172,7 +172,7 @@ def branch_settings():
 def lighting():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'lighting':
             branch_list.append({
                 'id': item['branch_id'],
@@ -187,7 +187,7 @@ def lighting():
 def lighting_settings():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'lighting':
             branch_list.append({
                 'id': item['branch_id'],
@@ -202,7 +202,7 @@ def lighting_settings():
 def power_outlets():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'power_outlet':
             branch_list.append({
                 'id': item['branch_id'],
@@ -217,7 +217,7 @@ def power_outlets():
 def power_outlets_settings():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'power_outlet':
             branch_list.append({
                 'id': item['branch_id'],
@@ -233,7 +233,7 @@ def add_rule_page():
         days = int(request.args.get('add_to_date'))
 
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'irrigation' and item['name'] != 'Насос':
             start_time = convert_to_datetime(item['start_time'])
             branch_list.append({
