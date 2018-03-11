@@ -111,9 +111,17 @@ def on_group(branch_id):
         logging.info("EN pin {0} enabled".format(en))
 
         relay = LINES[branch_id]['relay_num']
-        for pin in detect_pins(relay):
-            on(int(pin))
-            logging.info("pin {0} enabled".format(pin))
+        _pins = detect_pins(relay)
+        pins = {
+        's0': int(_pins[0]),
+        's1': int(_pins[1]),
+        's2': int(_pins[2]),
+        's3': int(_pins[3])
+        }
+
+        for pin_id, pin in pins.items():
+            on(pin)
+            logging.info("pin {0} enabled as {1} switch".format(pin, pin_id))
     except Exception as e:
         raise e
 
