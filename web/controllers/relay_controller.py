@@ -248,7 +248,6 @@ def branch_off(branch_id=None, pump_enable=True):
         return None
 
     if LINES[branch_id]['multiplex'] == 1:
-        logging.info('is_multiplex true')
         off_group(branch_id)
     else:
         off(LINES[branch_id]['pin'])

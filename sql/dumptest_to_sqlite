@@ -142,9 +142,6 @@ insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (3, 'П
 insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (4, 'Ліхтар', null, null, null, null, null, 0);
 
 
-
-
-
 insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (1, 1, 'Насос', 10, 2, 15, '2017-06-29 18:34:00', 'irrigation', '', 0, null, 12, 1, 1, 1, null);
 
 insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (2, 2, 'Огірки', 10, 2, 15, '2017-06-29 19:00:00', 'irrigation', '', 1, 1, null, 2, 0, 0, 12);

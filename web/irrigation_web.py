@@ -64,6 +64,7 @@ def get_settings():
             line_type = row[6]
             base_url = row[7]
             pump_enabled = row[8]
+            is_pump = row[9]
 
             BRANCHES_SETTINGS[branch_id] = {
                 'branch_id': branch_id,
@@ -74,7 +75,8 @@ def get_settings():
                 'start_time': start_time,
                 'line_type': line_type,
                 'base_url': base_url,
-                'pump_enabled': True if pump_enabled == 1 else False
+                'pump_enabled': True if pump_enabled == 1 else False,
+                'is_pump': is_pump
             }
             logging.debug("{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id])))
     except Exception as e:
@@ -138,7 +140,7 @@ def index():
     """Index page."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['branch_id'] != 1 and item['line_type'] == 'irrigation':
+        if item is not None and item['line_type'] == 'irrigation' and item['is_pump'] != 1:
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
@@ -155,7 +157,7 @@ def branch_settings():
     """Return branch names."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['line_type'] == 'irrigation':
+        if item is not None and item['line_type'] == 'irrigation' and item['is_pump'] != 1:
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
