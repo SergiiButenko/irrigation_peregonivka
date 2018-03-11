@@ -173,22 +173,16 @@ def form_pins_state():
     """Form returns arr of dicts."""
     try:
         for line_id, line in LINES.items():
-            logging.info(1)
             if line['multiplex'] == 0:
-                logging.info(2)
                 line['state'] = GPIO.input(line['pin'])
             elif GPIO.input(line['en']) == GPIO.LOW:
-                logging.info(3)
                 line['state'] = 0
             else:
-                logging.info(4)
                 s0 = GPIO.input(line['s0'])
                 s1 = GPIO.input(line['s1'])
                 s2 = GPIO.input(line['s2'])
                 s3 = GPIO.input(line['s3'])
-                logging.info(5)
                 line['state'] = GPIO.input(decrypt_pins([s0, s1, s2, s3]))
-        logging.info(5)
         logging.info(str(LINES))
         logging.debug("Pins state are {0}".format(str(LINES)))
 

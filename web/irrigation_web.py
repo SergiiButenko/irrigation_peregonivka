@@ -633,16 +633,16 @@ def deactivate_ongoing_rule():
 def form_responce_for_branches(payload):
     """Return responce with rules."""
     try:
-        res = [None] * BRANCHES_LENGTH
+        res = {}
         payload = convert_to_obj(payload)
-        for branch in payload:
-            status = branch['state']
-            branch_id = branch['id']
+        for line_id, line in payload.items():
+            status = line['state']
+            line_id = line['id']
 
-            last_rule = database.get_last_start_rule(branch_id)
-            next_rule = database.get_next_active_rule(branch_id)
+            last_rule = database.get_last_start_rule(line_id)
+            next_rule = database.get_next_active_rule(line_id)
 
-            res[int(branch_id)] = {'id': branch_id, 'status': status, 'next_rule': next_rule, 'last_rule': last_rule}
+            res[line] = {'id': line_id, 'status': status, 'next_rule': next_rule, 'last_rule': last_rule}
         return res
     except Exception as e:
         logging.error(e)
