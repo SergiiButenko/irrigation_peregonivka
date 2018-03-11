@@ -118,13 +118,14 @@ def on_group(branch_id):
 
         for pin, pin_state in pins.items():
             if pin_state == 1:
-                on(pin) 
+                on(pin)
                 logging.info("pin {0} enabled".format(pin))
             else:
                 off(pin)
                 logging.info("pin {0} disabled".format(pin))
     except Exception as e:
-        raise e
+        logging.error("Can't turn on group")
+        raise(e)
 
 
 def on(branch_id):
