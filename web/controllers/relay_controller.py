@@ -49,13 +49,13 @@ def setup_lines():
                             'state': -1}
 
             if LINES[key]['multiplex'] == 1:
-                GPIO.setup(LINES[key]['s0'], GPIO.OUT, GPIO.LOW)
-                GPIO.setup(LINES[key]['s1'], GPIO.OUT, GPIO.LOW)
-                GPIO.setup(LINES[key]['s2'], GPIO.OUT, GPIO.LOW)
-                GPIO.setup(LINES[key]['s3'], GPIO.OUT, GPIO.LOW)
-                GPIO.setup(LINES[key]['en'], GPIO.OUT, GPIO.LOW)
+                GPIO.setup(LINES[key]['s0'], GPIO.OUT)
+                GPIO.setup(LINES[key]['s1'], GPIO.OUT)
+                GPIO.setup(LINES[key]['s2'], GPIO.OUT)
+                GPIO.setup(LINES[key]['s3'], GPIO.OUT)
+                GPIO.setup(LINES[key]['en'], GPIO.OUT)
             else:
-                GPIO.setup(LINES[key]['pin'], GPIO.OUT, GPIO.LOW)
+                GPIO.setup(LINES[key]['pin'], GPIO.OUT)
 
         logging.info(LINES)
     except Exception as e:
