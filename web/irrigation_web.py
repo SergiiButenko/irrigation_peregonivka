@@ -138,7 +138,7 @@ def index():
     """Index page."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['branch_id'] != 17 and item['line_type'] == 'irrigation':
+        if item is not None and item['branch_id'] != 1 and item['line_type'] == 'irrigation':
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
