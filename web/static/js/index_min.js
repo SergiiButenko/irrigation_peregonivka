@@ -97,7 +97,7 @@ $(document).ready(function() {
 
         var res = is_any_line_active(index);
         if (res != null){
-            if (!confirm(`Лінію ${res['line_name']} буде вимкено. Ви згодні?`)) return;
+            if (!confirm(`Лінію '${res['line_name']}' буде вимкено. Ви згодні?`)) return;
             branch_off(res['id']);
         }
 
