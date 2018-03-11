@@ -205,7 +205,7 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
         logging.error("No branch alert time")
         return None
 
-    dlogging.info('trying to enable {0} branch'.format(branch_id))
+    logging.info('trying to enable {0} branch'.format(branch_id))
     if LINES[branch_id]['multiplex'] == 1:
         logging.info(1)
         on_group(branch_id)
