@@ -91,7 +91,7 @@ def get_relay_num(bitlist):
     return out
 
 
-def on(branch_id):
+def on(pin):
     """Set pin to high state."""
     try:
         GPIO.output(pin, GPIO.HIGH)
@@ -103,7 +103,7 @@ def on(branch_id):
         raise(e)
 
 
-def off(branch_id):
+def off(pin):
     """Set pin to low state."""
     try:
         GPIO.output(pin, GPIO.LOW)
