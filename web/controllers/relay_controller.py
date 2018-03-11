@@ -219,10 +219,15 @@ def form_pins_state():
                 s2 = GPIO.input(line['s2'])
                 s3 = GPIO.input(line['s3'])
                 relay_num = decrypt_pins([s0, s1, s2, s3])
+                logging.info("Relay = {0}".format(relay_num))
+                logging.info("id = {0}".format(line_id))
                 if line['relay_num'] == relay_num:
                     line['state'] = 1
+                    logging.info("state = {0}".format(line['state']))
                 else:
                     line['state'] = 0
+                    logging.info("state = {0}".format(line['state']))
+
         logging.info(str(LINES))
         logging.debug("Pins state are {0}".format(str(LINES)))
 
