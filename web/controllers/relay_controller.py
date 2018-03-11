@@ -58,6 +58,9 @@ def setup_lines():
             else:
                 GPIO.setup(LINES[key]['pin'], GPIO.OUT)
 
+            if LINES[key]['pump_enabled'] == 1:
+                GPIO.setup(LINES[key]['pump_pin'], GPIO.OUT)
+
         logging.info(LINES)
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
