@@ -92,7 +92,7 @@ def get_relay_num(bitlist):
 
 
 def on(branch_id):
-    """Set pin to hight state."""
+    """Set pin to high state."""
     try:
         pin = LINES[branch_id]['pin']
         GPIO.output(pin, GPIO.HIGH)
@@ -132,6 +132,7 @@ def on_group(branch_id):
         }
 
         for pin, pin_state in pins.items():
+            logging.info(pin)
             if pin_state == 1:
                 on(pin)
                 logging.info("pin {0} enabled".format(pin))
