@@ -76,16 +76,6 @@ GPIO.cleanup()
 
 setup_lines()
 
-for line_id, line in LINES.items():
-    if line['multiplex'] == 0:
-        GPIO.setup(line['pin'], GPIO.OUT, initial=GPIO.LOW)
-    else:
-        GPIO.setup(line['en'], GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(line['s0'], GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(line['s1'], GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(line['s2'], GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(line['s3'], GPIO.OUT, initial=GPIO.LOW)
-
 GPIO.setup(RAIN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(RAIN_PIN, GPIO.RISING, callback=rissing, bouncetime=200)
 
@@ -99,6 +89,31 @@ def get_relay_num(bitlist):
     for bit in bitlist:
         out = (out << 1) | bit
     return out
+
+
+def on(branch_id):
+    """Set pin to hight state."""
+    try:
+        pin = LINES[branch_id]['pin']
+        GPIO.output(pin, GPIO.HIGH)
+        time.sleep(1)
+        return GPIO.input(pin)
+    except Exception as e:
+        logging.error("Exception occured when turning on {0} pin. {1}".format(pin, e))
+        GPIO.cleanup()
+        raise(e)
+
+
+def off(branch_id):
+    """Set pin to low state."""
+    try:
+        pin = LINES[branch_id]['pin']
+        GPIO.output(pin, GPIO.LOW)
+        return GPIO.input(pin)
+    except Exception as e:
+        logging.error("Exception occured when turning off {0} pin. {1}".format(pin, e))
+        GPIO.cleanup()
+        raise(e)
 
 
 def on_group(branch_id):
@@ -128,19 +143,6 @@ def on_group(branch_id):
         raise(e)
 
 
-def on(branch_id):
-    """Set pin to hight state."""
-    try:
-        pin = LINES[branch_id]['pin']
-        GPIO.output(pin, GPIO.HIGH)
-        time.sleep(1)
-        return GPIO.input(pin)
-    except Exception as e:
-        logging.error("Exception occured when turning on {0} pin. {1}".format(pin, e))
-        GPIO.cleanup()
-        raise(e)
-
-
 def off_group(branch_id):
     try:
         en = LINES[branch_id]['en']
@@ -159,18 +161,6 @@ def off_group(branch_id):
             logging.info("pin {0} disabled".format(pin))
 
     except Exception as e:
-        raise(e)
-
-
-def off(branch_id):
-    """Set pin to low state."""
-    try:
-        pin = LINES[branch_id]['pin']
-        GPIO.output(pin, GPIO.LOW)
-        return GPIO.input(pin)
-    except Exception as e:
-        logging.error("Exception occured when turning off {0} pin. {1}".format(pin, e))
-        GPIO.cleanup()
         raise(e)
 
 
