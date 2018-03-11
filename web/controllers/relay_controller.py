@@ -48,6 +48,15 @@ def setup_lines():
                             'group_id': row[12],
                             'state': -1}
 
+            if LINES[key]['multiplex'] == 1:
+                GPIO.setup(LINES[key]['s0'], GPIO.OUT, GPIO.LOW)
+                GPIO.setup(LINES[key]['s1'], GPIO.OUT, GPIO.LOW)
+                GPIO.setup(LINES[key]['s2'], GPIO.OUT, GPIO.LOW)
+                GPIO.setup(LINES[key]['s3'], GPIO.OUT, GPIO.LOW)
+                GPIO.setup(LINES[key]['en'], GPIO.OUT, GPIO.LOW)
+            else:
+                GPIO.setup(LINES[key]['pin'], GPIO.OUT, GPIO.LOW)
+
         logging.info(LINES)
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
@@ -64,11 +73,10 @@ def rissing(channel):
 
         database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
 
-
-setup_lines()
-
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
+
+setup_lines()
 
 for line_id, line in LINES.items():
     if line['multiplex'] == 0:
