@@ -185,7 +185,7 @@ function branch_on(index, time_minutes, interval_quantity, time_wait) {
 
     var res = is_any_line_active(index);
     if (res != null){
-        confirm(`Лінію ${res['line_name']} буде вимкено. Ви згодні?`) && return false;
+        if (confirm(`Лінію ${res['line_name']} буде вимкено. Ви згодні?`)) return;
         branch_off(res['id']);
     }
 
