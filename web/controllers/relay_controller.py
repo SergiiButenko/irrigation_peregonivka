@@ -15,7 +15,6 @@ RAIN_PIN = 21
 RAIN_BUCKET_ITERATION = 1
 LINES = {}
 
-
 def setup_lines():
     """Fill up settings array to save settings for branches."""
     try:
@@ -206,12 +205,9 @@ def form_pins_state():
     try:
         for line_id, line in LINES.items():
             if line['multiplex'] == 0:
-                logging.ingo('Line {0} not multiplex'.format(line_id))
-
                 line['state'] = GPIO.input(line['pin'])
             elif GPIO.input(line['en']) == GPIO.LOW:
                 line['state'] = 0
-                logging.ingo('Line {0} - en pin is low'.format(line_id))
             else:
                 s0 = GPIO.input(line['s0'])
                 s1 = GPIO.input(line['s1'])
