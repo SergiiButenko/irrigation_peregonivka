@@ -11,14 +11,8 @@ from helpers.common import *
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
-PUMP_PIN = 12
 RAIN_PIN = 21
 RAIN_BUCKET_ITERATION = 1
-# 1,2,3 goes to light activities
-EXCEPT_PINS = [1, 2, 3, PUMP_PIN, RAIN_PIN]
-
-
-BRANCH_GROUPS = {}
 LINES = {}
 
 
@@ -97,11 +91,11 @@ GPIO.setup(RAIN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(RAIN_PIN, GPIO.RISING, callback=rissing, bouncetime=200)
 
 
-def detect_pins(r_id):
+def detect_pin_state(r_id):
     return list('{0:04b}'.format(r_id))
 
 
-def decrypt_pins(bitlist):
+def get_relay_num(bitlist):
     out = 0
     for bit in bitlist:
         out = (out << 1) | bit
@@ -115,7 +109,7 @@ def on_group(branch_id):
         logging.info("EN pin {0} enabled".format(en))
 
         relay = LINES[branch_id]['relay_num']
-        _pins = detect_pins(relay)
+        _pins = detect_pin_state(relay)
         pins = {
         LINES[branch_id]['s0']: int(_pins[0]),
         LINES[branch_id]['s1']: int(_pins[1]),
@@ -134,9 +128,10 @@ def on_group(branch_id):
         raise e
 
 
-def on(pin):
+def on(branch_id):
     """Set pin to hight state."""
     try:
+        pin = LINES[branch_id]['pin']
         GPIO.output(pin, GPIO.HIGH)
         time.sleep(1)
         return GPIO.input(pin)
@@ -167,9 +162,10 @@ def off_group(branch_id):
         raise(e)
 
 
-def off(pin):
+def off(branch_id):
     """Set pin to low state."""
     try:
+        pin = LINES[branch_id]['pin']
         GPIO.output(pin, GPIO.LOW)
         return GPIO.input(pin)
     except Exception as e:
@@ -210,25 +206,23 @@ def form_pins_state():
     try:
         for line_id, line in LINES.items():
             if line['multiplex'] == 0:
+                logging.ingo('Line {0} not multiplex'.format(line_id))
+
                 line['state'] = GPIO.input(line['pin'])
             elif GPIO.input(line['en']) == GPIO.LOW:
                 line['state'] = 0
+                logging.ingo('Line {0} - en pin is low'.format(line_id))
             else:
                 s0 = GPIO.input(line['s0'])
                 s1 = GPIO.input(line['s1'])
                 s2 = GPIO.input(line['s2'])
                 s3 = GPIO.input(line['s3'])
-                relay_num = decrypt_pins([s0, s1, s2, s3])
-                logging.info("Relay = {0}".format(relay_num))
-                logging.info("id = {0}".format(line_id))
+                relay_num = get_relay_num([s0, s1, s2, s3])
                 if line['relay_num'] == relay_num:
                     line['state'] = 1
-                    logging.info("state = {0}".format(line['state']))
                 else:
                     line['state'] = 0
-                    logging.info("state = {0}".format(line['state']))
 
-        logging.info(str(LINES))
         logging.debug("Pins state are {0}".format(str(LINES)))
 
         return LINES
@@ -248,19 +242,14 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
         logging.error("No branch alert time")
         return None
 
-    logging.info('trying to enable {0} branch'.format(branch_id))
     if LINES[branch_id]['multiplex'] == 1:
-        logging.info('is_multiplex true')
         on_group(branch_id)
     else:
-        logging.info(2)
         on(branch_id)
-    
-    logging.info(3)
+
     if LINES[branch_id]['pump_enabled'] == 0:
         logging.info("Pump won't be turned on with {0} branch id".format(branch_id))
     else:
-        logging.info(4)
         on(LINES[branch_id]['pump_pin'])
         logging.info("Pump turned on with {0} branch id".format(branch_id))
 
@@ -277,7 +266,6 @@ def branch_off(branch_id=None, pump_enable=True):
         logging.info('is_multiplex true')
         off_group(branch_id)
     else:
-        logging.info(2)
         off(branch_id)
 
     if LINES[branch_id]['pump_enabled'] == 1 and check_if_no_active():

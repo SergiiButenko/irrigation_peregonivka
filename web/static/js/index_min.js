@@ -314,6 +314,7 @@ function toogle_card(element_id, branch) {
 
         $('#btn-cancel-' + element_id).data('id', branch['next_rule']['interval_id'])
         $('#btn-cancel-' + element_id).css('display', 'inline-block').removeClass("hidden");
+        
     } else if (branch['next_rule'] && branch['next_rule']['rule_id'] == 2) {
         next_rule = convertDateToUTC(new Date(branch['next_rule']['timer']))
         if (daydiff(now, next_rule) == 0) {

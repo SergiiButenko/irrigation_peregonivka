@@ -16,29 +16,11 @@ QUERY['get_last_start_rule'] = (
     "WHERE l.state = 2 AND l.active=1 AND l.rule_id = 1 AND l.line_id={0} AND timer<=datetime('now', 'localtime') "
     "ORDER BY timer DESC LIMIT 1")
 
-QUERY['get_table_body_only'] = (
-    "SELECT l.id, li.name, rule_type.name, l.state, l.date, l.timer as \"[timestamp]\", l.active, rule_state.full_name, l.interval_id "
-    "FROM life as l, type_of_rule as rule_type, lines as li, state_of_rule as rule_state "
-    "WHERE l.rule_id = rule_type.id AND l.line_id = li.number AND l.state = rule_state.id "
-    "ORDER BY l.id, l.timer desc, l.interval_id")
-
 QUERY['history'] = (
     "SELECT l.interval_id, li.name, l.date, l.timer as \"[timestamp]\", l.active, l.time "
     "FROM life as l, lines as li "
     "WHERE l.rule_id = 1 AND (date(l.timer) BETWEEN date('now', 'localtime') AND date('now', 'localtime', '+{0} day')) AND l.line_id = li.number AND l.state = 1 AND l.active = 1 "
     "ORDER BY l.timer DESC")
-
-QUERY['get_timetable_list_1'] = (
-    "SELECT l.id, li.name, rule_type.name, l.state, l.date, l.timer as \"[timestamp]\", l.active, rule_state.full_name, l.time "
-    "FROM life as l, type_of_rule as rule_type, lines as li, state_of_rule as rule_state "
-    "WHERE l.rule_id = rule_type.id AND l.line_id = li.number AND l.timer<=datetime('now', 'localtime','+{0} day') AND l.state = rule_state.id "
-    "ORDER BY l.timer desc")
-
-QUERY['get_timetable_list_2'] = (
-    "SELECT l.id, li.name, rule_type.name, l.state, l.date, l.timer as \"[timestamp]\", l.active, rule_state.full_name, l.time "
-    "FROM life as l, type_of_rule as rule_type, lines as li, state_of_rule as rule_state "
-    "WHERE l.rule_id = rule_type.id AND l.line_id = li.number AND l.timer>= datetime('now', 'localtime', '-{0} hour') AND l.timer<=datetime('now', 'localtime', '+{0} hour') AND l.state = rule_state.id "
-    "ORDER BY l.timer desc")
 
 QUERY['ongoing_rules'] = (
     "SELECT r.id, r.line_id, r.time, r.intervals, r.time_wait, r.repeat_value, r.date_time_start, r.end_date, r.active, l.name, r.rule_id "
@@ -46,7 +28,6 @@ QUERY['ongoing_rules'] = (
     "EXCEPT select r.id, r.line_id, r.time, r.intervals, r.time_wait, r.repeat_value, r.date_time_start, r.end_date, r.active, l.name, r.rule_id "
     "FROM ongoing_rules as r, lines as l WHERE r.line_id = l.number and date(r.date_time_start) = date('now', 'localtime') "
     "and date(r.date_time_start) = date(r.end_date) and time('now', 'localtime') >= time(r.date_time_start) ORDER BY r.date_time_start;")
-
 
 QUERY['add_ongoing_rule'] = (
     "INSERT INTO ongoing_rules(line_id, time, intervals, time_wait, repeat_value, date_time_start, "
@@ -132,7 +113,6 @@ QUERY['get_settings'] = (
     "SELECT number, name, time, intervals, time_wait, start_time, "
     "line_type, base_url, pump_enabled, relay_num, pin, group_id FROM lines ORDER BY number")
 
-QUERY['setup_lines_groupes'] = "SELECT id, name, s0, s1, s2, s3, en, pump_enabled, pin, multiplex FROM line_groups order by multiplex ASC"
 QUERY['setup_lines_lines'] = (
     "SELECT l.number, lg.s0, lg.s1, lg.s2, lg.s3, "
     "lg.en, l.pump_enabled, l.pin, lg.multiplex, l.relay_num, l.is_pump, l.is_except, "
@@ -150,6 +130,7 @@ QUERY['moisture_sensors'] = (
 
 QUERY['get_moisture'] = (
     "SELECT line_id, value, datetime FROM moisture WHERE datetime >= datetime('now', 'localtime', '-23 hours');")
+
 
 # executes query and returns fetch* result
 def select(query, method='fetchall'):
