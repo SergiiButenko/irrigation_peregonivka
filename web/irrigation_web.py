@@ -641,11 +641,19 @@ def form_responce_for_branches(payload):
             status = line['state']
             line_id = line['id']
             line_group = line['group_id']
+            line_name = line['line_name']
+            group_name = line['group_name']
 
             last_rule = database.get_last_start_rule(line_id)
             next_rule = database.get_next_active_rule(line_id)
 
-            res[line_id] = {'id': line_id, 'group_id': line_group, 'status': status, 'next_rule': next_rule, 'last_rule': last_rule}
+            res[line_id] = {'id': line_id,
+                            'group_id': line_group,
+                            'line_name': line_name,
+                            'group_name': group_name,
+                            'status': status,
+                            'next_rule': next_rule,
+                            'last_rule': last_rule}
         return res
     except Exception as e:
         logging.error(e)

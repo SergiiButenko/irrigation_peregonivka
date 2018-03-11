@@ -4,6 +4,7 @@ var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
 
 var branch = [];
+var branch_state = null;
 
 $(document).ready(function() {
 
@@ -182,6 +183,13 @@ function branch_on(index, time_minutes, interval_quantity, time_wait) {
         mode = 'interval'
     }
 
+    var res = is_any_line_active(index);
+    if (res != null){
+        confirm(`Лінію ${res['line_name']} буде вимкено. Ви згодні?`) && return false;
+        branch_off(res['id']);
+    }
+
+
     $.ajax({
         url: '/activate_branch',
         type: "get",
@@ -233,6 +241,28 @@ function branch_off(index) {
     });
 }
 
+function is_any_line_active(line_id) {
+    for (key in branch_status) {
+        if (branch_status[key]['id'] == line_id) {
+            var group_id = branch_status[key]['group_id'];
+            break;
+        }
+    }
+
+    for (key in branch_status) {
+        if (branch_status[key]['group_id'] == group_id && branch_status[key]['status'] == 1) {
+            return {
+                'id': branch_status[key]['id'],
+                'group_name': branch_status[key]['group_name'],
+                'line_name': branch_status[key]['line_name']
+            };
+        }
+    }
+
+    return null;
+}
+
+
 function update_branches_request() {
     $.ajax({
         url: '/irrigation_lighting_status',
@@ -248,6 +278,7 @@ function update_branches_request() {
 
 function update_branches(json) {
     arr = json['branches'];
+    branch_status = arr;
 
     for (key in arr) {
         toogle_card(key, arr[key]);
@@ -314,7 +345,7 @@ function toogle_card(element_id, branch) {
 
         $('#btn-cancel-' + element_id).data('id', branch['next_rule']['interval_id'])
         $('#btn-cancel-' + element_id).css('display', 'inline-block').removeClass("hidden");
-        
+
     } else if (branch['next_rule'] && branch['next_rule']['rule_id'] == 2) {
         next_rule = convertDateToUTC(new Date(branch['next_rule']['timer']))
         if (daydiff(now, next_rule) == 0) {

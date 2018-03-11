@@ -40,6 +40,8 @@ def setup_lines():
                             'is_except': row[11],
                             'group_id': row[12],
                             'pump_pin': row[13],
+                            'line_name': row[14],
+                            'group_name': row[15],
                             'state': -1}
 
             if LINES[key]['multiplex'] == 1:
