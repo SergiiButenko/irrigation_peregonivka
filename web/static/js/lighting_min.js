@@ -173,10 +173,10 @@ function update_branches_request() {
 }
 
 function update_branches(json) {
-    arr = json['branches']
+    arr = json['branches'];
 
-    for (var i = 0; i <= arr.length; i++) {
-        toogle_card(i, arr[i]);
+    for (key in arr) {
+        toogle_card(key, arr[key]);
     }
 }
 

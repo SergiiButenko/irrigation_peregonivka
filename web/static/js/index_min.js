@@ -247,7 +247,7 @@ function update_branches_request() {
 }
 
 function update_branches(json) {
-    arr = json['branches']
+    arr = json['branches'];
 
     for (key in arr) {
         toogle_card(key, arr[key]);
