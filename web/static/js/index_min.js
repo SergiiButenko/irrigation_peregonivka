@@ -249,14 +249,8 @@ function update_branches_request() {
 function update_branches(json) {
     arr = json['branches']
 
-    for (obj in arr){
-        console.log(obj)
-    }
-    
-    for (var i = 0; i <= arr.length; i++) {
-        var obj = arr[i];
-        console.log(obj)
-        toogle_card(obj['id'], obj);
+    for (key in arr) {
+        toogle_card(key, arr[key]);
     }
 }
 
