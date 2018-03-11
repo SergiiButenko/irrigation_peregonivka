@@ -113,15 +113,19 @@ def on_group(branch_id):
         relay = LINES[branch_id]['relay_num']
         _pins = detect_pins(relay)
         pins = {
-        's0': int(_pins[0]),
-        's1': int(_pins[1]),
-        's2': int(_pins[2]),
-        's3': int(_pins[3])
+        LINES[branch_id]['s0']: int(_pins[0]),
+        LINES[branch_id]['s1']: int(_pins[1]),
+        LINES[branch_id]['s2']: int(_pins[2]),
+        LINES[branch_id]['s3']: int(_pins[3])
         }
 
-        for pin_id, pin in pins.items():
-            on(pin)
-            logging.info("pin {0} enabled as {1} switch".format(pin, pin_id))
+        for pin, pin_state in pins.items():
+            if pin_state == 1:
+                on(pin) 
+                logging.info("pin {0} enabled".format(pin))
+            else:
+                off(pin)
+                logging.info("pin {0} disabled".format(pin))
     except Exception as e:
         raise e
 
