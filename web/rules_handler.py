@@ -20,7 +20,7 @@ def branch_on(line_id, alert_time):
             try:
                 response = requests.get(url=BACKEND_IP + '/activate_branch', params={"id": line_id, 'time_min': alert_time, 'mode': 'auto'}, timeout=(10, 10))
                 response.raise_for_status()
-                logging.debug('response {0}'.format(response.text))
+                logging.info('response {0}'.format(response.text))
 
                 resp = json.loads(response.text)['branches']
                 if (resp[line_id]['status'] != 1):
