@@ -51,7 +51,7 @@ def branch_off(line_id):
             try:
                 response = requests.get(url=BACKEND_IP + '/deactivate_branch', params={"id": line_id, 'mode': 'auto'}, timeout=(10, 10))
                 response.raise_for_status()
-                logging.debug('response {0}'.format(response.text))
+                logging.info('response {0}'.format(response.text))
 
                 resp = json.loads(response.text)['branches']
                 if (resp[line_id]['status'] != 0):
