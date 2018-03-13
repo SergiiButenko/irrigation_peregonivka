@@ -64,6 +64,7 @@ def get_settings():
             line_type = row[6]
             base_url = row[7]
             pump_enabled = row[8]
+            is_pump = row[9]
 
             BRANCHES_SETTINGS[branch_id] = {
                 'branch_id': branch_id,
@@ -74,7 +75,8 @@ def get_settings():
                 'start_time': start_time,
                 'line_type': line_type,
                 'base_url': base_url,
-                'pump_enabled': True if pump_enabled == 1 else False
+                'pump_enabled': True if pump_enabled == 1 else False,
+                'is_pump': is_pump
             }
             logging.debug("{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id])))
     except Exception as e:
@@ -120,6 +122,11 @@ def send_ongoing_rule_message(channel, data):
     send_message(channel, {'data': json.dumps({'rule': data}, default=date_handler)})
 
 
+def send_history_change_message():
+    """Convert data in order to send data object."""
+    send_message('refresh_history', {'data': {'refresh': 1}})
+
+
 @app.route("/update_all_rules")
 def update_rules():
     """Synchronize rules with database."""
@@ -132,8 +139,8 @@ def update_rules():
 def index():
     """Index page."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
-        if item is not None and item['branch_id'] != 17 and item['line_type'] == 'irrigation':
+    for item_id, item in BRANCHES_SETTINGS.items():
+        if item is not None and item['line_type'] == 'irrigation' and item['is_pump'] != 1:
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
@@ -149,8 +156,8 @@ def index():
 def branch_settings():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
-        if item is not None and item['line_type'] == 'irrigation':
+    for item_id, item in BRANCHES_SETTINGS.items():
+        if item is not None and item['line_type'] == 'irrigation' and item['is_pump'] != 1:
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
@@ -167,7 +174,7 @@ def branch_settings():
 def lighting():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'lighting':
             branch_list.append({
                 'id': item['branch_id'],
@@ -182,7 +189,7 @@ def lighting():
 def lighting_settings():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'lighting':
             branch_list.append({
                 'id': item['branch_id'],
@@ -197,7 +204,7 @@ def lighting_settings():
 def power_outlets():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'power_outlet':
             branch_list.append({
                 'id': item['branch_id'],
@@ -212,7 +219,7 @@ def power_outlets():
 def power_outlets_settings():
     """Return branch names."""
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'power_outlet':
             branch_list.append({
                 'id': item['branch_id'],
@@ -228,7 +235,7 @@ def add_rule_page():
         days = int(request.args.get('add_to_date'))
 
     branch_list = []
-    for item in BRANCHES_SETTINGS:
+    for item_id, item in BRANCHES_SETTINGS.items():
         if item is not None and item['line_type'] == 'irrigation' and item['name'] != 'Насос':
             start_time = convert_to_datetime(item['start_time'])
             branch_list.append({
@@ -258,7 +265,7 @@ def history():
     list_arr = database.select(database.QUERY[mn()].format(days), 'fetchall')
     if list_arr is not None:
         list_arr.sort(key=itemgetter(0))
-        
+
         grouped = []
         for key, group in groupby(list_arr, itemgetter(0)):
             grouped.append(list([list(thing) for thing in group]))
@@ -266,7 +273,11 @@ def history():
         rules = []
         for intervals in grouped:
             intervals.sort(key=itemgetter(3))
-            interval = len(intervals)
+            intervals_quantity = len(intervals)
+
+            time_wait = 0
+            if intervals_quantity == 2:
+                time_wait = int((intervals[1][3] - intervals[0][3]).total_seconds() / 60 - intervals[0][5])
 
             row = intervals[0]
             rules.append(dict(
@@ -276,9 +287,9 @@ def history():
                 timer=date_handler(row[3]),
                 ative=row[4],
                 time=row[5],
-                intervals=interval,
+                intervals=intervals_quantity,
                 interval_id=row[0],
-                time_wait=15))
+                time_wait=time_wait))
 
         rules.sort(key=itemgetter('date'))
         for key, group in groupby(rules, itemgetter('date')):
@@ -354,7 +365,7 @@ def cancel_rule():
         if res is None:
             logging.info('No intervals for {0} ongoing rule. Remove it'.format(ongoing_rule_id))
             database.update(database.QUERY[mn() + "_delete_ongoing_rule"].format(ongoing_rule_id))
-        
+
         logging.info("Rule '{0}' canceled".format(rule_id))
 
     update_all_rules()
@@ -368,7 +379,8 @@ def cancel_rule():
         logging.error(e)
         logging.error("Can't get Raspberri Pi pin status. Exception occured")
         abort(500)
-
+    
+    send_history_change_message()
     return json.dumps({'status': 'OK'})
 
 
@@ -397,7 +409,7 @@ def ongoing_rules():
 
         start_dt = convert_to_datetime(date_time_start)
         end_dt = convert_to_datetime(end_date)
-        
+
         if start_dt.date() == end_dt.date():
             date_delta = end_dt.date() - now.date()
             if date_delta.days == 0:
@@ -528,6 +540,7 @@ def add_ongoing_rule():
         logging.error(e)
         logging.error("Can't send updated rules. Exception occured")
 
+    send_history_change_message()
     return json.dumps({'status': 'OK'})
 
 
@@ -540,6 +553,7 @@ def remove_ongoing_rule():
     update_all_rules()
 
     send_ongoing_rule_message('remove_ongoing_rule', {'rule_id': rule_id})
+    send_history_change_message()
 
     return json.dumps({'status': 'OK'})
 
@@ -586,6 +600,7 @@ def edit_ongoing_rule():
 
         send_ongoing_rule_message('edit_ongoing_rule', rule)
 
+    send_history_change_message()
     return json.dumps({'status': 'OK'})
 
 
@@ -598,6 +613,8 @@ def activate_ongoing_rule():
     update_all_rules()
 
     send_ongoing_rule_message('ongoing_rule_state', {'rule_id': rule_id, 'status': 1})
+
+    send_history_change_message()
     return json.dumps({'status': 'OK'})
 
 
@@ -610,27 +627,84 @@ def deactivate_ongoing_rule():
     update_all_rules()
 
     send_ongoing_rule_message('ongoing_rule_state', {'rule_id': rule_id, 'status': 0})
+
+    send_history_change_message()
     return json.dumps({'status': 'OK'})
 
 
 def form_responce_for_branches(payload):
     """Return responce with rules."""
     try:
-        res = [None] * BRANCHES_LENGTH
+        res = {}
         payload = convert_to_obj(payload)
-        for branch in payload:
-            status = branch['state']
-            branch_id = branch['id']
+        for line_id, line in payload.items():
+            status = line['state']
+            line_id = line['id']
+            line_group = line['group_id']
+            line_name = line['line_name']
+            group_name = line['group_name']
 
-            last_rule = database.get_last_start_rule(branch_id)
-            next_rule = database.get_next_active_rule(branch_id)
+            last_rule = database.get_last_start_rule(line_id)
+            next_rule = database.get_next_active_rule(line_id)
 
-            res[int(branch_id)] = {'id': branch_id, 'status': status, 'next_rule': next_rule, 'last_rule': last_rule}
+            res[line_id] = {'id': line_id,
+                            'group_id': line_group,
+                            'line_name': line_name,
+                            'group_name': group_name,
+                            'status': status,
+                            'next_rule': next_rule,
+                            'last_rule': last_rule}
         return res
     except Exception as e:
         logging.error(e)
         logging.error("Can't form responce. Exception occured")
         raise e
+
+
+@app.route('/moisture')
+@cache.cached(timeout=CACHE_TIMEOUT)
+def get_moisture():
+    try:
+        list_arr = database.select(database.QUERY[mn()], 'fetchall')
+        if list_arr is not None:
+            list_arr.sort(key=itemgetter(0))
+
+            grouped = {}
+            for key, group in groupby(list_arr, itemgetter(0)):
+                _list = list()
+                for thing in group:
+                    _list.append([
+                        round(thing[1] * 100, 2),
+                        int(convert_to_datetime(thing[2]).strftime('%H'))
+                        ])
+                grouped[key] = {}
+                grouped[key]['new'] = _list
+
+
+            # for key, value in grouped.items():
+            #     value['new'].sort(key=itemgetter(1))
+            #     logging.info(str(value['new']))
+
+            for key, value in grouped.items():
+                new_list = list()
+                for _key, _group in groupby(value['new'], itemgetter(1)):
+                    _sum = 0
+                    _len = 0
+                    for thing in _group:
+                        _sum += thing[0]
+                        _len += 1
+                    new_list.append(
+                        dict(hours=_key, val=round(_sum / _len, 2))
+                        )
+                grouped[key]['new'] = new_list
+                grouped[key]['base'] = 60
+
+            for key, value in grouped.items():
+                del value['new'][::2]
+
+    except Exception as e:
+        raise e
+    return jsonify(data=grouped)
 
 
 @app.route('/irrigation_lighting_status', methods=['GET'])
@@ -703,7 +777,6 @@ def retry_branch_on(branch_id, time_min):
                         continue
                     else:
                         return response_off
-
             except Exception as e:
                 logging.error(e)
                 logging.error("Can't turn on {0} branch. Exception occured. {1} try out of 2".format(branch_id, attempt))
@@ -781,6 +854,7 @@ def activate_branch():
 
     arr = form_responce_for_branches(response_arr)
     send_branch_status_message('branch_status', arr)
+    send_history_change_message()
 
     return jsonify(branches=arr)
 
@@ -862,7 +936,8 @@ def deactivate_branch():
 
     arr = form_responce_for_branches(response_off)
     send_branch_status_message('branch_status', arr)
-
+    send_history_change_message()
+    
     return jsonify(branches=arr)
 
 
@@ -870,9 +945,7 @@ def deactivate_branch():
 @cache.cached(timeout=CACHE_TIMEOUT)
 def weather():
     """Blablbal."""
-    rain = database.select(database.QUERY[mn()])[0][0]
-    if rain is None:
-        rain = 0
+    rain = database.get_rain_volume()
 
     rain_status = 0
     if rain < RAIN_MAX:

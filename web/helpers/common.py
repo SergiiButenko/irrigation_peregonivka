@@ -2,6 +2,7 @@ import inspect
 import datetime
 import json
 from pytz import timezone
+# from helpers import sqlite_database as database
 
 
 # For get function name intro function. Usage mn(). Return string with current function name. Instead 'query' will be database.QUERY[mn()].format(....)
@@ -12,7 +13,7 @@ VIBER_BOT_IP = 'https://mozart.hopto.org:7443'
 
 BRANCHES_LENGTH = 18
 RULES_FOR_BRANCHES = [None] * BRANCHES_LENGTH
-BRANCHES_SETTINGS = [None] * BRANCHES_LENGTH
+BRANCHES_SETTINGS = {}
 
 REDIS_KEY_FOR_VIBER = 'viber_sent_intervals'
 VIBER_SENT_TIMEOUT = 10
@@ -22,8 +23,9 @@ USERS = [
     {'name': 'Irina', 'id': 'mSR74mGibK+ETvTTx2VvcQ=='}
 ]
 
-HOURS = 24
-RAIN_MAX = 20
+RAIN_HOURS = 12
+RAIN_MAX = 15  # mm per m^2
+RAIN_CONSTANT_VOLUME = 0.73  # 8.2  ml per 120cm^2 -- 0.069 mm per m^2
 
 START_RULE = 1
 STOP_RULE = 2
@@ -116,6 +118,23 @@ def get_weekday(date):
     return week[date.weekday()]
 
 
+def get_month(date):
+    """Used in hostory request."""
+    monthes = ['Січня',
+               'Лютого',
+               'Березня',
+               'Квітня',
+               'Травня',
+               'Червня',
+               'Липня',
+               'Серпня',
+               'Вересня',
+               'Жовтня',
+               'Листопада',
+               'Грудня']
+    return monthes[date.month - 1]
+
+
 def form_date_description(date):
     """Used in hostory request."""
     date = convert_to_datetime(date)
@@ -128,4 +147,4 @@ def form_date_description(date):
     if delta.days == 1:
         return 'Завтра, ' + get_weekday(date)
 
-    return date.strftime('%m/%d/%Y') + ", " + get_weekday(date)
+    return "{0}, {1} {2}".format(get_weekday(date), date.strftime('%d'), get_month(date))

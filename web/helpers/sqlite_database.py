@@ -16,29 +16,11 @@ QUERY['get_last_start_rule'] = (
     "WHERE l.state = 2 AND l.active=1 AND l.rule_id = 1 AND l.line_id={0} AND timer<=datetime('now', 'localtime') "
     "ORDER BY timer DESC LIMIT 1")
 
-QUERY['get_table_body_only'] = (
-    "SELECT l.id, li.name, rule_type.name, l.state, l.date, l.timer as \"[timestamp]\", l.active, rule_state.full_name, l.interval_id "
-    "FROM life as l, type_of_rule as rule_type, lines as li, state_of_rule as rule_state "
-    "WHERE l.rule_id = rule_type.id AND l.line_id = li.number AND l.state = rule_state.id "
-    "ORDER BY l.id, l.timer desc, l.interval_id")
-
 QUERY['history'] = (
     "SELECT l.interval_id, li.name, l.date, l.timer as \"[timestamp]\", l.active, l.time "
     "FROM life as l, lines as li "
-    "WHERE l.rule_id = 1 AND (l.timer BETWEEN datetime('now', 'localtime') AND datetime('now', 'localtime', '+{0} day')) AND l.line_id = li.number AND l.state = 1 "
+    "WHERE l.rule_id = 1 AND (date(l.timer) BETWEEN date('now', 'localtime') AND date('now', 'localtime', '+{0} day')) AND l.line_id = li.number AND l.state = 1 AND l.active = 1 "
     "ORDER BY l.timer DESC")
-
-QUERY['get_timetable_list_1'] = (
-    "SELECT l.id, li.name, rule_type.name, l.state, l.date, l.timer as \"[timestamp]\", l.active, rule_state.full_name, l.time "
-    "FROM life as l, type_of_rule as rule_type, lines as li, state_of_rule as rule_state "
-    "WHERE l.rule_id = rule_type.id AND l.line_id = li.number AND l.timer<=datetime('now', 'localtime','+{0} day') AND l.state = rule_state.id "
-    "ORDER BY l.timer desc")
-
-QUERY['get_timetable_list_2'] = (
-    "SELECT l.id, li.name, rule_type.name, l.state, l.date, l.timer as \"[timestamp]\", l.active, rule_state.full_name, l.time "
-    "FROM life as l, type_of_rule as rule_type, lines as li, state_of_rule as rule_state "
-    "WHERE l.rule_id = rule_type.id AND l.line_id = li.number AND l.timer>= datetime('now', 'localtime', '-{0} hour') AND l.timer<=datetime('now', 'localtime', '+{0} hour') AND l.state = rule_state.id "
-    "ORDER BY l.timer desc")
 
 QUERY['ongoing_rules'] = (
     "SELECT r.id, r.line_id, r.time, r.intervals, r.time_wait, r.repeat_value, r.date_time_start, r.end_date, r.active, l.name, r.rule_id "
@@ -46,7 +28,6 @@ QUERY['ongoing_rules'] = (
     "EXCEPT select r.id, r.line_id, r.time, r.intervals, r.time_wait, r.repeat_value, r.date_time_start, r.end_date, r.active, l.name, r.rule_id "
     "FROM ongoing_rules as r, lines as l WHERE r.line_id = l.number and date(r.date_time_start) = date('now', 'localtime') "
     "and date(r.date_time_start) = date(r.end_date) and time('now', 'localtime') >= time(r.date_time_start) ORDER BY r.date_time_start;")
-
 
 QUERY['add_ongoing_rule'] = (
     "INSERT INTO ongoing_rules(line_id, time, intervals, time_wait, repeat_value, date_time_start, "
@@ -128,14 +109,27 @@ QUERY['temperature_2'] = (
     "INSERT INTO temperature_statistics (temperature_street, humidity_street, temperature_small_h_1_fl, humidity_small_h_1_fl, temperature_small_h_2_fl, humidity_small_h_2_fl, temperature_big_h_1_fl, humidity_big_h_1_fl, temperature_big_h_2_fl, humidity_big_h_2_fl) "
     "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')")
 
-QUERY['get_settings'] = "SELECT number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled FROM lines ORDER BY number"
+QUERY['get_settings'] = (
+    "SELECT number, name, time, intervals, time_wait, start_time, "
+    "line_type, base_url, pump_enabled, is_pump FROM lines ORDER BY number")
+
+QUERY['setup_lines_lines'] = (
+    "SELECT l.number, lg.s0, lg.s1, lg.s2, lg.s3, "
+    "lg.en, l.pump_enabled, l.pin, lg.multiplex, l.relay_num, l.is_pump, l.is_except, "
+    "l.group_id, l.pump_pin, l.name, lg.name "
+    "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number")
 
 QUERY['enable_rule_cancel_interval'] = "UPDATE life SET state={1} WHERE state=1 AND interval_id='{0}'"
 
 QUERY['rissing'] = "INSERT INTO rain (volume) VALUES ({0})"
 
-QUERY['weather'] = "SELECT sum(volume) from rain where datetime >= datetime('now', 'localtime', '-{0} hours');"
-QUERY['inspect_conditions_rain'] = QUERY['weather']
+QUERY['get_rain_volume'] = "SELECT sum(volume) from rain where datetime >= datetime('now', 'localtime', '-{0} hours');"
+QUERY['moisture_sensors'] = (
+    "INSERT INTO moisture(line_id, value) "
+    "VALUES ({0}, {1})")
+
+QUERY['get_moisture'] = (
+    "SELECT line_id, value, datetime FROM moisture WHERE datetime >= datetime('now', 'localtime', '-23 hours');")
 
 
 # executes query and returns fetch* result
@@ -214,3 +208,12 @@ def get_last_start_rule(line_id):
 
     logging.debug("Last completed rule retrieved for line id {0}".format(line_id))
     return {'id': res[0], 'line_id': res[1], 'rule_id': res[2], 'timer': res[3], 'interval_id': res[4]}
+
+
+def get_rain_volume():
+    """Return volume of rain mm/m^2"""
+    rain = select(QUERY[mn()].format(RAIN_HOURS))[0][0]
+    if rain is None:
+        rain = 0
+
+    return round(rain, 2)

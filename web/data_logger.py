@@ -1,145 +1,88 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import datetime
-import json
-import requests
-import inspect
-import sqlite3
+from pyfirmata import ArduinoMega, util
+import serial.tools.list_ports
 import logging
-import pytemperature
+import time
+from helpers import sqlite_database as database
+from helpers.common import *
+ANALOG_PIN = 4
+
+PINS = list(range(12, 28))
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
 
+
+def find_arduino(serial_number):
+    ports = list(serial.tools.list_ports.comports())
+    return ports[0][0]
+
+    # for pinfo in serial.tools.list_ports.comports():
+    #     if pinfo.serial_number == serial_number:
+    #         return serial.Serial(pinfo.device)
+    # raise IOError("Could not find an arduino - is it plugged in?")
+
+
+def inverse(val):
+    logging.info('   not inversed value {0}'.format(val))
+    return round(1 - val, 2)
+
+
 # For get function name intro function. Usage mn(). Return string with current function name. Instead 'query' will be QUERY[mn()].format(....)
-mn = lambda: inspect.stack()[1][3]
-ARDUINO_SMALL_H_IP = 'http://butenko.asuscomm.com:5555'
-
-QUERY = {}
-QUERY['weather'] = "INSERT INTO temperature_statistics (temperature_street, humidity_street, temperature_small_h_1_fl, humidity_small_h_1_fl, temperature_small_h_2_fl, humidity_small_h_2_fl, temperature_big_h_1_fl, humidity_big_h_1_fl, temperature_big_h_2_fl, humidity_big_h_2_fl) VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})"
-
-
-# executes query and returns fetch* result
-def execute_request(query, method='fetchall'):
-    """Use this method in case you need to get info from database."""
-    conn = None
+def moisture_sensors():
     try:
-        conn = sqlite3.connect('/var/sqlite_db/test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-        # conn = sqlite3.connect('/home/sergey/repos/irrigation_peregonivka/test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-        # conn = sqlite3.connect('C:\\repos\\irrigation_peregonivka\\test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        logging.info('Finding arduino...')
+        serial_port = find_arduino(serial_number='556393131333516090E0')
+        logging.info('Serial port {0}'.format(serial_port))
 
-        # conn.cursor will return a cursor object, you can use this cursor to perform queries
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        # execute our Query
-        cursor.execute(query)
-        logging.debug("db request '{0}' executed".format(query))
-        return getattr(cursor, method)()
-    except Exception as e:
-        logging.error("Error while performing operation with database: {0}".format(e))
-        return None
-    finally:
+        logging.info('Connecting to arduino...')
+        board = ArduinoMega(serial_port)
+        logging.info('Connected')
+
+        logging.info('Starting thread...')
+        it = util.Iterator(board)
+        it.start()
+        time.sleep(5)
+        logging.info('Started')
+
+        for x in range(0, ANALOG_PIN):
+            logging.info('Enable reporting for {0} analog pin...'.format(x))
+            board.analog[x].enable_reporting()
+            time.sleep(1)
+            logging.info('Reading from {0} analog pin...'.format(x))
+
+            avr = 0
+            for i in range(0, 11):
+                # 0 - 100%
+                # 1 - 0%
+                val = inverse(board.analog[x].read())
+                avr = avr + val
+                logging.info('   value {0}'.format(val))
+                time.sleep(1)
+
+            avr = round(avr / 10, 4)
+            logging.info('Avr value {0}'.format(avr))
+
+            database.update(database.QUERY[mn()].format(PINS[x], avr))
+
+            time.sleep(1)
+            logging.info('Disable reporting for {0} analog pin...'.format(x))
+            board.analog[x].disable_reporting()
+            time.sleep(5)
+
+        time.sleep(10)
         try:
-            if conn is not None:
-                conn.close()
+            logging.info('Stopping serial')
+            board.exit()
+            logging.info('done')
         except Exception as e:
-            logging.error("Error while closing connection with database: {0}".format(e))
+            logging.warn('Expected TypeError occured. Trying one more time. {0}'.format(e))
+            board.exit()
+            logging.info('done')
 
-
-# executes query and returns fetch* result
-def update_db_request(query):
-    """Doesn't have fetch* methods. Returns lastrowid after database insert command."""
-    conn = None
-    lastrowid = 0
-    try:
-        conn = sqlite3.connect('/var/sqlite_db/test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-        # conn = sqlite3.connect('/home/sergey/repos/irrigation_peregonivka/test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-        # conn = sqlite3.connect('C:\\repos\\irrigation_peregonivka\\test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-        # conn.cursor will return a cursor object, you can use this cursor to perform queries
-        cursor = conn.cursor()
-        # execute our Query
-        cursor.execute(query)
-        conn.commit()
-        logging.debug("db request '{0}' executed".format(query))
-        lastrowid = cursor.lastrowid
-        return lastrowid
-    except Exception as e:
-        logging.error("Error while performing operation with database: {0}".format(e))
-    finally:
-        try:
-            if conn is not None:
-                conn.close()
-        except Exception as e:
-            logging.error("Error while closing connection with database: {0}".format(e))
-            return None
-
-
-def weather():
-    """Blablbal."""
-    try:
-        temperature_street = 0
-        humidity_street = 0
-
-        temperature_small_h_1_fl = 0
-        humidity_small_h_1_fl = 0
-
-        temperature_small_h_2_fl = 0
-        humidity_small_h_2_fl = 0
-
-        temperature_big_h_1_fl = 0
-        humidity_big_h_1_fl = 0
-
-        temperature_big_h_2_fl = 0
-        humidity_big_h_2_fl = 0
-
-        url = 'http://api.openweathermap.org/data/2.5/weather?id=698782&appid=319f5965937082b5cdd29ac149bfbe9f'
-        try:
-            response = requests.get(url=url, timeout=(3, 3))
-            response.raise_for_status()
-            json_data = json.loads(response.text)
-            temperature_street = str(round(pytemperature.k2c(json_data['main']['temp']), 1)), 
-            humidity_street = str(round(json_data['main']['humidity'], 1))
-        except requests.exceptions.RequestException as e:
-            logging.error(e)
-            logging.error("Can't get weather info Exception occured")
-            humidity_street = 0
-            temperature_street = 0
-
-        try:
-            response = requests.get(url=ARDUINO_SMALL_H_IP + '/temperature', timeout=(3, 3))
-            response.raise_for_status()
-            json_data = json.loads(response.text)
-
-            temperature_small_h_1_fl = json_data['1_floor_temperature']
-            humidity_small_h_1_fl = json_data['1_floor_humidity']
-
-            temperature_small_h_2_fl = json_data['2_floor_temperature']
-            humidity_small_h_2_fl = json_data['2_floor_humidity']
-            logging.info(response.text)
-        except requests.exceptions.RequestException as e:
-            logging.error(e)
-            logging.error("Can't get temp info Exception occured")
-
-            temperature_small_h_1_fl = 0
-            humidity_small_h_1_fl = 0
-
-            temperature_small_h_2_fl = 0
-            humidity_small_h_2_fl = 0
-
-        logging.info(QUERY[mn()].format(0, humidity_street,
-            temperature_small_h_1_fl, humidity_small_h_1_fl,
-            temperature_small_h_2_fl, humidity_small_h_2_fl,
-            temperature_big_h_1_fl, humidity_big_h_1_fl,
-            temperature_big_h_2_fl, humidity_big_h_2_fl))
-
-        update_db_request(QUERY[mn()].format(0, humidity_street,
-            temperature_small_h_1_fl, humidity_small_h_1_fl,
-            temperature_small_h_2_fl, humidity_small_h_2_fl,
-            temperature_big_h_1_fl, humidity_big_h_1_fl,
-            temperature_big_h_2_fl, humidity_big_h_2_fl)
-        )
     except Exception as e:
         logging.error(e)
 
 if __name__ == "__main__":
-    weather()
+    moisture_sensors()

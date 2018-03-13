@@ -5,6 +5,17 @@ $(document).ready(function() {
         form_text($(this))
     });
     set_events();
+
+    var socket = io.connect(server, {
+        'sync disconnect on unload': true
+    });
+    socket.on('connect', function() {
+        console.log("connected to websocket");
+    });
+    socket.on('refresh_history', function(msg) {
+        console.log('Reload received');
+        reload_history();
+    });
 });
 
 
@@ -49,9 +60,6 @@ function set_events() {
             },
             error: function(data) {
                 alert("Сталася помилка. Cпробуйте ще раз");
-            },
-            complete: function(data) {
-                location.reload();
             }
         });
     });
@@ -79,9 +87,6 @@ function set_events() {
             },
             error: function(data) {
                 alert("Сталася помилка. Cпробуйте ще раз");
-            },
-            complete: function(data) {
-                location.reload();
             }
         });
     });

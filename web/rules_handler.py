@@ -23,7 +23,7 @@ def branch_on(line_id, alert_time):
                 logging.debug('response {0}'.format(response.text))
 
                 resp = json.loads(response.text)['branches']
-                if (resp[line_id]['status'] != 1):
+                if (resp[str(line_id)]['status'] != 1):
                     logging.error('Branch {0} cant be turned on by rule. response {1}'.format(line_id, response.text))
                     time.sleep(2)
                     continue
@@ -54,7 +54,7 @@ def branch_off(line_id):
                 logging.debug('response {0}'.format(response.text))
 
                 resp = json.loads(response.text)['branches']
-                if (resp[line_id]['status'] != 0):
+                if (resp[str(line_id)]['status'] != 0):
                     logging.error('Branch {0} cant be turned off by rule. response {1}. {2} try out of 2'.format(line_id, response.text, attempt))
                     time.sleep(2)
                     continue
@@ -103,19 +103,17 @@ def sync_rules_from_redis():
 def inspect_conditions(rule):
     """Check if rule can be executed or not."""
     try:
-        rain = database.select(database.QUERY[mn() + '_rain'].format(HOURS))[0][0]
-        if rain is None:
-            rain = 0
+        rain = database.get_rain_volume()
 
         if rule['rule_id'] == 2:
             logging.debug("Stop rule executes always.")
-            logging.debug("Rain volume for last {0} hours is {1}mm".format(HOURS, rain))
+            logging.debug("Rain volume for last {0} hours is {1}mm".format(RAIN_HOURS, rain))
             return True
 
         if rain < RAIN_MAX:
             return True
         else:
-            logging.info("Rain volume for last {0} hours is {1}mm".format(HOURS, rain))
+            logging.info("Rain volume for last {0} hours is {1}mm".format(RAIN_HOURS, rain))
             return False
     except Exception as e:
         logging.error("Exeption occured while getting rain volume. {0}".format(e))

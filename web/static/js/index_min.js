@@ -4,6 +4,7 @@ var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
 
 var branch = [];
+var branch_state = null;
 
 $(document).ready(function() {
 
@@ -33,6 +34,17 @@ $(document).ready(function() {
                     'default_time_wait': parseInt(item['default_time_wait']),
                     'start_time': new Date(item['start_time'])
                 }
+            }
+        }
+    });
+
+    $.ajax({
+        url: '/moisture',
+        success: function(data) {
+            list = data['data']
+            for (j in list) {
+                console.log(j);
+                draw_d3js(j, list[j]);
             }
         }
     });
@@ -82,6 +94,12 @@ $(document).ready(function() {
         time = branch[index]['default_time'];
         interval = branch[index]['default_interval'];
         time_wait = branch[index]['default_time_wait'];
+
+        var res = is_any_line_active(index);
+        if (res != null){
+            if (!confirm(`Лінію '${res['line_name']}' буде вимкено. Ви згодні?`)) return;
+            branch_off(res['id']);
+        }
 
         $('#irrigation_minutes').val(time);
         $('#irrigation_intervals').val(interval);
@@ -148,13 +166,13 @@ $(document).ready(function() {
         $.ajax({
             url: server + '/cancel_rule',
             type: "post",
-            data: JSON.stringify( { 'list': [interval_id] } ),
+            data: JSON.stringify({ 'list': [interval_id] }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             beforeSend: function(xhr, opts) {
                 set_status_spinner();
             },
-            success: function(data) {                                
+            success: function(data) {
                 set_status_ok();
             },
             error: function() {
@@ -162,7 +180,6 @@ $(document).ready(function() {
             }
         });
     });
-
 });
 
 function branch_on(index, time_minutes, interval_quantity, time_wait) {
@@ -171,6 +188,7 @@ function branch_on(index, time_minutes, interval_quantity, time_wait) {
     } else {
         mode = 'interval'
     }
+
 
     $.ajax({
         url: '/activate_branch',
@@ -223,6 +241,28 @@ function branch_off(index) {
     });
 }
 
+function is_any_line_active(line_id) {
+    for (key in branch_status) {
+        if (branch_status[key]['id'] == line_id) {
+            var group_id = branch_status[key]['group_id'];
+            break;
+        }
+    }
+
+    for (key in branch_status) {
+        if (branch_status[key]['group_id'] == group_id && branch_status[key]['status'] == 1) {
+            return {
+                'id': branch_status[key]['id'],
+                'group_name': branch_status[key]['group_name'],
+                'line_name': branch_status[key]['line_name']
+            };
+        }
+    }
+
+    return null;
+}
+
+
 function update_branches_request() {
     $.ajax({
         url: '/irrigation_lighting_status',
@@ -237,10 +277,11 @@ function update_branches_request() {
 }
 
 function update_branches(json) {
-    arr = json['branches']
+    arr = json['branches'];
+    branch_status = arr;
 
-    for (var i = 0; i <= arr.length; i++) {
-        toogle_card(i, arr[i]);
+    for (key in arr) {
+        toogle_card(key, arr[key]);
     }
 }
 
@@ -285,10 +326,10 @@ function toogle_card(element_id, branch) {
     } else {
         last_rule = "немає запису"
     }
-    $('#last-' + element_id).text("Останній полив: " + last_rule)
+    $('#last-' + element_id).html("Останній полив: " + last_rule)
 
     if (branch['next_rule'] && branch['next_rule']['rule_id'] == 1) {
-        next_rule =  convertDateToUTC(new Date(branch['next_rule']['timer']))
+        next_rule = convertDateToUTC(new Date(branch['next_rule']['timer']))
         if (daydiff(now, next_rule) == 0) {
             next_rule = "сьогодні, о " + next_rule.toLocaleTimeString("uk-UA", options_time);
         } else if (daydiff(now, next_rule) == 1) {
@@ -300,12 +341,13 @@ function toogle_card(element_id, branch) {
         }
 
         $('#next-' + element_id).css('display', 'inline-block').removeClass("hidden");
-        $('#next-' + element_id).html("</br>Наступний полив: " + next_rule);
+        $('#next-' + element_id).html("Наступний полив: " + next_rule);
 
         $('#btn-cancel-' + element_id).data('id', branch['next_rule']['interval_id'])
         $('#btn-cancel-' + element_id).css('display', 'inline-block').removeClass("hidden");
+
     } else if (branch['next_rule'] && branch['next_rule']['rule_id'] == 2) {
-        next_rule =  convertDateToUTC(new Date(branch['next_rule']['timer']))
+        next_rule = convertDateToUTC(new Date(branch['next_rule']['timer']))
         if (daydiff(now, next_rule) == 0) {
             next_rule = "сьогодні, о " + next_rule.toLocaleTimeString("uk-UA", options_time);
         } else if (daydiff(now, next_rule) == 1) {
@@ -317,7 +359,7 @@ function toogle_card(element_id, branch) {
         }
 
         $('#next-' + element_id).css('display', 'inline-block').removeClass("hidden");
-        $('#next-' + element_id).html("</br>Полив зупиниться: " + next_rule);
+        $('#next-' + element_id).html("Полив зупиниться: " + next_rule);
         $('#btn-cancel-' + element_id).hide().addClass("hidden");
     } else {
         $('#next-' + element_id).html("</br>Наступний полив: немає запису");
@@ -325,3 +367,99 @@ function toogle_card(element_id, branch) {
         $('#btn-cancel-' + element_id).hide().addClass("hidden");
     }
 }
+
+
+function draw_d3js(id, data) {
+    var parent_el = $(`#card-${id} > .card-block`);
+
+    // 2. Use the margin convention practice 
+    var margin = { top: 20, right: 5, bottom: 20, left: 25 },
+        width = parent_el.width() - margin.left - margin.right // Use the window's width 
+        ,
+        height = 250 - margin.top - margin.bottom; // Use the window's height
+
+    // The number of datapoints
+    var n = 25;
+
+    // 5. X scale will use the index of our data
+    var xScale = d3.scaleBand()
+        //.domain([0, n - 1]) // input
+        .range([0, width]); // output
+
+    // 6. Y scale will use the randomly generate number 
+    var yScale = d3.scaleLinear()
+        .domain([0, 100]) // input 
+        .range([height, 0]); // output 
+
+    // 7. d3's line generator
+    var line = d3.line()
+        .x(function(d) { return xScale(d.hours); }) // set the x values for the line generator
+        .y(function(d) { return yScale(d.val); }) // set the y values for the line generator 
+        .curve(d3.curveMonotoneX) // apply smoothing to the line
+
+    var line_base = d3.line()
+        .x(function(d) { return xScale(d.hours); }) // set the x values for the line generator
+        .y(function(d) { return yScale(d.base_val); }) // set the y values for the line generator 
+        .curve(d3.curveMonotoneX) // apply smoothing to the line
+    // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+    // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+    var dataset = data['new']
+    var dataset2 = [] //Array(n).fill({ 'base_val': data['base']})
+    var hours = []
+    for (var i = 0; i < dataset.length; i++) {
+        dataset2[i] = { 'base_val': data['base'], 'hours': data['new'][i]['hours'] }
+    }
+
+    xScale.domain(dataset.map(function(d) { return d.hours + ""; }));
+
+
+    //var dataset = d3.range(n).map(function(d) { return { "y": d3.randomUniform(1)() } })
+    //d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } })
+
+    // 1. Add the SVG to the page and employ #2
+    var svg = d3.select(`#card-${id} chart`).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // 3. Call the x axis in a group tag
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+
+    // 4. Call the y axis in a group tag
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+
+    svg.append("path")
+        .datum(dataset2) // 10. Binds data to the line 
+        .attr("class", "line_base") // Assign a class for styling 
+        .attr("d", line_base); // 11. Calls the line generator 
+
+    // 9. Append the path, bind the data, and call the line generator 
+    svg.append("path")
+        .datum(dataset) // 10. Binds data to the line 
+        .attr("class", "line") // Assign a class for styling 
+        .attr("d", line); // 11. Calls the line generator 
+
+    // 12. Appends a circle for each datapoint 
+    // var tickLabels = svg.selectAll(".dot")
+    // tickLabels.last()
+    //     .data(dataset)
+    //     .enter().append("circle") // Uses the enter().append() method
+    //     .attr("class", "dot") // Assign a class for styling
+    //     .attr("cx", function(d, i) { return xScale(d.hours) })
+    //     .attr("cy", function(d) { return yScale(d.val) })
+    //     .attr("r", 5);
+}
+
+d3.selection.prototype.first = function() {
+    return d3.select(this[0][0]);
+};
+d3.selection.prototype.last = function() {
+    var last = this.size() - 1;
+    return d3.select(this[0][last]);
+};
