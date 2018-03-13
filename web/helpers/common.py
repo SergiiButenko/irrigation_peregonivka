@@ -98,11 +98,6 @@ def date_hook(json_dict):
     """Convert str to datatime object."""
     for (key, value) in json_dict.items():
         try:
-            key = int(key)
-        except:
-            pass
-
-        try:
             json_dict[key] = convert_to_datetime(value)
         except:
             pass
