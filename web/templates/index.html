@@ -67,13 +67,13 @@
         </div>
         {% else %}
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-4">
-            <div class="card" id="card-1">
+            <div class="card" id="card-{{n[ 'id']}}">
                 <div class="card-block">
-                    <h4 class="card-title" id="title-1">Насос</h4>
+                    <h4 class="card-title" id="title-{{n[ 'id']}}">{{n[ 'name']}}</h4>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-primary btn-block btn-open-modal disabled" data-id="1" id="btn-start-1">Увімкнути</a>
-                    <a href="#" class="btn btn-primary btn-block stop-irrigation disabled" data-id="1" id="btn-stop-1">Вимкнути</a>
+                    <a href="#" class="btn btn-primary btn-block btn-open-modal disabled" data-id="{{n[ 'id']}}" id="btn-start-{{n[ 'id']}}">Увімкнути</a>
+                    <a href="#" class="btn btn-primary btn-block stop-irrigation disabled" data-id="{{n[ 'id']}}" id="btn-stop-{{n[ 'id']}}">Вимкнути</a>
                     <span class="status-span">В системі помилка</span>
                 </div>
             </div>
