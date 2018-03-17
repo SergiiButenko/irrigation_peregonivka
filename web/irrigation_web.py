@@ -196,7 +196,7 @@ def branch_settings():
     """Return branch names."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['line_type'] == 'irrigation':# and item['is_pump'] != 1:
+        if item is not None and item['line_type'] == 'irrigation':
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
