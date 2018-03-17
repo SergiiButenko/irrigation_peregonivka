@@ -758,8 +758,10 @@ def retry_branch_on(branch_id, time_min):
             try:
                 if base_url is None:
                     response_off = garden_controller.branch_on(branch_id=branch_id, pump_enable=pump_enabled, branch_alert=time_min)
-                    logging.info('response {0}'.format(response_off))
+                    logging.debug('response {0}'.format(response_off.text))
 
+                    response_off = json.loads(response_off.text)
+                    logging.info('Response {0}'.format(response_off[branch_id]))
                     if (response_off[branch_id]['state'] != 1):
                         logging.error('Branch {0} cant be turned on. response {1}'.format(branch_id, str(response_off)))
                         time.sleep(2)
@@ -768,11 +770,12 @@ def retry_branch_on(branch_id, time_min):
                         return response_off
                 else:
                     response_off = requests.get(url=base_url, params={'branch_id': branch_id, 'branch_alert': time_min}, timeout=(5, 5))
-                    logging.info('response {0}'.format(str(response_off.text)))
+                    logging.debug('response {0}'.format(str(response_off.text)))
+                    
                     response_off = json.loads(response_off.text)
-
+                    logging.info('Response {0}'.format(response_off[branch_id]))
                     if (response_off[branch_id]['state'] != 0):
-                        logging.error('Branch {0} cant be turned on. response {1}'.format(branch_id, response_off))
+                        logging.error('Branch {0} cant be turned on.'.format(branch_id))
                         time.sleep(2)
                         continue
                     else:
