@@ -164,6 +164,32 @@ def index():
     return render_template('index.html', my_list=grouped)
 
 
+@app.route("/pumps")
+@cache.cached(timeout=CACHE_TIMEOUT)
+def index():
+    """Index page."""
+    branch_list = []
+    for item_id, item in BRANCHES_SETTINGS.items():
+        if item is not None and item['line_type'] == 'irrigation' and item['is_pump'] == 1:
+            branch_list.append({
+                'id': item['branch_id'],
+                'group_id': item['group_id'],
+                'group_name': item['group_name'],
+                'is_pump': item['is_pump'],
+                'name': item['name'],
+                'default_time': item['time'],
+                'default_interval': item['intervals'],
+                'default_time_wait': item['time_wait'],
+                'start_time': item['start_time']})
+
+    branch_list.sort(key=itemgetter('group_name'))
+    grouped = {}
+    for key, group in groupby(branch_list, itemgetter('group_name')):
+        grouped[key] = (list([thing for thing in group]))
+
+    return render_template('pumps.html', my_list=grouped)
+
+
 @app.route("/branch_settings")
 @cache.cached(timeout=CACHE_TIMEOUT)
 def branch_settings():

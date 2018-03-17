@@ -157,3 +157,5 @@ insert into lines(id, number, name, time, intervals, time_wait, start_time, line
 insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (7, 7, 'Ліхтар', 300, 1, 1, '2017-06-29 18:34:00', 'lighting', '', 0, null, 13, 4, 0, 1, null);
 
 insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (8, 8, 'Кіпариси', 10, 2, 15, '2017-06-29 19:30:00', 'irrigation', null, 0, null, 14, 3, 0, 1, null);
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (9, 9, 'Смородина', 10, 2, 15, '2017-06-29 18:30:00', 'irrigation', null, 0, null, 15, 3, 0, 1, null);
