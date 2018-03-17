@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block nav_item_title %}Насоси{% endblock %} {% block modals %}
+{% endblock %}
+<!-- Custom styles for this template -->
+{% block container %}
+<div id="card-holder">
+    {% for name, group in my_list.items() %}
+    <h5>{{name}}</h5>
+    <div class="row">
+        {% for n in group %} 
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-4">
+            <div class="card" id="card-{{n[ 'id']}}">
+                <div class="card-block">
+                    <h4 class="card-title" id="title-{{n[ 'id']}}">{{n[ 'name']}}</h4>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary btn-block btn-open-modal disabled" data-id="{{n[ 'id']}}" id="btn-start-{{n[ 'id']}}">Увімкнути</a>
+                    <a href="#" class="btn btn-primary btn-block stop-irrigation disabled" data-id="{{n[ 'id']}}" id="btn-stop-{{n[ 'id']}}">Вимкнути</a>
+                    <span class="status-span">В системі помилка</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %} 
+    </div>
+    <hr style="margin-top: 2rem; margin-bottom: 2rem" /> {% endfor %}
+</div>
+{% endblock %} {% block custom_scripts %}
+<script src="static/js/index_min.js"></script>
+{% endblock %}
