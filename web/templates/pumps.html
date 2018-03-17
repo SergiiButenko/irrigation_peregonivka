@@ -1,4 +1,37 @@
 {% extends 'base.html' %} {% block nav_item_title %}Насоси{% endblock %} {% block modals %}
+<div id="irrigate_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="irrigate_modal-label" aria-hidden="true" data-id='0'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title ">Почати полив</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" id="irrigation_minutes_group">
+                    <label class="control-label" for="irrigation_minutes">Тривалість полива</label>
+                    <input iinput type="number" pattern="\d*" class="form-control" id="irrigation_minutes" required>
+                </div>
+                <div class="form-group" id="irrigation_intervals_group">
+                    <label for="irrigation_minutes">Кількість повторів</label>
+                    <input input type="number" pattern="\d*" class="form-control" id="irrigation_intervals" value=1>
+                </div>
+                <div class="form-group" style="display:none" id="irrigation_time_wait_group">
+                    <label for="irrigation_minutes">Час між поливами</label>
+                    <input input type="number" pattern="\d*" class="form-control" id="irrigation_time_wait" value=1 required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                <button type="button" class="btn btn-primary start-irrigation">Полити</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 {% endblock %}
 <!-- Custom styles for this template -->
 {% block container %}
