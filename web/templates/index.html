@@ -37,7 +37,7 @@
 {% block container %}
 <div id="card-holder">
     <div class="row">
-        {% for name, group in my_list.iteritems() %}
+        {% for name, group in my_list.items() %}
         <h5>{{name}}</h5>
             {% for n in group %}
                 <div class="col-xs-12 col-sm-12 col-md-10 col-lg-4">
