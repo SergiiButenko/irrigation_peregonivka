@@ -157,7 +157,7 @@ def index():
     logging.info(str(branch_list))
     branch_list.sort(key=itemgetter('group_id'))
     grouped = OrderedDict()
-    for key, group in groupby(BRANCHES_SETTINGS, itemgetter('group_id')):
+    for key, group in groupby(branch_list, itemgetter('group_id')):
         grouped[key] = (list([thing for thing in group]))
 
     logging.info(str(grouped))
