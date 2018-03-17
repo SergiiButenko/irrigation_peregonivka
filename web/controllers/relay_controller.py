@@ -14,6 +14,9 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)
 RAIN_PIN = 21
 RAIN_BUCKET_ITERATION = 1
 LINES = {}
+EN_ENABLED = GPIO.LOW
+EN_DISABLED = GPIO.HIGH
+
 
 def setup_lines():
     """Fill up settings array to save settings for branches."""
@@ -119,7 +122,7 @@ def off(pin):
 def on_group(branch_id):
     try:
         en = LINES[branch_id]['en']
-        GPIO.output(en, GPIO.LOW)
+        GPIO.output(en, EN_ENABLED)
         logging.info("EN pin {0} enabled".format(en))
 
         relay = LINES[branch_id]['relay_num']
@@ -146,7 +149,7 @@ def on_group(branch_id):
 def off_group(branch_id):
     try:
         en = LINES[branch_id]['en']
-        GPIO.output(en, GPIO.HIGH)
+        GPIO.output(en, EN_DISABLED)
         logging.info("EN pin disabled")
 
         pins = {
@@ -179,7 +182,7 @@ def check_if_no_active():
                     return False
             else:
                 state = GPIO.input(line['en'])
-                if state == GPIO.LOW:
+                if state == EN_ENABLED:
                     logging.info("EN pin of {0} group is active".format(line['group_id']))
                     return False
 
