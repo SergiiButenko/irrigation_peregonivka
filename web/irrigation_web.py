@@ -89,23 +89,23 @@ def error_handler(e):
     logging.error('error_handler for socketio. An error has occurred: ' + str(e))
 
 
-@socketio.on('connect')
-def connect():
-    """Log info if user is connected to websocket."""
-    logging.info('Client connected')
+# @socketio.on('connect')
+# def connect():
+#     """Log info if user is connected to websocket."""
+#     logging.info('Client connected')
 
 
-@socketio.on('disconnect')
-def disconnect():
-    """Log info if user is disconnected to websocket."""
-    logging.info('Client disconnected')
+# @socketio.on('disconnect')
+# def disconnect():
+#     """Log info if user is disconnected to websocket."""
+#     logging.info('Client disconnected')
 
 
 def send_message(channel, data):
     """Enclose emit method into try except block."""
     try:
         socketio.emit(channel, data)
-        logging.info('Message was sent.')
+        logging.debug('Message was sent.')
         logging.debug(data)
     except Exception as e:
         logging.error(e)
@@ -937,7 +937,7 @@ def deactivate_branch():
     arr = form_responce_for_branches(response_off)
     send_branch_status_message('branch_status', arr)
     send_history_change_message()
-    
+
     return jsonify(branches=arr)
 
 
