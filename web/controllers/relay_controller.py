@@ -122,10 +122,10 @@ def on_group(branch_id):
     try:
         relay = LINES[branch_id]['relay_num']
         _pins = detect_pin_state(relay)
-        pins = {LINES[branch_id]['s0']: int(_pins[0]),
-                LINES[branch_id]['s1']: int(_pins[1]),
-                LINES[branch_id]['s2']: int(_pins[2]),
-                LINES[branch_id]['s3']: int(_pins[3])}
+        pins = {LINES[branch_id]['s0']: int(_pins[3]),
+                LINES[branch_id]['s1']: int(_pins[2]),
+                LINES[branch_id]['s2']: int(_pins[1]),
+                LINES[branch_id]['s3']: int(_pins[0])}
 
         for pin, pin_state in pins.items():
             if pin_state == 1:
