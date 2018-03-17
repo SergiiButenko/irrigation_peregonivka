@@ -37,33 +37,33 @@
 {% block container %}
 <div id="card-holder">
     <div class="row">
-        {% for name, group in my list.iteritems()%}
+        {% for name, group in my_list.iteritems() %}
         <h5>{{name}}</h5>
-        {% for n in group %}
-        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-4">
-            <div class="card card-irrigation" id="card-{{n['id']}}">
-                <div class="card-block">
-                    <div data-toggle="collapse" href="#collapse-{{n['id']}}" aria-expanded="false" aria-controls="collapse-{{n['id']}}">
-                        <h4 class="card-title" id="title-{{n['id']}}">{{n['name']}}</h4>
-                        <p class="card-text"> <!-- text-muted -->
-                            <span id="last-{{n['id']}}"></span>
-                            <span id="next-{{n['id']}}"></span>
-                        </p>
-                        <div class="collapse" id="collapse-{{n['id']}}">
-                            <chart>
-                            </chart>
+            {% for n in group %}
+                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-4">
+                    <div class="card card-irrigation" id="card-{{n['id']}}">
+                        <div class="card-block">
+                            <div data-toggle="collapse" href="#collapse-{{n['id']}}" aria-expanded="false" aria-controls="collapse-{{n['id']}}">
+                                <h4 class="card-title" id="title-{{n['id']}}">{{n['name']}}</h4>
+                                <p class="card-text"> <!-- text-muted -->
+                                    <span id="last-{{n['id']}}"></span>
+                                    <span id="next-{{n['id']}}"></span>
+                                </p>
+                                <div class="collapse" id="collapse-{{n['id']}}">
+                                    <chart>
+                                    </chart>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <a href="#" class="btn btn-secondary cancel-irrigation" data-id={{n[ 'id']}} id="btn-cancel-{{n['id']}}">Скасувати наступний</a>
+                            <a href="#" class="btn btn-primary btn-open-modal disabled" data-id={{n[ 'id']}} id="btn-start-{{n['id']}}">Полити</a>
+                            <a href="#" class="btn btn-primary stop-irrigation disabled" data-id={{n[ 'id']}} id="btn-stop-{{n['id']}}">Зупинити</a>
+                            <span class="status-span">В системі помилка</span>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer text-right">
-                    <a href="#" class="btn btn-secondary cancel-irrigation" data-id={{n[ 'id']}} id="btn-cancel-{{n['id']}}">Скасувати наступний</a>
-                    <a href="#" class="btn btn-primary btn-open-modal disabled" data-id={{n[ 'id']}} id="btn-start-{{n['id']}}">Полити</a>
-                    <a href="#" class="btn btn-primary stop-irrigation disabled" data-id={{n[ 'id']}} id="btn-stop-{{n['id']}}">Зупинити</a>
-                    <span class="status-span">В системі помилка</span>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
         <hr style="margin-top: 2rem; margin-bottom: 2rem" />
         {% endfor %}
     </div>
