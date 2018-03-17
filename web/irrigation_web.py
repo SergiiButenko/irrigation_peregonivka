@@ -758,7 +758,7 @@ def retry_branch_on(branch_id, time_min):
             try:
                 if base_url is None:
                     response_off = garden_controller.branch_on(branch_id=branch_id, pump_enable=pump_enabled, branch_alert=time_min)
-                    logging.debug('response {0}'.format(response_off.text))
+                    logging.debug('response {0}'.format(response_off))
                     
                     logging.info('Response {0}'.format(response_off[branch_id]))
                     if (response_off[branch_id]['state'] != 1):
