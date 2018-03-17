@@ -166,7 +166,7 @@ def index():
 
 @app.route("/pumps")
 @cache.cached(timeout=CACHE_TIMEOUT)
-def index():
+def pumps():
     """Index page."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
