@@ -39,7 +39,8 @@
     {% for name, group in my_list.items() %}
     <h5>{{name}}</h5>
     <div class="row">
-        {% for n in group %} {% if n['is_pump'] == 0 %}
+        {% for n in group %} 
+        {% if n['is_pump'] == 0 %}
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-4">
             <div class="card card-irrigation" id="card-{{n['id']}}">
                 <div class="card-block">
@@ -77,10 +78,10 @@
                 </div>
             </div>
         </div>
-        {% endif %} 
+        {% endif %}
+        {% endfor %} 
     </div>
-      <hr style="margin-top: 2rem; margin-bottom: 2rem" /> {% endfor %}
-        {% endfor %}
+    <hr style="margin-top: 2rem; margin-bottom: 2rem" /> {% endfor %}
 </div>
 {% endblock %} {% block custom_scripts %}
 <script src="static/js/index_min.js"></script>
