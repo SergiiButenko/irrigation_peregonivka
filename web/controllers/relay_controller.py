@@ -24,11 +24,6 @@ def setup_lines():
         GPIO.setwarnings(False)
         lines = database.select(database.QUERY[mn() + '_lines'])             
         for row in lines:
-            if row[10] != 1:
-                key = row[0]
-            else:
-                key = 'pump'
-
             LINES[row[0]] = {'id': row[0],
                              's0': row[1],
                              's1': row[2],
