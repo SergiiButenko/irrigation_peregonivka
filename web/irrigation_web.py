@@ -878,7 +878,7 @@ def retry_branch_off(branch_id):
                         time.sleep(2)
                         continue
                     else:
-                        logging.info('Branch {0} is turned off by rule'.format(branch_id))
+                        logging.info('Branch {0} is turned off'.format(branch_id))
                         return response_off
                 else:
                     response_off = requests.get(url=base_url, params={'branch_id': branch_id})
@@ -889,7 +889,7 @@ def retry_branch_off(branch_id):
                         time.sleep(2)
                         continue
                     else:
-                        logging.info('Branch {0} is turned off by rule'.format(branch_id))
+                        logging.info('Branch {0} is turned off'.format(branch_id))
                         return response_off
             except Exception as e:
                 logging.error(e)
