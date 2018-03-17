@@ -21,6 +21,7 @@ EN_DISABLED = GPIO.HIGH
 def setup_lines():
     """Fill up settings array to save settings for branches."""
     try:
+        GPIO.setwarnings(False)
         lines = database.select(database.QUERY[mn() + '_lines'])             
         for row in lines:
             if row[10] != 1:
@@ -28,31 +29,30 @@ def setup_lines():
             else:
                 key = 'pump'
 
-            LINES[key] = {
-                            'id': row[0],
-                            's0': row[1],
-                            's1': row[2],
-                            's2': row[3],
-                            's3': row[4],
-                            'en': row[5],
-                            'pump_enabled': row[6],
-                            'pin': row[7],
-                            'multiplex': row[8],
-                            'relay_num': row[9],
-                            'is_pump': row[10],
-                            'is_except': row[11],
-                            'group_id': row[12],
-                            'pump_pin': row[13],
-                            'line_name': row[14],
-                            'group_name': row[15],
-                            'state': -1}
+            LINES[key] = {'id': row[0],
+                          's0': row[1],
+                          's1': row[2],
+                          's2': row[3],
+                          's3': row[4],
+                          'en': row[5],
+                          'pump_enabled': row[6],
+                          'pin': row[7],
+                          'multiplex': row[8],
+                          'relay_num': row[9],
+                          'is_pump': row[10],
+                          'is_except': row[11],
+                          'group_id': row[12],
+                          'pump_pin': row[13],
+                          'line_name': row[14],
+                          'group_name': row[15],
+                          'state': -1}
 
             if LINES[key]['multiplex'] == 1:
-                GPIO.setup(LINES[key]['s0'], GPIO.OUT)
-                GPIO.setup(LINES[key]['s1'], GPIO.OUT)
-                GPIO.setup(LINES[key]['s2'], GPIO.OUT)
-                GPIO.setup(LINES[key]['s3'], GPIO.OUT)
-                GPIO.setup(LINES[key]['en'], GPIO.OUT)
+                GPIO.setup(LINES[key]['s0'], GPIO.OUT, inital=GPIO.LOW)
+                GPIO.setup(LINES[key]['s1'], GPIO.OUT, inital=GPIO.LOW)
+                GPIO.setup(LINES[key]['s2'], GPIO.OUT, inital=GPIO.LOW)
+                GPIO.setup(LINES[key]['s3'], GPIO.OUT, inital=GPIO.LOW)
+                GPIO.setup(LINES[key]['en'], GPIO.OUT, inital=EN_DISABLED)
             else:
                 GPIO.setup(LINES[key]['pin'], GPIO.OUT)
 
@@ -60,6 +60,7 @@ def setup_lines():
                 GPIO.setup(LINES[key]['pump_pin'], GPIO.OUT)
 
         logging.info(LINES)
+        GPIO.setwarnings(True)
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
 
@@ -76,7 +77,6 @@ def rissing(channel):
         database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
 GPIO.cleanup()
 
 setup_lines()
@@ -127,12 +127,10 @@ def on_group(branch_id):
 
         relay = LINES[branch_id]['relay_num']
         _pins = detect_pin_state(relay)
-        pins = {
-                LINES[branch_id]['s0']: int(_pins[0]),
+        pins = {LINES[branch_id]['s0']: int(_pins[0]),
                 LINES[branch_id]['s1']: int(_pins[1]),
                 LINES[branch_id]['s2']: int(_pins[2]),
-                LINES[branch_id]['s3']: int(_pins[3])
-                }
+                LINES[branch_id]['s3']: int(_pins[3])}
 
         for pin, pin_state in pins.items():
             if pin_state == 1:
@@ -152,12 +150,10 @@ def off_group(branch_id):
         GPIO.output(en, EN_DISABLED)
         logging.info("EN pin disabled")
 
-        pins = {
-                LINES[branch_id]['s0']: 0,
+        pins = {LINES[branch_id]['s0']: 0,
                 LINES[branch_id]['s1']: 0,
                 LINES[branch_id]['s2']: 0,
-                LINES[branch_id]['s3']: 0
-                }
+                LINES[branch_id]['s3']: 0}
 
         for pin, pin_state in pins.items():
             off(pin)
