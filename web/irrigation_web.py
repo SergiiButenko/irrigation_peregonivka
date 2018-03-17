@@ -156,9 +156,9 @@ def index():
                 'default_time_wait': item['time_wait'],
                 'start_time': item['start_time']})
 
-    branch_list.sort(key=itemgetter('group_name'))
+    branch_list.sort(key=itemgetter('group_id'))
     grouped = {}
-    for key, group in groupby(branch_list, itemgetter('group_name')):
+    for key, group in groupby(branch_list, itemgetter('group_id')):
         grouped[key] = (list([thing for thing in group]))
 
     return render_template('index.html', my_list=grouped)
