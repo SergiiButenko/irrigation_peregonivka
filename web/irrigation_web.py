@@ -65,6 +65,8 @@ def get_settings():
             base_url = row[7]
             pump_enabled = row[8]
             is_pump = row[9]
+            group_id = row[10]
+            group_name = row[11]
 
             BRANCHES_SETTINGS[branch_id] = {
                 'branch_id': branch_id,
@@ -76,7 +78,9 @@ def get_settings():
                 'line_type': line_type,
                 'base_url': base_url,
                 'pump_enabled': True if pump_enabled == 1 else False,
-                'is_pump': is_pump
+                'is_pump': is_pump,
+                'group_id': group_id,
+                'group_name': group_name
             }
             logging.debug("{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id])))
     except Exception as e:
@@ -143,11 +147,19 @@ def index():
         if item is not None and item['line_type'] == 'irrigation' and item['is_pump'] != 1:
             branch_list.append({
                 'id': item['branch_id'],
+                'group_id': item['group_id'],
                 'name': item['name'],
                 'default_time': item['time'],
                 'default_interval': item['intervals'],
                 'default_time_wait': item['time_wait'],
                 'start_time': item['start_time']})
+
+    branch_list.sort(key=itemgetter('group_id'))
+    grouped = OrderedDict()
+    for key, group in groupby(BRANCHES_SETTINGS, itemgetter('group_id')):
+        grouped[key] = (list([thing for thing in group]))
+
+    logging.info(str(grouped))
     return render_template('index.html', my_list=branch_list)
 
 

@@ -110,8 +110,9 @@ QUERY['temperature_2'] = (
     "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')")
 
 QUERY['get_settings'] = (
-    "SELECT number, name, time, intervals, time_wait, start_time, "
-    "line_type, base_url, pump_enabled, is_pump FROM lines ORDER BY number")
+    "SELECT l.number, l.name, l.time, l.intervals, l.time_wait, l.start_time, "
+    "l.line_type, l.base_url, l.pump_enabled, l.is_pump, lg.id, lg.name "
+    "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number")
 
 QUERY['setup_lines_lines'] = (
     "SELECT l.number, lg.s0, lg.s1, lg.s2, lg.s3, "
