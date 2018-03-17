@@ -29,23 +29,23 @@ def setup_lines():
             else:
                 key = 'pump'
 
-            LINES[key] = {'id': row[0],
-                          's0': row[1],
-                          's1': row[2],
-                          's2': row[3],
-                          's3': row[4],
-                          'en': row[5],
-                          'pump_enabled': row[6],
-                          'pin': row[7],
-                          'multiplex': row[8],
-                          'relay_num': row[9],
-                          'is_pump': row[10],
-                          'is_except': row[11],
-                          'group_id': row[12],
-                          'pump_pin': row[13],
-                          'line_name': row[14],
-                          'group_name': row[15],
-                          'state': -1}
+            LINES[row[0]] = {'id': row[0],
+                             's0': row[1],
+                             's1': row[2],
+                             's2': row[3],
+                             's3': row[4],
+                             'en': row[5],
+                             'pump_enabled': row[6],
+                             'pin': row[7],
+                             'multiplex': row[8],
+                             'relay_num': row[9],
+                             'is_pump': row[10],
+                             'is_except': row[11],
+                             'group_id': row[12],
+                             'pump_pin': row[13],
+                             'line_name': row[14],
+                             'group_name': row[15],
+                             'state': -1}
 
             if LINES[key]['multiplex'] == 1:
                 GPIO.setup(LINES[key]['s0'], GPIO.OUT, initial=GPIO.LOW)
