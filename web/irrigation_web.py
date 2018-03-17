@@ -53,7 +53,6 @@ def get_settings():
     """Fill up settings array to save settings for branches."""
     try:
         branches = database.select(database.QUERY[mn()])
-        # QUERY['get_settings'] = "SELECT number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled from lines where line_type='power_outlet' order by number"
         for row in branches:
             branch_id = row[0]
             name = row[1]
