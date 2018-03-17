@@ -100,7 +100,6 @@ def on(pin):
     """Set pin to high state."""
     try:
         GPIO.output(pin, GPIO.HIGH)
-        logging.info("{0} pin is set to {1}".format(pin, GPIO.HIGH))
         # return GPIO.input(pin)
     except Exception as e:
         logging.error("Exception occured when turning on {0} pin. {1}".format(pin, e))
@@ -112,7 +111,6 @@ def off(pin):
     """Set pin to low state."""
     try:
         GPIO.output(pin, GPIO.LOW)
-        logging.info("{0} pin is set to {1}".format(pin, GPIO.LOW))
         # return GPIO.input(pin)
     except Exception as e:
         logging.error("Exception occured when turning off {0} pin. {1}".format(pin, e))
@@ -173,13 +171,11 @@ def check_if_no_active():
                 continue
 
             if line['multiplex'] == 0:
-                state = GPIO.input(line['pin'])
-                if state == GPIO.HIGH:
+                if GPIO.input(line['pin']) == GPIO.HIGH:
                     logging.info("branch {0} is active".format(line['id']))
                     return False
             else:
-                state = GPIO.input(line['en'])
-                if state == EN_ENABLED:
+                if GPIO.input(line['en']) == EN_ENABLED:
                     logging.info("EN pin of {0} group is active".format(line['group_id']))
                     return False
 
@@ -197,7 +193,7 @@ def form_pins_state():
         for line_id, line in LINES.items():
             if line['multiplex'] == 0:
                 line['state'] = GPIO.input(line['pin'])
-            elif GPIO.input(line['en']) == GPIO.LOW:
+            elif GPIO.input(line['en']) == EN_DISABLED:
                 line['state'] = 0
             else:
                 s0 = GPIO.input(line['s0'])
