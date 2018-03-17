@@ -162,7 +162,7 @@ def index():
         grouped[key] = (list([thing for thing in group]))
 
     logging.info(str(grouped))
-    return render_template('index.html', my_list=sorted(branch_list))
+    return render_template('index.html', my_list=branch_list)
 
 
 @app.route("/branch_settings")
