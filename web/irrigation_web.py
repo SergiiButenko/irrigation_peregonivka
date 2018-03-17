@@ -148,6 +148,7 @@ def index():
             branch_list.append({
                 'id': item['branch_id'],
                 'group_id': item['group_id'],
+                'group_name': item['group_name'],
                 'name': item['name'],
                 'default_time': item['time'],
                 'default_interval': item['intervals'],
@@ -155,9 +156,9 @@ def index():
                 'start_time': item['start_time']})
 
     logging.info(str(branch_list))
-    branch_list.sort(key=itemgetter('group_id'))
+    branch_list.sort(key=itemgetter('group_name'))
     grouped = OrderedDict()
-    for key, group in groupby(branch_list, itemgetter('group_id')):
+    for key, group in groupby(branch_list, itemgetter('group_name')):
         grouped[key] = (list([thing for thing in group]))
 
     logging.info(str(grouped))

@@ -37,7 +37,9 @@
 {% block container %}
 <div id="card-holder">
     <div class="row">
-        {% for n in my_list %}
+        {% for name, group in my list.iteritems()%}
+        <h5>{{name}}</h5>
+        {% for n in group %}
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-4">
             <div class="card card-irrigation" id="card-{{n['id']}}">
                 <div class="card-block">
@@ -61,6 +63,8 @@
                 </div>
             </div>
         </div>
+        {% endfor %}
+        <hr style="margin-top: 2rem; margin-bottom: 2rem" />
         {% endfor %}
     </div>
     <hr style="margin-top: 2rem; margin-bottom: 2rem" />
