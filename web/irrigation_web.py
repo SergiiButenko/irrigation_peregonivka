@@ -149,19 +149,18 @@ def index():
                 'id': item['branch_id'],
                 'group_id': item['group_id'],
                 'group_name': item['group_name'],
+                'is_pump': item['is_pump'],
                 'name': item['name'],
                 'default_time': item['time'],
                 'default_interval': item['intervals'],
                 'default_time_wait': item['time_wait'],
                 'start_time': item['start_time']})
 
-    logging.info(str(branch_list))
     branch_list.sort(key=itemgetter('group_name'))
     grouped = {}
     for key, group in groupby(branch_list, itemgetter('group_name')):
         grouped[key] = (list([thing for thing in group]))
 
-    logging.info(str(grouped))
     return render_template('index.html', my_list=grouped)
 
 
