@@ -119,17 +119,17 @@ def off(pin):
 def on_group(branch_id):
     try:
         en = LINES[branch_id]['en']
-        GPIO.output(en, GPIO.HIGH)
+        GPIO.output(en, GPIO.LOW)
         logging.info("EN pin {0} enabled".format(en))
 
         relay = LINES[branch_id]['relay_num']
         _pins = detect_pin_state(relay)
         pins = {
-        LINES[branch_id]['s0']: int(_pins[0]),
-        LINES[branch_id]['s1']: int(_pins[1]),
-        LINES[branch_id]['s2']: int(_pins[2]),
-        LINES[branch_id]['s3']: int(_pins[3])
-        }
+                LINES[branch_id]['s0']: int(_pins[0]),
+                LINES[branch_id]['s1']: int(_pins[1]),
+                LINES[branch_id]['s2']: int(_pins[2]),
+                LINES[branch_id]['s3']: int(_pins[3])
+                }
 
         for pin, pin_state in pins.items():
             if pin_state == 1:
@@ -146,15 +146,15 @@ def on_group(branch_id):
 def off_group(branch_id):
     try:
         en = LINES[branch_id]['en']
-        GPIO.output(en, GPIO.LOW)
+        GPIO.output(en, GPIO.HIGH)
         logging.info("EN pin disabled")
 
         pins = {
-        LINES[branch_id]['s0']: 0,
-        LINES[branch_id]['s1']: 0,
-        LINES[branch_id]['s2']: 0,
-        LINES[branch_id]['s3']: 0
-        }
+                LINES[branch_id]['s0']: 0,
+                LINES[branch_id]['s1']: 0,
+                LINES[branch_id]['s2']: 0,
+                LINES[branch_id]['s3']: 0
+                }
 
         for pin, pin_state in pins.items():
             off(pin)
@@ -179,7 +179,7 @@ def check_if_no_active():
                     return False
             else:
                 state = GPIO.input(line['en'])
-                if state == GPIO.HIGH:
+                if state == GPIO.LOW:
                     logging.info("EN pin of {0} group is active".format(line['group_id']))
                     return False
 
