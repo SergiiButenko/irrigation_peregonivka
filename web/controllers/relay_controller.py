@@ -120,10 +120,6 @@ def off(pin):
 
 def on_group(branch_id):
     try:
-        en = LINES[branch_id]['en']
-        GPIO.output(en, EN_ENABLED)
-        logging.info("EN pin {0} enabled".format(en))
-
         relay = LINES[branch_id]['relay_num']
         _pins = detect_pin_state(relay)
         pins = {LINES[branch_id]['s0']: int(_pins[0]),
@@ -138,6 +134,10 @@ def on_group(branch_id):
             else:
                 off(pin)
                 logging.info("pin {0} disabled".format(pin))
+
+        en = LINES[branch_id]['en']
+        GPIO.output(en, EN_ENABLED)
+        logging.info("EN pin {0} enabled".format(en))
     except Exception as e:
         logging.error("Can't turn on group")
         raise(e)
