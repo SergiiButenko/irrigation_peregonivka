@@ -154,6 +154,7 @@ def index():
                 'default_time_wait': item['time_wait'],
                 'start_time': item['start_time']})
 
+    logging.info(str(branch_list))
     branch_list.sort(key=itemgetter('group_id'))
     grouped = OrderedDict()
     for key, group in groupby(BRANCHES_SETTINGS, itemgetter('group_id')):
