@@ -195,7 +195,7 @@ def get_next_active_rule(line_id):
     if res is None:
         return None
 
-    logging.info("Next active rule retrieved for line id {0}".format(line_id))
+    logging.debug("Next active rule retrieved for line id {0}".format(line_id))
     return {'id': res[0], 'line_id': res[1], 'rule_id': res[2], 'user_friendly_name': res[6], 'timer': res[3], 'interval_id': res[4], 'time': res[5]}
 
 

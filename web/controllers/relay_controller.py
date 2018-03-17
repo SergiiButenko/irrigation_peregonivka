@@ -100,8 +100,7 @@ def on(pin):
     """Set pin to high state."""
     try:
         GPIO.output(pin, GPIO.HIGH)
-        time.sleep(1)
-        return GPIO.input(pin)
+        # return GPIO.input(pin)
     except Exception as e:
         logging.error("Exception occured when turning on {0} pin. {1}".format(pin, e))
         GPIO.cleanup()
@@ -112,7 +111,7 @@ def off(pin):
     """Set pin to low state."""
     try:
         GPIO.output(pin, GPIO.LOW)
-        return GPIO.input(pin)
+        # return GPIO.input(pin)
     except Exception as e:
         logging.error("Exception occured when turning off {0} pin. {1}".format(pin, e))
         GPIO.cleanup()
