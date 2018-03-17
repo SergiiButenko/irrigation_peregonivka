@@ -3,7 +3,7 @@ var server = location.protocol + '//' + location.hostname + (location.port ? ':'
 var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
 
-var branch = [];
+var branch = {};
 var branch_state = null;
 
 $(document).ready(function() {
