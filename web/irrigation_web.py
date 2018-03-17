@@ -157,10 +157,11 @@ def index():
 
     logging.info(str(branch_list))
     branch_list.sort(key=itemgetter('group_name'))
-    grouped = OrderedDict()
+    grouped = {}
     for key, group in groupby(branch_list, itemgetter('group_name')):
         grouped[key] = (list([thing for thing in group]))
 
+    grouped.sort(key=itemgetter('group_name'))
     logging.info(str(grouped))
     return render_template('index.html', my_list=branch_list)
 
