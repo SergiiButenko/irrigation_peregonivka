@@ -197,33 +197,69 @@ function toogle_card(element_id, branch) {
         $('#btn-start-with-options-' + element_id).css('display', 'inline-block').removeClass("hidden");
     }
 
-    var options = {
+    var options_datetime = {
         weekday: "long",
         month: "short",
         day: "numeric",
         hour: "2-digit",
-        minute: "2-digit",
-        timeZone: 'UTC'
+        minute: "2-digit"
     };
 
+    var options_time = {
+        hour: "2-digit",
+        minute: "2-digit"
+    };
+
+    var now = new Date();
+    if (branch['last_rule']) {
+        last_rule = convertDateToUTC(new Date(branch['last_rule']['timer']))
+        if (daydiff(now, last_rule) == 0) {
+            last_rule = "сьогодні, о " + last_rule.toLocaleTimeString("uk-UA", options_time);
+        } else if (daydiff(now, last_rule) == -1) {
+            last_rule = "вчора, о " + last_rule.toLocaleTimeString("uk-UA", options_time);
+        } else {
+            last_rule = last_rule.toLocaleTimeString("uk-UA", options_datetime);
+        }
+    } else {
+        last_rule = "немає запису"
+    }
+    $('#last-' + element_id).html("Останнє включення: " + last_rule)
+
     if (branch['next_rule'] && branch['next_rule']['rule_id'] == 1) {
-        next_rule = branch['next_rule']['timer']
-        next_rule = (new Date(next_rule)).toLocaleTimeString("uk-UA", options);
+        next_rule = convertDateToUTC(new Date(branch['next_rule']['timer']))
+        if (daydiff(now, next_rule) == 0) {
+            next_rule = "сьогодні, о " + next_rule.toLocaleTimeString("uk-UA", options_time);
+        } else if (daydiff(now, next_rule) == 1) {
+            next_rule = "завтра, о " + next_rule.toLocaleTimeString("uk-UA", options_time);
+        } else if (daydiff(now, next_rule) == 2) {
+            next_rule = "післязавтра, о " + next_rule.toLocaleTimeString("uk-UA", options_time);
+        } else {
+            next_rule = next_rule.toLocaleTimeString("uk-UA", options_datetime);
+        }
 
         $('#next-' + element_id).css('display', 'inline-block').removeClass("hidden");
-        $('#next-' + element_id).html("</br>Наступний запуск: " + next_rule);
+        $('#next-' + element_id).html("Наступне включення: " + next_rule);
 
-        $('#btn-cancel-' + element_id).data('id', branch['next_rule']['id'])
+        $('#btn-cancel-' + element_id).data('id', branch['next_rule']['interval_id'])
         $('#btn-cancel-' + element_id).css('display', 'inline-block').removeClass("hidden");
+
     } else if (branch['next_rule'] && branch['next_rule']['rule_id'] == 2) {
-        next_rule = branch['next_rule']['timer']
-        next_rule = (new Date(next_rule)).toLocaleTimeString("uk-UA", options);
+        next_rule = convertDateToUTC(new Date(branch['next_rule']['timer']))
+        if (daydiff(now, next_rule) == 0) {
+            next_rule = "сьогодні, о " + next_rule.toLocaleTimeString("uk-UA", options_time);
+        } else if (daydiff(now, next_rule) == 1) {
+            next_rule = "завтра, о " + next_rule.toLocaleTimeString("uk-UA", options_time);
+        } else if (daydiff(now, next_rule) == 2) {
+            next_rule = "післязавтра, о " + next_rule.toLocaleTimeString("uk-UA", options_time);
+        } else {
+            next_rule = next_rule.toLocaleTimeString("uk-UA", options_datetime);
+        }
 
         $('#next-' + element_id).css('display', 'inline-block').removeClass("hidden");
-        $('#next-' + element_id).html("</br>Освітлення вимкнеться: " + next_rule);
+        $('#next-' + element_id).html("Освітлення вимкнеться: " + next_rule);
         $('#btn-cancel-' + element_id).hide().addClass("hidden");
     } else {
-        $('#next-' + element_id).html("</br>Наступний запуск: немає запису");
+        $('#next-' + element_id).html("</br>Наступне включення: немає запису");
         $('#next-' + element_id).hide().addClass("hidden");
         $('#btn-cancel-' + element_id).hide().addClass("hidden");
     }
