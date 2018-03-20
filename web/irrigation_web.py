@@ -81,6 +81,12 @@ def get_settings():
                 'group_id': group_id,
                 'group_name': group_name
             }
+
+
+            
+            line_name = BRANCHES_SETTINGS[line_id]['line_name']
+            
+
             logging.debug("{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id])))
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
@@ -678,9 +684,9 @@ def form_responce_for_branches(payload):
         for line_id, line in payload.items():
             status = line['state']
             line_id = line['id']
-            line_group = line['group_id']
-            line_name = line['line_name']
-            group_name = line['group_name']
+            line_group = BRANCHES_SETTINGS[line_id]['group_id']
+            line_name = BRANCHES_SETTINGS[line_id]['name']
+            group_name = BRANCHES_SETTINGS[line_id]['group_name']
 
             last_rule = database.get_last_start_rule(line_id)
             next_rule = database.get_next_active_rule(line_id)
@@ -717,11 +723,6 @@ def get_moisture():
                         ])
                 grouped[key] = {}
                 grouped[key]['new'] = _list
-
-
-            # for key, value in grouped.items():
-            #     value['new'].sort(key=itemgetter(1))
-            #     logging.info(str(value['new']))
 
             for key, value in grouped.items():
                 new_list = list()
@@ -817,7 +818,8 @@ def retry_branch_on(branch_id, time_min):
                         time.sleep(2)
                         continue
                     else:
-                        return response_on
+                        r_dict = dict(id=branch_id, state=int(response_on[str(branch_id)]))
+                        return r_dict
             except Exception as e:
                 logging.error(e)
                 logging.error("Can't turn on {0} branch. Exception occured. {1} try out of 2".format(branch_id, attempt))
@@ -931,7 +933,8 @@ def retry_branch_off(branch_id):
                         time.sleep(2)
                         continue
                     else:
-                        return response_off
+                        r_dict = dict(id=branch_id, state=int(response_off[str(branch_id)]))
+                        return r_dict
             except Exception as e:
                 logging.error(e)
                 logging.error("Can't turn off {0} branch. Exception occured. {1} try out of 2".format(branch_id, attempt))
