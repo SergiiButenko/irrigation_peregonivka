@@ -841,7 +841,8 @@ def retry_branch_on(branch_id, time_min):
                         time.sleep(2)
                         continue
                     else:
-                        r_dict = dict(id=branch_id, state=int(response_on[str(relay)]))
+                        r_dict = {}
+                        r_dict[branch_id] = dict(id=branch_id, state=int(response_on[str(relay)]))
                         return r_dict
             except Exception as e:
                 logging.error(e)
@@ -956,7 +957,8 @@ def retry_branch_off(branch_id):
                         time.sleep(2)
                         continue
                     else:
-                        r_dict = dict(id=branch_id, state=int(response_off[str(relay)]))
+                        r_dict = {}
+                        r_dict[branch_id] = dict(id=branch_id, state=int(response_off[str(relay)]))
                         return r_dict
             except Exception as e:
                 logging.error(e)
