@@ -36,6 +36,7 @@ void handleNotFound(){
 }
 
 void setup(void){
+  Serial.println("setup");
   pinMode(led, OUTPUT);
   pinMode(r1, OUTPUT);
   pinMode(r2, OUTPUT);
@@ -47,6 +48,7 @@ void setup(void){
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   Serial.println("");
+  Serial.println("done");
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
@@ -71,25 +73,15 @@ void setup(void){
 
   server.on("/on", [](){
     String relay=server.arg("relay");
-    if (relay == "1"){
-      digitalWrite(r1, 1);
-    }
-    if (relay == "2"){
-      digitalWrite(r2, 1);
-    }
-    
+    if (relay == "1")  digitalWrite(r1, 1);
+    if (relay == "2")  digitalWrite(r2, 1);
     server.send(200, "text/plain", "on works as well. relay: " + relay);
   });
 
   server.on("/off", [](){
     String relay=server.arg("relay");
-    if (relay == "1"){
-      digitalWrite(r1, 0);
-    }
-    if (relay == "2"){
-      digitalWrite(r2, 0);
-    }
-    
+    if (relay == "1")  digitalWrite(r1, 0);
+    if (relay == "2")  digitalWrite(r2, 0);
     server.send(200, "text/plain", "off works as well. relay: " + relay);
   });
 
