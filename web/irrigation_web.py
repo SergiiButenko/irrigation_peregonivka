@@ -769,7 +769,7 @@ def lighting_status():
                 base_url = line['base_url']
                 response_status = requests.get(url='http://' + base_url + '/status', timeout=(5, 5))
                 response_status = json.loads(response_status.text)
-                
+
                 logging.info('Response {0}'.format(response_status[str(relay)]))
                 lines[line_id] = dict(id=line_id, state=int(response_status[str(relay)]))
             elif line['line_type'] == 'lighting' and line['base_url'] is None:
@@ -946,7 +946,7 @@ def retry_branch_off(branch_id):
                         return response_off
                 else:
                     relay = BRANCHES_SETTINGS[branch_id]['relay_num']
-                    response_off = requests.get(url='http://' + base_url + '/off', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
+                    response_off = requests.get(url='http://' + base_url + '/off', params={'relay': relay}, timeout=(5, 5))
                     logging.info('response {0}'.format(str(response_off.text)))
 
                     response_off = json.loads(response_off.text)
