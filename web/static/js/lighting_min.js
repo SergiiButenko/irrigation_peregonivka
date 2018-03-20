@@ -25,7 +25,7 @@ $(document).ready(function() {
 
     (function worker2() {
         $.ajax({
-            url: '/irrigation_lighting_status',
+            url: '/irrigation_status',
             beforeSend: function(xhr, opts) {
                 set_status_spinner();
 
@@ -161,7 +161,7 @@ function branch_off(index) {
 
 function update_branches_request() {
     $.ajax({
-        url: '/irrigation_lighting_status',
+        url: '/irrigation_status',
         success: function(data) {
             update_branches(data);
         },

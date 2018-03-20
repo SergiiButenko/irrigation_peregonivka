@@ -144,7 +144,7 @@ def index():
     """Index page."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['line_type'] == 'irrigation' and item['is_pump'] == 0:
+        if item['line_type'] == 'irrigation' and item['is_pump'] == 0:
             branch_list.append({
                 'id': item['branch_id'],
                 'group_id': item['group_id'],
@@ -170,7 +170,7 @@ def pumps():
     """Index page."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['line_type'] == 'irrigation' and item['is_pump'] == 1:
+        if item['line_type'] == 'irrigation' and item['is_pump'] == 1:
             branch_list.append({
                 'id': item['branch_id'],
                 'group_id': item['group_id'],
@@ -196,7 +196,7 @@ def branch_settings():
     """Return branch names."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['line_type'] == 'irrigation':
+        if item['line_type'] == 'irrigation':
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
@@ -214,7 +214,7 @@ def lighting():
     """Return branch names."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['line_type'] == 'lighting':
+        if item['line_type'] == 'lighting':
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
@@ -229,7 +229,7 @@ def lighting_settings():
     """Return branch names."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['line_type'] == 'lighting':
+        if item['line_type'] == 'lighting':
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
@@ -741,7 +741,7 @@ def get_moisture():
     return jsonify(data=grouped)
 
 
-@app.route('/irrigation_lighting_status', methods=['GET'])
+@app.route('/irrigation_status', methods=['GET'])
 def irrigation_status():
     """Return status of raspberry_pi relay."""
     try:
@@ -755,6 +755,30 @@ def irrigation_status():
         logging.error("Can't get Raspberri Pi pin status. Exception occured")
         abort(500)
 
+
+@app.route('/lighting_status', methods=['GET'])
+def lighting_status():
+    """Return status of lightingn relay."""
+    try:
+        lines = {}
+        for line_id, line in BRANCHES_SETTINGS.items():
+            if line['line_type'] == 'lighting' and line['base_url'] is not None:
+                relay = line['relay_num']
+                response_status = requests.get(url=base_url + '/status', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
+                response_status = json.loads(response_status.text)
+                logging.info('Response {0}'.format(response_status[str(relay)]))
+                lines[line_id] = dict(id=line_id, state=int(response_status[str(relay)]))
+            elif line['line_type'] == 'lighting' and line['base_url'] is None:
+                response_status = garden_controller.branch_status()
+                lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
+
+        arr = form_responce_for_branches(lines)
+        send_branch_status_message('branch_status', arr)
+        return jsonify(branches=arr)
+    except Exception as e:
+        logging.error(e)
+        logging.error("Can't get Raspberri Pi pin status. Exception occured")
+        abort(500)
 
 @app.route('/power_outlets_status', methods=['GET'])
 def arduino_small_house_status():
