@@ -951,7 +951,7 @@ def retry_branch_off(branch_id):
 
                     response_off = json.loads(response_off.text)
                     logging.info('Response {0}'.format(response_off[str(relay)]))
-                    if (response_off[str(relay)] != 1):
+                    if (response_off[str(relay)] != 0):
                         logging.error('Branch {0} cant be turned off.'.format(branch_id))
                         time.sleep(2)
                         continue
