@@ -769,6 +769,7 @@ def lighting_status():
                 base_url = line['base_url']
                 response_status = requests.get(url='http://' + base_url + '/status', timeout=(5, 5))
                 response_status = json.loads(response_status.text)
+                
                 logging.info('Response {0}'.format(response_status[str(relay)]))
                 lines[line_id] = dict(id=line_id, state=int(response_status[str(relay)]))
             elif line['line_type'] == 'lighting' and line['base_url'] is None:
@@ -834,8 +835,8 @@ def retry_branch_on(branch_id, time_min):
                     logging.info('response {0}'.format(str(response_on.text)))
 
                     response_on = json.loads(response_on.text)
-                    logging.info('Response {0}'.format(response_on[str(branch_id)]))
-                    if (response_on[str(branch_id)] != 1):
+                    logging.info('Response {0}'.format(response_on[str(relay)]))
+                    if (response_on[str(relay)] != 1):
                         logging.error('Branch {0} cant be turned on.'.format(branch_id))
                         time.sleep(2)
                         continue
@@ -949,8 +950,8 @@ def retry_branch_off(branch_id):
                     logging.info('response {0}'.format(str(response_off.text)))
 
                     response_off = json.loads(response_off.text)
-                    logging.info('Response {0}'.format(response_off[str(branch_id)]))
-                    if (response_off[str(branch_id)] != 1):
+                    logging.info('Response {0}'.format(response_off[str(relay)]))
+                    if (response_off[str(relay)] != 1):
                         logging.error('Branch {0} cant be turned off.'.format(branch_id))
                         time.sleep(2)
                         continue
