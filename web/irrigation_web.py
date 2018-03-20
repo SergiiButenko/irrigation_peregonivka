@@ -118,14 +118,14 @@ def send_message(channel, data):
         logging.error("Can't send message. Exeption occured")
 
 
-def send_branch_status_message(channel, data):
+def send_branch_status_message(data):
     """Convert data in order to send data object."""
-    send_message(channel, {'data': json.dumps({'branches': data}, default=date_handler)})
+    send_message('branch_status', {'data': json.dumps({'branches': data}, default=date_handler)})
 
 
 def send_ongoing_rule_message(channel, data):
     """Convert data in order to send data object."""
-    send_message(channel, {'data': json.dumps({'rule': data}, default=date_handler)})
+    send_message('edit_ongoing_rule', {'data': json.dumps({'rule': data}, default=date_handler)})
 
 
 def send_history_change_message():
@@ -377,7 +377,7 @@ def history():
 #         response_status = garden_controller.branch_status()
 
 #         arr = form_responce_for_branches(response_status)
-#         send_branch_status_message('branch_status', arr)
+#         send_branch_status_message(arr)
 #     except Exception as e:
 #         logging.error(e)
 #         logging.error("Can't send updated rules. Exception occured")
@@ -415,7 +415,7 @@ def cancel_rule():
         response_status = garden_controller.branch_status()
 
         arr = form_responce_for_branches(response_status)
-        send_branch_status_message('branch_status', arr)
+        send_branch_status_message(arr)
     except Exception as e:
         logging.error(e)
         logging.error("Can't get Raspberri Pi pin status. Exception occured")
@@ -576,7 +576,7 @@ def add_ongoing_rule():
         response_status = garden_controller.branch_status()
 
         arr = form_responce_for_branches(response_status)
-        send_branch_status_message('branch_status', arr)
+        send_branch_status_message(arr)
     except Exception as e:
         logging.error(e)
         logging.error("Can't send updated rules. Exception occured")
@@ -639,7 +639,7 @@ def edit_ongoing_rule():
         # update_all_rules()
         logging.info("Ongoing rule modified. {0}".format(str(rule)))
 
-        send_ongoing_rule_message('edit_ongoing_rule', rule)
+        send_ongoing_rule_message(rule)
 
     send_history_change_message()
     return json.dumps({'status': 'OK'})
@@ -750,7 +750,7 @@ def irrigation_status():
         response_status = garden_controller.branch_status()
 
         arr = form_responce_for_branches(response_status)
-        send_branch_status_message('branch_status', arr)
+        send_branch_status_message(arr)
         return jsonify(branches=arr)
     except Exception as e:
         logging.error(e)
@@ -777,7 +777,7 @@ def lighting_status():
                 lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
 
         arr = form_responce_for_branches(lines)
-        send_branch_status_message('branch_status', arr)
+        send_branch_status_message(arr)
         return jsonify(branches=arr)
     except Exception as e:
         logging.error(e)
@@ -920,7 +920,7 @@ def activate_branch():
         logging.info("Branch '{0}' activated manually".format(branch_id))
 
     arr = form_responce_for_branches(response_arr)
-    send_branch_status_message('branch_status', arr)
+    send_branch_status_message(arr)
     send_history_change_message()
 
     return jsonify(branches=arr)
@@ -1006,7 +1006,7 @@ def deactivate_branch():
         logging.info('No new entries is added to database.')
 
     arr = form_responce_for_branches(response_off)
-    send_branch_status_message('branch_status', arr)
+    send_branch_status_message(arr)
     send_history_change_message()
 
     return jsonify(branches=arr)
