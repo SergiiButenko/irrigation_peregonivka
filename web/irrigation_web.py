@@ -795,28 +795,29 @@ def retry_branch_on(branch_id, time_min):
         for attempt in range(2):
             try:
                 if base_url is None:
-                    response_off = garden_controller.branch_on(branch_id=branch_id, pump_enable=pump_enabled, branch_alert=time_min)
-                    logging.debug('response {0}'.format(response_off))
-                    
-                    logging.info('Response {0}'.format(response_off[branch_id]))
-                    if (response_off[branch_id]['state'] != 1):
-                        logging.error('Branch {0} cant be turned on. response {1}'.format(branch_id, str(response_off)))
+                    response_on = garden_controller.branch_on(branch_id=branch_id, pump_enable=pump_enabled, branch_alert=time_min)
+                    logging.debug('response {0}'.format(response_on))
+
+                    logging.info('Response {0}'.format(response_on[branch_id]))
+                    if (response_on[branch_id]['state'] != 1):
+                        logging.error('Branch {0} cant be turned on. response {1}'.format(branch_id, str(response_on)))
                         time.sleep(2)
                         continue
                     else:
-                        return response_off
+                        return response_on
                 else:
-                    response_off = requests.get(url=base_url, params={'branch_id': branch_id, 'branch_alert': time_min}, timeout=(5, 5))
-                    logging.debug('response {0}'.format(str(response_off.text)))
-                    
-                    response_off = json.loads(response_off.text)
-                    logging.info('Response {0}'.format(response_off[branch_id]))
-                    if (response_off[branch_id]['state'] != 0):
+                    relay = BRANCHES_SETTINGS[branch_id]['relay_num']
+                    response_on = requests.get(url=base_url + '/on', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
+                    logging.info('response {0}'.format(str(response_on.text)))
+
+                    response_on = json.loads(response_on.text)
+                    logging.info('Response {0}'.format(response_on[str(branch_id)]))
+                    if (response_on[str(branch_id)] != 1):
                         logging.error('Branch {0} cant be turned on.'.format(branch_id))
                         time.sleep(2)
                         continue
                     else:
-                        return response_off
+                        return response_on
             except Exception as e:
                 logging.error(e)
                 logging.error("Can't turn on {0} branch. Exception occured. {1} try out of 2".format(branch_id, attempt))
@@ -919,15 +920,17 @@ def retry_branch_off(branch_id):
                         logging.info('Branch {0} is turned off'.format(branch_id))
                         return response_off
                 else:
-                    response_off = requests.get(url=base_url, params={'branch_id': branch_id})
-                    logging.info('response {0}'.format(str(response_off)))
+                    relay = BRANCHES_SETTINGS[branch_id]['relay_num']
+                    response_off = requests.get(url=base_url + '/off', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
+                    logging.info('response {0}'.format(str(response_off.text)))
 
-                    if (response_off[branch_id]['state'] != 0):
-                        logging.error('Branch {0} cant be turned off. response {1}'.format(branch_id, response_off))
+                    response_off = json.loads(response_off.text)
+                    logging.info('Response {0}'.format(response_off[str(branch_id)]))
+                    if (response_off[str(branch_id)] != 1):
+                        logging.error('Branch {0} cant be turned off.'.format(branch_id))
                         time.sleep(2)
                         continue
                     else:
-                        logging.info('Branch {0} is turned off'.format(branch_id))
                         return response_off
             except Exception as e:
                 logging.error(e)
