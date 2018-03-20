@@ -44,7 +44,7 @@ def setup_lines():
                              'base_url': row[16],
                              'state': -1}
             
-            if LINES[key]['base_url'] is None:
+            if LINES[key]['base_url'] is not None:
                 continue
 
             if LINES[key]['multiplex'] == 1:
