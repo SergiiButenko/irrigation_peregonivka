@@ -767,7 +767,7 @@ def lighting_status():
             if line['line_type'] == 'lighting' and line['base_url'] is not None:
                 relay = line['relay_num']
                 base_url = line['base_url']
-                response_status = requests.get(url=base_url + '/status', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
+                response_status = requests.get(url=base_url + '/status', timeout=(5, 5))
                 response_status = json.loads(response_status.text)
                 logging.info('Response {0}'.format(response_status[str(relay)]))
                 lines[line_id] = dict(id=line_id, state=int(response_status[str(relay)]))
