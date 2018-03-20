@@ -25,6 +25,10 @@ def setup_lines():
         lines = database.select(database.QUERY[mn() + '_lines'])             
         for row in lines:
             key = row[0]
+
+            if row[16] is not None:
+                continue
+
             LINES[key] = {'id': row[0],
                              's0': row[1],
                              's1': row[2],
@@ -41,11 +45,7 @@ def setup_lines():
                              'pump_pin': row[13],
                              'line_name': row[14],
                              'group_name': row[15],
-                             'base_url': row[16],
                              'state': -1}
-            
-            if LINES[key]['base_url'] is not None:
-                continue
 
             if LINES[key]['multiplex'] == 1:
                 GPIO.setup(LINES[key]['s0'], GPIO.OUT, initial=GPIO.LOW)
