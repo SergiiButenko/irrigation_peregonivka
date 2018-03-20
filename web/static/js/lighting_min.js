@@ -25,7 +25,7 @@ $(document).ready(function() {
 
     (function worker2() {
         $.ajax({
-            url: '/irrigation_status',
+            url: '/lighting_status',
             beforeSend: function(xhr, opts) {
                 set_status_spinner();
 
