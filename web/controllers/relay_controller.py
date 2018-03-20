@@ -41,7 +41,11 @@ def setup_lines():
                              'pump_pin': row[13],
                              'line_name': row[14],
                              'group_name': row[15],
+                             'base_url': row[16],
                              'state': -1}
+            
+            if LINES[key]['base_url'] is None:
+                continue
 
             if LINES[key]['multiplex'] == 1:
                 GPIO.setup(LINES[key]['s0'], GPIO.OUT, initial=GPIO.LOW)

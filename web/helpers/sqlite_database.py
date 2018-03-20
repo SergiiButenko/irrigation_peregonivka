@@ -117,7 +117,7 @@ QUERY['get_settings'] = (
 QUERY['setup_lines_lines'] = (
     "SELECT l.number, lg.s0, lg.s1, lg.s2, lg.s3, "
     "lg.en, l.pump_enabled, l.pin, lg.multiplex, l.relay_num, l.is_pump, l.is_except, "
-    "l.group_id, l.pump_pin, l.name, lg.name "
+    "l.group_id, l.pump_pin, l.name, lg.name, l.base_url "
     "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number")
 
 QUERY['enable_rule_cancel_interval'] = "UPDATE life SET state={1} WHERE state=1 AND interval_id='{0}'"
