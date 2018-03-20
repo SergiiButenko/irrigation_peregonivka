@@ -82,11 +82,6 @@ def get_settings():
                 'group_name': group_name
             }
 
-
-            
-            line_name = BRANCHES_SETTINGS[line_id]['line_name']
-            
-
             logging.debug("{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id])))
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
