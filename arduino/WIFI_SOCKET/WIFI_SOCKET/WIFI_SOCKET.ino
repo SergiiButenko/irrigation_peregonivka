@@ -9,8 +9,8 @@ const char* password = "0660101327";
 ESP8266WebServer server(80);
 
 const int led = 13;
-const int r1 = 8;
-const int r2 = 7;
+const int r1 = D8;
+const int r2 = D7;
 
 void handleRoot() {
   digitalWrite(led, 1);
@@ -75,14 +75,20 @@ void setup(void){
     String relay=server.arg("relay");
     if (relay == "1")  digitalWrite(r1, 1);
     if (relay == "2")  digitalWrite(r2, 1);
-    server.send(200, "text/plain", "on works as well. relay: " + relay);
+    int r1_status = digitalRead(r1);
+    int r2_status = digitalRead(r2);
+    send_status();
   });
 
   server.on("/off", [](){
     String relay=server.arg("relay");
     if (relay == "1")  digitalWrite(r1, 0);
     if (relay == "2")  digitalWrite(r2, 0);
-    server.send(200, "text/plain", "off works as well. relay: " + relay);
+    send_status();
+  });
+
+  server.on("/status", [](){
+    send_status();
   });
 
   server.onNotFound(handleNotFound);
@@ -94,3 +100,10 @@ void setup(void){
 void loop(void){
   server.handleClient();
 }
+
+void send_status(){
+    int r1_status = digitalRead(r1);
+    int r2_status = digitalRead(r2);
+    server.send(200, "application/json", "{\"1:\"" + String(r1_status) + ", \"2\":" + String(r2_status) + "}");
+}
+
