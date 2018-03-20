@@ -66,6 +66,7 @@ def get_settings():
             is_pump = row[9]
             group_id = row[10]
             group_name = row[11]
+            relay_num = row[12]
 
             BRANCHES_SETTINGS[branch_id] = {
                 'branch_id': branch_id,
@@ -79,7 +80,8 @@ def get_settings():
                 'pump_enabled': True if pump_enabled == 1 else False,
                 'is_pump': is_pump,
                 'group_id': group_id,
-                'group_name': group_name
+                'group_name': group_name,
+                'relay_num': relay_num
             }
 
             logging.debug("{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id])))

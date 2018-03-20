@@ -111,7 +111,7 @@ QUERY['temperature_2'] = (
 
 QUERY['get_settings'] = (
     "SELECT l.number, l.name, l.time, l.intervals, l.time_wait, l.start_time, "
-    "l.line_type, l.base_url, l.pump_enabled, l.is_pump, lg.id, lg.name "
+    "l.line_type, l.base_url, l.pump_enabled, l.is_pump, lg.id, lg.name, l.relay_num "
     "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number")
 
 QUERY['setup_lines_lines'] = (
