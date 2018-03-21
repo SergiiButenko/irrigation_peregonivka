@@ -104,6 +104,7 @@ void loop(void){
 void send_status(){
     int r1_status = digitalRead(r1);
     int r2_status = digitalRead(r2);
-    server.send(200, "application/json", "{\"1:\"" + String(r1_status) + ", \"2\":" + String(r2_status) + "}");
+    server.send(200, "application/json", "{\"1\":
+    " + String(r1_status) + ", \"2\":" + String(r2_status) + "}");
 }
 
