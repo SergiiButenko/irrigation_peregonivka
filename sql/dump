@@ -15,6 +15,7 @@ CREATE TABLE life (
     FOREIGN KEY(state) REFERENCES state_of_rule(id),
     FOREIGN KEY(rule_id) REFERENCES type_of_rule(id)
 );
+CREATE INDEX life_index ON life (interval_id, ongoing_rule_id);
 
 CREATE TABLE state_of_rule (
     id INTEGER PRIMARY KEY,
@@ -61,6 +62,7 @@ CREATE TABLE moisture (
     line_id integer NOT NULL,
     value REAL NOT NULL DEFAULT 0
 );
+CREATE INDEX moisture_index ON moisture (line_id);
 
 CREATE TABLE line_groups (
 id INTEGER PRIMARY KEY,
