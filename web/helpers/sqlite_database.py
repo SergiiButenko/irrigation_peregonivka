@@ -138,7 +138,7 @@ def select(query, method='fetchall'):
     """Use this method in case you need to get info from database."""
     conn = None
     try:
-        conn = sqlite3.connect('/var/sqlite_db/smart_system', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        conn = sqlite3.connect('/var/sqlite_db/smart_system.sql', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
@@ -163,7 +163,7 @@ def update(query):
     conn = None
     lastrowid = -1
     try:
-        conn = sqlite3.connect('/var/sqlite_db/smart_system', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        conn = sqlite3.connect('/var/sqlite_db/smart_system.sql', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         cursor = conn.cursor()
         # execute our Query
