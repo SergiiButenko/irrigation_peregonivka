@@ -33,20 +33,19 @@ def moisture_sensors():
             # The read_adc function will get the value of the specified channel (0-7).
             logging.info('Reading from {0} line...'.format(x))
             avr = 0
-            for i in range(0, 11):
+            for i in range(11):
                 # 0 - 100%
                 # 1 - 0%
                 value = mcp.read_adc(x)
                 avr = avr + value
                 logging.info('   value {0}'.format(value))
-                time.sleep(1)
+                time.sleep(0.5)
 
             avr = round(avr / 10, 4)
             logging.info('Avr value {0}'.format(avr))
 
-            database.update(database.QUERY[mn()].format(x, avr))
+            database.update(database.QUERY[mn()].format(x+2, avr))
 
-            time.sleep(1)
     except Exception as e:
         logging.error(e)
 
