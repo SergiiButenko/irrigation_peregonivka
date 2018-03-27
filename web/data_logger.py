@@ -5,6 +5,8 @@ from helpers.common import *
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
+                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
 # Software SPI configuration:
 CLK  = 18
@@ -23,14 +25,14 @@ def inverse(val):
 def moisture_sensors():
     try:
         value = 0
-        for i in range(8):
+        for x in range(8):
             # The read_adc function will get the value of the specified channel (0-7).
             logging.info('Reading from {0} line...'.format(i))
             avr = 0
             for i in range(0, 11):
                 # 0 - 100%
                 # 1 - 0%
-                value = mcp.read_adc(i)
+                value = mcp.read_adc(x)
                 val = inverse(value)
                 avr = avr + val
                 logging.info('   value {0}'.format(val))
@@ -39,7 +41,7 @@ def moisture_sensors():
             avr = round(avr / 10, 4)
             logging.info('Avr value {0}'.format(avr))
 
-            database.update(database.QUERY[mn()].format(i, avr))
+            database.update(database.QUERY[mn()].format(x, avr))
 
             time.sleep(1)
     except Exception as e:
