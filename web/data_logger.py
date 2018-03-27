@@ -36,7 +36,7 @@ def moisture_sensors():
             for i in range(11):
                 # 0 - 100%
                 # 1 - 0%
-                value = mcp.read_adc(x)
+                value = (100 * mcp.read_adc(x)) / 1023
                 avr = avr + value
                 logging.info('   value {0}'.format(value))
                 time.sleep(0.5)
