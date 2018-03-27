@@ -27,7 +27,7 @@ def moisture_sensors():
         value = 0
         for x in range(8):
             # The read_adc function will get the value of the specified channel (0-7).
-            logging.info('Reading from {0} line...'.format(i))
+            logging.info('Reading from {0} line...'.format(x))
             avr = 0
             for i in range(0, 11):
                 # 0 - 100%
