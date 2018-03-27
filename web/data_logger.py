@@ -37,8 +37,9 @@ def moisture_sensors():
                 # 0 - 100%
                 # 1 - 0%
                 value = round( ((100 * mcp.read_adc(x)) / 1023), 2)
-                avr = avr + value
-                logging.info('   value {0}'.format(value))
+                val = inverse(value)
+                avr = avr + val
+                logging.info('   value {0}'.format(val))
                 time.sleep(0.5)
 
             avr = round(avr / 10, 4)
