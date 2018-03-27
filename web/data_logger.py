@@ -51,9 +51,9 @@ def moisture_sensors():
         logging.error(e)
 
 if __name__ == "__main__":
-    GPIO.output(pin, GPIO.HIGH)
+    GPIO.output(15, GPIO.HIGH)
     moisture_sensors()
-    GPIO.output(pin, GPIO.LOW)
+    GPIO.output(15, GPIO.LOW)
 
 
 # while True:
