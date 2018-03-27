@@ -4,6 +4,7 @@ from helpers import sqlite_database as database
 from helpers.common import *
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
+import RPi.GPIO as GPIO
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
@@ -14,6 +15,9 @@ MISO = 23
 MOSI = 24
 CS   = 25
 mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(15, GPIO.OUT, initial=GPIO.LOW)
 
 
 def inverse(val):
@@ -47,7 +51,9 @@ def moisture_sensors():
         logging.error(e)
 
 if __name__ == "__main__":
+    GPIO.output(pin, GPIO.HIGH)
     moisture_sensors()
+    GPIO.output(pin, GPIO.LOW)
 
 
 # while True:
