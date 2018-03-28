@@ -1,88 +1,68 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-from pyfirmata import ArduinoMega, util
-import serial.tools.list_ports
 import logging
 import time
 from helpers import sqlite_database as database
 from helpers.common import *
-ANALOG_PIN = 4
-
-PINS = list(range(12, 28))
+import Adafruit_GPIO.SPI as SPI
+import Adafruit_MCP3008
+import RPi.GPIO as GPIO
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
+                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
+# Software SPI configuration:
+CLK  = 18
+MISO = 23
+MOSI = 24
+CS   = 25
+mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
-def find_arduino(serial_number):
-    ports = list(serial.tools.list_ports.comports())
-    return ports[0][0]
-
-    # for pinfo in serial.tools.list_ports.comports():
-    #     if pinfo.serial_number == serial_number:
-    #         return serial.Serial(pinfo.device)
-    # raise IOError("Could not find an arduino - is it plugged in?")
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(15, GPIO.OUT, initial=GPIO.LOW)
 
 
 def inverse(val):
     logging.info('   not inversed value {0}'.format(val))
-    return round(1 - val, 2)
+    return round(100 - val, 2)
 
 
 # For get function name intro function. Usage mn(). Return string with current function name. Instead 'query' will be QUERY[mn()].format(....)
 def moisture_sensors():
     try:
-        logging.info('Finding arduino...')
-        serial_port = find_arduino(serial_number='556393131333516090E0')
-        logging.info('Serial port {0}'.format(serial_port))
-
-        logging.info('Connecting to arduino...')
-        board = ArduinoMega(serial_port)
-        logging.info('Connected')
-
-        logging.info('Starting thread...')
-        it = util.Iterator(board)
-        it.start()
-        time.sleep(5)
-        logging.info('Started')
-
-        for x in range(0, ANALOG_PIN):
-            logging.info('Enable reporting for {0} analog pin...'.format(x))
-            board.analog[x].enable_reporting()
-            time.sleep(1)
-            logging.info('Reading from {0} analog pin...'.format(x))
-
+        value = 0
+        for x in range(8):
+            # The read_adc function will get the value of the specified channel (0-7).
+            logging.info('Reading from {0} line...'.format(x))
             avr = 0
-            for i in range(0, 11):
+            for i in range(11):
                 # 0 - 100%
                 # 1 - 0%
-                val = inverse(board.analog[x].read())
+                value = round( ((100 * mcp.read_adc(x)) / 1023), 2)
+                val = inverse(value)
                 avr = avr + val
                 logging.info('   value {0}'.format(val))
-                time.sleep(1)
+                time.sleep(0.5)
 
             avr = round(avr / 10, 4)
             logging.info('Avr value {0}'.format(avr))
 
-            database.update(database.QUERY[mn()].format(PINS[x], avr))
-
-            time.sleep(1)
-            logging.info('Disable reporting for {0} analog pin...'.format(x))
-            board.analog[x].disable_reporting()
-            time.sleep(5)
-
-        time.sleep(10)
-        try:
-            logging.info('Stopping serial')
-            board.exit()
-            logging.info('done')
-        except Exception as e:
-            logging.warn('Expected TypeError occured. Trying one more time. {0}'.format(e))
-            board.exit()
-            logging.info('done')
+            database.update(database.QUERY[mn()].format(x+2, avr))
 
     except Exception as e:
         logging.error(e)
 
 if __name__ == "__main__":
+    GPIO.output(15, GPIO.HIGH)
     moisture_sensors()
+    GPIO.output(15, GPIO.LOW)
+
+
+# while True:
+#     # Read all the ADC channel values in a list.
+#     values = [0]*8
+#     for i in range(8):
+#         # The read_adc function will get the value of the specified channel (0-7).
+#         values[i] = mcp.read_adc(i)
+#     # Print the ADC values.
+#     print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
+#     # Pause for half a second.
+#     time.sleep(0.5)

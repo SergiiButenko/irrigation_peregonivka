@@ -715,7 +715,7 @@ def get_moisture():
                 _list = list()
                 for thing in group:
                     _list.append([
-                        round(thing[1] * 100, 2),
+                        round(thing[1], 2),
                         int(convert_to_datetime(thing[2]).strftime('%H'))
                         ])
                 grouped[key] = {}
