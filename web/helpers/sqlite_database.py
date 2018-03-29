@@ -160,6 +160,7 @@ QUERY['get_temperature'] = (
     "SELECT * from temperature where line_id = 10 and datetime >= datetime('now', 'localtime', '-{0} days');"
     )
 
+
 # executes query and returns fetch* result
 def select(query, method='fetchall'):
     """Use this method in case you need to get info from database."""
@@ -243,4 +244,11 @@ def get_rain_volume():
 
 def get_temperature():
     """Return volume of rain mm/m^2"""
-    return select(QUERY[mn()].format(TEMP_DAYS))
+    res = select(QUERY[mn()].format(TEMP_DAYS))
+
+    temp = {}
+    for row in res:
+        temp.setdefault(row[2], []).append([row[1], row[3], row[4]])
+
+    return temp
+
