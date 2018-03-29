@@ -773,7 +773,10 @@ def lighting_status():
         logging.info("responce: {0}".format(response_status))
         lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
 
+        logging.info("responce: {0}".format(lines))
         arr = form_responce_for_branches(lines)
+
+        logging.info("responce: {0}".format(arr))
         send_branch_status_message(arr)
         return jsonify(branches=arr)
     except Exception as e:
