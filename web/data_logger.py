@@ -5,6 +5,7 @@ from helpers.common import *
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 import RPi.GPIO as GPIO
+from controllers import remote_controller as remote_controller
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
@@ -27,6 +28,8 @@ def inverse(val):
 
 # For get function name intro function. Usage mn(). Return string with current function name. Instead 'query' will be QUERY[mn()].format(....)
 def moisture_sensors():
+    GPIO.output(15, GPIO.HIGH)
+    logging.info("Getting moisture:")
     try:
         value = 0
         for x in range(8):
@@ -46,15 +49,32 @@ def moisture_sensors():
             logging.info('Avr value {0}'.format(avr))
 
             database.update(database.QUERY[mn()].format(x+2, avr))
+    except Exception as e:
+        logging.error(e)
+    else:
+        logging.info("Done!")
+    finally:
+        GPIO.output(15, GPIO.LOW)
+
+
+def temp_sensors():
+    try:
+        logging.info("Getting temperature:")
+        response = requests.get(url='http://192.168.1.16/air_temperature', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
+        logging.info('response {0}'.format(str(response.text)))
+
+        response = json.loads(response_on.text)
 
     except Exception as e:
         logging.error(e)
+    else:
+        logging.info("Done!")
+    finally:
+        pass
 
 if __name__ == "__main__":
-    GPIO.output(15, GPIO.HIGH)
     moisture_sensors()
-    GPIO.output(15, GPIO.LOW)
-
+    #temp_sensors()
 
 # while True:
 #     # Read all the ADC channel values in a list.

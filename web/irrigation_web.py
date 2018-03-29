@@ -19,6 +19,7 @@ from itertools import groupby
 from operator import itemgetter
 from collections import OrderedDict
 from controllers import relay_controller as garden_controller
+from controllers import remote_controller as remote_controller
 from helpers import sqlite_database as database
 from helpers.redis import *
 from helpers.common import *
@@ -765,16 +766,11 @@ def lighting_status():
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
             if line['line_type'] == 'lighting' and line['base_url'] is not None:
-                relay = line['relay_num']
-                base_url = line['base_url']
-                response_status = requests.get(url='http://' + base_url + '/status', timeout=(5, 5))
-                response_status = json.loads(response_status.text)
-
-                logging.info('Response {0}'.format(response_status[str(relay)]))
-                lines[line_id] = dict(id=line_id, state=int(response_status[str(relay)]))
+                response_status = remote_controller.line_status()
             elif line['line_type'] == 'lighting' and line['base_url'] is None:
                 response_status = garden_controller.branch_status()
-                lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
+
+        lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
 
         arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
@@ -782,29 +778,6 @@ def lighting_status():
     except Exception as e:
         logging.error(e)
         logging.error("Can't get Raspberri Pi pin status. Exception occured")
-        abort(500)
-
-@app.route('/power_outlets_status', methods=['GET'])
-def arduino_small_house_status():
-    """Return status of arduino relay."""
-    try:
-        response_status_small_house = requests.get(url='http://butenko.asuscomm.com:5555/branch_status', timeout=(5, 5))
-        response_status_small_house.raise_for_status()
-
-        arr = form_responce_for_branches(response_status_small_house.text)
-        send_branch_status_message('power_outlet_status', arr)
-
-        response_status_big_house = requests.get(url='http://butenko.asuscomm.com:5555/branch_status', timeout=(5, 5))
-        response_status_big_house.raise_for_status()
-
-        arr2 = form_responce_for_branches(response_status_big_house.text)
-        send_branch_status_message('power_outlet_status', arr2)
-
-        return jsonify(branches=arr.contat(arr2))
-
-    except Exception as e:
-        logging.error(e)
-        logging.error("Can't get arduino small_house status. Exception occured")
         abort(500)
 
 
@@ -830,20 +803,16 @@ def retry_branch_on(branch_id, time_min):
                     else:
                         return response_on
                 else:
-                    relay = BRANCHES_SETTINGS[branch_id]['relay_num']
-                    response_on = requests.get(url='http://' + base_url + '/on', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
-                    logging.info('response {0}'.format(str(response_on.text)))
+                    response_on = remote_controller.branch_on(line_id=branch_id, line_alert=time_min)
+                    logging.debug('response {0}'.format(response_on))
 
-                    response_on = json.loads(response_on.text)
-                    logging.info('Response {0}'.format(response_on[str(relay)]))
-                    if (response_on[str(relay)] != 1):
+                    logging.info('Response {0}'.format(response_on[branch_id]))
+                    if (response_on[branch_id]['state'] != 1):
                         logging.error('Branch {0} cant be turned on.'.format(branch_id))
                         time.sleep(2)
                         continue
                     else:
-                        r_dict = {}
-                        r_dict[branch_id] = dict(id=branch_id, state=int(response_on[str(relay)]))
-                        return r_dict
+                        return response_on
             except Exception as e:
                 logging.error(e)
                 logging.error("Can't turn on {0} branch. Exception occured. {1} try out of 2".format(branch_id, attempt))
@@ -946,20 +915,16 @@ def retry_branch_off(branch_id):
                         logging.info('Branch {0} is turned off'.format(branch_id))
                         return response_off
                 else:
-                    relay = BRANCHES_SETTINGS[branch_id]['relay_num']
-                    response_off = requests.get(url='http://' + base_url + '/off', params={'relay': relay}, timeout=(5, 5))
-                    logging.info('response {0}'.format(str(response_off.text)))
+                    response_off = remote_controller.branch_off(line_id=branch_id)
+                    logging.debug('response {0}'.format(response_off))
 
-                    response_off = json.loads(response_off.text)
-                    logging.info('Response {0}'.format(response_off[str(relay)]))
-                    if (response_off[str(relay)] != 0):
-                        logging.error('Branch {0} cant be turned off.'.format(branch_id))
+                    logging.info('Response {0}'.format(response_off[branch_id]))
+                    if (response_off[branch_id]['state'] != 1):
+                        logging.error('Branch {0} cant be turned on.'.format(branch_id))
                         time.sleep(2)
                         continue
                     else:
-                        r_dict = {}
-                        r_dict[branch_id] = dict(id=branch_id, state=int(response_off[str(relay)]))
-                        return r_dict
+                        return response_off
             except Exception as e:
                 logging.error(e)
                 logging.error("Can't turn off {0} branch. Exception occured. {1} try out of 2".format(branch_id, attempt))

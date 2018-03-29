@@ -120,6 +120,12 @@ QUERY['setup_lines_lines'] = (
     "l.group_id, l.pump_pin, l.name, lg.name, l.base_url "
     "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number")
 
+QUERY['setup_lines_remote_control'] = (
+    "SELECT l.number, l.relay_num, l.is_pump, l.is_except, "
+    "l.group_id, l.name, lg.name, l.base_url "
+    "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number"
+    )
+
 QUERY['enable_rule_cancel_interval'] = "UPDATE life SET state={1} WHERE state=1 AND interval_id='{0}'"
 
 QUERY['rissing'] = "INSERT INTO rain (volume) VALUES ({0})"
