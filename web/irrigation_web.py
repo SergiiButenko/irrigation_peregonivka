@@ -769,14 +769,9 @@ def lighting_status():
                 response_status = remote_controller.line_status(line_id=line_id)
             elif line['line_type'] == 'lighting' and line['base_url'] is None:
                 response_status = garden_controller.branch_status()
+            lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
 
-        logging.info("responce: {0}".format(response_status))
-        lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
-
-        logging.info("responce: {0}".format(lines))
         arr = form_responce_for_branches(lines)
-
-        logging.info("responce: {0}".format(arr))
         send_branch_status_message(arr)
         return jsonify(branches=arr)
     except Exception as e:
