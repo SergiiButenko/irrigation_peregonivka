@@ -8,7 +8,7 @@ import RPi.GPIO as GPIO
 from controllers import remote_controller as remote_controller
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
 
 # Software SPI configuration:
 CLK  = 18
