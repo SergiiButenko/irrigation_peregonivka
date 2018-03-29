@@ -124,7 +124,14 @@ QUERY['setup_lines_remote_control'] = (
 QUERY['setup_sensors_datalogger']  = (
     "SELECT l.number, l.line_type, l.base_url "
     "FROM lines AS l "
-    "WHERE l.line_type like '%sensor'"
+    "WHERE l.line_type like '%sensor' "
+    "ORDER BY l.number"
+    )
+
+QUERY['setup_lines_datalogger']  = (
+    "SELECT l.number, l.moisture_id "
+    "FROM lines AS l "
+    "WHERE l.moisture_id is not NULL "
     "ORDER BY l.number"
     )
 
@@ -136,12 +143,6 @@ QUERY['temp_sensors_ground'] = (
     "INSERT into temperature (line_id, temp, hum) values ({0}, '{1}')"
     )
 
-QUERY['setup_lines_datalogger']  = (
-    "SELECT l.number, l.moisture_id "
-    "FROM lines AS l "
-    "WHERE l.moisture_id is not NULL"
-    "ORDER BY l.number"
-    )
 
 QUERY['enable_rule_cancel_interval'] = "UPDATE life SET state={1} WHERE state=1 AND interval_id='{0}'"
 
