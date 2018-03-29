@@ -73,10 +73,14 @@ s2 integer,
 s3 integer, 
 en integer, 
 multiplex integer default 1);
+
 INSERT INTO "line_groups" VALUES(1,'Насоси',NULL,NULL,NULL,NULL,NULL,0);
 INSERT INTO "line_groups" VALUES(2,'Полив з бочки',26,13,6,5,12,1);
 INSERT INTO "line_groups" VALUES(3,'Полив з системи',NULL,NULL,NULL,NULL,NULL,0);
 INSERT INTO "line_groups" VALUES(4,'Ліхтар',NULL,NULL,NULL,NULL,NULL,0);
+INSERT INTO "line_groups" VALUES(5,'Теплиця',NULL,NULL,NULL,NULL,NULL,0);
+INSERT INTO "line_groups" VALUES(5,'Теплиця Датчики',NULL,NULL,NULL,NULL,NULL,0);
+
 
 CREATE TABLE lines (
     id INTEGER PRIMARY KEY,
@@ -95,14 +99,28 @@ CREATE TABLE lines (
     is_pump integer not null default 0, 
     is_except integer not null default 0, 
     pump_pin integer,
+    moisture_id integer,
     FOREIGN KEY(group_id) REFERENCES line_groups(id));
 INSERT INTO "lines" VALUES(1,1,'Насос AL-KO',10,2,15,'2017-06-29 18:34:00','irrigation',NULL,0,NULL,16,1,1,1,NULL);
-INSERT INTO "lines" VALUES(2,2,'Огірки',10,2,15,'2017-06-29 19:00:00','irrigation',NULL,1,0,NULL,2,0,0,16);
-INSERT INTO "lines" VALUES(3,3,'Полуниця клумба',10,2,15,'2017-06-29 20:00:00','irrigation',NULL,1,1,NULL,2,0,0,16);
-INSERT INTO "lines" VALUES(4,4,'Полуниця альтанка',10,2,15,'2017-06-29 21:00:00','irrigation',NULL,1,2,NULL,2,0,0,16);
-INSERT INTO "lines" VALUES(5,5,'Томати',10,2,15,'2017-06-29 06:00:00','irrigation',NULL,1,3,NULL,2,0,0,16);
-INSERT INTO "lines" VALUES(6,6,'Малина',10,2,15,'2017-06-29 22:00:00','irrigation',NULL,1,4,NULL,2,0,0,16);
-INSERT INTO "lines" VALUES(7,7,'Ліхтар',300,1,1,'2017-06-29 18:34:00','lighting','192.168.1.16',0,1,NULL,4,0,1,NULL);
-INSERT INTO "lines" VALUES(8,8,'Кіпариси',10,2,15,'2017-06-29 19:30:00','irrigation',NULL,0,NULL,14,3,0,1,NULL);
-INSERT INTO "lines" VALUES(9,9,'Смородина',10,2,15,'2017-06-29 18:30:00','irrigation',NULL,0,NULL,15,3,0,1,NULL);
+INSERT INTO "lines" VALUES(2,2,'Огірки',10,2,15,'2017-06-29 19:00:00','irrigation',NULL,1,0,NULL,2,0,0,16,1);
+INSERT INTO "lines" VALUES(3,3,'Полуниця клумба',10,2,15,'2017-06-29 20:00:00','irrigation',NULL,1,1,NULL,2,0,0,16,2);
+INSERT INTO "lines" VALUES(4,4,'Полуниця альтанка',10,2,15,'2017-06-29 21:00:00','irrigation',NULL,1,2,NULL,2,0,0,16,3);
+INSERT INTO "lines" VALUES(5,5,'Томати',10,2,15,'2017-06-29 06:00:00','irrigation',NULL,1,3,NULL,2,0,0,16,4);
+INSERT INTO "lines" VALUES(6,6,'Малина',10,2,15,'2017-06-29 22:00:00','irrigation',NULL,1,4,NULL,2,0,0,16,5);
+INSERT INTO "lines" VALUES(7,7,'Ліхтар',300,1,1,'2017-06-29 18:34:00','lighting','192.168.1.16',0,1,NULL,4,0,1,NULL,NULL);
+INSERT INTO "lines" VALUES(8,8,'Кіпариси',10,2,15,'2017-06-29 19:30:00','irrigation',NULL,0,NULL,14,3,0,1,NULL,NULL);
+INSERT INTO "lines" VALUES(9,9,'Смородина',10,2,15,'2017-06-29 18:30:00','irrigation',NULL,0,NULL,15,3,0,1,NULL,NULL);
+INSERT INTO "lines" VALUES(10,10,'Сенсор Повітря',0,0,0,'2017-06-29 18:30:00','air_sensor','192.168.1.16',0,NULL,NULL,5,0,1,NULL,NULL);
+!!!INSERT INTO "lines" VALUES(10,10,'Сенсор Землі',0,0,0,'2017-06-29 18:30:00','ground_sensor','192.168.1.16',0,NULL,NULL,5,0,1,NULL,NULL);
+
+
+CREATE TABLE temperature (
+    id INTEGER PRIMARY KEY,
+    datetime time without time zone NOT NULL DEFAULT (datetime('now','localtime')),
+    line_id integer NOT NULL,
+    temp REAL NOT NULL DEFAULT 0
+    hum REAL NOT NULL DEFAULT 0
+);
+CREATE INDEX temperature_index ON temperature (line_id);
+
 COMMIT;

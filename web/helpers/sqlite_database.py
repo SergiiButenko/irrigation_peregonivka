@@ -104,11 +104,6 @@ QUERY['cancel_rule_2'] = "UPDATE life SET state = 4 WHERE interval_id = '{0}' AN
 QUERY['cancel_rule_select_ongoing_rule'] = "SELECT * FROM life where ongoing_rule_id='{0}' AND state = 1 AND timer>=datetime('now', 'localtime') "
 QUERY['cancel_rule_delete_ongoing_rule'] = "DELETE FROM ongoing_rules WHERE rule_id = '{0}'"
 
-QUERY['temperature_1'] = "SELECT * FROM temperature_statistics limit 1"
-QUERY['temperature_2'] = (
-    "INSERT INTO temperature_statistics (temperature_street, humidity_street, temperature_small_h_1_fl, humidity_small_h_1_fl, temperature_small_h_2_fl, humidity_small_h_2_fl, temperature_big_h_1_fl, humidity_big_h_1_fl, temperature_big_h_2_fl, humidity_big_h_2_fl) "
-    "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')")
-
 QUERY['get_settings'] = (
     "SELECT l.number, l.name, l.time, l.intervals, l.time_wait, l.start_time, "
     "l.line_type, l.base_url, l.pump_enabled, l.is_pump, lg.id, lg.name, l.relay_num "
@@ -124,6 +119,28 @@ QUERY['setup_lines_remote_control'] = (
     "SELECT l.number, l.relay_num, l.is_pump, l.is_except, "
     "l.group_id, l.name, lg.name, l.base_url "
     "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number"
+    )
+
+QUERY['setup_sensors_datalogger']  = (
+    "SELECT l.number, l.type, l.base_url "
+    "FROM lines AS l "
+    "WHERE type like '%sensor'"
+    "ORDER BY l.number"
+    )
+
+QUERY['temp_sensors_air'] = (
+    "INSERT into temperature (line_id, temp, hum) values ({0}, '{1}', '{2}')"
+    )
+
+QUERY['temp_sensors_ground'] = (
+    "INSERT into temperature (line_id, temp, hum) values ({0}, '{1}')"
+    )
+
+QUERY['setup_lines_datalogger']  = (
+    "SELECT l.number, l.moisture_id "
+    "FROM lines AS l "
+    "WHERE l.moisture_id is not NULL"
+    "ORDER BY l.number"
     )
 
 QUERY['enable_rule_cancel_interval'] = "UPDATE life SET state={1} WHERE state=1 AND interval_id='{0}'"

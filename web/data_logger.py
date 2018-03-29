@@ -21,6 +21,41 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(15, GPIO.OUT, initial=GPIO.LOW)
 
 
+SENSORS = {}
+LINES = {}
+
+def setup_sensors_datalogger():
+    try:
+        lines = database.select(database.QUERY[mn()])
+        for row in lines:
+            key = row[0]
+
+            if row[2].endswith('sensor') == False:
+                continue
+
+            SENSORS[key] = {'id': row[0],
+                          'type': row[1],
+                          'base_url': row[2]}
+
+        logging.info(SENSORS)
+    except Exception as e:
+        logging.error("Exceprion occured when trying to get settings for all sensors. {0}".format(e))
+
+
+def setup_lines_datalogger():
+    try:
+        lines = database.select(database.QUERY[mn()])
+        for row in lines:
+            key = row[0]
+
+            LINES[key] = {'id': row[0],
+                          'moisture_id': row[1]}
+
+        logging.info(SENSORS)
+    except Exception as e:
+        logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
+
+
 def inverse(val):
     logging.info('   not inversed value {0}'.format(val))
     return round(100 - val, 2)
@@ -32,14 +67,15 @@ def moisture_sensors():
     logging.info("Getting moisture:")
     try:
         value = 0
-        for x in range(8):
+        for line_id, line in LINES.items():
+            mcp_line = line['moisture_id']
             # The read_adc function will get the value of the specified channel (0-7).
-            logging.info('Reading from {0} line...'.format(x))
+            logging.info('Reading from {0} line...'.format(mcp_line))
             avr = 0
             for i in range(11):
                 # 0 - 100%
                 # 1 - 0%
-                value = round( ((100 * mcp.read_adc(x)) / 1023), 2)
+                value = round( ((100 * mcp.read_adc(mcp_line)) / 1023), 2)
                 val = inverse(value)
                 avr = avr + val
                 logging.info('   value {0}'.format(val))
@@ -48,7 +84,7 @@ def moisture_sensors():
             avr = round(avr / 10, 4)
             logging.info('Avr value {0}'.format(avr))
 
-            database.update(database.QUERY[mn()].format(x+2, avr))
+            database.update(database.QUERY[mn()].format(line_id, avr))
     except Exception as e:
         logging.error(e)
     else:
@@ -60,11 +96,16 @@ def moisture_sensors():
 def temp_sensors():
     try:
         logging.info("Getting temperature:")
-        response = requests.get(url='http://192.168.1.16/air_temperature', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
-        logging.info('response {0}'.format(str(response.text)))
-
-        response = json.loads(response_on.text)
-
+        for sensor_id, sensor in SENSORS.items():
+            if sensor['type'] == 'air_sensor':
+                response = remote_controller.air_sensor(sensor_id)
+                database.update(database.QUERY[mn() + '_air'].format(
+                                                            response['id'], 
+                                                            response['air_temp'], 
+                                                            response['air_hum']))
+            elif sensor['type'] == 'ground_sensor':
+                response = remote_controller.ground_sensor(sensor_id)
+                database.update(database.QUERY[mn() + '_ground'].format(response['id'], response['air_temp']))
     except Exception as e:
         logging.error(e)
     else:
@@ -74,7 +115,7 @@ def temp_sensors():
 
 if __name__ == "__main__":
     moisture_sensors()
-    #temp_sensors()
+    temp_sensors()
 
 # while True:
 #     # Read all the ADC channel values in a list.
