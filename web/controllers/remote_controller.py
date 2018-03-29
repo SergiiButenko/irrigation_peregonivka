@@ -21,8 +21,11 @@ def setup_lines_remote_control():
         for row in lines:
             key = row[0]
 
+            logging.info(row[7])
             if row[7] is None:
+                logging.info('skipped')
                 continue
+            logging.info('added')
 
             LINES[key] = {'id': row[0],
                              'relay_num': row[1],
