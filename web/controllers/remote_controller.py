@@ -47,6 +47,8 @@ def on(line_id):
         relay = LINES[line_id]['relay_num']
         base_url = LINES[line_id]['base_url']
         response_on = requests.get(url='http://' + base_url + '/on', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
+        response_on.raise_for_status()
+
         logging.info('response {0}'.format(str(response_on.text)))
 
         return json.loads(response_on.text)
@@ -62,6 +64,8 @@ def off(line_id):
         relay = LINES[line_id]['relay_num']
         base_url = LINES[line_id]['base_url']
         response_off = requests.get(url='http://' + base_url + '/off', params={'relay': relay}, timeout=(5, 5))
+        response_off.raise_for_status()
+
         logging.info('response {0}'.format(str(response_off.text)))
 
         return json.loads(response_off.text)
@@ -74,6 +78,8 @@ def air_s(line_id):
     try:
         base_url = LINES[line_id]['base_url']
         response_air = requests.get(url='http://' + base_url + '/air_status', timeout=(5, 5))
+        response_air.raise_for_status()
+
         logging.info('response {0}'.format(str(response_air.text)))
         res = json.loads(response_air.text)
 
@@ -89,6 +95,8 @@ def ground_s(line_id):
     try:
         base_url = LINES[line_id]['base_url']
         response_air = requests.get(url='http://' + base_url + '/ground_status', timeout=(5, 5))
+        response_air.raise_for_status()
+
         logging.info('response {0}'.format(str(response_air.text)))
         res = json.loads(response_air.text)
 
@@ -153,17 +161,19 @@ def line_status(line_id):
     try:
         base_url = LINES[line_id]['base_url']
         relay = LINES[line_id]['relay_num']
+        r_dict = {}
+
         response = requests.get(url='http://' + base_url + '/status', timeout=(5, 5))
+        response.raise_for_status()
+
         logging.info('response {0}'.format(str(response.text)))
 
         response = json.loads(response.text)
-
-        r_dict = {}
+        
         r_dict[line_id] = dict(id=line_id, state=int(response[str(relay)]))
-
         return r_dict
 
     except Exception as e:
         logging.error(e)
         logging.error("Can't get line status status. Exception occured")
-        return None
+        raise e
