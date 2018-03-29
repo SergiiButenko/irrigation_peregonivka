@@ -145,7 +145,7 @@ def air_sensor(line_id=None):
         logging.error('No line id')
         return None
 
-    return air_s()
+    return air_s(line_id=line_id)
 
 
 def ground_sensor(line_id=None):
@@ -153,7 +153,7 @@ def ground_sensor(line_id=None):
         logging.error('No line id')
         return None
 
-    return ground_s()
+    return ground_s(line_id=line_id)
 
 
 def line_status(line_id):
