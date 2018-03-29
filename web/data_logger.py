@@ -24,13 +24,14 @@ GPIO.setup(15, GPIO.OUT, initial=GPIO.LOW)
 SENSORS = {}
 LINES = {}
 
+
 def setup_sensors_datalogger():
     try:
         lines = database.select(database.QUERY[mn()])
         for row in lines:
             key = row[0]
 
-            if row[2].endswith('sensor') == False:
+            if row[2].endswith('sensor') is False:
                 continue
 
             SENSORS[key] = {'id': row[0],

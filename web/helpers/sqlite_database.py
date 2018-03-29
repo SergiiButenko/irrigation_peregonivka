@@ -124,7 +124,7 @@ QUERY['setup_lines_remote_control'] = (
 QUERY['setup_sensors_datalogger']  = (
     "SELECT l.number, l.type, l.base_url "
     "FROM lines AS l "
-    "WHERE type like '%sensor'"
+    "WHERE l.type like '%sensor'"
     "ORDER BY l.number"
     )
 
