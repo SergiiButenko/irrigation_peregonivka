@@ -32,9 +32,6 @@ def setup_sensors_datalogger():
         for row in lines:
             key = row[0]
 
-            if row[2].endswith('sensor') is False:
-                continue
-
             SENSORS[key] = {'id': row[0],
                           'type': row[1],
                           'base_url': row[2]}
