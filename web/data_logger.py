@@ -115,6 +115,9 @@ def temp_sensors():
         pass
 
 if __name__ == "__main__":
+    setup_sensors_datalogger()
+    setup_lines_datalogger()
+
     moisture_sensors()
     temp_sensors()
 
