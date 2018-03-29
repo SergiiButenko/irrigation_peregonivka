@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import logging
-import time
+import requests
+import json
 from itertools import groupby
 from operator import itemgetter
 from helpers import sqlite_database as database
