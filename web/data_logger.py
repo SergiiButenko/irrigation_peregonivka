@@ -101,12 +101,12 @@ def temp_sensors():
             if sensor['type'] == 'air_sensor':
                 response = remote_controller.air_sensor(sensor_id)
                 database.update(database.QUERY[mn() + '_air'].format(
-                                                            response['id'], 
-                                                            response['air_temp'], 
-                                                            response['air_hum']))
+                                                            response[sensor_id]['id'], 
+                                                            response[sensor_id]['air_temp'], 
+                                                            response[sensor_id]['air_hum']))
             elif sensor['type'] == 'ground_sensor':
                 response = remote_controller.ground_sensor(sensor_id)
-                database.update(database.QUERY[mn() + '_ground'].format(response['id'], response['air_temp']))
+                database.update(database.QUERY[mn() + '_ground'].format(response[sensor_id]['id'], response[sensor_id]['ground_temp']))
     except Exception as e:
         logging.error(e)
     else:
