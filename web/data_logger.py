@@ -28,6 +28,7 @@ LINES = {}
 def setup_sensors_datalogger():
     try:
         lines = database.select(database.QUERY[mn()])
+        logging.info(str(lines))
         for row in lines:
             key = row[0]
 
@@ -46,6 +47,7 @@ def setup_sensors_datalogger():
 def setup_lines_datalogger():
     try:
         lines = database.select(database.QUERY[mn()])
+        logging.info(str(lines))
         for row in lines:
             key = row[0]
 
