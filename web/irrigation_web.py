@@ -770,6 +770,7 @@ def lighting_status():
             elif line['line_type'] == 'lighting' and line['base_url'] is None:
                 response_status = garden_controller.branch_status()
 
+        logging.info("responce: {0}".format(response_status))
         lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
 
         arr = form_responce_for_branches(lines)
