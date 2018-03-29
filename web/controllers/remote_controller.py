@@ -21,11 +21,8 @@ def setup_lines_remote_control():
         for row in lines:
             key = row[0]
 
-            logging.info(row[7])
             if row[7] is None:
-                logging.info('skipped')
                 continue
-            logging.info('added')
 
             LINES[key] = {'id': row[0],
                              'relay_num': row[1],
@@ -80,7 +77,7 @@ def off(line_id):
 def air_s(line_id):
     try:
         base_url = LINES[line_id]['base_url']
-        response_air = requests.get(url='http://' + base_url + '/air_status', timeout=(5, 5))
+        response_air = requests.get(url='http://' + base_url + '/air_temperature', timeout=(5, 5))
         response_air.raise_for_status()
 
         logging.info('response {0}'.format(str(response_air.text)))
@@ -97,7 +94,7 @@ def air_s(line_id):
 def ground_s(line_id):
     try:
         base_url = LINES[line_id]['base_url']
-        response_air = requests.get(url='http://' + base_url + '/ground_status', timeout=(5, 5))
+        response_air = requests.get(url='http://' + base_url + '/ground_temperature', timeout=(5, 5))
         response_air.raise_for_status()
 
         logging.info('response {0}'.format(str(response_air.text)))
