@@ -157,7 +157,7 @@ QUERY['get_moisture'] = (
     "SELECT line_id, value, datetime FROM moisture WHERE datetime >= datetime('now', 'localtime', '-23 hours');")
 
 QUERY['get_temperature'] = (
-    "SELECT * from temperature where line_id = 10 and datetime <= datetime('now', 'localtime', '-{0} days');"
+    "SELECT * from temperature where line_id = 10 and datetime >= datetime('now', 'localtime', '-{0} days');"
     )
 
 # executes query and returns fetch* result
