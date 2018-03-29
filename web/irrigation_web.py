@@ -988,6 +988,16 @@ def weather():
             rain_status=rain_status)
 
 
+@app.route("/temperature")
+@cache.cached(timeout=CACHE_TIMEOUT)
+def temperature():
+    """Blablbal."""
+    temp = database.get_temperature()
+
+    return jsonify(
+        data=temp)
+
+
 @app.route("/.well-known/acme-challenge/caIBL2nKjk9nIX_Earqy9Qy4vttNvOcXA_TEgfNLcUk")
 def sensors2():
     """Blablbal."""

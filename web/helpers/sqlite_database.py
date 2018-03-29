@@ -236,3 +236,8 @@ def get_rain_volume():
         rain = 0
 
     return round(rain, 2)
+
+
+def get_temperature():
+    """Return volume of rain mm/m^2"""
+    return select(QUERY[mn()].format(TEMP_DAYS))
