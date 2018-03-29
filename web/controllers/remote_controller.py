@@ -46,7 +46,7 @@ def on(line_id):
     try:
         relay = LINES[line_id]['relay_num']
         base_url = LINES[line_id]['base_url']
-        response_on = requests.get(url='http://' + base_url + '/on', params={'relay': relay, 'relay_alert': time_min}, timeout=(5, 5))
+        response_on = requests.get(url='http://' + base_url + '/on', params={'relay': relay}, timeout=(5, 5))
         response_on.raise_for_status()
 
         logging.info('response {0}'.format(str(response_on.text)))
