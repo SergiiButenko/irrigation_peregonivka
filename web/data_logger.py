@@ -99,7 +99,7 @@ def temp_sensors():
             if sensor['type'] == 'air_sensor':
                 response = remote_controller.air_sensor(sensor_id)
                 logging.info("Air temp: {0}".format(str(response)))
-                logging.debug(mn() + '_air')
+                logging.info(mn() + '_air')
                 database.update(database.QUERY[mn() + '_air'].format(
                                                             response[sensor_id]['id'], 
                                                             response[sensor_id]['air_temp'], 
