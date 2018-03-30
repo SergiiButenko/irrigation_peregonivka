@@ -254,7 +254,7 @@ def get_temperature():
 
         grouped = {}
         for key, group in groupby(list_arr, itemgetter(0)):
-            grouped.setdefault(key, {}) = {
+            grouped[key] = {
             'sensor_id': key,
             'sensor_name': group[4],
             'sensor_type': group[5],
