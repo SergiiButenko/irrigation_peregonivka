@@ -6,8 +6,12 @@
 {% for id, group in my_list.items() %}
 <h5>{{group['values'][0][3]}}</h5>
 	{% if group['values'][0][4] == 'air_sensor' %}
-	<h6>Температура повітря: {{group['values'][0][1]}} C*</h6>
-	<h6>Вологість повітря: {{group['values'][0][2]}} %</h6>
+	<h7>Температура повітря: {{group['values'][0][1]}} C*</h7>
+	<h7>Вологість повітря: {{group['values'][0][2]}} %</h7>
+	{% endif %}
+
+	{% if group['values'][0][4] == 'ground_sensor' %}
+	<h7>Температура грунта: {{group['values'][0][1]}} C*</h7>
 	{% endif %}
 {% endfor %}
 
