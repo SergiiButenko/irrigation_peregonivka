@@ -991,17 +991,8 @@ def weather():
 def temperature():
     """Blablbal."""
     temp = database.get_temperature()
-
-    temp_data = {}
-    for k, v in temp.items():
-        temp_data[k] = {
-        'sensor_id': k,
-        'sensor_name': BRANCHES_SETTINGS[k]['name'],
-        'values': v
-        }
-
     return jsonify(
-        data=temp_data)
+        data=temp)
 
 
 @app.route("/.well-known/acme-challenge/caIBL2nKjk9nIX_Earqy9Qy4vttNvOcXA_TEgfNLcUk")
