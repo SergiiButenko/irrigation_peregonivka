@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block nav_item_title %}Теплиця{% endblock %} {% block modals %}
+{% endblock %}
+<!-- Custom styles for this template -->
+{% block container %}
+
+{% for name, group in my_list.items() %}
+<h5>{{group[0]['values'][3]}}</h5>
+	{% if group[0]['values'][4] == 'air_sensor' %}
+	<h6>Температура повітря: {{group[0]['values']|last[1]}}</h6>
+	<h6>Вологість повітря: {{group[0]['values']|last[2]}}</h6>
+	{% endif %}
+{% endfor %}
+
+{% endblock %} {% block custom_scripts %}
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="static/js/greenhouse.js"></script>
+{% endblock %}
