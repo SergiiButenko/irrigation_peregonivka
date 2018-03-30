@@ -193,6 +193,13 @@ def pumps():
     return render_template('pumps.html', my_list=grouped)
 
 
+@app.route("/greenhouse")
+@cache.cached(timeout=CACHE_TIMEOUT)
+def greenhouse():
+    """Index page."""
+    return render_template('greenhouse.html', my_list=database.get_temperature())
+
+
 @app.route("/branch_settings")
 @cache.cached(timeout=CACHE_TIMEOUT)
 def branch_settings():
