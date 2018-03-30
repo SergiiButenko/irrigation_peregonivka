@@ -101,7 +101,7 @@ CREATE TABLE lines (
     pump_pin integer,
     moisture_id integer,
     FOREIGN KEY(group_id) REFERENCES line_groups(id));
-INSERT INTO "lines" VALUES(1,1,'Насос AL-KO',10,2,15,'2017-06-29 18:34:00','irrigation',NULL,0,NULL,16,1,1,1,NULL);
+INSERT INTO "lines" VALUES(1,1,'Насос AL-KO',10,2,15,'2017-06-29 18:34:00','irrigation',NULL,0,NULL,16,1,1,1,NULL,NULL);
 INSERT INTO "lines" VALUES(2,2,'Огірки',10,2,15,'2017-06-29 19:00:00','irrigation',NULL,1,0,NULL,2,0,0,16,1);
 INSERT INTO "lines" VALUES(3,3,'Полуниця клумба',10,2,15,'2017-06-29 20:00:00','irrigation',NULL,1,1,NULL,2,0,0,16,2);
 INSERT INTO "lines" VALUES(4,4,'Полуниця альтанка',10,2,15,'2017-06-29 21:00:00','irrigation',NULL,1,2,NULL,2,0,0,16,3);
