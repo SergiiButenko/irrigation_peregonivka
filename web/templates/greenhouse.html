@@ -3,11 +3,11 @@
 <!-- Custom styles for this template -->
 {% block container %}
 
-{% for name, group in my_list.items() %}
-<h5>{{group[0]['values'][3]}}</h5>
-	{% if group[0]['values'][4] == 'air_sensor' %}
-	<h6>Температура повітря: {{group[0]['values'][0][1]}}</h6>
-	<h6>Вологість повітря: {{group[0]['values'][0][2]}}</h6>
+{% for id, group in my_list.items() %}
+<h5>{{group['values'][3]}}</h5>
+	{% if group['values'][4] == 'air_sensor' %}
+	<h6>Температура повітря: {{group['values'][0][1]}}</h6>
+	<h6>Вологість повітря: {{group['values'][0][2]}}</h6>
 	{% endif %}
 {% endfor %}
 
