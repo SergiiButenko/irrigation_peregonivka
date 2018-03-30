@@ -262,5 +262,5 @@ def get_temperature():
             }
 
         for s_id, sensor in grouped.items():
-            sensor[values].sort(key=itemgetter(5))
+            sensor['values'].sort(key=itemgetter(5))
     return grouped
