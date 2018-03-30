@@ -1001,7 +1001,7 @@ def temperature():
         }
 
     return jsonify(
-        data=temp)
+        data=temp_data)
 
 
 @app.route("/.well-known/acme-challenge/caIBL2nKjk9nIX_Earqy9Qy4vttNvOcXA_TEgfNLcUk")
