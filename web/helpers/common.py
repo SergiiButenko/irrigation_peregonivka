@@ -150,3 +150,7 @@ def form_date_description(date):
         return 'Завтра, ' + get_weekday(date)
 
     return "{0}, {1} {2}".format(get_weekday(date), date.strftime('%d'), get_month(date))
+
+
+def get_lines_by_type(lines, type):
+    return

@@ -717,8 +717,7 @@ def get_moisture():
                 for thing in group:
                     _list.append([
                         round(thing[1], 2),
-                        int(convert_to_datetime(thing[2]).strftime('%H'))
-                        ])
+                        int(convert_to_datetime(thing[2]).strftime('%H'))])
                 grouped[key] = {}
                 grouped[key]['new'] = _list
 
@@ -731,8 +730,7 @@ def get_moisture():
                         _sum += thing[0]
                         _len += 1
                     new_list.append(
-                        dict(hours=_key, val=round(_sum / _len, 2))
-                        )
+                        dict(hours=_key, val=round(_sum / _len, 2)))
                 grouped[key]['new'] = new_list
                 grouped[key]['base'] = 60
 
@@ -993,6 +991,14 @@ def weather():
 def temperature():
     """Blablbal."""
     temp = database.get_temperature()
+
+    temp_data = {}
+    for k, v in temp.items():
+        temp_data[k] = {
+        'sensor_id': k,
+        'sensor_name': BRANCHES_SETTINGS[k]['name'],
+        'values': v
+        }
 
     return jsonify(
         data=temp)
