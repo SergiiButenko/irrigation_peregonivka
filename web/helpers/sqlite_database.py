@@ -2,6 +2,9 @@ import sqlite3
 import logging
 from helpers.redis import *
 from helpers.common import *
+from itertools import groupby
+from operator import itemgetter
+
 
 QUERY = {}
 QUERY['get_next_active_rule'] = (
@@ -157,7 +160,7 @@ QUERY['get_moisture'] = (
     "SELECT line_id, value, datetime FROM moisture WHERE datetime >= datetime('now', 'localtime', '-23 hours');")
 
 QUERY['get_temperature'] = (
-    "SELECT * from temperature where line_id = 10 and datetime >= datetime('now', 'localtime', '-{0} days');"
+    "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} days');"
     )
 
 
@@ -244,11 +247,17 @@ def get_rain_volume():
 
 def get_temperature():
     """Return volume of rain mm/m^2"""
-    res = select(QUERY[mn()].format(TEMP_DAYS))
+    list_arr = select(QUERY[mn()].format(TEMP_DAYS))
 
-    temp = {}
-    for row in res:
-        temp.setdefault(row[2], []).append([row[1], row[3], row[4]])
+    if list_arr is not None:
+        list_arr.sort(key=itemgetter(0))
 
-    return temp
-
+        grouped = {}
+        for key, group in groupby(list_arr, itemgetter(0)):
+            grouped.setdefault(key, {}) = {
+            'sensor_id': key,
+            'sensor_name': group[4],
+            'sensor_type': group[5],
+            'values': [list(thing) for thing in group]
+            }
+    return grouped
