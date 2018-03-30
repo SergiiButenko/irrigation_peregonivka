@@ -143,7 +143,7 @@ QUERY['temp_sensors_air'] = (
     )
 
 QUERY['temp_sensors_ground'] = (
-    "INSERT into temperature (line_id, temp, hum) values ({0}, '{1}')"
+    "INSERT into temperature (line_id, temp) values ({0}, '{1}')"
     )
 
 
