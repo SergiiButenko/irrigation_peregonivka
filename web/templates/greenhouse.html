@@ -4,8 +4,8 @@
 {% block container %}
 
 {% for id, group in my_list.items() %}
-<h5>{{group['values'][3]}}</h5>
-	{% if group['values'][4] == 'air_sensor' %}
+<h5>{{group['values'][0][3]}}</h5>
+	{% if group['values'][0][4] == 'air_sensor' %}
 	<h6>Температура повітря: {{group['values'][0][1]}}</h6>
 	<h6>Вологість повітря: {{group['values'][0][2]}}</h6>
 	{% endif %}
