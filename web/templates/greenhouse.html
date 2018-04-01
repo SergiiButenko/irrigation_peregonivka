@@ -31,10 +31,12 @@
     {% for id, group in my_list['sensors'].items() %}
     <h5>{{group['values'][0][3]}}</h5> {% if group['values'][0][4] == 'air_sensor' %}
     <h7>Температура повітря: {{group['values'][0][1]}} C*</h7>
+    <h7>Час: {{group['values'][0][5].strftime('%H:%M%')}} C*</h7>
     <br>
     <h7>Вологість повітря: {{group['values'][0][2]}} %</h7>
     {% endif %} {% if group['values'][0][4] == 'ground_sensor' %}
     <h7>Температура повітря: {{group['values'][0][1]}} C*</h7>
+    <h7>Час: {{group['values'][0][5].strftime('%H:%M%')}} C*</h7>
     {% endif %}
     <hr style="margin-top: 0.5rem; margin-bottom: 2rem" /> {% endfor %}
     <div class="row">
