@@ -11,6 +11,10 @@ h5 {
     color: darkslategrey
 }
 
+h7 {
+    margin-left: 1.2em;
+}
+
 #no_card {
     position: relative;
     left: 22rem;
