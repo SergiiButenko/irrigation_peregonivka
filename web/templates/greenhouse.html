@@ -28,7 +28,7 @@
 <!-- Custom styles for this template -->
 {% block container %}
 <div id="card-holder">
-    {% for id, group in my_list['sensor'].items() %}
+    {% for id, group in my_list['sensors'].items() %}
     <h5>{{group['values'][0][3]}}</h5> {% if group['values'][0][4] == 'air_sensor' %}
     <h7>Температура повітря: {{group['values'][0][1]}} C*</h7>
     <br>
