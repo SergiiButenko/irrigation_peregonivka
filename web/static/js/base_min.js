@@ -165,6 +165,7 @@ var class_err = {
 function set_status_error() {
     $(".card-irrigation").addClass(class_err.class);
     $(".card-lighting").addClass(class_err.class);
+    $(".card-greenhouse").addClass(class_err.class);
 
 
     $(".btn").addClass('disabled');
