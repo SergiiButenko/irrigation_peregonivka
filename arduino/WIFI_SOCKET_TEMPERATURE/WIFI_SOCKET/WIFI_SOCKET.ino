@@ -18,15 +18,14 @@ DallasTemperature DS18B20(&oneWire);
 char temperatureCString[7];
 char temperatureFString[7];
 
-const char* ssid = "NotebookNet";
-const char* password = "0660101327";
+const char* ssid = "faza_2";
+const char* password = "Kobe_2016";
 
 ESP8266WebServer server(80);
 
 const int led = 13;
 const int r1 = D8;
 const int r2 = D7;
-const int photocellPin = A0;
 
 void handleRoot() {
   digitalWrite(led, 1);
@@ -56,7 +55,6 @@ void setup(void){
   pinMode(led, OUTPUT);
   pinMode(r1, OUTPUT);
   pinMode(r2, OUTPUT);
-  pinMode(photocellPin, INPUT);
 
   digitalWrite(led, 0);
   digitalWrite(r1, 0);
@@ -64,6 +62,15 @@ void setup(void){
   
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
+
+//  IPAddress ip(192, 168, 1, 101); // where xx is the desired IP Address
+//  IPAddress gateway(192, 168, 1, 1); // set gateway to match your network
+//  Serial.print(F("Setting static ip to : "));
+//  Serial.println(ip);
+//  IPAddress subnet(255, 255, 255, 0); // set subnet mask to match your
+//  WiFi.config(ip, gateway, subnet);
+  
+  
   WiFi.begin(ssid, password);
   Serial.println("");
   Serial.println("done");
@@ -121,13 +128,6 @@ void setup(void){
     delay(2000);
     getTemperature();
     server.send(200, "application/json", "{\"temp\":" + String(temperatureCString) + "}");
-  });
-
-  server.on("/light_status", [](){
-    delay(2000);
-    
-    photocellReading = analogRead(photocellPin);
-    server.send(200, "application/json", "{\"light\":" + String(photocellReading) + "}");
   });
 
   server.onNotFound(handleNotFound);

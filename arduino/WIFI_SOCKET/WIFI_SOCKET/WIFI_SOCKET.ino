@@ -58,6 +58,13 @@ void setup(void){
   
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
+//  IPAddress ip(192, 168, 1, 101); // where xx is the desired IP Address
+//  IPAddress gateway(192, 168, 1, 1); // set gateway to match your network
+//  Serial.print(F("Setting static ip to : "));
+//  Serial.println(ip);
+//  IPAddress subnet(255, 255, 255, 0); // set subnet mask to match your
+//  WiFi.config(ip, gateway, subnet);
+  
   WiFi.begin(ssid, password);
   Serial.println("");
   Serial.println("done");

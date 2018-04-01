@@ -161,7 +161,7 @@ function branch_off(index) {
 
 function update_branches_request() {
     $.ajax({
-        url: '/irrigation_status',
+        url: '/lighting_status',
         success: function(data) {
             update_branches(data);
         },

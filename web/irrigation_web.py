@@ -197,7 +197,27 @@ def pumps():
 @cache.cached(timeout=CACHE_TIMEOUT)
 def greenhouse():
     """Index page."""
-    return render_template('greenhouse.html', my_list=database.get_temperature())
+    my_list = {}
+    my_list['sensors'] = database.get_temperature()
+
+    branch_list = []
+    for item_id, item in BRANCHES_SETTINGS.items():
+        if item['line_type'] == 'greenhouse':
+            branch_list.append({
+                'id': item['branch_id'],
+                'group_id': item['group_id'],
+                'group_name': item['group_name'],
+                'is_pump': item['is_pump'],
+                'name': item['name'],
+                'default_time': item['time'],
+                'default_interval': item['intervals'],
+                'default_time_wait': item['time_wait'],
+                'start_time': item['start_time']})
+
+    branch_list.sort(key=itemgetter('id'))
+    my_list['lines'] = branch_list
+
+    return render_template('greenhouse.html', my_list=my_list)
 
 
 @app.route("/branch_settings")
@@ -248,28 +268,13 @@ def lighting_settings():
     return jsonify(list=branch_list)
 
 
-@app.route("/power_outlets")
+@app.route("/greenhouse_settings")
 @cache.cached(timeout=CACHE_TIMEOUT)
-def power_outlets():
+def greenhouse_settings():
     """Return branch names."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['line_type'] == 'power_outlet':
-            branch_list.append({
-                'id': item['branch_id'],
-                'name': item['name'],
-                'default_time': item['time']})
-
-    return render_template('power_outlets.html', my_list=branch_list)
-
-
-@app.route("/power_outlets_settings")
-@cache.cached(timeout=CACHE_TIMEOUT)
-def power_outlets_settings():
-    """Return branch names."""
-    branch_list = []
-    for item_id, item in BRANCHES_SETTINGS.items():
-        if item is not None and item['line_type'] == 'power_outlet':
+        if item['line_type'] == 'greenhouse':
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
@@ -774,6 +779,28 @@ def lighting_status():
                 response_status = remote_controller.line_status(line_id=line_id)
                 lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
             elif line['line_type'] == 'lighting' and line['base_url'] is None:
+                response_status = garden_controller.branch_status()
+                lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
+
+        arr = form_responce_for_branches(lines)
+        send_branch_status_message(arr)
+        return jsonify(branches=arr)
+    except Exception as e:
+        logging.error(e)
+        logging.error("Can't get Raspberri Pi pin status. Exception occured")
+        abort(500)
+
+
+@app.route('/greenhouse_status', methods=['GET'])
+def greenhouse_status():
+    """Return status of lightingn relay."""
+    try:
+        lines = {}
+        for line_id, line in BRANCHES_SETTINGS.items():
+            if line['line_type'] == 'greenhouse' and line['base_url'] is not None:
+                response_status = remote_controller.line_status(line_id=line_id)
+                lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
+            elif line['line_type'] == 'greenhouse' and line['base_url'] is None:
                 response_status = garden_controller.branch_status()
                 lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
 
