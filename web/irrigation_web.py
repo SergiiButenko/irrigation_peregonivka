@@ -18,8 +18,8 @@ import time
 from itertools import groupby
 from operator import itemgetter
 from collections import OrderedDict
-from controllers import relay_controller as garden_controller
-from controllers import remote_controller as remote_controller
+# from controllers import relay_controller as garden_controller
+# from controllers import remote_controller as remote_controller
 from helpers import sqlite_database as database
 from helpers.redis import *
 from helpers.common import *

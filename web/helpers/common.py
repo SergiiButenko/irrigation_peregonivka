@@ -2,8 +2,8 @@ import inspect
 import datetime
 import json
 from pytz import timezone
-from ..controllers import relay_controller as garden_controller
-from ..controllers import remote_controller as remote_controller
+from controllers import relay_controller as garden_controller
+from controllers import remote_controller as remote_controller
 # from helpers import sqlite_database as database
 
 
