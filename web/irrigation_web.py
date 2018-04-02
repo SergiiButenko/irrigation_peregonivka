@@ -873,7 +873,7 @@ def activate_branch():
         abort(500)
     # ============ check input params =======================
 
-    response_arr = relay_controller.branch_status()
+    response_arr = garden_controller.branch_status()
     if response_arr[branch_id]['state'] != 1:
         try:
             response_arr = retry_branch_on(branch_id=branch_id, time_min=time_min)
@@ -966,7 +966,7 @@ def deactivate_branch():
         logging.error("no 'mode' parameter passed")
         abort(500)
 
-    response_off = relay_controller.branch_status()
+    response_off = garden_controller.branch_status()
     if response_off[branch_id]['state'] != 0:
         try:
             response_off = retry_branch_off(branch_id=branch_id)
