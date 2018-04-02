@@ -873,42 +873,46 @@ def activate_branch():
         abort(500)
     # ============ check input params =======================
 
-    try:
-        response_arr = retry_branch_on(branch_id=branch_id, time_min=time_min)
-    except Exception as e:
-        logging.error(e)
-        logging.error("Can't turn on branch id={0}. Exception occured".format(branch_id))
-        abort(500)
+    response_arr = relay_controller.branch_status()
+    if response_arr[branch_id]['state'] != 1:
+        try:
+            response_arr = retry_branch_on(branch_id=branch_id, time_min=time_min)
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't turn on branch id={0}. Exception occured".format(branch_id))
+            abort(500)
 
-    # needs to be executed in both cases single and interval, but in in auto
-    if (mode != 'auto'):
-        interval_id = str(uuid.uuid4())
-        now = datetime.datetime.now()
-        stop_time = now + datetime.timedelta(minutes=time_min)
+        # needs to be executed in both cases single and interval, but in in auto
+        if (mode != 'auto'):
+            interval_id = str(uuid.uuid4())
+            now = datetime.datetime.now()
+            stop_time = now + datetime.timedelta(minutes=time_min)
 
-        database.update(database.QUERY[mn() + '_1'].format(branch_id, 1, 2, now.date(), now, interval_id, time_min))
-        lastid = database.update(database.QUERY[mn() + '_1'].format(branch_id, 2, 1, now.date(), stop_time, interval_id, 0))
-        logging.debug("lastid:{0}".format(lastid))
+            database.update(database.QUERY[mn() + '_1'].format(branch_id, 1, 2, now.date(), now, interval_id, time_min))
+            lastid = database.update(database.QUERY[mn() + '_1'].format(branch_id, 2, 1, now.date(), stop_time, interval_id, 0))
+            logging.debug("lastid:{0}".format(lastid))
 
-        res = database.select(database.QUERY[mn() + '_2'].format(lastid), 'fetchone')
-        logging.debug("res:{0}".format(res[0]))
+            res = database.select(database.QUERY[mn() + '_2'].format(lastid), 'fetchone')
+            logging.debug("res:{0}".format(res[0]))
 
-        set_next_rule_to_redis(branch_id, {'id': res[0], 'line_id': res[1], 'rule_id': res[2], 'user_friendly_name': res[6], 'timer': res[3], 'interval_id': res[4], 'time': res[5]})
-        logging.info("Rule '{0}' added".format(str(database.get_next_active_rule(branch_id))))
+            set_next_rule_to_redis(branch_id, {'id': res[0], 'line_id': res[1], 'rule_id': res[2], 'user_friendly_name': res[6], 'timer': res[3], 'interval_id': res[4], 'time': res[5]})
+            logging.info("Rule '{0}' added".format(str(database.get_next_active_rule(branch_id))))
 
-    if (mode == 'interval'):
-        # first interval is already added
-        for x in range(2, num_of_intervals + 1):
-            start_time = stop_time + datetime.timedelta(minutes=time_wait)
-            stop_time = start_time + datetime.timedelta(minutes=time_min)
-            database.update(database.QUERY[mn() + '_1'].format(branch_id, 1, 1, now.date(), start_time, interval_id, time_min))
-            database.update(database.QUERY[mn() + '_1'].format(branch_id, 2, 1, now.date(), stop_time, interval_id, 0))
-            logging.info("Start time: {0}. Stop time: {1} added to database".format(str(start_time), str(stop_time)))
+        if (mode == 'interval'):
+            # first interval is already added
+            for x in range(2, num_of_intervals + 1):
+                start_time = stop_time + datetime.timedelta(minutes=time_wait)
+                stop_time = start_time + datetime.timedelta(minutes=time_min)
+                database.update(database.QUERY[mn() + '_1'].format(branch_id, 1, 1, now.date(), start_time, interval_id, time_min))
+                database.update(database.QUERY[mn() + '_1'].format(branch_id, 2, 1, now.date(), stop_time, interval_id, 0))
+                logging.info("Start time: {0}. Stop time: {1} added to database".format(str(start_time), str(stop_time)))
 
-    if (mode == 'auto'):
-        logging.info("Branch '{0}' activated from rules service".format(branch_id))
+        if (mode == 'auto'):
+            logging.info("Branch '{0}' activated from rules service".format(branch_id))
+        else:
+            logging.info("Branch '{0}' activated manually".format(branch_id))
     else:
-        logging.info("Branch '{0}' activated manually".format(branch_id))
+        logging.info("Branch '{0}' already activated. No action performed".format(branch_id))
 
     arr = form_responce_for_branches(response_arr)
     send_branch_status_message(arr)
@@ -962,26 +966,30 @@ def deactivate_branch():
         logging.error("no 'mode' parameter passed")
         abort(500)
 
-    try:
-        response_off = retry_branch_off(branch_id=branch_id)
-    except Exception as e:
-        logging.error(e)
-        logging.error("Can't turn off branch id={0}. Exception occured".format(branch_id))
-        abort(500)
+    response_off = relay_controller.branch_status()
+    if response_off[branch_id]['state'] != 0:
+        try:
+            response_off = retry_branch_off(branch_id=branch_id)
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't turn off branch id={0}. Exception occured".format(branch_id))
+            abort(500)
 
-    if (mode == 'manually'):
-        now = datetime.datetime.now()
-        if get_next_rule_from_redis(branch_id) is not None:
-            database.update(database.QUERY[mn() + '_1'].format(get_next_rule_from_redis(branch_id)['interval_id']))
+        if (mode == 'manually'):
+            now = datetime.datetime.now()
+            if get_next_rule_from_redis(branch_id) is not None:
+                database.update(database.QUERY[mn() + '_1'].format(get_next_rule_from_redis(branch_id)['interval_id']))
+            else:
+                database.update(database.QUERY[mn() + '_2'].format(branch_id, 2, 4, now.date(), now, None))
+
+            set_next_rule_to_redis(branch_id, database.get_next_active_rule(branch_id))
+            logging.info("Rule '{0}' added".format(str(get_next_rule_from_redis(branch_id))))
+
+            logging.info("Branch '{0}' deactivated manually".format(branch_id))
         else:
-            database.update(database.QUERY[mn() + '_2'].format(branch_id, 2, 4, now.date(), now, None))
-
-        set_next_rule_to_redis(branch_id, database.get_next_active_rule(branch_id))
-        logging.info("Rule '{0}' added".format(str(get_next_rule_from_redis(branch_id))))
-
-        logging.info("Branch '{0}' deactivated manually".format(branch_id))
+            logging.info('No new entries is added to database.')
     else:
-        logging.info('No new entries is added to database.')
+        logging.info("Branch '{0}' already deactivated. No action performed".format(branch_id))
 
     arr = form_responce_for_branches(response_off)
     send_branch_status_message(arr)
