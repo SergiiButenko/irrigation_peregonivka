@@ -145,10 +145,13 @@ def enable_rule():
         for sensor_id, sensor in SENSORS.items():
             if sensor['type'] == 'air_sensor':
                 response = remote_controller.air_sensor(sensor_id)
-                logging.info("Air temp: {0}".format(str(response)))
                 current_temp = response[sensor_id]['air_temp']
+                logging.info("Air temp: {0}".format(current_temp))
                 line_id = response[sensor_id]['id']
-        logging.info("Done!")
+
+        if (current_temp > TEMP_MIN and current_temp < TEMP_MAX):
+            logging.info("Current temperature: {0}. Between MIN point: {1} and MAX point: {2}. No action required".format(current_temp, TEMP_MIN, TEMP_MAX))
+            return
 
         if (current_temp >= TEMP_MAX):
             logging.info("Current temperature: {0}. Higher than MAX: {1}. Turn off heating".format(current_temp, TEMP_MAX))
