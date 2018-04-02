@@ -820,7 +820,7 @@ def get_line_status(line_id):
     else:
         response = remote_controller.line_status(line_id=line_id)
 
-    return response[line_id]
+    return response
 
 
 def retry_branch_on(branch_id, time_min):
