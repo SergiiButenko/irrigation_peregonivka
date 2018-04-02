@@ -2,9 +2,6 @@ import inspect
 import datetime
 import json
 from pytz import timezone
-from controllers import relay_controller as garden_controller
-from controllers import remote_controller as remote_controller
-# from helpers import sqlite_database as database
 
 
 # For get function name intro function. Usage mn(). Return string with current function name. Instead 'query' will be database.QUERY[mn()].format(....)
@@ -156,13 +153,3 @@ def form_date_description(date):
         return 'Завтра, ' + get_weekday(date)
 
     return "{0}, {1} {2}".format(get_weekday(date), date.strftime('%d'), get_month(date))
-
-
-def get_line_status(line_id):
-    base_url = BRANCHES_SETTINGS[line_id]['base_url']
-    if base_url is None:
-        response = garden_controller.branch_status()
-    else:
-        response = remote_controller.line_status(line_id=line_id)
-
-    return response

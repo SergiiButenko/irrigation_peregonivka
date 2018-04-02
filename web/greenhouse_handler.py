@@ -8,6 +8,7 @@ import logging
 from helpers import sqlite_database as database
 from helpers.redis import *
 from helpers.common import *
+from controllers import relay_controller as garden_controller
 from controllers import remote_controller as remote_controller
 
 
@@ -32,6 +33,16 @@ def setup_sensors_datalogger():
         logging.info(SENSORS)
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all sensors. {0}".format(e))
+
+
+def get_line_status(line_id):
+    base_url = BRANCHES_SETTINGS[line_id]['base_url']
+    if base_url is None:
+        response = garden_controller.branch_status()
+    else:
+        response = remote_controller.line_status(line_id=line_id)
+
+    return response
 
 
 def branch_on(line_id, alert_time=7 * 24 * 60):
@@ -153,11 +164,21 @@ def enable_rule():
 
         if (current_temp >= TEMP_MAX):
             logging.info("Current temperature: {0}. Higher than MAX: {1}. Turn off heating".format(current_temp, TEMP_MAX))
-            branch_off(HEAT_ID)
+            state = get_line_status()
+            if state[HEAT_ID]['state'] != 0:
+                branch_off(HEAT_ID)
+            else:
+                logging.info("Current state: {0}. No action performed".format(state))
+
 
         if (current_temp <= TEMP_MIN):
             logging.info("Current temperature: {0}. Lower than MIN: {1}. Turn on heating".format(current_temp, TEMP_MIN))
-            branch_on(HEAT_ID)
+            state = get_line_status()
+            if state[HEAT_ID]['state'] != 1:
+                branch_on(HEAT_ID)
+            else:
+                logging.info("Current state: {0}. No action performed".format(state))
+                
         time.sleep(15 * 60)
 
 if __name__ == "__main__":

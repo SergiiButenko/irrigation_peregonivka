@@ -18,8 +18,8 @@ import time
 from itertools import groupby
 from operator import itemgetter
 from collections import OrderedDict
-# from controllers import relay_controller as garden_controller
-# from controllers import remote_controller as remote_controller
+from controllers import relay_controller as garden_controller
+from controllers import remote_controller as remote_controller
 from helpers import sqlite_database as database
 from helpers.redis import *
 from helpers.common import *
@@ -811,6 +811,16 @@ def greenhouse_status():
         logging.error(e)
         logging.error("Can't get Raspberri Pi pin status. Exception occured")
         abort(500)
+
+
+def get_line_status(line_id):
+    base_url = BRANCHES_SETTINGS[line_id]['base_url']
+    if base_url is None:
+        response = garden_controller.branch_status()
+    else:
+        response = remote_controller.line_status(line_id=line_id)
+
+    return response
 
 
 def retry_branch_on(branch_id, time_min):
