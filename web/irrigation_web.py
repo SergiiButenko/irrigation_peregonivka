@@ -818,7 +818,7 @@ def get_line_status(line_id):
     if base_url is None:
         response = garden_controller.branch_status()
     else:
-        response = remote_controller.line_status(line_id=branch_id)
+        response = remote_controller.line_status(line_id=line_id)
 
     return response[line_id]
 
