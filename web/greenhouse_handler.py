@@ -164,7 +164,7 @@ def enable_rule():
 
         if (current_temp >= TEMP_MAX):
             logging.info("Current temperature: {0}. Higher than MAX: {1}. Turn off heating".format(current_temp, TEMP_MAX))
-            state = get_line_status()
+            state = get_line_status(line_id=HEAT_ID)
             if state[HEAT_ID]['state'] != 0:
                 branch_off(HEAT_ID)
             else:
@@ -173,12 +173,12 @@ def enable_rule():
 
         if (current_temp <= TEMP_MIN):
             logging.info("Current temperature: {0}. Lower than MIN: {1}. Turn on heating".format(current_temp, TEMP_MIN))
-            state = get_line_status()
+            state = get_line_status(line_id=HEAT_ID)
             if state[HEAT_ID]['state'] != 1:
                 branch_on(HEAT_ID)
             else:
                 logging.info("Current state: {0}. No action performed".format(state))
-                
+
         time.sleep(15 * 60)
 
 if __name__ == "__main__":
