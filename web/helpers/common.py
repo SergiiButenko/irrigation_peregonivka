@@ -28,6 +28,9 @@ RAIN_MAX = 15  # mm per m^2
 RAIN_CONSTANT_VOLUME = 0.73  # 8.2  ml per 120cm^2 -- 0.069 mm per m^2
 
 TEMP_DAYS = 5
+TEMP_MIN = 10
+TEMP_MAX = 25
+
 
 START_RULE = 1
 STOP_RULE = 2
