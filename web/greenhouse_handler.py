@@ -140,8 +140,6 @@ def send_to_viber_bot(rule):
 
 def enable_rule():
     while True:
-        # logging.info("enable_rule_daemon heartbeat. RULES_FOR_BRANCHES: {0}".format(str(RULES_FOR_BRANCHES)))
-        time.sleep(15 * 60)
         logging.info("Getting temperature:")
         current_temp = -1
         for sensor_id, sensor in SENSORS.items():
@@ -159,7 +157,7 @@ def enable_rule():
         if (current_temp <= TEMP_MIN):
             logging.info("Current temperature: {0}. Higher than MAX: {1}. Turn off heating".format(current_temp, TEMP_MAX))
             # branch_on(line_id)
-
+        time.sleep(15 * 60)
 
 if __name__ == "__main__":
     enable_rule()
