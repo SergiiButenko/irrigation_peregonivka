@@ -813,6 +813,16 @@ def greenhouse_status():
         abort(500)
 
 
+def get_line_status(line_id):
+    base_url = BRANCHES_SETTINGS[line_id]['base_url']
+    if base_url is None:
+        response = garden_controller.branch_status()
+    else:
+        response = remote_controller.line_status(line_id=branch_id)
+
+    return response[line_id]
+
+
 def retry_branch_on(branch_id, time_min):
     """Retry turn on branch in case of any error."""
     base_url = BRANCHES_SETTINGS[branch_id]['base_url']
@@ -873,7 +883,7 @@ def activate_branch():
         abort(500)
     # ============ check input params =======================
 
-    response_arr = garden_controller.branch_status()
+    response_arr = get_line_status(branch_id)
     if response_arr[branch_id]['state'] != 1:
         try:
             response_arr = retry_branch_on(branch_id=branch_id, time_min=time_min)
@@ -912,7 +922,7 @@ def activate_branch():
         else:
             logging.info("Branch '{0}' activated manually".format(branch_id))
     else:
-        logging.info("Branch '{0}' already activated. No action performed".format(branch_id))
+        logging.info("Branch '{0}' already activated no action performed".format(branch_id))
 
     arr = form_responce_for_branches(response_arr)
     send_branch_status_message(arr)
@@ -966,7 +976,7 @@ def deactivate_branch():
         logging.error("no 'mode' parameter passed")
         abort(500)
 
-    response_off = garden_controller.branch_status()
+    response_arr = get_line_status(branch_id)
     if response_off[branch_id]['state'] != 0:
         try:
             response_off = retry_branch_off(branch_id=branch_id)

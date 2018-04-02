@@ -104,7 +104,7 @@ def on(pin):
     except Exception as e:
         logging.error("Exception occured when turning on {0} pin. {1}".format(pin, e))
         GPIO.cleanup()
-        raise(e)
+        raise e
 
 
 def off(pin):
@@ -115,7 +115,7 @@ def off(pin):
     except Exception as e:
         logging.error("Exception occured when turning off {0} pin. {1}".format(pin, e))
         GPIO.cleanup()
-        raise(e)
+        raise e
 
 
 def on_group(branch_id):
@@ -140,7 +140,7 @@ def on_group(branch_id):
         logging.info("EN pin {0} enabled".format(en))
     except Exception as e:
         logging.error("Can't turn on group")
-        raise(e)
+        raise e
 
 
 def off_group(branch_id):
@@ -159,7 +159,7 @@ def off_group(branch_id):
             logging.info("pin {0} disabled".format(pin))
 
     except Exception as e:
-        raise(e)
+        raise e
 
 
 def check_if_no_active():
@@ -184,7 +184,7 @@ def check_if_no_active():
     except Exception as e:
         logging.error("Exception occured when checking active {0}".format(e))
         GPIO.cleanup()
-        raise(e)
+        raise e
 
 
 def form_pins_state():
@@ -212,7 +212,7 @@ def form_pins_state():
     except Exception as e:
         logging.error("Exception occured during forming of branches status. {0}".format(e))
         GPIO.cleanup()
-        raise(e)
+        raise e
 
 
 def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
