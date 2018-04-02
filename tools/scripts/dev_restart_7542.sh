@@ -10,8 +10,8 @@ systemctl daemon-reload
 
 systemctl restart irrigation_7542.service
 systemctl restart rules_handler.service
+systemctl restart greenhouse_handler.service
+systemctl restart irrigation_data_logger.service
 #systemctl restart irrigation_viber_bot.service
-#systemctl restart irrigation_power_supply.service
-#systemctl restart irrigation_data_logger.service
 
 echo 'HEAD is now '$msg

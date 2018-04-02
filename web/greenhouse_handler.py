@@ -151,7 +151,6 @@ def enable_rule():
 
         if (current_temp > TEMP_MIN and current_temp < TEMP_MAX):
             logging.info("Current temperature: {0}. Between MIN point: {1} and MAX point: {2}. No action required".format(current_temp, TEMP_MIN, TEMP_MAX))
-            return
 
         if (current_temp >= TEMP_MAX):
             logging.info("Current temperature: {0}. Higher than MAX: {1}. Turn off heating".format(current_temp, TEMP_MAX))
