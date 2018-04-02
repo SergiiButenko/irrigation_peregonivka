@@ -36,15 +36,14 @@ def setup_sensors_datalogger():
         logging.error("Exceprion occured when trying to get settings for all sensors. {0}".format(e))
 
 
-def setup_lines_datalogger():
+def setup_lines_greenlines():
     try:
         lines = database.select(database.QUERY[mn()])
         for row in lines:
             key = row[0]
 
             LINES[key] = {'id': row[0],
-                          'moisture_id': row[1],
-                          'base_url': row[2]}
+                          'base_url': row[1]}
 
         logging.info(LINES)
     except Exception as e:
