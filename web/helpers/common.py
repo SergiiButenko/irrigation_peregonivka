@@ -30,6 +30,7 @@ RAIN_CONSTANT_VOLUME = 0.73  # 8.2  ml per 120cm^2 -- 0.069 mm per m^2
 TEMP_DAYS = 5
 TEMP_MIN = 14
 TEMP_MAX = 18
+HEAT_ID = 12
 
 
 START_RULE = 1
