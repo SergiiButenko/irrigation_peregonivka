@@ -141,7 +141,7 @@ def send_to_viber_bot(rule):
 def enable_rule():
     while True:
         logging.info("Getting temperature:")
-        current_temp = -1
+        current_temp = None
         for sensor_id, sensor in SENSORS.items():
             if sensor['type'] == 'air_sensor':
                 response = remote_controller.air_sensor(sensor_id)
@@ -160,4 +160,5 @@ def enable_rule():
         time.sleep(15 * 60)
 
 if __name__ == "__main__":
+    setup_sensors_datalogger()
     enable_rule()
