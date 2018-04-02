@@ -50,7 +50,7 @@ def setup_lines_datalogger():
             LINES[key] = {'id': row[0],
                           'moisture_id': row[1]}
 
-        logging.info(SENSORS)
+        logging.info(LINES)
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
 

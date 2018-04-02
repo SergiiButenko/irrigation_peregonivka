@@ -132,7 +132,7 @@ QUERY['setup_sensors_datalogger']  = (
     )
 
 QUERY['setup_lines_datalogger']  = (
-    "SELECT l.number, l.moisture_id "
+    "SELECT l.number, l.moisture_id, l.base_url "
     "FROM lines AS l "
     "WHERE l.moisture_id is not NULL "
     "ORDER BY l.number"

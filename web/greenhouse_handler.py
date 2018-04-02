@@ -17,6 +17,7 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)
 
 
 SENSORS = {}
+LINES = {}
 
 
 def setup_sensors_datalogger():
@@ -35,8 +36,23 @@ def setup_sensors_datalogger():
         logging.error("Exceprion occured when trying to get settings for all sensors. {0}".format(e))
 
 
+def setup_lines_datalogger():
+    try:
+        lines = database.select(database.QUERY[mn()])
+        for row in lines:
+            key = row[0]
+
+            LINES[key] = {'id': row[0],
+                          'moisture_id': row[1],
+                          'base_url': row[2]}
+
+        logging.info(LINES)
+    except Exception as e:
+        logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
+
+
 def get_line_status(line_id):
-    base_url = BRANCHES_SETTINGS[line_id]['base_url']
+    base_url = LINES[line_id]['base_url']
     if base_url is None:
         response = garden_controller.branch_status()
     else:
@@ -183,4 +199,5 @@ def enable_rule():
 
 if __name__ == "__main__":
     setup_sensors_datalogger()
+    setup_lines_datalogger()
     enable_rule()
