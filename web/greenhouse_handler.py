@@ -198,5 +198,5 @@ def enable_rule():
 
 if __name__ == "__main__":
     setup_sensors_datalogger()
-    setup_lines_datalogger()
+    setup_lines_greenlines()
     enable_rule()
