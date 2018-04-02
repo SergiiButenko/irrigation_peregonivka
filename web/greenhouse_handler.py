@@ -155,7 +155,7 @@ def enable_rule():
             # branch_off(line_id)
 
         if (current_temp <= TEMP_MIN):
-            logging.info("Current temperature: {0}. Higher than MAX: {1}. Turn off heating".format(current_temp, TEMP_MAX))
+            logging.info("Current temperature: {0}. Lower than MIN: {1}. Turn off heating".format(current_temp, TEMP_MIN))
             # branch_on(line_id)
         time.sleep(15 * 60)
 
