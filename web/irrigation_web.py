@@ -813,16 +813,6 @@ def greenhouse_status():
         abort(500)
 
 
-def get_line_status(line_id):
-    base_url = BRANCHES_SETTINGS[line_id]['base_url']
-    if base_url is None:
-        response = garden_controller.branch_status()
-    else:
-        response = remote_controller.line_status(line_id=line_id)
-
-    return response
-
-
 def retry_branch_on(branch_id, time_min):
     """Retry turn on branch in case of any error."""
     base_url = BRANCHES_SETTINGS[branch_id]['base_url']
