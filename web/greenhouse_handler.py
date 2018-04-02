@@ -34,7 +34,7 @@ def setup_sensors_datalogger():
         logging.error("Exceprion occured when trying to get settings for all sensors. {0}".format(e))
 
 
-def branch_on(line_id, alert_time):
+def branch_on(line_id, alert_time=7 * 24 * 60):
     """Blablbal."""
     try:
         for attempt in range(2):
