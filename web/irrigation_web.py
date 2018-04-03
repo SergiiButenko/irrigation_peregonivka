@@ -1066,6 +1066,7 @@ def set_settings():
     content = request.json['list']
     logging.info(content)
     database.set_app_settings(content)
+    get_settings()
     return json.dumps({'status': 'OK'})
 
 
