@@ -117,15 +117,15 @@ $(document).ready(function() {
 
     //Function to change settings
     $(".setup_greenhouse").click(function() {
-        $('#greenhouse_min_temp').val(18);
         $('#greenhouse_min_temp').val(14);
+        $('#greenhouse_max_temp').val(18);
 
         $('#greenhouse_settings_modal').modal('show');
     });
 
     $(".save-greenhouse_settings").click(function() {
         var min = $('#greenhouse_min_temp').val();
-        var max = $('#greenhouse_min_temp').val();
+        var max = $('#greenhouse_max_temp').val();
 
         console.log("MIN:" + min + "; MAX:" + max);
         $('#greenhouse_settings_modal').modal('hide');
