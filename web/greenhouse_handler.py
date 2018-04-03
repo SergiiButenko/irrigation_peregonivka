@@ -96,7 +96,7 @@ def branch_off(line_id):
     try:
         for attempt in range(2):
             try:
-                response = requests.get(url=BACKEND_IP + '/deactivate_branch', params={"id": line_id, 'mode': 'auto'}, timeout=(10, 10))
+                response = requests.get(url=BACKEND_IP + '/deactivate_branch', params={"id": line_id, 'mode': 'manually'}, timeout=(10, 10))
                 response.raise_for_status()
                 logging.debug('response {0}'.format(response.text))
 
