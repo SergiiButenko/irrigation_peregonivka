@@ -113,6 +113,26 @@ $(document).ready(function() {
     });
 
     $(".btn-start").click(function() {
+        if (settings['greenhouse_auto']['enabled'] == "1") {
+            var returnVal = confirm("Автоматичне керування увімкнено. \nВимкнути і перейти до ручного керування?");
+            if (returnVal == false)
+                return;
+
+            $.ajax({
+                url: '/set_settings',
+                type: "post",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(data) {
+                    settings = data['data'];
+                    console.log(settings);
+                    toggle_buttons();
+                }
+            });
+        }
+
+
         index = $(this).data('id');
         console.log(branch[index]['name'] + " will be activated on " + branch[index]['default_time'] + " minutes ");
         branch_on(index, branch[index]['default_time']);
@@ -120,6 +140,25 @@ $(document).ready(function() {
 
     //Function to stop greenhouse
     $(".stop-greenhouse").click(function() {
+        if (settings['greenhouse_auto']['enabled'] == "1") {
+            var returnVal = confirm("Автоматичне керування увімкнено. \nВимкнути і перейти до ручного керування?");
+            if (returnVal == false)
+                return;
+
+            $.ajax({
+                url: '/set_settings',
+                type: "post",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(data) {
+                    settings = data['data'];
+                    console.log(settings);
+                    toggle_buttons();
+                }
+            });
+        }
+
         index = $(this).data('id');
         console.log(branch[index]['name'] + " will be deactivated now");
         branch_off(index);
@@ -164,6 +203,10 @@ $(document).ready(function() {
 
 
     $(".greenhouse_auto_enable").click(function() {
+        var returnVal = confirm("Вимкнути автоматичне керування?");
+        if (returnVal == false)
+            return;
+
         var json = {
             'list': { 'greenhouse_auto': { 'enabled': '1' } }
         }
@@ -183,6 +226,10 @@ $(document).ready(function() {
     });
 
     $(".greenhouse_auto_disable").click(function() {
+        var returnVal = confirm("Вимкнути автоматичне керування?");
+        if (returnVal == false)
+            return;
+
         var json = {
             'list': { 'greenhouse_auto': { 'enabled': '0' } }
         }
@@ -198,10 +245,7 @@ $(document).ready(function() {
                 toggle_buttons();
             }
         });
-
     });
-
-
 });
 
 
@@ -209,11 +253,13 @@ function toggle_buttons() {
     if (settings['greenhouse_auto']['enabled'] == "1") {
         $('.greenhouse_auto_enable').hide().addClass("hidden");
         $('.greenhouse_auto_disable').css('display', 'inline-block').removeClass("hidden");
+        alert("автоматичне керування увімкнено");
     }
 
     if (settings['greenhouse_auto']['enabled'] == "0") {
         $('.greenhouse_auto_disable').hide().addClass("hidden");
         $('.greenhouse_auto_enable').css('display', 'inline-block').removeClass("hidden");
+        alert("автоматичне керування вимкнено");
     }
 }
 
