@@ -23,6 +23,7 @@ from controllers import remote_controller as remote_controller
 from helpers import sqlite_database as database
 from helpers.redis import *
 from helpers.common import *
+import ast
 
 eventlet.monkey_patch()
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
@@ -90,10 +91,7 @@ def get_settings():
         global APP_SETTINGS
         APP_SETTINGS = database.get_app_settings()
         for key, item in APP_SETTINGS.items():
-            logging.info(item)
-            logging.info(key)
-            item = json.loads(json.dumps(item))
-            key = json.loads(json.dumps(key))
+            item = ast.literal_eval(item)
 
         logging.info("APP settings: {0}".format(str(APP_SETTINGS)))
 
