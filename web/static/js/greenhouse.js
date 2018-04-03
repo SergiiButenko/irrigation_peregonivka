@@ -29,10 +29,7 @@ $(document).ready(function() {
         success: function(data) {
             settings = data['data'];
             console.log(settings);
-
-            for (item in settings) {
-                settings[item] = JSON.parse(settings[item].replace(/'/g, '"'));
-            }
+            toggle_buttons();
         }
     });
 
@@ -166,9 +163,9 @@ $(document).ready(function() {
     });
 
 
-    $(".greenhouse_auto_enable").click(function() {        
+    $(".greenhouse_auto_enable").click(function() {
         var json = {
-            'list': { 'greenhouse_auto': {'enabled': '1'} }
+            'list': { 'greenhouse_auto': { 'enabled': '1' } }
         }
         $.ajax({
             url: '/set_settings',
@@ -179,6 +176,7 @@ $(document).ready(function() {
             success: function(data) {
                 settings = data['data'];
                 console.log(settings);
+                toggle_buttons();
             }
         });
 
@@ -186,7 +184,7 @@ $(document).ready(function() {
 
     $(".greenhouse_auto_disable").click(function() {
         var json = {
-            'list': { 'greenhouse_auto': {'enabled': '0'} }
+            'list': { 'greenhouse_auto': { 'enabled': '0' } }
         }
         $.ajax({
             url: '/set_settings',
@@ -197,6 +195,7 @@ $(document).ready(function() {
             success: function(data) {
                 settings = data['data'];
                 console.log(settings);
+                toggle_buttons();
             }
         });
 
@@ -206,13 +205,13 @@ $(document).ready(function() {
 });
 
 
-function toggle_buttons(){
-    if (settings['greenhouse_auto']['enabled'] == 1){
+function toggle_buttons() {
+    if (settings['greenhouse_auto']['enabled'] == 1) {
         $('greenhouse_auto_enable').hide().addClass("hidden");
         $('greenhouse_auto_disable').css('display', 'inline-block').removeClass("hidden");
     }
 
-    if (settings['greenhouse_auto']['enabled'] == 0){
+    if (settings['greenhouse_auto']['enabled'] == 0) {
         $('greenhouse_auto_disable').hide().addClass("hidden");
         $('greenhouse_auto_enable').css('display', 'inline-block').removeClass("hidden");
     }
