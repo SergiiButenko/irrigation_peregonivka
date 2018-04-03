@@ -18,9 +18,9 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)
 
 SENSORS = {}
 LINES = {}
-global APP_SETTINGS
-TEMP_MAX = APP_SETTINGS['temp_min_max']['max']
-TEMP_MIN = APP_SETTINGS['temp_min_max']['min']
+APP_SETTINGS = {}
+TEMP_MIN = None
+TEMP_MAX = None
 
 
 def setup_sensors_datalogger():
@@ -51,6 +51,16 @@ def setup_lines_greenlines():
         logging.info(LINES)
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
+
+
+def setup_app_settings():
+    global APP_SETTINGS
+    APP_SETTINGS = database.get_app_settings()
+    
+    TEMP_MAX = APP_SETTINGS['temp_min_max']['max']
+    TEMP_MIN = APP_SETTINGS['temp_min_max']['min']
+
+    logging.info("APP settings: {0}".format(APP_SETTINGS))
 
 
 def get_line_status(line_id):
