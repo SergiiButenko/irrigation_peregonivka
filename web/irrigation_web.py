@@ -1057,7 +1057,7 @@ def app_settings():
     """Blablbal."""
     global APP_SETTINGS
     return jsonify(
-        data=json.loads(APP_SETTINGS))
+        data=APP_SETTINGS)
 
 
 @app.route("/set_settings", methods=['POST'])
