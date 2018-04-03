@@ -57,6 +57,7 @@
 <div id="card-holder">
     <h5>Автоматичне керування:</h5>
     <h7 id='automode_header'></h7><br>
+    <hr style="margin-top: 0.5rem; margin-bottom: 2rem" />
     {% for id, group in my_list['sensors'].items() %}
     <h5>{{group['values'][0][3]}}</h5> {% if group['values'][0][4] == 'air_sensor' %}
     <h7>Температура повітря: {{group['values'][0][1]}} &#8451;</h7>

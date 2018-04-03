@@ -220,6 +220,7 @@ $(document).ready(function() {
                 settings = data['data'];
                 console.log(settings);
                 toggle_buttons();
+                alert("Aвтоматичне керування увімкнено");
             }
         });
 
@@ -243,6 +244,7 @@ $(document).ready(function() {
                 settings = data['data'];
                 console.log(settings);
                 toggle_buttons();
+                alert("Aвтоматичне керування вимкнено");
             }
         });
     });
@@ -254,14 +256,12 @@ function toggle_buttons() {
         $('.greenhouse_auto_enable').hide().addClass("hidden");
         $('.greenhouse_auto_disable').css('display', 'inline-block').removeClass("hidden");
         $('#automode_header').text('Aвтоматичне керування увімкнено')
-        alert("Aвтоматичне керування увімкнено");
     }
 
     if (settings['greenhouse_auto']['enabled'] == "0") {
         $('.greenhouse_auto_disable').hide().addClass("hidden");
         $('.greenhouse_auto_enable').css('display', 'inline-block').removeClass("hidden");
         $('#automode_header').text('Aвтоматичне керування вимкнено')
-        alert("Aвтоматичне керування вимкнено");
     }
 }
 
