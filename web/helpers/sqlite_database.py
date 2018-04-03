@@ -289,6 +289,7 @@ def get_app_settings():
 
 def set_app_settings(settings):
     "update settings set json_value=json({0}) where short_name = {1}"
+    logging.info(settings)
     for k, v in settings:
         update(QUERY[mn()].format(k, json.dumps(v)))
 

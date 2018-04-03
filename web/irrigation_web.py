@@ -1065,7 +1065,7 @@ def app_settings():
 @cache.cached(timeout=CACHE_TIMEOUT)
 def set_settings():
     """Blablbal."""
-    content = json.loads(request.json['list'])
+    content = request.json['list']
     logging.info(content)
     database.set_app_settings(content)
     return 'OK'
