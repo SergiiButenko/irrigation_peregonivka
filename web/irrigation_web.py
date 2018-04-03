@@ -90,9 +90,6 @@ def get_settings():
 
         global APP_SETTINGS
         APP_SETTINGS = database.get_app_settings()
-        for key, item in APP_SETTINGS.items():
-            item = ast.literal_eval(item)
-
         logging.info("APP settings: {0}".format(str(APP_SETTINGS)))
 
     except Exception as e:
