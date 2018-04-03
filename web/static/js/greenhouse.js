@@ -152,10 +152,17 @@ $(document).ready(function() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(data) {
+                settings = data['data'];
+                console.log(settings);
+
+                for (item in settings) {
+                    settings[item] = JSON.parse(settings[item].replace(/'/g, '"'));
+                }
+
                 $('#greenhouse_settings_modal').modal('hide');
             }
         });
-        
+
     });
 
 
