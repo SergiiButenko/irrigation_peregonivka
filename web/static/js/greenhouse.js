@@ -253,13 +253,15 @@ function toggle_buttons() {
     if (settings['greenhouse_auto']['enabled'] == "1") {
         $('.greenhouse_auto_enable').hide().addClass("hidden");
         $('.greenhouse_auto_disable').css('display', 'inline-block').removeClass("hidden");
-        alert("автоматичне керування увімкнено");
+        $('#automode_header').innerText('Aвтоматичне керування увімкнено')
+        alert("Aвтоматичне керування увімкнено");
     }
 
     if (settings['greenhouse_auto']['enabled'] == "0") {
         $('.greenhouse_auto_disable').hide().addClass("hidden");
         $('.greenhouse_auto_enable').css('display', 'inline-block').removeClass("hidden");
-        alert("автоматичне керування вимкнено");
+        $('#automode_header').innerText('Aвтоматичне керування вимкнено')
+        alert("Aвтоматичне керування вимкнено");
     }
 }
 
