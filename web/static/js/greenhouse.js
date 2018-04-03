@@ -141,16 +141,16 @@ $(document).ready(function() {
             'list': { 'temp_min_max': { 'min': min, 'max': max } }
         }
         $.ajax({
-            url: '/app_settings',
+            url: '/set_settings',
             type: "post",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(data) {
-                settings = data['data']
+                $('#greenhouse_settings_modal').modal('hide');
             }
         });
-        $('#greenhouse_settings_modal').modal('hide');
+        
     });
 
 
