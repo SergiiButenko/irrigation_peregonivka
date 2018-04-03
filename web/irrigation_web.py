@@ -89,7 +89,10 @@ def get_settings():
 
         global APP_SETTINGS
         APP_SETTINGS = database.get_app_settings()
-        logging.info("APP settings: {0}".format(APP_SETTINGS))
+        for key, item in APP_SETTINGS.items():
+            item = json.loads(item)
+
+        logging.info("APP settings: {0}".format(str(APP_SETTINGS)))
 
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
