@@ -57,10 +57,10 @@ def setup_app_settings():
     global APP_SETTINGS, TEMP_MIN, TEMP_MAX
     APP_SETTINGS = database.get_app_settings()
 
+    logging.info("APP settings: {0}".format(APP_SETTINGS))
+
     TEMP_MAX = APP_SETTINGS['temp_min_max']['max']
     TEMP_MIN = APP_SETTINGS['temp_min_max']['min']
-
-    logging.info("APP settings: {0}".format(APP_SETTINGS))
 
 
 def get_line_status(line_id):
