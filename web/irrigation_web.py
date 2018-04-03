@@ -1053,7 +1053,6 @@ def temperature():
 
 
 @app.route("/app_settings")
-@cache.cached(timeout=CACHE_TIMEOUT)
 def app_settings():
     """Blablbal."""
     global APP_SETTINGS
@@ -1062,7 +1061,6 @@ def app_settings():
 
 
 @app.route("/set_settings", methods=['POST'])
-@cache.cached(timeout=CACHE_TIMEOUT)
 def set_settings():
     """Blablbal."""
     content = request.json['list']
