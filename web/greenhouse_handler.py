@@ -18,6 +18,9 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)
 
 SENSORS = {}
 LINES = {}
+global APP_SETTINGS
+TEMP_MAX = APP_SETTINGS['temp_min_max']['max']
+TEMP_MIN = APP_SETTINGS['temp_min_max']['min']
 
 
 def setup_sensors_datalogger():
