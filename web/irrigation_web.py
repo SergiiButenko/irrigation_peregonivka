@@ -1066,7 +1066,7 @@ def set_settings():
     content = request.json['list']
     logging.info(content)
     database.set_app_settings(content)
-    return 'OK'
+    return json.dumps({'status': 'OK'})
 
 
 @app.route("/.well-known/acme-challenge/caIBL2nKjk9nIX_Earqy9Qy4vttNvOcXA_TEgfNLcUk")

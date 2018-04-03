@@ -130,6 +130,6 @@ CREATE TABLE settings (
     value int,
     json_value json
 );
-insert into settings (name, short_name, json_value) values ('Температура в теплиці', 'temp_min_max', json("{'min': 14, 'max': 18}"))
+insert into settings (name, short_name, json_value) values ('Температура в теплиці', 'temp_min_max', json('{"min": 14, "max": 18}''))
 
 COMMIT;
