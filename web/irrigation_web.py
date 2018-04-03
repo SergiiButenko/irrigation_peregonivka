@@ -91,6 +91,7 @@ def get_settings():
         APP_SETTINGS = database.get_app_settings()
         for key, item in APP_SETTINGS.items():
             item = json.loads(json.dumps(item))
+            key = json.loads(json.dumps(key))
 
         logging.info("APP settings: {0}".format(str(APP_SETTINGS)))
 
