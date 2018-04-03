@@ -29,7 +29,12 @@ $(document).ready(function() {
         success: function(data) {
             settings = data['data'];
             console.log(settings);
-        }
+
+            for (item in settings) {
+                settings[item] = JSON.parse(settings[item]);
+            }
+        },
+        com
     });
 
 
