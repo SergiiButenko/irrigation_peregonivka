@@ -291,6 +291,6 @@ def set_app_settings(settings):
     "update settings set json_value=json({0}) where short_name = {1}"
     logging.info(settings)
     for k, v in settings.items():
-        update(QUERY[mn()].format(v, json.dumps(k)))
+        update(QUERY[mn()].format(v, json.dumps(k).replace("'", '"')))
 
     return True
