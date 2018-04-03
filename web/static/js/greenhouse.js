@@ -31,7 +31,7 @@ $(document).ready(function() {
             console.log(settings);
 
             for (item in settings) {
-                settings[item] = JSON.parse(settings[item]);
+                settings[item] = JSON.parse(settings[item].replace(/'/g, '"'));
             }
         }
     });
