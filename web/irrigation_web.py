@@ -90,6 +90,8 @@ def get_settings():
         global APP_SETTINGS
         APP_SETTINGS = database.get_app_settings()
         for key, item in APP_SETTINGS.items():
+            logging.info(item)
+            logging.info(key)
             item = json.loads(json.dumps(item))
             key = json.loads(json.dumps(key))
 
