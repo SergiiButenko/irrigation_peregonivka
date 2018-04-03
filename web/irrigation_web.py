@@ -87,6 +87,7 @@ def get_settings():
 
             logging.debug("{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id])))
 
+        global APP_SETTINGS
         APP_SETTINGS = database.get_app_settings()
         logging.info("APP settings: {0}".format(APP_SETTINGS))
 
@@ -1055,6 +1056,7 @@ def temperature():
 @cache.cached(timeout=CACHE_TIMEOUT)
 def app_settings():
     """Blablbal."""
+    global APP_SETTINGS
     return jsonify(
         data=APP_SETTINGS)
 
