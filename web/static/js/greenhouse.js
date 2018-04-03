@@ -4,6 +4,7 @@ var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
 
 var branch = [];
+var settings = {};
 
 $(document).ready(function() {
 
@@ -19,6 +20,14 @@ $(document).ready(function() {
                     'default_time': parseInt(item['default_time'])
                 }
             }
+        }
+    });
+
+
+    $.ajax({
+        url: '/app_settings',
+        success: function(data) {
+            settings = data['data']
         }
     });
 
@@ -117,8 +126,8 @@ $(document).ready(function() {
 
     //Function to change settings
     $(".setup_greenhouse").click(function() {
-        $('#greenhouse_min_temp').val(14);
-        $('#greenhouse_max_temp').val(18);
+        $('#greenhouse_min_temp').val(settings['temp_min_max']['min']);
+        $('#greenhouse_max_temp').val(settings['temp_min_max']['max']);
 
         $('#greenhouse_settings_modal').modal('show');
     });
@@ -128,10 +137,23 @@ $(document).ready(function() {
         var max = $('#greenhouse_max_temp').val();
 
         console.log("MIN:" + min + "; MAX:" + max);
+        var json = {
+            'list': { 'temp_min_max': { 'min': min, 'max': max } }
+        }
+        $.ajax({
+            url: '/app_settings',
+            type: "post",
+            data: JSON.stringify(json),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data) {
+                settings = data['data']
+            }
+        });
         $('#greenhouse_settings_modal').modal('hide');
     });
 
-    
+
 
 });
 

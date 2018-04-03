@@ -1061,6 +1061,15 @@ def app_settings():
         data=APP_SETTINGS)
 
 
+@app.route("/set_settings", methods=['POST'])
+@cache.cached(timeout=CACHE_TIMEOUT)
+def set_settings():
+    """Blablbal."""
+    content = request.json['list']
+    logging.info(content)
+    return 'OK'
+
+
 @app.route("/.well-known/acme-challenge/caIBL2nKjk9nIX_Earqy9Qy4vttNvOcXA_TEgfNLcUk")
 def sensors2():
     """Blablbal."""
