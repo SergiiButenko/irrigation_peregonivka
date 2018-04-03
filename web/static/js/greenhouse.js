@@ -27,7 +27,7 @@ $(document).ready(function() {
     $.ajax({
         url: '/app_settings',
         success: function(data) {
-            settings = JSON.parce(data['data']);
+            settings = JSON.parse(data['data']);
             console.log(settings);
         }
     });
