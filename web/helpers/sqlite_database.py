@@ -173,7 +173,7 @@ QUERY['get_temperature'] = (
 
 QUERY['get_app_settings'] = "SELECT short_name, json_value from settings"
 
-QUERY['set_app_settings'] = "update settings set json_value=\"{0}\" where short_name = '{1}'"
+QUERY['set_app_settings'] = "update settings set json_value=\"{0}\" where short_name = {1}"
 
 
 # executes query and returns fetch* result
@@ -212,7 +212,7 @@ def update(query):
         # execute our Query
         cursor.execute(query)
         conn.commit()
-        logging.info("db request '{0}' executed".format(query))
+        logging.debug("db request '{0}' executed".format(query))
         lastrowid = cursor.lastrowid
         return lastrowid
     except Exception as e:
