@@ -21,7 +21,7 @@ LINES = {}
 APP_SETTINGS = {}
 TEMP_MIN = None
 TEMP_MAX = None
-
+SERVICE_ENABLED = 1
 
 def setup_sensors_datalogger():
     try:
@@ -54,13 +54,18 @@ def setup_lines_greenlines():
 
 
 def setup_app_settings():
-    global APP_SETTINGS, TEMP_MIN, TEMP_MAX
+    global APP_SETTINGS, TEMP_MIN, TEMP_MAX, SERVICE_ENABLED
     APP_SETTINGS = database.get_app_settings()
 
     logging.info("APP settings: {0}".format(APP_SETTINGS))
 
-    TEMP_MAX = APP_SETTINGS['temp_min_max']['max']
-    TEMP_MIN = APP_SETTINGS['temp_min_max']['min']
+    SERVICE_ENABLED = int(APP_SETTINGS['greenhouse_auto']['enabled'])
+    if SERVICE_ENABLED == 0:
+        logging.info("Service is disabled. Please enable it")
+        exit(0)
+
+    TEMP_MAX = int(APP_SETTINGS['temp_min_max']['max'])
+    TEMP_MIN = int(APP_SETTINGS['temp_min_max']['min'])
 
 
 def get_line_status(line_id):
