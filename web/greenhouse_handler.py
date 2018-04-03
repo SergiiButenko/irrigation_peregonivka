@@ -54,9 +54,9 @@ def setup_lines_greenlines():
 
 
 def setup_app_settings():
-    global APP_SETTINGS
+    global APP_SETTINGS, TEMP_MIN, TEMP_MAX
     APP_SETTINGS = database.get_app_settings()
-    
+
     TEMP_MAX = APP_SETTINGS['temp_min_max']['max']
     TEMP_MIN = APP_SETTINGS['temp_min_max']['min']
 
@@ -197,7 +197,6 @@ def enable_rule():
         else:
             logging.info("Current state: {0}. No action performed".format(state))
 
-
     if (current_temp <= TEMP_MIN):
         logging.info("Current temperature: {0}. Lower than MIN: {1}. Turn on heating".format(current_temp, TEMP_MIN))
         state = get_line_status(line_id=HEAT_ID)
@@ -210,4 +209,5 @@ def enable_rule():
 if __name__ == "__main__":
     setup_sensors_datalogger()
     setup_lines_greenlines()
+    setup_app_settings()
     enable_rule()
