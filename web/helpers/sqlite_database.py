@@ -172,6 +172,8 @@ QUERY['get_temperature'] = (
 
 QUERY['get_app_settings'] = "SELECT short_name, json_value from settings"
 
+QUERY['set_app_settings'] = "update settings set json_value=json({0}) where short_name = {1}"
+
 
 # executes query and returns fetch* result
 def select(query, method='fetchall'):
@@ -282,3 +284,11 @@ def get_app_settings():
         settings[row[0]] = json.loads(row[1])
 
     return settings
+
+
+def set_app_settings(settings):
+    "update settings set json_value=json({0}) where short_name = {1}"
+    for k, v in settings:
+        update(QUERY[mn()].format(k, v))
+
+    return True
