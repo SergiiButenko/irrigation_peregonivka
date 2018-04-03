@@ -279,6 +279,6 @@ def get_app_settings():
     list_arr = select(QUERY[mn()])
     settings = {}
     for row in list_arr:
-        setting[row[0]] = json.loads(row[1])
+        settings[row[0]] = json.loads(row[1])
 
     return settings

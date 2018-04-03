@@ -1053,8 +1053,8 @@ def temperature():
 
 @app.route("/app_settings")
 @cache.cached(timeout=CACHE_TIMEOUT)
-def APP_SETTINGS():
-    """Blablbal."""    
+def app_settings():
+    """Blablbal."""
     return jsonify(
         data=APP_SETTINGS)
 
