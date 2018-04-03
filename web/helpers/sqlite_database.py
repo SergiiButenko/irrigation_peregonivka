@@ -212,7 +212,7 @@ def update(query):
         # execute our Query
         cursor.execute(query)
         conn.commit()
-        logging.debug("db request '{0}' executed".format(query))
+        logging.info("db request '{0}' executed".format(query))
         lastrowid = cursor.lastrowid
         return lastrowid
     except Exception as e:
@@ -290,7 +290,6 @@ def get_app_settings():
 def set_app_settings(settings):
     "update settings set json_value=json({0}) where short_name = {1}"
     logging.info(settings)
-    settings = json.loads(settings)
     for k, v in settings.items():
         update(QUERY[mn()].format(v, json.dumps(k)))
 
