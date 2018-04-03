@@ -33,8 +33,7 @@ $(document).ready(function() {
             for (item in settings) {
                 settings[item] = JSON.parse(settings[item]);
             }
-        },
-        com
+        }
     });
 
 
