@@ -23,6 +23,33 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+<div id="greenhouse_settings_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="greenhouse_settings_modal-label" aria-hidden="true" data-id=0>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title ">Налаштувати</h4>
+            </div>
+            <div class="modal-body">
+                    <label class="control-label" for="greenhouse_min_temp">Нижня границя:</label>
+                    <input iinput type="number" pattern="\d*" class="form-control" id="greenhouse_min_temp" required>
+
+                    <label class="control-label" for="greenhouse_max_temp">Верхня границя:</label>
+                    <input iinput type="number" pattern="\d*" class="form-control" id="greenhouse_max_temp" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
+                <button type="button" class="btn btn-primary save-greenhouse_settings">Зберегти</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 <!-- /.modal -->
 {% endblock %}
 <!-- Custom styles for this template -->
@@ -62,6 +89,13 @@
         {% endfor %}
     </div>
 </div>
+<hr style="margin-top: 2rem; margin-bottom: 2rem" />
+
+<h5>Додаткові дії</h5>
+</br>
+<a class="btn btn-raised btn-block btn-secondary setup_greenhouse" role="button">
+                    Налаштування...
+                </a>
 {% endblock %} {% block custom_scripts %}
 <script src="static/js/greenhouse.js"></script>
 {% endblock %}
