@@ -976,7 +976,7 @@ def deactivate_branch():
         logging.error("no 'mode' parameter passed")
         abort(500)
 
-    response_arr = get_line_status(branch_id)
+    response_off = get_line_status(branch_id)
     if response_off[branch_id]['state'] != 0:
         try:
             response_off = retry_branch_off(branch_id=branch_id)
