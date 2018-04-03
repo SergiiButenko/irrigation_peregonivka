@@ -5,6 +5,7 @@ from helpers.redis import *
 from helpers.common import *
 from itertools import groupby
 from operator import itemgetter
+import ast
 
 
 QUERY = {}
@@ -282,7 +283,7 @@ def get_app_settings():
     list_arr = select(QUERY[mn()])
     settings = {}
     for row in list_arr:
-        settings[row[0]] = row[1]
+        settings[row[0]] = ast.literal_eval(row[1])
 
     return settings
 
