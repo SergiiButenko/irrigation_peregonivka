@@ -1,5 +1,6 @@
 import sqlite3
 import logging
+import json
 from helpers.redis import *
 from helpers.common import *
 from itertools import groupby
@@ -172,7 +173,7 @@ QUERY['get_temperature'] = (
 
 QUERY['get_app_settings'] = "SELECT short_name, json_value from settings"
 
-QUERY['set_app_settings'] = "update settings set json_value=json({0}) where short_name = {1}"
+QUERY['set_app_settings'] = "update settings set json_value=json('{0}') where short_name = {1}"
 
 
 # executes query and returns fetch* result
@@ -289,6 +290,6 @@ def get_app_settings():
 def set_app_settings(settings):
     "update settings set json_value=json({0}) where short_name = {1}"
     for k, v in settings:
-        update(QUERY[mn()].format(k, v))
+        update(QUERY[mn()].format(k, json.dumps(v)))
 
     return True

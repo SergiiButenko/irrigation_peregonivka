@@ -1066,8 +1066,8 @@ def app_settings():
 def set_settings():
     """Blablbal."""
     content = request.json['list']
-    logging.info(json.dumps(content))
-    database.set_app_settings(json.dumps(content))
+    logging.info(content)
+    database.set_app_settings(content)
     return 'OK'
 
 
