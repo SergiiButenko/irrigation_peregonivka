@@ -166,6 +166,50 @@ $(document).ready(function() {
     });
 
 
+    $(".greenhouse_auto_enable").click(function() {        
+        var json = {
+            'list': { 'greenhouse_auto': {'enabled': '1'} }
+        }
+        $.ajax({
+            url: '/set_settings',
+            type: "post",
+            data: JSON.stringify(json),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data) {
+                settings = data['data'];
+                console.log(settings);
+
+                for (item in settings) {
+                    settings[item] = JSON.parse(settings[item].replace(/'/g, '"'));
+                }
+            }
+        });
+
+    });
+
+    $(".greenhouse_auto_disable").click(function() {
+        var json = {
+            'list': { 'greenhouse_auto': {'enabled': '0'} }
+        }
+        $.ajax({
+            url: '/set_settings',
+            type: "post",
+            data: JSON.stringify(json),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data) {
+                settings = data['data'];
+                console.log(settings);
+
+                for (item in settings) {
+                    settings[item] = JSON.parse(settings[item].replace(/'/g, '"'));
+                }
+            }
+        });
+
+    });
+
 
 });
 
