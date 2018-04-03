@@ -207,13 +207,13 @@ $(document).ready(function() {
 
 function toggle_buttons() {
     if (settings['greenhouse_auto']['enabled'] == "1") {
-        $('greenhouse_auto_enable').hide().addClass("hidden");
-        $('greenhouse_auto_disable').css('display', 'inline-block').removeClass("hidden");
+        $('.greenhouse_auto_enable').hide().addClass("hidden");
+        $('.greenhouse_auto_disable').css('display', 'inline-block').removeClass("hidden");
     }
 
     if (settings['greenhouse_auto']['enabled'] == "0") {
-        $('greenhouse_auto_disable').hide().addClass("hidden");
-        $('greenhouse_auto_enable').css('display', 'inline-block').removeClass("hidden");
+        $('.greenhouse_auto_disable').hide().addClass("hidden");
+        $('.greenhouse_auto_enable').css('display', 'inline-block').removeClass("hidden");
     }
 }
 
