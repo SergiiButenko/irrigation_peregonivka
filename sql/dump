@@ -123,4 +123,13 @@ CREATE TABLE temperature (
 );
 CREATE INDEX temperature_index ON temperature (line_id);
 
+CREATE TABLE settings (
+    id INTEGER PRIMARY KEY,
+    name text,
+    short_name text,
+    value int,
+    json_value json
+);
+insert into settings (name, short_name, json_value) values ('Температура в теплиці', 'temp_min_max', json("{'min': 14, 'max': 18}"))
+
 COMMIT;

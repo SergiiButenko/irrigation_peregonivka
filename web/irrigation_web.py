@@ -86,6 +86,10 @@ def get_settings():
             }
 
             logging.debug("{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id])))
+
+        APP_SETTINGS = database.get_app_settings()
+        logging.info("APP settings: {0}".format(APP_SETTINGS))
+
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
 
@@ -1045,6 +1049,14 @@ def temperature():
     temp = database.get_temperature()
     return jsonify(
         data=temp)
+
+
+@app.route("/app_settings")
+@cache.cached(timeout=CACHE_TIMEOUT)
+def APP_SETTINGS():
+    """Blablbal."""    
+    return jsonify(
+        data=APP_SETTINGS)
 
 
 @app.route("/.well-known/acme-challenge/caIBL2nKjk9nIX_Earqy9Qy4vttNvOcXA_TEgfNLcUk")

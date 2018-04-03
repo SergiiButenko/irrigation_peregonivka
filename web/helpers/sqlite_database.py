@@ -170,6 +170,8 @@ QUERY['get_temperature'] = (
     "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} days');"
     )
 
+QUERY['get_app_settings'] = "SELECT short_name, json_value from settings"
+
 
 # executes query and returns fetch* result
 def select(query, method='fetchall'):
@@ -271,3 +273,12 @@ def get_temperature():
         for s_id, sensor in grouped.items():
             sensor['values'].sort(key=itemgetter(5), reverse=True)
     return grouped
+
+
+def get_app_settings():
+    list_arr = select(QUERY[mn()])
+    settings = {}
+    for row in list_arr:
+        setting[row[0]] = json.loads(row[1])
+
+    return settings
