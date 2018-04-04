@@ -23,7 +23,6 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-
 <div id="greenhouse_settings_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="greenhouse_settings_modal-label" aria-hidden="true" data-id=0>
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -34,11 +33,10 @@
                 <h4 class="modal-title ">Налаштування</h4>
             </div>
             <div class="modal-body">
-                    <label class="control-label" for="greenhouse_min_temp">Температура включення:</label>
-                    <input iinput type="number" pattern="\d*" class="form-control" id="greenhouse_min_temp" required>
-
-                    <label class="control-label" for="greenhouse_max_temp">Температура виключення:</label>
-                    <input iinput type="number" pattern="\d*" class="form-control" id="greenhouse_max_temp" required>
+                <label class="control-label" for="greenhouse_min_temp">Температура включення:</label>
+                <input iinput type="number" pattern="\d*" class="form-control" id="greenhouse_min_temp" required>
+                <label class="control-label" for="greenhouse_max_temp">Температура виключення:</label>
+                <input iinput type="number" pattern="\d*" class="form-control" id="greenhouse_max_temp" required>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
@@ -49,16 +47,15 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-
 <!-- /.modal -->
 {% endblock %}
 <!-- Custom styles for this template -->
 {% block container %}
 <div id="card-holder">
     <h5>Автоматичне керування:</h5>
-    <h7 id='automode_header'></h7><br>
-    <hr style="margin-top: 0.5rem; margin-bottom: 2rem" />
-    {% for id, group in my_list['sensors'].items() %}
+    <h7 id='automode_header'></h7>
+    <br>
+    <hr style="margin-top: 0.5rem; margin-bottom: 2rem" /> {% for id, group in my_list['sensors'].items() %}
     <h5>{{group['values'][0][3]}}</h5> {% if group['values'][0][4] == 'air_sensor' %}
     <h7>Температура повітря: {{group['values'][0][1]}} &#8451;</h7>
     <br>
@@ -93,7 +90,6 @@
     </div>
 </div>
 <hr style="margin-top: 2rem; margin-bottom: 2rem" />
-
 <h5>Додаткові дії</h5>
 </br>
 <a class="btn btn-raised btn-block btn-secondary greenhouse_auto_disable" role="button">
@@ -105,24 +101,25 @@
 <a class="btn btn-raised btn-block btn-secondary setup_greenhouse" role="button">
                     Налаштування...
                 </a>
-
 <table class="table">
-      <thead>
-    <tr>
-      <th scope="col">Час</th>
-      <th scope="col">Температура в теплиці</th>
-      <th scope="col">Вологість в теплиці</th>
-      <th scope="col">Температура на вулиці</th>
-    </tr>
-  </thead>
-   <tbody>
-    {% for data, value in my_list['temperature'].items() %}
-    <th scope="row">{{data}}</th>
-      <td>{{value[0][1]}}</td>
-      <td>{{value[0][2]}}</td>
-      <td>{{value[0][1]}}</td>
-      {% endfor %}
-</tbody>
+    <thead>
+        <tr>
+            <th scope="col">Час</th>
+            <th scope="col">Температура в теплиці</th>
+            <th scope="col">Вологість в теплиці</th>
+            <th scope="col">Температура на вулиці</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data, value in my_list['temperature'].items() %}
+        <tr>
+            <th scope="row">{{data}}</th>
+            <td>{{value[0][1]}}</td>
+            <td>{{value[0][2]}}</td>
+            <td>{{value[0][1]}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %} {% block custom_scripts %}
 <script src="static/js/greenhouse.js"></script>
