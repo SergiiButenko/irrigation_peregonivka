@@ -273,9 +273,30 @@ def get_temperature2():
 
         grouped = OrderedDict()
         for key, group in groupby(list_arr, itemgetter(5)):
-            grouped[key] = [list(thing) for thing in group]
+            grouped.setdefault(key.strftime('%H:%M'), default=[]).append([list(thing) for thing in group])
 
-        return grouped
+        grouped_by_line_id = OrderedDict()
+        for key, group in grouped:
+            _sum_temp_air = 0
+            _sum_hum_air = 0
+            _sum_temp_out_air = 0
+            _group_len = len(group)
+            for item in group:
+
+                if item[0] == 10:
+                    _sum_hum_air += item[2]
+                    _sum_temp_air += item[1]
+                if item[0] == 11:
+                    _sum_temp_out_air += item[1]
+            _avr_temp_air = _sum_temp_air / _group_len
+            _avr_hum_air = _sum_hum_air / _group_len
+            _avr_temp_out_air = _sum_temp_out_air / _group_len
+
+            grouped_by_line_id[key] = {'temp_air': _avr_temp_air,
+            'hum_air': _avr_hum_air,
+            'temp_out': _avr_temp_out_air}
+
+        return grouped_by_line_id
 
     except Exception as e:
         logging.error(e)
