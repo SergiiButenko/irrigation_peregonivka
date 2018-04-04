@@ -102,22 +102,24 @@
                     Налаштування...
                 </a>
 <hr style="margin-top: 2rem; margin-bottom: 2rem" />
+<h7>Данні за останні 8 годин</h7>
+    <br>
 <table class="table" id = 'greenhouse_table'>
     <thead>
         <tr>
             <th scope="col">Час</th>
-            <th scope="col">Температура в теплиці</th>
-            <th scope="col">Температура на вулиці</th>
-            <th scope="col">Вологість в теплиці</th>
+            <th scope="col">Температура в теплиці, &#8451;</th>
+            <th scope="col">Температура на вулиці, &#8451;</th>
+            <th scope="col">Вологість в теплиці,%</th>
         </tr>
     </thead>
     <tbody>
         {% for data, value in my_list['temperature'].items() %}
         <tr>
-            <th scope="row">{{data}}:00</th>
-            <td>{{value['temp_air']}}</td>
-            <td>{{value['temp_out']}}</td>
-            <td>{{value['hum_air']}}</td>
+            <th scope="row" class="text-center">{{data}}:00</th>
+            <td class="text-center">{{value['temp_air']}}</td>
+            <td class="text-center">{{value['temp_out']}}</td>
+            <td class="text-center">{{value['hum_air']}}</td>
         </tr>
         {% endfor %}
     </tbody>
