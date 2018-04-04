@@ -18,7 +18,13 @@ import sched
 import threading
 import json
 import re
-from ..helpers.common import *
+
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+from helpers.common import *
 
 
 logger = logging.getLogger()
