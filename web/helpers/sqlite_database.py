@@ -266,6 +266,7 @@ def get_rain_volume():
 
 def get_temperature2():
     try:
+        list_arr = select(QUERY[mn()].format(TEMP_DAYS))
         if list_arr is not None:
             list_arr.sort(key=itemgetter(5))
 
