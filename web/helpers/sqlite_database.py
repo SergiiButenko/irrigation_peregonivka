@@ -148,11 +148,11 @@ QUERY['setup_lines_greenlines'] = (
     )
 
 QUERY['temp_sensors_air'] = (
-    "INSERT into temperature (line_id, temp, hum) values ({0}, '{1}', '{2}')"
+    "INSERT into temperature (line_id, temp, hum, datetime) values ({0}, '{1}', '{2}', '{3}')"
     )
 
 QUERY['temp_sensors_ground'] = (
-    "INSERT into temperature (line_id, temp) values ({0}, '{1}')"
+    "INSERT into temperature (line_id, temp, datetime) values ({0}, '{1}', '{2}')"
     )
 
 

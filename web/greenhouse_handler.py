@@ -185,6 +185,7 @@ def send_to_viber_bot(rule):
 def enable_rule():
     logging.info("Getting temperature:")
     current_temp = None
+
     for sensor_id, sensor in SENSORS.items():
         if sensor['type'] == 'air_sensor':
             response = remote_controller.air_sensor(sensor_id)

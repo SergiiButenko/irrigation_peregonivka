@@ -95,6 +95,7 @@ def moisture_sensors():
 def temp_sensors():
     try:
         logging.info("Getting temperature:")
+        now = datetime.datetime.now()
         for sensor_id, sensor in SENSORS.items():
             if sensor['type'] == 'air_sensor':
                 response = remote_controller.air_sensor(sensor_id)
@@ -102,11 +103,12 @@ def temp_sensors():
                 database.update(database.QUERY[mn() + '_air'].format(
                                                             response[sensor_id]['id'], 
                                                             response[sensor_id]['air_temp'], 
-                                                            response[sensor_id]['air_hum']))
+                                                            response[sensor_id]['air_hum'],
+                                                            now))
             elif sensor['type'] == 'ground_sensor':
                 response = remote_controller.ground_sensor(sensor_id)
                 logging.info("Ground temp: {0}".format(str(response)))
-                database.update(database.QUERY[mn() + '_ground'].format(response[sensor_id]['id'], response[sensor_id]['ground_temp']))
+                database.update(database.QUERY[mn() + '_ground'].format(response[sensor_id]['id'], response[sensor_id]['ground_temp'], now))
     except Exception as e:
         logging.error(e)
     else:
@@ -118,7 +120,7 @@ if __name__ == "__main__":
     setup_sensors_datalogger()
     setup_lines_datalogger()
 
-    moisture_sensors()
+    # moisture_sensors()
     temp_sensors()
 
 # while True:
