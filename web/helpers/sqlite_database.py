@@ -286,10 +286,10 @@ def get_temperature2():
             for items in group:
                 for item in items:
                     if item[0] == 10:
-                        _sum_hum_air += round(item[2], 1)
-                        _sum_temp_air += round(item[1], 1)
+                        _sum_hum_air += int(item[2])
+                        _sum_temp_air += int(item[1])
                     if item[0] == 11:
-                        _sum_temp_out_air += round(item[1], 1)
+                        _sum_temp_out_air += int(item[1])
                 _avr_temp_air = round(_sum_temp_air / _group_len, 1)
                 _avr_hum_air = round(_sum_hum_air / _group_len, 1)
                 _avr_temp_out_air = round(_sum_temp_out_air / _group_len, 1)
