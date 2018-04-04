@@ -271,7 +271,7 @@ def get_temperature2():
         if list_arr is not None:
             list_arr.sort(key=itemgetter(5), reverse=False)
 
-        grouped = {}# OrderedDict()
+        grouped = OrderedDict()
         for key, group in groupby(list_arr, itemgetter(5)):
             _key = datetime.datetime.strptime(key, '%Y-%m-%d %H:%M').strftime('%H')
             _key = "24" if _key == "00" else _key
