@@ -75,37 +75,45 @@ def off(line_id):
 
 
 def air_s(line_id):
-    try:
-        base_url = LINES[line_id]['base_url']
-        response_air = requests.get(url='http://' + base_url + '/air_temperature', timeout=(5, 5))
-        response_air.raise_for_status()
+    for attempt in range(2):
+        try:
+            base_url = LINES[line_id]['base_url']
+            response_air = requests.get(url='http://' + base_url + '/air_temperature', timeout=(5, 5))
+            response_air.raise_for_status()
 
-        logging.info('response {0}'.format(str(response_air.text)))
-        res = json.loads(response_air.text)
+            logging.info('response {0}'.format(str(response_air.text)))
+            res = json.loads(response_air.text)
 
-        r_dict = {}
-        r_dict[line_id] = dict(id=line_id, air_temp=res['temp'], air_hum=res['hum'])
+            r_dict = {}
+            r_dict[line_id] = dict(id=line_id, air_temp=res['temp'], air_hum=res['hum'])
 
-        return r_dict
-    except Exception as e:
-        raise e
+            return r_dict
+        except Exception as e:
+            logging.error(e)
+            time.sleep(2)
+            continue
+    raise Exception("Can't get temperature. Retries limit reached")
 
 
 def ground_s(line_id):
-    try:
-        base_url = LINES[line_id]['base_url']
-        response_air = requests.get(url='http://' + base_url + '/ground_temperature', timeout=(5, 5))
-        response_air.raise_for_status()
+    for attempt in range(2):
+        try:
+            base_url = LINES[line_id]['base_url']
+            response_air = requests.get(url='http://' + base_url + '/ground_temperature', timeout=(5, 5))
+            response_air.raise_for_status()
 
-        logging.info('response {0}'.format(str(response_air.text)))
-        res = json.loads(response_air.text)
+            logging.info('response {0}'.format(str(response_air.text)))
+            res = json.loads(response_air.text)
 
-        r_dict = {}
-        r_dict[line_id] = dict(id=line_id, ground_temp=res['temp'])
+            r_dict = {}
+            r_dict[line_id] = dict(id=line_id, ground_temp=res['temp'])
 
-        return r_dict
-    except Exception as e:
-        raise e
+            return r_dict
+        except Exception as e:
+            logging.error(e)
+            time.sleep(2)
+            continue
+    raise Exception("Can't get temperature. Retries limit reached")
 
 
 def branch_on(line_id=None, line_alert=None):
