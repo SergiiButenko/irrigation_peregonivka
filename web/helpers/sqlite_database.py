@@ -170,10 +170,10 @@ QUERY['get_moisture'] = (
     "SELECT line_id, value, datetime FROM moisture WHERE datetime >= datetime('now', 'localtime', '-23 hours');")
 
 QUERY['get_temperature'] = (
-    "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} days');")
+    "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} hours');")
 
 QUERY['get_temperature2'] = (
-    "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-2 hours') "
+    "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} hours') "
     "order by t.datetime ASC limit 100;")
 
 QUERY['get_app_settings'] = "SELECT short_name, json_value from settings"
@@ -267,7 +267,7 @@ def get_rain_volume():
 
 def get_temperature2():
     try:
-        list_arr = select(QUERY[mn()].format(TEMP_DAYS))
+        list_arr = select(QUERY[mn()].format(TEMP_HOURS))
         if list_arr is not None:
             list_arr.sort(key=itemgetter(5), reverse=True)
 
@@ -283,7 +283,7 @@ def get_temperature2():
 
 def get_temperature():
     """Return volume of rain mm/m^2"""
-    list_arr = select(QUERY[mn()].format(TEMP_DAYS))
+    list_arr = select(QUERY[mn()].format(TEMP_HOURS))
 
     if list_arr is not None:
         list_arr.sort(key=itemgetter(0))
