@@ -174,7 +174,7 @@ QUERY['get_temperature'] = (
 
 QUERY['get_temperature2'] = (
     "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} hours') "
-    "order by t.datetime ASC;")
+    "order by t.datetime DESC;")
 
 QUERY['get_app_settings'] = "SELECT short_name, json_value from settings"
 
