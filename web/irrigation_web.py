@@ -222,7 +222,7 @@ def greenhouse():
 
     branch_list.sort(key=itemgetter('id'))
     my_list['lines'] = branch_list
-    my_list['temperature'] = database.get_temperature2()
+    ny_list['temperature'] = database.get_temperature2()
 
     return render_template('greenhouse.html', my_list=my_list)
 
