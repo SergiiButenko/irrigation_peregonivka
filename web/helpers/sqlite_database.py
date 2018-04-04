@@ -176,6 +176,8 @@ QUERY['get_app_settings'] = "SELECT short_name, json_value from settings"
 
 QUERY['set_app_settings'] = "update settings set json_value=\"{0}\" where short_name = {1}"
 
+QUERY['migrate_data'] = 'select * from temperature'
+QUERY['migrate_data_insert'] = 'select * from temperature'
 
 # executes query and returns fetch* result
 def select(query, method='fetchall'):

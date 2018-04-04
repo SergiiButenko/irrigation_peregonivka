@@ -119,6 +119,13 @@ def temp_sensors():
     finally:
         pass
 
+
+def migrate_data():
+    database.select(database.QUERY[mn()])
+
+    database.update(database.QUERY[mn() + '_insert'])
+
+
 if __name__ == "__main__":
     setup_sensors_datalogger()
     setup_lines_datalogger()
