@@ -18,9 +18,9 @@ APP_SETTINGS = {}
 REDIS_KEY_FOR_VIBER = 'viber_sent_intervals'
 VIBER_SENT_TIMEOUT = 10
 USERS = [
-    {'name': 'Sergii', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='},
-    {'name': 'Oleg', 'id': 'IRYaSCRnmV1IT1ddtB8Bdw=='},
-    {'name': 'Irina', 'id': 'mSR74mGibK+ETvTTx2VvcQ=='}
+    {'name': 'Sergii', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='}
+    # {'name': 'Oleg', 'id': 'IRYaSCRnmV1IT1ddtB8Bdw=='},
+    # {'name': 'Irina', 'id': 'mSR74mGibK+ETvTTx2VvcQ=='}
 ]
 
 RAIN_HOURS = 12
