@@ -266,7 +266,6 @@ def get_rain_volume():
 
 def get_temperature2():
     try:
-        "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime 
         if list_arr is not None:
             list_arr.sort(key=itemgetter(5))
 
