@@ -105,6 +105,25 @@
 <a class="btn btn-raised btn-block btn-secondary setup_greenhouse" role="button">
                     Налаштування...
                 </a>
+
+<table class="table">
+      <thead>
+    <tr>
+      <th scope="col">Час</th>
+      <th scope="col">Температура в теплиці</th>
+      <th scope="col">Вологість в теплиці</th>
+      <th scope="col">Температура на вулиці</th>
+    </tr>
+  </thead>
+   <tbody>
+    {% for data, value in my_list['temperature'].items() %}
+    <th scope="row">{{data}}</th>
+      <td>{{value[0][1]}}</td>
+      <td>{{value[0][2]}}</td>
+      <td>{{value[1][1]}}</td>
+      {% endfor %}
+</tbody>
+</table>
 {% endblock %} {% block custom_scripts %}
 <script src="static/js/greenhouse.js"></script>
 {% endblock %}
