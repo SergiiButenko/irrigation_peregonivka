@@ -269,7 +269,7 @@ def get_temperature2():
     try:
         list_arr = select(QUERY[mn()].format(TEMP_HOURS))
         if list_arr is not None:
-            list_arr.sort(key=itemgetter(5), reverse=False)
+            list_arr.sort(key=itemgetter(5), reverse=True)
 
         grouped = OrderedDict()
         for key, group in groupby(list_arr, itemgetter(5)):
