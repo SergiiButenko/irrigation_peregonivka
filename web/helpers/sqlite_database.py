@@ -270,7 +270,7 @@ def get_temperature2():
         if list_arr is not None:
             list_arr.sort(key=itemgetter(5))
 
-        grouped = OrderedDict()
+        grouped = {}
         for key, group in groupby(list_arr, itemgetter(5)):
             grouped[key] = [list(thing) for thing in group]
         
