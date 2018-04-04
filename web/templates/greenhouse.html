@@ -116,7 +116,11 @@
             <th scope="row">{{data}}</th>
             <td>{{value[0][1]}}</td>
             <td>{{value[0][2]}}</td>
-            <td>{{value[1][1] or '-'}}</td>
+            {% if value|length > 1 %}   
+        <td>{{value[1][1]}}</td>
+    {% else %}
+        <td>-</td>
+    {%endif %}
         </tr>
         {% endfor %}
     </tbody>
