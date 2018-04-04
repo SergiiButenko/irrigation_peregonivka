@@ -297,7 +297,7 @@ def get_temperature2():
             'hum_air': _avr_hum_air,
             'temp_out': _avr_temp_out_air}
 
-        return grouped_by_line_id
+        return OrderedDict(sorted(grouped_by_line_id.items(), key=lambda t: t[0], reverse=True))
 
     except Exception as e:
         logging.error(e)
