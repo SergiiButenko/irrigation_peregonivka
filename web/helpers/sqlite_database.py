@@ -273,6 +273,8 @@ def get_temperature2():
         grouped = {}
         for key, group in groupby(list_arr, itemgetter(5)):
             grouped[key] = [list(thing) for thing in group]
+        logging.info(list_arr)
+        logging.info("dsfdsf")
         logging.info(grouped)
         return grouped
 
