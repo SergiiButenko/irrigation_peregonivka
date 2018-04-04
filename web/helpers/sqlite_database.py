@@ -277,7 +277,7 @@ def get_temperature2():
                 datetime.datetime.strptime(key, '%Y-%m-%d %H:%M').strftime('%H'), []).append([list(thing) for thing in group])
 
         grouped_by_line_id = {}
-        for key, group in grouped.items():
+        for key, group in sorted(grouped.items(), key=lambda t: t[0], reverse=True):
             _sum_temp_air = 0
             _sum_hum_air = 0
             _sum_temp_out_air = 0
@@ -297,7 +297,7 @@ def get_temperature2():
             'hum_air': _avr_hum_air,
             'temp_out': _avr_temp_out_air}
 
-        return OrderedDict(sorted(grouped_by_line_id.items(), key=lambda t: t[0], reverse=True))
+        return grouped_by_line_id
 
     except Exception as e:
         logging.error(e)
