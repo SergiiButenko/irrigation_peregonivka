@@ -283,16 +283,16 @@ def get_temperature2():
             _sum_hum_air = 0
             _sum_temp_out_air = 0
             _group_len = len(group)
-            for item in group:
-                logging.info(item)
-                if item[0] == 10:
-                    _sum_hum_air += item[2]
-                    _sum_temp_air += item[1]
-                if item[0] == 11:
-                    _sum_temp_out_air += item[1]
-            _avr_temp_air = _sum_temp_air / _group_len
-            _avr_hum_air = _sum_hum_air / _group_len
-            _avr_temp_out_air = _sum_temp_out_air / _group_len
+            for items in group:
+                for item in items:
+                    if item[0] == 10:
+                        _sum_hum_air += item[2]
+                        _sum_temp_air += item[1]
+                    if item[0] == 11:
+                        _sum_temp_out_air += item[1]
+                _avr_temp_air = _sum_temp_air / _group_len
+                _avr_hum_air = _sum_hum_air / _group_len
+                _avr_temp_out_air = _sum_temp_out_air / _group_len
 
             grouped_by_line_id[key] = {'temp_air': _avr_temp_air,
             'hum_air': _avr_hum_air,
