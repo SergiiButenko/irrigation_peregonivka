@@ -269,36 +269,14 @@ def get_temperature2():
     try:
         list_arr = select(QUERY[mn()].format(TEMP_DAYS))
         if list_arr is not None:
-            list_arr.sort(key=itemgetter(5))
+            list_arr.sort(key=itemgetter(5), reverse=True)
 
         grouped = OrderedDict()
         for key, group in groupby(list_arr, itemgetter(5)):
             grouped[key] = [list(thing) for thing in group]
-        
+
         return grouped
 
-            #             round(thing[1], 2),
-            #             round(thing[1], 2),
-            #             round(thing[1], 2),
-            #             int(convert_to_datetime(thing[2]).strftime('%H'))])
-            #     grouped[key] = {}
-            #     grouped[key]['new'] = _list
-
-            # for key, value in grouped.items():
-            #     new_list = list()
-            #     for _key, _group in groupby(value['new'], itemgetter(1)):
-            #         _sum = 0
-            #         _len = 0
-            #         for thing in _group:
-            #             _sum += thing[0]
-            #             _len += 1
-            #         new_list.append(
-            #             dict(hours=_key, val=round(_sum / _len, 2)))
-            #     grouped[key]['new'] = new_list
-            #     grouped[key]['base'] = 60
-
-            # for key, value in grouped.items():
-            #     del value['new'][::2]
     except Exception as e:
         logging.error(e)
 
