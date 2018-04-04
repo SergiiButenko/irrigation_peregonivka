@@ -269,7 +269,7 @@ def get_temperature2():
     try:
         list_arr = select(QUERY[mn()].format(TEMP_HOURS))
         if list_arr is not None:
-            list_arr.sort(key=itemgetter(5), reverse=True)
+            list_arr.sort(key=itemgetter(5), reverse=False)
 
         grouped = OrderedDict()
         for key, group in groupby(list_arr, itemgetter(5)):
@@ -290,9 +290,9 @@ def get_temperature2():
                         _sum_temp_air += item[1]
                     if item[0] == 11:
                         _sum_temp_out_air += item[1]
-                _avr_temp_air = _sum_temp_air / _group_len
-                _avr_hum_air = _sum_hum_air / _group_len
-                _avr_temp_out_air = _sum_temp_out_air / _group_len
+                _avr_temp_air = round(_sum_temp_air / _group_len, 1)
+                _avr_hum_air = round(_sum_hum_air / _group_len, 1)
+                _avr_temp_out_air = round(_sum_temp_out_air / _group_len, 1)
 
             grouped_by_line_id[key] = {'temp_air': _avr_temp_air,
             'hum_air': _avr_hum_air,
