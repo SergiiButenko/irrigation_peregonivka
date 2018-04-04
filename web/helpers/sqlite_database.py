@@ -5,6 +5,7 @@ from helpers.redis import *
 from helpers.common import *
 from itertools import groupby
 from operator import itemgetter
+from collections import OrderedDict
 import ast
 
 
@@ -270,7 +271,7 @@ def get_temperature2():
         if list_arr is not None:
             list_arr.sort(key=itemgetter(5))
 
-        grouped = {}
+        grouped = OrderedDict()
         for key, group in groupby(list_arr, itemgetter(5)):
             grouped[key] = [list(thing) for thing in group]
         
