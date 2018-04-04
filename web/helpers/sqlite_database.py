@@ -282,7 +282,7 @@ def get_temperature2():
             _sum_temp_air = 0
             _sum_hum_air = 0
             _sum_temp_out_air = 0
-            _group_len = len(group)
+            _group_len = len(group) + 1
             for items in group:
                 for item in items:
                     if item[0] == 10:
