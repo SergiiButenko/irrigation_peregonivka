@@ -277,8 +277,8 @@ def get_temperature2():
             _key = "24" if _key == "00" else _key
             grouped.setdefault(_key, []).append([list(thing) for thing in group])
 
-        grouped_by_line_id = {}
-        for key, group in sorted(grouped.items(), key=lambda t: t[0], reverse=False):
+        grouped_by_line_id = OrderedDict()
+        for key, group in grouped.items():
             _sum_temp_air = 0
             _sum_hum_air = 0
             _sum_temp_out_air = 0
