@@ -106,8 +106,8 @@
         <tr>
             <th scope="col">Час</th>
             <th scope="col">Температура в теплиці</th>
-            <th scope="col">Вологість в теплиці</th>
             <th scope="col">Температура на вулиці</th>
+            <th scope="col">Вологість в теплиці</th>
         </tr>
     </thead>
     <tbody>
@@ -115,12 +115,12 @@
         <tr>
             <th scope="row">{{data}}</th>
             <td>{{value[0][1]}}</td>
+            {% if value|length > 1 %}
+            <td>{{value[1][1]}}</td>
+            {% else %}
+            <td>-</td>
+            {%endif %}
             <td>{{value[0][2]}}</td>
-            {% if value|length > 1 %}   
-        <td>{{value[1][1]}}</td>
-    {% else %}
-        <td>-</td>
-    {%endif %}
         </tr>
         {% endfor %}
     </tbody>
