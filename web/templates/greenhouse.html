@@ -114,14 +114,10 @@
     <tbody>
         {% for data, value in my_list['temperature'].items() %}
         <tr>
-            <th scope="row">{{data}}</th>
-            <td>{{value[0][1]}}</td>
-            {% if value|length > 1 %}
-            <td>{{value[1][1]}}</td>
-            {% else %}
-            <td>-</td>
-            {%endif %}
-            <td>{{value[0][2]}}</td>
+            <th scope="row">{{data}}:00</th>
+            <td>{{value['temp_air']}}</td>
+            <td>{{value['temp_out']}}</td>
+            <td>{{value['hum_air']}}</td>
         </tr>
         {% endfor %}
     </tbody>
