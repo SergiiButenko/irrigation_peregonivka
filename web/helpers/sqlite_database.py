@@ -169,8 +169,11 @@ QUERY['get_moisture'] = (
     "SELECT line_id, value, datetime FROM moisture WHERE datetime >= datetime('now', 'localtime', '-23 hours');")
 
 QUERY['get_temperature'] = (
-    "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} days');"
-    )
+    "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} days');")
+
+QUERY['get_temperature2'] = (
+    "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} days') "
+    "and l.line_type = 'air_sensor' or l.line_type = 'ground_sensor';")
 
 QUERY['get_app_settings'] = "SELECT short_name, json_value from settings"
 
@@ -178,6 +181,7 @@ QUERY['set_app_settings'] = "update settings set json_value=\"{0}\" where short_
 
 QUERY['migrate_data'] = 'select * from temperature'
 QUERY['migrate_data_insert'] = 'select * from temperature'
+
 
 # executes query and returns fetch* result
 def select(query, method='fetchall'):
@@ -260,6 +264,44 @@ def get_rain_volume():
     return round(rain, 2)
 
 
+def get_temperature2():
+    try:
+        "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime 
+        if list_arr is not None:
+            list_arr.sort(key=itemgetter(5))
+
+        grouped = []
+        for key, group in groupby(list_arr, itemgetter(5)):
+            grouped.append(list([list(thing) for thing in group]))
+        logging.info(grouped)
+        return grouped
+
+            #             round(thing[1], 2),
+            #             round(thing[1], 2),
+            #             round(thing[1], 2),
+            #             int(convert_to_datetime(thing[2]).strftime('%H'))])
+            #     grouped[key] = {}
+            #     grouped[key]['new'] = _list
+
+            # for key, value in grouped.items():
+            #     new_list = list()
+            #     for _key, _group in groupby(value['new'], itemgetter(1)):
+            #         _sum = 0
+            #         _len = 0
+            #         for thing in _group:
+            #             _sum += thing[0]
+            #             _len += 1
+            #         new_list.append(
+            #             dict(hours=_key, val=round(_sum / _len, 2)))
+            #     grouped[key]['new'] = new_list
+            #     grouped[key]['base'] = 60
+
+            # for key, value in grouped.items():
+            #     del value['new'][::2]
+    except Exception as e:
+        logging.error(e)
+
+
 def get_temperature():
     """Return volume of rain mm/m^2"""
     list_arr = select(QUERY[mn()].format(TEMP_DAYS))
@@ -278,6 +320,7 @@ def get_temperature():
 
         for s_id, sensor in grouped.items():
             sensor['values'].sort(key=itemgetter(5), reverse=True)
+
     return grouped
 
 
