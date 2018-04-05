@@ -470,7 +470,7 @@ function draw_d3js(data) {
         hours.push(hour+":00")
     }
 
-    xScale.domain(hours);
+    xScale.domain(hours.sort());
 
     // 1. Add the SVG to the page and employ #2
     var svg = d3.select('#greenhouse_chart').append("svg")
@@ -491,7 +491,7 @@ function draw_d3js(data) {
         .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
 
     svg.append("path")
-        .datum(dataset2) // 10. Binds data to the line 
+        .datum(dataset) // 10. Binds data to the line 
         .attr("class", "line_base") // Assign a class for styling 
         .attr("d", line_air); // 11. Calls the line generator 
 
