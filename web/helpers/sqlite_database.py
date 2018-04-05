@@ -282,17 +282,21 @@ def get_temperature2():
             _sum_temp_air = 0
             _sum_hum_air = 0
             _sum_temp_out_air = 0
+            _quant_10 = 0
+            _quant_11 = 0
             _group_len = float(len(group))
             for items in group:
                 for item in items:
                     if item[0] == 10:
+                        _quant_10 += 1
                         _sum_hum_air += float(item[2])
                         _sum_temp_air += float(item[1])
                     if item[0] == 11:
+                        _quant_11 += 1
                         _sum_temp_out_air += float(item[1])
-            _avr_temp_air = round(_sum_temp_air / _group_len, 1)
-            _avr_hum_air = round(_sum_hum_air / _group_len, 1)
-            _avr_temp_out_air = round(_sum_temp_out_air / _group_len, 1)
+            _avr_temp_air = round(_sum_temp_air / _quant_10, 1)
+            _avr_hum_air = round(_sum_hum_air / _quant_10, 1)
+            _avr_temp_out_air = round(_sum_temp_out_air / _quant_11, 1)
 
             grouped_by_line_id[key] = {'temp_air': _avr_temp_air,
             'hum_air': _avr_hum_air,
