@@ -258,13 +258,18 @@ li>span {
 
 /* Style the lines by removing the fill and applying a stroke */
 
-.line_base {
+.line_air {
     fill: none;
-    stroke: black;
-    stroke-width: 1;
-    opacity: 70%;
+    stroke: green;
+    stroke-width: 3;
 }
 
+
+.line_out {
+    fill: none;
+    stroke: #ffab00;
+    stroke-width: 3;
+}
 
 /* Style the dots by assigning a fill and stroke */
 

@@ -444,7 +444,7 @@ function draw_d3js(data) {
 
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
-        .domain([0, 100]) // input 
+        .domain([0, 50]) // input 
         .range([height, 0]); // output 
 
     // 7. d3's line generator
@@ -494,18 +494,18 @@ function draw_d3js(data) {
 
     svg.append("path")
         .datum(dataset) // 10. Binds data to the line 
-        .attr("class", "line") // Assign a class for styling 
+        .attr("class", "line_air") // Assign a class for styling 
         .attr("d", line_air); // 11. Calls the line generator 
 
-    // 9. Append the path, bind the data, and call the line generator 
-    svg.append("path")
-        .datum(dataset) // 10. Binds data to the line 
-        .attr("class", "line") // Assign a class for styling 
-        .attr("d", line_hum); // 11. Calls the line generator 
+    // // 9. Append the path, bind the data, and call the line generator 
+    // svg.append("path")
+    //     .datum(dataset) // 10. Binds data to the line 
+    //     .attr("class", "line") // Assign a class for styling 
+    //     .attr("d", line_hum); // 11. Calls the line generator 
 
     svg.append("path")
         .datum(dataset) // 10. Binds data to the line 
-        .attr("class", "line") // Assign a class for styling 
+        .attr("class", "line_out") // Assign a class for styling 
         .attr("d", line_out); // 11. Calls the line generator 
 
     // 12. Appends a circle for each datapoint 
