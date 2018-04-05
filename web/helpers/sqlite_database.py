@@ -296,7 +296,8 @@ def get_temperature2():
 
             grouped_by_line_id[key] = {'temp_air': _avr_temp_air,
             'hum_air': _avr_hum_air,
-            'temp_out': _avr_temp_out_air}
+            'temp_out': _avr_temp_out_air,
+            'hour': key}
 
         return grouped_by_line_id
 
