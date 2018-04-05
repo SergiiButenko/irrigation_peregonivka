@@ -525,7 +525,7 @@ function draw_d3js(data) {
             div.transition()
                 .duration(200)
                 .style("opacity", .9);
-            div.html("На вулиці: " + d.temp_out + "<br/>" + "В теплиці: " + d.temp_air)
+            div.html("В теплиці: " + d.temp_air + "<br/>" + "На вулиці: " + d.temp_out)
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
         })
@@ -555,7 +555,7 @@ function draw_d3js(data) {
             div.transition()
                 .duration(200)
                 .style("opacity", .9);
-            div.html("На вулиці: " + d.temp_out + "<br/>" + "В теплиці: " + d.temp_air)
+            div.html("В теплиці: " + d.temp_air + "<br/>" + "На вулиці: " + d.temp_out)
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
         })
