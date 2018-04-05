@@ -24,6 +24,16 @@ $(document).ready(function() {
     });
 
 
+      //Rename branches
+    $.ajax({
+        url: '/temperature2',
+        success: function(data) {
+            list = data['data']
+            draw_d3js(list);
+        }
+    });
+
+
     $.ajax({
         url: '/app_settings',
         success: function(data) {
@@ -413,3 +423,104 @@ function toogle_card(element_id, branch) {
         $('#btn-cancel-' + element_id).hide().addClass("hidden");
     }
 }
+
+
+function draw_d3js(data) {
+    var parent_el = $('#greenhouse_chart');
+
+    // 2. Use the margin convention practice 
+    var margin = { top: 20, right: 5, bottom: 20, left: 25 },
+        width = parent_el.width() - margin.left - margin.right // Use the window's width 
+        ,
+        height = 250 - margin.top - margin.bottom; // Use the window's height
+
+    // The number of datapoints
+    var n = 25;
+
+    // 5. X scale will use the index of our data
+    var xScale = d3.scaleBand()
+        //.domain([0, n - 1]) // input
+        .range([0, width]); // output
+
+    // 6. Y scale will use the randomly generate number 
+    var yScale = d3.scaleLinear()
+        .domain([0, 100]) // input 
+        .range([height, 0]); // output 
+
+    // 7. d3's line generator
+    var line_air = d3.line()
+        // .x(function(d) { return xScale(d.hours); }) // set the x values for the line generator
+        .y(function(d) { return yScale(d.temp_air); }) // set the y values for the line generator 
+        .curve(d3.curveMonotoneX) // apply smoothing to the line
+
+    var line_hum = d3.line()
+        // .x(function(d) { return xScale(d.hours); }) // set the x values for the line generator
+        .y(function(d) { return yScale(d.hum_air); }) // set the y values for the line generator 
+        .curve(d3.curveMonotoneX) // apply smoothing to the line
+
+    var line_out = d3.line()
+        // .x(function(d) { return xScale(d.hours); }) // set the x values for the line generator
+        .y(function(d) { return yScale(d.temp_out); }) // set the y values for the line generator 
+        .curve(d3.curveMonotoneX) // apply smoothing to the line
+    // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+    // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+    var dataset = data
+    var hours = []
+    for (hour in data) {
+        hours.append(hour+":00")
+    }
+
+    xScale.domain(hours);
+
+    // 1. Add the SVG to the page and employ #2
+    var svg = d3.select(`#card-${id} chart`).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // 3. Call the x axis in a group tag
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+
+    // 4. Call the y axis in a group tag
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+
+    svg.append("path")
+        .datum(dataset2) // 10. Binds data to the line 
+        .attr("class", "line_base") // Assign a class for styling 
+        .attr("d", line_air); // 11. Calls the line generator 
+
+    // 9. Append the path, bind the data, and call the line generator 
+    svg.append("path")
+        .datum(dataset) // 10. Binds data to the line 
+        .attr("class", "line") // Assign a class for styling 
+        .attr("d", line_hum); // 11. Calls the line generator 
+
+    svg.append("path")
+        .datum(dataset) // 10. Binds data to the line 
+        .attr("class", "line") // Assign a class for styling 
+        .attr("d", line_out); // 11. Calls the line generator 
+
+    // 12. Appends a circle for each datapoint 
+    // var tickLabels = svg.selectAll(".dot")
+    // tickLabels.last()
+    //     .data(dataset)
+    //     .enter().append("circle") // Uses the enter().append() method
+    //     .attr("class", "dot") // Assign a class for styling
+    //     .attr("cx", function(d, i) { return xScale(d.hours) })
+    //     .attr("cy", function(d) { return yScale(d.val) })
+    //     .attr("r", 5);
+}
+
+d3.selection.prototype.first = function() {
+    return d3.select(this[0][0]);
+};
+d3.selection.prototype.last = function() {
+    var last = this.size() - 1;
+    return d3.select(this[0][last]);
+};
