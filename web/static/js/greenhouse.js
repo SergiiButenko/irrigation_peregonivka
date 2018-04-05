@@ -465,6 +465,7 @@ function draw_d3js(data) {
     // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
     // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
     var dataset = data
+    comsole.log(dataset);
     var hours = []
     for (hour in data) {
         hours.push(hour+"")
