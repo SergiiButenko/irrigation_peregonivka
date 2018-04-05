@@ -462,14 +462,15 @@ function draw_d3js(data) {
         .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
         .y(function(d) { return yScale(d.temp_out); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
-    // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-    // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-    var dataset = data
-    console.log(dataset);
+    
+    var dataset = []
+    console.log(data);
     var hours = []
     for (hour in data) {
-        hours.push(hour+"")
+        hours.push(hour+"");
+        dataset.push(data[hour]);
     }
+    console.log(dataset);
 
     xScale.domain(hours.sort());
 
@@ -493,7 +494,7 @@ function draw_d3js(data) {
 
     svg.append("path")
         .datum(dataset) // 10. Binds data to the line 
-        .attr("class", "line_base") // Assign a class for styling 
+        .attr("class", "line") // Assign a class for styling 
         .attr("d", line_air); // 11. Calls the line generator 
 
     // 9. Append the path, bind the data, and call the line generator 
