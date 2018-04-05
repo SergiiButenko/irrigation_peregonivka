@@ -446,9 +446,8 @@ function draw_d3js(data) {
 
     // 5. X scale will use the index of our data
     var xScale = d3.scaleBand()
-        .domain([0,  dataset.length]) // input
-        .range([0, width]) // output
-        .padding(0);
+        .domain([dataset[0],  dataset[dataset.length - 1]]) // input
+        .range([0, width]); // output
 
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
@@ -464,10 +463,10 @@ function draw_d3js(data) {
         .y(function(d) { return yScale(d.temp_air); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
 
-    var line_hum = d3.line()
-        .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
-        .y(function(d) { return yScale(d.hum_air); }) // set the y values for the line generator 
-        .curve(d3.curveMonotoneX) // apply smoothing to the line
+    // var line_hum = d3.line()
+    //     .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
+    //     .y(function(d) { return yScale(d.hum_air); }) // set the y values for the line generator 
+    //     .curve(d3.curveMonotoneX) // apply smoothing to the line
 
     var line_out = d3.line()
         .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
@@ -530,4 +529,19 @@ function draw_d3js(data) {
         .attr("cx", function(d, i) { return xScale(d.hour) })
         .attr("cy", function(d) { return yScale(d.temp_out) })
         .attr("r", 5);
+
+        // 12. Appends a circle for each datapoint 
+    // svg.selectAll(".dot")
+    //     .data(dataset)
+    //     .enter().append("text") // Uses the enter().append() method
+    //     .attr("cx", function(d, i) { return xScale(d.hour) })
+    //     .attr("cy", function(d) { return yScale(d.temp_air) })
+    //     .attr("r", 5);
+
+    // svg.selectAll(".dot")
+    //     .data(dataset)
+    //     .enter().append("text") // Uses the enter().append() method
+    //     .attr("cx", function(d, i) { return xScale(d.hour) })
+    //     .attr("cy", function(d) { return yScale(d.temp_out) })
+    //     .attr("r", 5);
 }
