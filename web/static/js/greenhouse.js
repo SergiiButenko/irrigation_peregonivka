@@ -487,13 +487,16 @@ function draw_d3js(data) {
     // 3. Call the x axis in a group tag
     svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
+        // .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + 0 + ")")
         .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
 
     // 4. Call the y axis in a group tag
     svg.append("g")
         .attr("class", "y axis")
         .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+
+
 
     svg.append("path")
         .datum(dataset) // 10. Binds data to the line 
@@ -527,18 +530,4 @@ function draw_d3js(data) {
         .attr("cx", function(d, i) { return xScale(d.hour) })
         .attr("cy", function(d) { return yScale(d.temp_out) })
         .attr("r", 5);
-
-    svg.append("text")
-        .attr("transform", "translate(" + (width + 3) + "," + yScale(d.temp_out) + ")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .style("fill", "green")
-        .text("Теплиця");
-
-    svg.append("text")
-        .attr("transform", "translate(" + (width + 3) + "," + yScale(d.temp_air) + ")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .style("fill", "#ffab00;")
-        .text("Вулиця");
 }
