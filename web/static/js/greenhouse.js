@@ -202,10 +202,10 @@ $(document).ready(function() {
                 console.log(settings);
 
                 for (item in settings) {
-                    settings[item] = JSON.parse(settings[item].replace(/'/g, '"'));
+                    settings[item] = JSON.parse(settings[item]);
                 }
 
-                $('#greenhouse_settings_modal').modal('hide');
+                $('#greenhouse_settings_modal').modal('show');
             }
         });
 
