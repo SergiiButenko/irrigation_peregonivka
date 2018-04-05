@@ -512,16 +512,16 @@ function draw_d3js(data) {
     svg.selectAll(".dot")
         .data(dataset)
         .enter().append("circle") // Uses the enter().append() method
-        .attr("class", "dot") // Assign a class for styling
+        .attr("class", "dot_air") // Assign a class for styling
         .attr("cx", function(d, i) { return xScale(d.hour) })
         .attr("cy", function(d) { return yScale(d.temp_air) })
         .attr("r", 5);
-}
 
-d3.selection.prototype.first = function() {
-    return d3.select(this[0][0]);
-};
-d3.selection.prototype.last = function() {
-    var last = this.size() - 1;
-    return d3.select(this[0][last]);
-};
+    svg.selectAll(".dot")
+        .data(dataset)
+        .enter().append("circle") // Uses the enter().append() method
+        .attr("class", "dot_out") // Assign a class for styling
+        .attr("cx", function(d, i) { return xScale(d.hour) })
+        .attr("cy", function(d) { return yScale(d.temp_out) })
+        .attr("r", 5);
+}
