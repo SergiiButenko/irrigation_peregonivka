@@ -447,7 +447,8 @@ function draw_d3js(data) {
     // 5. X scale will use the index of our data
     var xScale = d3.scaleBand()
         .domain([0,  dataset.length]) // input
-        .range([0, width]); // output
+        .range([0, width]) // output
+        .nice();
 
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
