@@ -525,7 +525,7 @@ function draw_d3js(data) {
             div.transition()
                 .duration(200)
                 .style("opacity", .9);
-            div.html(d.temp_air + "<br/>" + d.temp_out)
+            div.html("На вулиці: " + d.temp_out + "<br/>" + "В теплиці: " + d.temp_air)
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
         })
@@ -533,10 +533,16 @@ function draw_d3js(data) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
+        })
+        .on("scroll", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
         });
+
     var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+        .attr("class", "tooltip")
+        .style("opacity", 0);
 
     svg.selectAll(".dot")
         .data(dataset)
@@ -554,6 +560,11 @@ function draw_d3js(data) {
                 .style("top", (d3.event.pageY - 28) + "px");
         })
         .on("mouseout", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+        })
+        .on("scroll", function(d) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
