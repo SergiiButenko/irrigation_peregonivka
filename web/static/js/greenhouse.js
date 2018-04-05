@@ -426,6 +426,16 @@ function toogle_card(element_id, branch) {
 
 
 function draw_d3js(data) {
+    var dataset = []
+    console.log(data);
+    var hours = []
+    for (hour in data) {
+        hours.push(hour + "");
+        dataset.push(data[hour]);
+    }
+    console.log(dataset);
+
+
     var parent_el = $('#greenhouse_chart');
 
     // 2. Use the margin convention practice 
@@ -434,17 +444,17 @@ function draw_d3js(data) {
         ,
         height = 250 - margin.top - margin.bottom; // Use the window's height
 
-    // The number of datapoints
-    var n = 25;
-
     // 5. X scale will use the index of our data
     var xScale = d3.scaleBand()
-        //.domain([0, n - 1]) // input
+        .domain([0,  dataset.length]) // input
         .range([0, width]); // output
 
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
-        .domain([0, 50]) // input 
+        .domain([
+        0,
+        d3.max(dataset, function(c) { return c.temp_air })
+        ]) // input 
         .range([height, 0]); // output 
 
     // 7. d3's line generator
@@ -463,14 +473,7 @@ function draw_d3js(data) {
         .y(function(d) { return yScale(d.temp_out); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
 
-    var dataset = []
-    console.log(data);
-    var hours = []
-    for (hour in data) {
-        hours.push(hour + "");
-        dataset.push(data[hour]);
-    }
-    console.log(dataset);
+ 
 
     xScale.domain(hours.sort());
 
