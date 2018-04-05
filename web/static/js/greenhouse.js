@@ -487,8 +487,7 @@ function draw_d3js(data) {
     // 3. Call the x axis in a group tag
     svg.append("g")
         .attr("class", "x axis")
-        // .attr("transform", "translate(0," + height + ")")
-        .attr("transform", "translate(0," + 0 + ")")
+        .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
 
     // 4. Call the y axis in a group tag
