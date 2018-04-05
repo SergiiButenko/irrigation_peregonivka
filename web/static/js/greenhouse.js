@@ -534,6 +534,9 @@ function draw_d3js(data) {
                 .duration(500)
                 .style("opacity", 0);
         });
+    var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
     svg.selectAll(".dot")
         .data(dataset)
