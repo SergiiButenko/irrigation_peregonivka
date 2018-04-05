@@ -534,7 +534,7 @@ function draw_d3js(data) {
                 .duration(500)
                 .style("opacity", 0);
         })
-        .on("scroll", function(d) {
+        .bind("scroll", function(d) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
@@ -564,7 +564,7 @@ function draw_d3js(data) {
                 .duration(500)
                 .style("opacity", 0);
         })
-        .on("scroll", function(d) {
+        .bind("scroll", function(d) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
