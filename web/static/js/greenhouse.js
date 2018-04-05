@@ -446,14 +446,14 @@ function draw_d3js(data) {
 
     // 5. X scale will use the index of our data
     var xScale = d3.scalePoint()
-        .domain([dataset[0],  dataset[dataset.length - 1]]) // input
+        .domain([dataset[0], dataset[dataset.length - 1]]) // input
         .rangeRound([0, width]); // output
 
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
         .domain([
-        0,
-        d3.max(dataset, function(c) { return c.temp_air })
+            0,
+            d3.max(dataset, function(c) { return c.temp_air })
         ]) // input 
         .range([height, 0]); // output 
 
@@ -473,7 +473,7 @@ function draw_d3js(data) {
         .y(function(d) { return yScale(d.temp_out); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
 
- 
+
 
     xScale.domain(hours.sort());
 
@@ -520,7 +520,20 @@ function draw_d3js(data) {
         .attr("class", "dot_air") // Assign a class for styling
         .attr("cx", function(d, i) { return xScale(d.hour) })
         .attr("cy", function(d) { return yScale(d.temp_air) })
-        .attr("r", 5);
+        .attr("r", 5)
+        .on("mouseover", function(d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div.html(d.temp_air + "<br/>" + d.temp_out)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
 
     svg.selectAll(".dot")
         .data(dataset)
@@ -528,20 +541,19 @@ function draw_d3js(data) {
         .attr("class", "dot_out") // Assign a class for styling
         .attr("cx", function(d, i) { return xScale(d.hour) })
         .attr("cy", function(d) { return yScale(d.temp_out) })
-        .attr("r", 5);
+        .attr("r", 5)
+        .on("mouseover", function(d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div.html(d.temp_out + "<br/>" + d.temp_air)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
 
-        // 12. Appends a circle for each datapoint 
-    svg.selectAll(".dot")
-        .data(dataset)
-        .enter().append("text") // Uses the enter().append() method
-        .attr("cx", function(d, i) { return xScale(d.hour) })
-        .attr("cy", function(d) { return yScale(d.temp_air) })
-        .attr("r", 5);
-
-    svg.selectAll(".dot")
-        .data(dataset)
-        .enter().append("text") // Uses the enter().append() method
-        .attr("cx", function(d, i) { return xScale(d.hour) })
-        .attr("cy", function(d) { return yScale(d.temp_out) })
-        .attr("r", 5);
 }
