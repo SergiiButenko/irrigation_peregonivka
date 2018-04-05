@@ -24,7 +24,7 @@ $(document).ready(function() {
     });
 
 
-      //Rename branches
+    //Rename branches
     $.ajax({
         url: '/temperature2',
         success: function(data) {
@@ -462,12 +462,12 @@ function draw_d3js(data) {
         .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
         .y(function(d) { return yScale(d.temp_out); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
-    
+
     var dataset = []
     console.log(data);
     var hours = []
     for (hour in data) {
-        hours.push(hour+"");
+        hours.push(hour + "");
         dataset.push(data[hour]);
     }
     console.log(dataset);
@@ -524,4 +524,18 @@ function draw_d3js(data) {
         .attr("cx", function(d, i) { return xScale(d.hour) })
         .attr("cy", function(d) { return yScale(d.temp_out) })
         .attr("r", 5);
+
+    svg.append("text")
+        .attr("transform", "translate(" + (width + 3) + "," + yScale(d.temp_out) + ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "green")
+        .text("Теплиця");
+
+    svg.append("text")
+        .attr("transform", "translate(" + (width + 3) + "," + yScale(d.temp_air) + ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "#ffab00;")
+        .text("Вулиця");
 }
