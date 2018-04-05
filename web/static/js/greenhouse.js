@@ -449,17 +449,17 @@ function draw_d3js(data) {
 
     // 7. d3's line generator
     var line_air = d3.line()
-        // .x(function(d) { return xScale(d.hours); }) // set the x values for the line generator
+        .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
         .y(function(d) { return yScale(d.temp_air); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
 
     var line_hum = d3.line()
-        // .x(function(d) { return xScale(d.hours); }) // set the x values for the line generator
+        .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
         .y(function(d) { return yScale(d.hum_air); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
 
     var line_out = d3.line()
-        // .x(function(d) { return xScale(d.hours); }) // set the x values for the line generator
+        .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
         .y(function(d) { return yScale(d.temp_out); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
     // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
@@ -467,7 +467,7 @@ function draw_d3js(data) {
     var dataset = data
     var hours = []
     for (hour in data) {
-        hours.push(hour+":00")
+        hours.push(hour+"")
     }
 
     xScale.domain(hours.sort());
