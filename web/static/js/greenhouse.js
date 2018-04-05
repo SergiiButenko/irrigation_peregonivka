@@ -467,7 +467,7 @@ function draw_d3js(data) {
     var dataset = data
     var hours = []
     for (hour in data) {
-        hours.append(hour+":00")
+        hours.push(hour+":00")
     }
 
     xScale.domain(hours);
