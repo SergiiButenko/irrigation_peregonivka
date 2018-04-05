@@ -250,25 +250,46 @@ li>span {
 
 /* Style the dots by assigning a fill and stroke */
 
-.dot {
+.dot_air {
+    fill: green;
+    stroke: #fff;
+}
+
+/* Style the lines by removing the fill and applying a stroke */
+
+.line_air {
+    fill: none;
+    stroke: green;
+    stroke-width: 3;
+}
+
+.dot_out {
     fill: #ffab00;
     stroke: #fff;
 }
 
-
-/* Style the lines by removing the fill and applying a stroke */
-
-.line_base {
+.line_out {
     fill: none;
-    stroke: black;
-    stroke-width: 1;
-    opacity: 70%;
+    stroke: #ffab00;
+    stroke-width: 3;
 }
-
 
 /* Style the dots by assigning a fill and stroke */
 
 .dot_base {
     fill: black;
     stroke: #fff;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 100px;
+  height: 35px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
 }

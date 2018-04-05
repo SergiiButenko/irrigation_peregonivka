@@ -115,7 +115,7 @@
     <tbody>
         {% for data, value in my_list['temperature'].items() %}
         <tr>
-            <th scope="row" class="text-center">{{data}}:00</th>
+            <th scope="row" class="text-center">{{data}}</th>
             <td class="text-center">{{value['temp_air']}}</td>
             <td class="text-center">{{value['temp_out']}}</td>
             <td class="text-center">{{value['hum_air']}}</td>
@@ -123,6 +123,9 @@
         {% endfor %}
     </tbody>
 </table>
+<hr style="margin-top: 2rem; margin-bottom: 2rem" />
+<div id='greenhouse_chart'>
+    </div>
 {% endblock %} {% block custom_scripts %}
 <script src="static/js/greenhouse.js"></script>
 {% endblock %}

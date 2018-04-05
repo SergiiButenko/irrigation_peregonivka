@@ -273,8 +273,8 @@ def get_temperature2():
 
         grouped = OrderedDict()
         for key, group in groupby(list_arr, itemgetter(5)):
-            _key = datetime.datetime.strptime(key, '%Y-%m-%d %H:%M').strftime('%H')
-            _key = "24" if _key == "00" else _key
+            _key = datetime.datetime.strptime(key, '%Y-%m-%d %H:%M').strftime('%H') + ':00'
+            _key = "24:00" if _key == "00:00" else _key
             grouped.setdefault(_key, []).append([list(thing) for thing in group])
 
         grouped_by_line_id = OrderedDict()
@@ -300,7 +300,8 @@ def get_temperature2():
 
             grouped_by_line_id[key] = {'temp_air': _avr_temp_air,
             'hum_air': _avr_hum_air,
-            'temp_out': _avr_temp_out_air}
+            'temp_out': _avr_temp_out_air,
+            'hour': key}
 
         return grouped_by_line_id
 
