@@ -459,7 +459,7 @@ function draw_d3js(data) {
 
     // 7. d3's line generator
     var line_air = d3.line()
-        .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
+        .x(function(d) { return xScale(d.hour+""); }) // set the x values for the line generator
         .y(function(d) { return yScale(d.temp_air); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
 
@@ -469,7 +469,7 @@ function draw_d3js(data) {
     //     .curve(d3.curveMonotoneX) // apply smoothing to the line
 
     var line_out = d3.line()
-        .x(function(d) { return xScale(d.hour); }) // set the x values for the line generator
+        .x(function(d) { return xScale(d.hour+""); }) // set the x values for the line generator
         .y(function(d) { return yScale(d.temp_out); }) // set the y values for the line generator 
         .curve(d3.curveMonotoneX) // apply smoothing to the line
 
