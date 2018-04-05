@@ -509,8 +509,7 @@ function draw_d3js(data) {
         .attr("d", line_out); // 11. Calls the line generator 
 
     // 12. Appends a circle for each datapoint 
-    var tickLabels = svg.selectAll(".dot")
-    tickLabels.last()
+    svg.selectAll(".dot")
         .data(dataset)
         .enter().append("circle") // Uses the enter().append() method
         .attr("class", "dot") // Assign a class for styling
