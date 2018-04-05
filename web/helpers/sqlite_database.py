@@ -284,7 +284,6 @@ def get_temperature2():
             _sum_temp_out_air = 0
             _quant_10 = 0
             _quant_11 = 0
-            _group_len = float(len(group))
             for items in group:
                 for item in items:
                     if item[0] == 10:
