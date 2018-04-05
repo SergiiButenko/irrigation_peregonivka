@@ -549,7 +549,7 @@ function draw_d3js(data) {
             div.transition()
                 .duration(200)
                 .style("opacity", .9);
-            div.html(d.temp_out + "<br/>" + d.temp_air)
+            div.html("На вулиці: " + d.temp_out + "<br/>" + "В теплиці: " + d.temp_air)
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
         })
