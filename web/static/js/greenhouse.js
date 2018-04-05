@@ -200,11 +200,6 @@ $(document).ready(function() {
             success: function(data) {
                 settings = data['data'];
                 console.log(settings);
-
-                for (item in settings) {
-                    settings[item] = JSON.parse(settings[item]);
-                }
-
                 $('#greenhouse_settings_modal').modal('show');
             }
         });
@@ -439,7 +434,7 @@ function draw_d3js(data) {
     var parent_el = $('#greenhouse_chart');
 
     // 2. Use the margin convention practice 
-    var margin = { top: 20, right: 20, bottom: 20, left: 25 },
+    var margin = { top: 20, right: 20, bottom: 20, left: 50 },
         width = parent_el.width() - margin.left - margin.right // Use the window's width 
         ,
         height = 250 - margin.top - margin.bottom; // Use the window's height
