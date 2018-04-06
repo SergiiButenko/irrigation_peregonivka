@@ -26,6 +26,8 @@ ESP8266WebServer server(80);
 const int led = 13;
 const int r1 = D8;
 const int r2 = D7;
+const int led1 = D5;
+const int led2 = D4;
 
 void handleRoot() {
   digitalWrite(led, 1);
@@ -50,6 +52,18 @@ void handleNotFound(){
   digitalWrite(led, 0);
 }
 
+void blink_led_01(){
+  digitalWrite(led, 0);
+  delay(500);
+  digitalWrite(led, 1);
+}
+
+void blink_led_10(){
+  digitalWrite(led, 1);
+  delay(500);
+  digitalWrite(led, 0);
+}
+
 void setup(void){
   Serial.println("setup");
   pinMode(led, OUTPUT);
@@ -59,27 +73,25 @@ void setup(void){
   digitalWrite(led, 0);
   digitalWrite(r1, 0);
   digitalWrite(r2, 0);
-  
+  digitalWrite(led1, 0);
+  digitalWrite(led2, 0);
+
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
-
-//  IPAddress ip(192, 168, 1, 101); // where xx is the desired IP Address
-//  IPAddress gateway(192, 168, 1, 1); // set gateway to match your network
-//  Serial.print(F("Setting static ip to : "));
-//  Serial.println(ip);
-//  IPAddress subnet(255, 255, 255, 0); // set subnet mask to match your
-//  WiFi.config(ip, gateway, subnet);
-  
-  
+  blink_led_01();
   WiFi.begin(ssid, password);
   Serial.println("");
   Serial.println("done");
+  blink_led_10();
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
+    blink_led_01();
     delay(500);
     Serial.print(".");
+    blink_led_10();
   }
+
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
@@ -93,6 +105,7 @@ void setup(void){
   server.on("/", handleRoot);
 
   server.on("/test", [](){
+    blink_led_01();
     server.send(200, "text/plain", "this works as well");
   });
 
@@ -103,16 +116,19 @@ void setup(void){
     int r1_status = digitalRead(r1);
     int r2_status = digitalRead(r2);
     send_status();
+    blink_led_01();
   });
 
   server.on("/off", [](){
     String relay=server.arg("relay");
     if (relay == "1")  digitalWrite(r1, 0);
     if (relay == "2")  digitalWrite(r2, 0);
+    blink_led_01();
     send_status();
   });
 
   server.on("/status", [](){
+    blink_led_01();
     send_status();
   });
 
@@ -121,12 +137,14 @@ void setup(void){
     float h = dht.readHumidity();
     // Read temperature as Celsius (the default)
     float t = dht.readTemperature();
+    blink_led_01();
     server.send(200, "application/json", "{\"temp\":" + String(t) + ", \"hum\":" + String(h) + "}");
   });
 
   server.on("/ground_temperature", [](){
     delay(2000);
     getTemperature();
+    blink_led_01();
     server.send(200, "application/json", "{\"temp\":" + String(temperatureCString) + "}");
   });
 

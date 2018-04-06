@@ -60,13 +60,15 @@ void setup(void){
   
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
+  blink_led_01();
   WiFi.begin(ssid, password);
   Serial.println("");
   Serial.println("done");
-  blink_led_01();
-
+  blink_led_10();
+  
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
+    blink_led_01();
     delay(500);
     Serial.print(".");
     blink_led_10();
