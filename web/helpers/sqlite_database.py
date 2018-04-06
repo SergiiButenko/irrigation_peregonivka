@@ -183,6 +183,8 @@ QUERY['set_app_settings'] = "update settings set json_value=\"{0}\" where short_
 QUERY['migrate_data'] = 'select * from temperature'
 QUERY['migrate_data_insert'] = 'select * from temperature'
 
+QUERY['stop_filling'] = "INSERT into stop_fill (datetime) values (datetime('now', 'localtime'));"
+
 
 # executes query and returns fetch* result
 def select(query, method='fetchall'):

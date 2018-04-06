@@ -1084,6 +1084,8 @@ def set_settings():
 def stop_filling():
     """Blablbal."""
     logging.info("INERUPT SIGNAL RESEIVED!")
+    database.update(database.QUERY[mn()])
+
     return json.dumps({'status': 'OK'})
 
 
