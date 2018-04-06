@@ -1080,10 +1080,11 @@ def set_settings():
         data=APP_SETTINGS)
 
 
-@app.route("/.well-known/acme-challenge/caIBL2nKjk9nIX_Earqy9Qy4vttNvOcXA_TEgfNLcUk")
-def sensors2():
+@app.route("/stop_filling")
+def stop_filling():
     """Blablbal."""
-    return app.send_static_file('caIBL2nKjk9nIX_Earqy9Qy4vttNvOcXA_TEgfNLcUk')
+    logging.info("INERUPT SIGNAL RESEIVED!")
+    return json.dumps({'status': 'OK'})
 
 
 if __name__ == "__main__":
