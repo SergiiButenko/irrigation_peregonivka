@@ -26,15 +26,13 @@ def is_api_group(chat_id):
     return chat_id == GROUP_CHAT_ID
 
 
-@bot.message_handler(commands=["ping"])
+@bot.inline_handler(commands=["ping"])
 def on_ping(message):
-    logging.info(str(message))
     bot.reply_to(message, "Still alive and kicking!")
 
 
 @bot.message_handler(commands=['start'])
 def on_start(message):
-    logging.info(str(message))
     if not is_api_group(message.chat.id):
         bot.reply_to(message, text_messages['wrong_chat'])
         return
