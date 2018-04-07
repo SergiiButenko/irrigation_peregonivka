@@ -8,7 +8,7 @@ from pytz import timezone
 mn = lambda: inspect.stack()[1][3]
 
 BACKEND_IP = 'http://0.0.0.0:7542'
-VIBER_BOT_IP = 'https://0.0.0.0:8443'
+VIBER_BOT_IP = 'https://butenko.asuscomm.com:8443'
 
 BRANCHES_LENGTH = 18
 RULES_FOR_BRANCHES = [None] * BRANCHES_LENGTH
