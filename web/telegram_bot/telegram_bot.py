@@ -28,11 +28,13 @@ def is_api_group(chat_id):
 
 @bot.message_handler(commands=["ping"])
 def on_ping(message):
+    logging.info(str(message))
     bot.reply_to(message, "Still alive and kicking!")
 
 
 @bot.message_handler(commands=['start'])
 def on_start(message):
+    logging.info(str(message))
     if not is_api_group(message.chat.id):
         bot.reply_to(message, text_messages['wrong_chat'])
         return
@@ -61,6 +63,7 @@ def webhook():
 # Handle '/start' and '/help'
 @bot.message_handler(commands=['info', 'help'])
 def on_info(message):
+    logging.info(str(message))
     if not is_api_group(message.chat.id):
         bot.reply_to(message, text_messages['wrong_chat'])
         return
@@ -68,11 +71,11 @@ def on_info(message):
     bot.reply_to(message, text_messages['info'])
 
 
-# Handle all other messages
-@bot.message_handler(func=lambda message: True, content_types=['text'])
-def echo_message(message):
-    ligging.info(str(message))
-    bot.reply_to(message, message.text)
+# # Handle all other messages
+# @bot.message_handler(func=lambda message: True, content_types=['text'])
+# def echo_message(message):
+#     logging.info(str(message))
+#     bot.reply_to(message, message.text)
 
 
 @app.route('/notify_users_irrigation_started', methods=['POST'])
