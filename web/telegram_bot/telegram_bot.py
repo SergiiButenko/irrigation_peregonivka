@@ -79,7 +79,7 @@ def on_info(message):
 
 @app.route('/notify_users_irrigation_started', methods=['POST'])
 def notify_users():
-    logger.debug("received request for send_message. post data: {0}".format(request.get_data()))
+    logging.debug("received request for send_message. post data: {0}".format(request.get_data()))
     data = json.loads(request.get_data().decode())
     users = data['users']
     rule_id = data['rule_id']
@@ -91,7 +91,7 @@ def notify_users():
         logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
         bot.send_message(CHANNEL_NAME, "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nДля того, щоб відмнінити цей полив, відправте мені повідомлення \n'Відмінити {3}'".format(timeout, user_friendly_name, time, rule_id))        
 
-    logger.info("Done")
+    logging.info("Done")
 
 # Remove webhook, it fails sometimes the set if there is a previous webhook
 bot.remove_webhook()
