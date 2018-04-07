@@ -1,4 +1,6 @@
-API_TOKEN = '586425295:AAEmEki86ttI0UeNM0ugr9fOwCgGXQI1mrk'
+import os
+
+API_TOKEN = os.environ['API_TOKEN']
 NAME = 'Peregonivka_bot'
 
 WEBHOOK_HOST = 'butenko.asuscomm.com'
