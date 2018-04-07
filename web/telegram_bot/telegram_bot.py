@@ -26,7 +26,7 @@ def is_api_group(chat_id):
     return chat_id == GROUP_CHAT_ID
 
 
-@bot.inline_handler(commands=["ping"])
+@bot.inline_handler(func=lambda query: len(query.query) > 0)
 def on_ping(message):
     bot.reply_to(message, "Still alive and kicking!")
 
