@@ -4,7 +4,7 @@ if "API_TOKEN" not in os.environ or "GROUP_CHAT_ID" not in os.environ:
     raise AssertionError("Please configure TELEBOT_BOT_TOKEN and GROUP_CHAT_ID as environment variables")
 
 API_TOKEN = os.environ['API_TOKEN']
-b = int(os.environ['GROUP_CHAT_ID'])
+GROUP_CHAT_ID = int(os.environ['GROUP_CHAT_ID'])
 NAME = 'Peregonivka_bot'
 CHANNEL_NAME = '@Butenko_test'
 
