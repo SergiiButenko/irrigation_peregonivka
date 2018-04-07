@@ -80,6 +80,14 @@ def on_info(message):
 #     bot.reply_to(message, message.text)
 
 
+def time_in_range(start, end, x):
+    """Return true if x is in the range [start, end]"""
+    if start <= end:
+        return start <= x <= end
+    else:
+        return start <= x or x <= end
+
+
 @app.route('/notify_users_irrigation_started', methods=['POST'])
 def notify_users():
     logging.debug("received request for send_message. post data: {0}".format(request.get_data()))
@@ -94,7 +102,7 @@ def notify_users():
     start_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['start_messaging'], '%H:%M').time()
     dnow = datetime.datetime.now().time()
 
-    if dnow > end_messaging_time and dnow < start_messaging_time:
+    if time_in_range(start_messaging_time, end_messaging_time, dnow):
         logging.info("Snooze hours is on. Message won't be send")
         return json.dumps({'status': 'OK'})
     else:
