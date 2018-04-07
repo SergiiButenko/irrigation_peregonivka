@@ -90,9 +90,9 @@ def notify_users():
     timeout = data['timeout']
     user_friendly_name = data['user_friendly_name']
 
-    end_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['stop_messaging'], '%H:%M')
-    start_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['start_messaging'], '%H:%M')
-    dnow = datetime.datetime.now()
+    end_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['stop_messaging'], '%H:%M').time()
+    start_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['start_messaging'], '%H:%M').time()
+    dnow = datetime.datetime.now().time()
 
     if dnow > end_messaging_time and dnow < start_messaging_time:
         logging.info("Snooze hours is on. Message won't be send")
