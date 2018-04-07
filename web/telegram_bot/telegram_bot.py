@@ -71,6 +71,7 @@ def on_info(message):
 # Handle all other messages
 @bot.message_handler(func=lambda message: True, content_types=['text'])
 def echo_message(message):
+    ligging.info(str(message))
     bot.reply_to(message, message.text)
 
 
