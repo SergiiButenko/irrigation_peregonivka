@@ -26,7 +26,24 @@ def is_api_group(chat_id):
     return chat_id == GROUP_CHAT_ID
 
 
-@bot.inline_handler(func=lambda query: len(query.query) > 0)
+@bot.inline_handler(func=lambda query: len(query.query) is 0)
+def empty_query(query):
+    hint = "Введите ровно 2 числа и получите результат!"
+    try:
+        r = types.InlineQueryResultArticle(
+                id='1',
+                parse_mode='Markdown',
+                title="Бот \"Математика\"",
+                description=hint,
+                input_message_content=types.InputTextMessageContent(
+                message_text="Эх, зря я не ввёл 2 числа :(")
+        )
+        bot.answer_inline_query(query.id, [r])
+    except Exception as e:
+        print(e)
+
+
+@bot.message_handler(commands=["ping"])
 def on_ping(message):
     bot.reply_to(message, "Still alive and kicking!")
 
