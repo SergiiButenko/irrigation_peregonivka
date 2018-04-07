@@ -43,7 +43,8 @@ def on_start(message):
 # Empty webserver index, return nothing, just http 200
 @app.route('/', methods=['GET', 'HEAD'])
 def index():
-    return ''
+    logging.info("ROOT requested")
+    return 'OK'
 
 
 # Process webhook calls
