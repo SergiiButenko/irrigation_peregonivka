@@ -8,19 +8,23 @@ from pytz import timezone
 mn = lambda: inspect.stack()[1][3]
 
 BACKEND_IP = 'http://0.0.0.0:7542'
-VIBER_BOT_IP = 'https://mozart.hopto.org:7443'
+VIBER_BOT_IP = 'https://butenko.asuscomm.com:8443'
 
 BRANCHES_LENGTH = 18
 RULES_FOR_BRANCHES = [None] * BRANCHES_LENGTH
 BRANCHES_SETTINGS = {}
 APP_SETTINGS = {}
 
-REDIS_KEY_FOR_VIBER = 'viber_sent_intervals'
+REDIS_KEY_FOR_VIBER = 'telegram_sent_intervals'
 VIBER_SENT_TIMEOUT = 10
 USERS = [
-    {'name': 'Sergii', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='}
-    # {'name': 'Oleg', 'id': 'IRYaSCRnmV1IT1ddtB8Bdw=='},
-    # {'name': 'Irina', 'id': 'mSR74mGibK+ETvTTx2VvcQ=='}
+    {'name': 'Cottage', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='}
+]
+
+VIBER_USERS = [
+    {'name': 'Sergii', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='},
+    {'name': 'Oleg', 'id': 'IRYaSCRnmV1IT1ddtB8Bdw=='},
+    {'name': 'Irina', 'id': 'mSR74mGibK+ETvTTx2VvcQ=='}
 ]
 
 RAIN_HOURS = 12

@@ -21,6 +21,24 @@ bot = telebot.TeleBot(API_TOKEN)
 app = flask.Flask(__name__)
 
 
+def is_api_group(chat_id):
+    return chat_id == GROUP_CHAT_ID
+
+
+@bot.message_handler(commands=["ping"])
+def on_ping(message):
+    bot.reply_to(message, "Still alive and kicking!")
+
+
+@bot.message_handler(commands=['start'])
+def on_start(message):
+    if not is_api_group(message.chat.id):
+        bot.reply_to(message, text_messages['wrong_chat'])
+        return
+
+    bot.reply_to(message, text_messages['welcome'])
+
+
 # Empty webserver index, return nothing, just http 200
 @app.route('/', methods=['GET', 'HEAD'])
 def index():
@@ -40,11 +58,13 @@ def webhook():
 
 
 # Handle '/start' and '/help'
-@bot.message_handler(commands=['help', 'start'])
-def send_welcome(message):
-    bot.reply_to(message,
-                 ("Hi there, I am EchoBot.\n"
-                  "I am here to echo your kind words back to you."))
+@bot.message_handler(commands=['info', 'help'])
+def on_info(message):
+    if not is_api_group(message.chat.id):
+        bot.reply_to(message, text_messages['wrong_chat'])
+        return
+
+    bot.reply_to(message, text_messages['info'])
 
 
 # Handle all other messages
@@ -52,6 +72,27 @@ def send_welcome(message):
 def echo_message(message):
     bot.reply_to(message, message.text)
 
+
+@app.route('/notify_users_irrigation_started', methods=['POST'])
+def notify_users():
+    logger.debug("received request for send_message. post data: {0}".format(request.get_data()))
+    data = json.loads(request.get_data().decode())
+    users = data['users']
+    rule_id = data['rule_id']
+    time = data['time']
+    timeout = data['timeout']
+    user_friendly_name = data['user_friendly_name']
+
+    for user in users:
+        logger.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
+        bot.send_message(CHANNEL_NAME
+        viber.send_messages(user['id'], [
+            # TextMessage(text='Через {0} хвилин {1} будут поливатися {2}хв.\nДля того, щоб відмнінити правило, наберіть \'Відмінити {3}\' або перейдіть за посиланням з наступного повідомлення'.format(timeout, user_friendly_name, time, rule_id))
+            TextMessage(text="Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nДля того, щоб відмнінити цей полив, відправте мені повідомлення \n'Відмінити {3}'".format(timeout, user_friendly_name, time, rule_id))
+            # URLMessage(media="http://185.20.216.94:7542/cancel_rule?id={0}".format(rule_id))
+        ])
+
+    logger.info("Done")
 
 # Remove webhook, it fails sometimes the set if there is a previous webhook
 bot.remove_webhook()
