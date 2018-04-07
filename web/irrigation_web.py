@@ -1,3 +1,4 @@
+
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 from flask import Flask
@@ -1087,6 +1088,10 @@ def stop_filling():
     database.update(database.QUERY[mn()])
 
     return json.dumps({'status': 'OK'})
+
+
+@app.route(".well-known/acme-challenge/Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8")
+    return app.send_static_file('Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8')
 
 
 if __name__ == "__main__":
