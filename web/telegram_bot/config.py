@@ -18,6 +18,7 @@ WEBHOOK_SSL_PRIV = '/var/www/web/telegram_bot/private.key'  # Path to the ssl pr
 WEBHOOK_URL_BASE = "https://%s:%s" % (WEBHOOK_HOST, WEBHOOK_PORT)
 WEBHOOK_URL_PATH = "/%s/" % (API_TOKEN)
 
+SNOOZE_HOURS = {'stop_messaging': "23:00", 'start_messaging': "07:00"}
 
 text_messages = {
     'welcome':

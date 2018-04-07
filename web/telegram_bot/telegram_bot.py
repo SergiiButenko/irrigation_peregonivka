@@ -90,6 +90,14 @@ def notify_users():
     timeout = data['timeout']
     user_friendly_name = data['user_friendly_name']
 
+    end_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['stop_messaging'], '%H:%M')
+    start_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['start_messaging'], '%H:%M')
+    dnow = datetime.datetime.now()
+
+    if dnow > end_messaging_time and dnow < start_messaging_time:
+        logging.info("Snooze hours is on. Message won't be send")
+        return json.dumps({'status': 'OK'})
+
     for user in users:
         logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
         bot.send_message(GROUP_CHAT_ID, "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nЗайдіть на сайт, щоб відмнінити цей полив".format(timeout, user_friendly_name, time,))  # rule_id))
