@@ -88,7 +88,7 @@ def notify_users():
     user_friendly_name = data['user_friendly_name']
 
     for user in users:
-        logger.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
+        logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
         bot.send_message(CHANNEL_NAME, "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nДля того, щоб відмнінити цей полив, відправте мені повідомлення \n'Відмінити {3}'".format(timeout, user_friendly_name, time, rule_id))        
 
     logger.info("Done")
