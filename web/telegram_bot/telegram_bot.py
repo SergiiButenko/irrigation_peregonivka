@@ -95,6 +95,7 @@ def notify_users():
         bot.send_message(GROUP_CHAT_ID, "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nДля того, щоб відмнінити цей полив, відправте мені повідомлення \n'Відмінити {3}'".format(timeout, user_friendly_name, time, rule_id))        
 
     logging.info("Done")
+    return json.dumps({'status': 'OK'})
 
 # Remove webhook, it fails sometimes the set if there is a previous webhook
 bot.remove_webhook()

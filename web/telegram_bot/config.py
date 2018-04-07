@@ -1,10 +1,10 @@
 import os
 
-if "API_TOKEN" not in os.environ or "GROUP_CHAT_ID" not in os.environ:
+if "API_TOKEN_MOZART" not in os.environ or "GROUP_CHAT_ID_COTTAGE" not in os.environ:
     raise AssertionError("Please configure TELEBOT_BOT_TOKEN and GROUP_CHAT_ID as environment variables")
 
-API_TOKEN = os.environ['API_TOKEN']
-GROUP_CHAT_ID = int(os.environ['GROUP_CHAT_ID'])
+API_TOKEN = os.environ['API_TOKEN_MOZART']
+GROUP_CHAT_ID = int(os.environ['GROUP_CHAT_ID_COTTAGE'])
 NAME = 'Peregonivka_bot'
 CHANNEL_NAME = '@Butenko_test'
 
