@@ -22,6 +22,7 @@ app = flask.Flask(__name__)
 
 
 def is_api_group(chat_id):
+    logging.info("income chat id: {0}; expecting chat id: {1}".format(chat_id, GROUP_CHAT_ID))
     return chat_id == GROUP_CHAT_ID
 
 
