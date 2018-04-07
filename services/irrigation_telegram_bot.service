@@ -2,9 +2,9 @@
 Description=Telegram Bot service
 After=network.target
 Requires=network.target
-EnvironmentFile=/etc/environment
 
 [Service]
+EnvironmentFile=/etc/environment
 ExecStart=/usr/bin/python3 /var/www/web/telegram_bot/telegram_bot.py
 
 Restart=always
