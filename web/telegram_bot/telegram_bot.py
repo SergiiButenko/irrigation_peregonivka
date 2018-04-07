@@ -10,7 +10,9 @@ from config import *
 import telebot
 import logging
 import json
-from flask import Flask, request, Response
+from flask import Flask
+from flask import request
+from flask import abort
 import requests
 from helpers.common import *
 
@@ -19,7 +21,7 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)
 
 
 bot = telebot.TeleBot(API_TOKEN)
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
 
 def is_api_group(chat_id):
@@ -51,13 +53,13 @@ def index():
 # Process webhook calls
 @app.route(WEBHOOK_URL_PATH, methods=['POST'])
 def webhook():
-    if flask.request.headers.get('content-type') == 'application/json':
+    if request.headers.get('content-type') == 'application/json':
         json_string = flask.request.get_data().decode('utf-8')
         update = telebot.types.Update.de_json(json_string)
         bot.process_new_updates([update])
         return ''
     else:
-        flask.abort(403)
+        abort(403)
 
 
 # Handle '/start' and '/help'
