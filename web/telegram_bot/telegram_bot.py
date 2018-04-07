@@ -10,7 +10,8 @@ from config import *
 import telebot
 import logging
 import json
-import flask
+from flask import Flask, request, Response
+import requests
 from helpers.common import *
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
