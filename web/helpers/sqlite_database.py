@@ -295,9 +295,9 @@ def get_temperature2():
                     if item[0] == 11:
                         _quant_11 += 1
                         _sum_temp_out_air += float(item[1])
-            _avr_temp_air = round(_sum_temp_air / _quant_10, 1)
-            _avr_hum_air = round(_sum_hum_air / _quant_10, 1)
-            _avr_temp_out_air = round(_sum_temp_out_air / _quant_11, 1)
+            _avr_temp_air = round(_sum_temp_air / (_quant_10 or 1), 1)
+            _avr_hum_air = round(_sum_hum_air / (_quant_10 or 1), 1)
+            _avr_temp_out_air = round(_sum_temp_out_air / (_quant_11 or 1), 1)
 
             grouped_by_line_id[key] = {'temp_air': _avr_temp_air,
             'hum_air': _avr_hum_air,
