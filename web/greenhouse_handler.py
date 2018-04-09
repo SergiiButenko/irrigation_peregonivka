@@ -23,6 +23,7 @@ TEMP_MIN = None
 TEMP_MAX = None
 SERVICE_ENABLED = 1
 
+
 def setup_sensors_datalogger():
     try:
         lines = database.select(database.QUERY[mn()])
