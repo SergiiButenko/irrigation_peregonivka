@@ -127,7 +127,10 @@ $(document).ready(function() {
             var returnVal = confirm("Автоматичне керування увімкнено. \nВимкнути і перейти до ручного керування?");
             if (returnVal == false)
                 return;
-
+            
+            var json = {
+                'list': { 'greenhouse_auto': { 'enabled': '0' } }
+            }
             $.ajax({
                 url: '/set_settings',
                 type: "post",
@@ -155,6 +158,9 @@ $(document).ready(function() {
             if (returnVal == false)
                 return;
 
+            var json = {
+                'list': { 'greenhouse_auto': { 'enabled': '0' } }
+            }
             $.ajax({
                 url: '/set_settings',
                 type: "post",

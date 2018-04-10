@@ -18,14 +18,18 @@ DallasTemperature DS18B20(&oneWire);
 
 // char temperatureCString[7];
 
-const char* ssid = "faza_2";
-const char* password = "Kobe_2016";
+const char* ssid = "NotebookNet";
+const char* password = "0660101327";
 
 ESP8266WebServer server(80);
 
 const int power_led = D5;
-const int r1 = D8;
+const int r1 = D6;
 const int r2 = D7;
+const int l1 = D8;
+const int l2 = D3;
+
+
 
 void blink_010() {
   digitalWrite(power_led, 0);
@@ -70,10 +74,14 @@ void setup(void) {
   pinMode(power_led, OUTPUT);
   pinMode(r1, OUTPUT);
   pinMode(r2, OUTPUT);
+  pinMode(l1, OUTPUT);
+  pinMode(l2, OUTPUT);
 
   digitalWrite(power_led, 0);
   digitalWrite(r1, 0);
   digitalWrite(r2, 0);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
 
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
@@ -113,6 +121,8 @@ void setup(void) {
     if (relay == "2")  digitalWrite(r2, 1);
     int r1_status = digitalRead(r1);
     int r2_status = digitalRead(r2);
+    digitalWrite(l1, r1_status);
+    digitalWrite(l2, r2_status);
     send_status();
     blink_101();
   });
@@ -121,7 +131,11 @@ void setup(void) {
     String relay = server.arg("relay");
     if (relay == "1")  digitalWrite(r1, 0);
     if (relay == "2")  digitalWrite(r2, 0);
+    int r1_status = digitalRead(r1);
+    int r2_status = digitalRead(r2);
     send_status();
+    digitalWrite(l1, r1_status);
+    digitalWrite(l2, r2_status);
     blink_101();
   });
 
@@ -140,10 +154,8 @@ void setup(void) {
   });
 
   server.on("/ground_temperature", []() {
-    delay(2000);
-    float tempC;
-    DS18B20.requestTemperatures();
-    tempC = DS18B20.getTempCByIndex(0);
+    delay(1000);
+    float tempC = getTemperature();
     server.send(200, "application/json", "{\"temp\":" + String(tempC) + "}");
     blink_101();
   });
@@ -164,9 +176,17 @@ void send_status() {
   server.send(200, "application/json", "{\"1\":" + String(r1_status) + ", \"2\":" + String(r2_status) + "}");
 }
 
-//void getTemperature() {
-//  float tempC;
-//  DS18B20.requestTemperatures();
-//  tempC = DS18B20.getTempCByIndex(0);
-//  dtostrf(tempC, 2, 2, temperatureCString);
-//}
+float getTemperature() {
+  float tempC;
+  int i = 2;
+  for (int i=0; i<=15; i++){
+    DS18B20.requestTemperatures(); 
+    tempC = DS18B20.getTempCByIndex(0);
+    if (tempC >= (-127.0)){
+      return tempC;
+    }
+    delay(100);
+  }
+
+  return tempC;
+}
