@@ -79,7 +79,7 @@ def air_s(line_id):
     for attempt in range(2):
         try:
             base_url = LINES[line_id]['base_url']
-            response_air = requests.get(url='http://' + base_url + '/air_temperature', timeout=(5, 5))
+            response_air = requests.get(url='http://' + base_url + '/air_temperature', timeout=(10, 10))
             response_air.raise_for_status()
 
             logging.info('response {0}'.format(str(response_air.text)))
@@ -100,7 +100,7 @@ def ground_s(line_id):
     for attempt in range(2):
         try:
             base_url = LINES[line_id]['base_url']
-            response_air = requests.get(url='http://' + base_url + '/ground_temperature', timeout=(5, 5))
+            response_air = requests.get(url='http://' + base_url + '/ground_temperature', timeout=(10, 10))
             response_air.raise_for_status()
 
             logging.info('response {0}'.format(str(response_air.text)))
