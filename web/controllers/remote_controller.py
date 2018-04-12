@@ -3,6 +3,7 @@
 import logging
 import requests
 import json
+import time
 from itertools import groupby
 from operator import itemgetter
 from helpers import sqlite_database as database
