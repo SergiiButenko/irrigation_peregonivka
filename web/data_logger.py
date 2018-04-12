@@ -93,33 +93,27 @@ def moisture_sensors():
 
 
 def temp_sensors():
-    try:
-        logging.info("Getting temperature:")
-        now = datetime.datetime.now()
-        for sensor_id, sensor in SENSORS.items():
-            if sensor['type'] == 'air_sensor':
-                response = remote_controller.air_sensor(sensor_id)
-                logging.info("Air temp: {0}".format(str(response)))
-                database.update(database.QUERY[mn() + '_air'].format(
-                                                            response[sensor_id]['id'], 
-                                                            response[sensor_id]['air_temp'], 
-                                                            response[sensor_id]['air_hum'],
-                                                            now.strftime("%Y-%m-%d %H:%M")))
-            
-                response = requests.get(url=BACKEND_IP + '/weather', timeout=(10, 10))
-                response.raise_for_status()
-                json_data = json.loads(response.text)
-                logging.info("Outer temp: {0}".format(str(json_data)))
-                database.update(database.QUERY[mn() + '_ground'].format(
-                    11,  # shity hardcode. need to be changed
-                    json_data['temperature'],
-                    now.strftime("%Y-%m-%d %H:%M")))
-    except Exception as e:
-        logging.error(e)
-    else:
-        logging.info("Done!")
-    finally:
-        pass
+    logging.info("Getting temperature:")
+    now = datetime.datetime.now()
+    for sensor_id, sensor in SENSORS.items():
+        if sensor['type'] == 'air_sensor':
+            response = remote_controller.air_sensor(sensor_id)
+            logging.info("Air temp: {0}".format(str(response)))
+            database.update(database.QUERY[mn() + '_air'].format(
+                                                        response[sensor_id]['id'], 
+                                                        response[sensor_id]['air_temp'], 
+                                                        response[sensor_id]['air_hum'],
+                                                        now.strftime("%Y-%m-%d %H:%M")))
+        
+            response = requests.get(url=BACKEND_IP + '/weather', timeout=(10, 10))
+            response.raise_for_status()
+            json_data = json.loads(response.text)
+            logging.info("Outer temp: {0}".format(str(json_data)))
+            database.update(database.QUERY[mn() + '_ground'].format(
+                11,  # shity hardcode. need to be changed
+                json_data['temperature'],
+                now.strftime("%Y-%m-%d %H:%M")))
+    logging.info("Done!")
 
 
 def migrate_data():
