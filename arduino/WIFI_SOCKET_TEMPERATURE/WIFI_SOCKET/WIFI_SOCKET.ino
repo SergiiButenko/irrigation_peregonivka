@@ -18,15 +18,15 @@ DallasTemperature DS18B20(&oneWire);
 
 // char temperatureCString[7];
 
-const char* ssid = "NotebookNet";
-const char* password = "0660101327";
+const char* ssid = "faza_2";
+const char* password = "Kobe_2016";
 
 ESP8266WebServer server(80);
 
 const int power_led = D5;
-const int r1 = D6;
-const int r2 = D7;
-const int l1 = D8;
+const int r1 = D7;
+const int r2 = D8;
+const int l1 = D6;
 const int l2 = D3;
 
 
@@ -179,10 +179,10 @@ void send_status() {
 float getTemperature() {
   float tempC;
   int i = 2;
-  for (int i=0; i<=15; i++){
+  for (int i=0; i<=30; i++){
     DS18B20.requestTemperatures(); 
     tempC = DS18B20.getTempCByIndex(0);
-    if (tempC >= (-127.0)){
+    if (tempC > (-127.0)){
       return tempC;
     }
     delay(100);
