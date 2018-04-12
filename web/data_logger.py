@@ -105,12 +105,14 @@ def temp_sensors():
                                                             response[sensor_id]['air_temp'], 
                                                             response[sensor_id]['air_hum'],
                                                             now.strftime("%Y-%m-%d %H:%M")))
-            elif sensor['type'] == 'ground_sensor':
-                response = remote_controller.ground_sensor(sensor_id)
-                logging.info("Ground temp: {0}".format(str(response)))
+            
+                response = requests.get(url=BACKEND_IP + '/weather', timeout=(10, 10))
+                response.raise_for_status()
+                json_data = json.loads(response.text)
+                logging.info("Outer temp: {0}".format(str(json_data)))
                 database.update(database.QUERY[mn() + '_ground'].format(
-                    response[sensor_id]['id'],
-                    response[sensor_id]['ground_temp'],
+                    11,  # shity hardcode. need to be changed
+                    json_data['temperature'],
                     now.strftime("%Y-%m-%d %H:%M")))
     except Exception as e:
         logging.error(e)
