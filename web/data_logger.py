@@ -1,6 +1,7 @@
 import logging
 import time
 from helpers import sqlite_database as database
+import requests
 from helpers.common import *
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
