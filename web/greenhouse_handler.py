@@ -22,6 +22,7 @@ APP_SETTINGS = {}
 TEMP_MIN = None
 TEMP_MAX = None
 SERVICE_ENABLED = 1
+ATTEMPTS = 5
 
 
 def setup_sensors_datalogger():
@@ -82,7 +83,7 @@ def get_line_status(line_id):
 def branch_on(line_id, alert_time=7 * 24 * 60):
     """Blablbal."""
     try:
-        for attempt in range(2):
+        for attempt in range(ATTEMPTS):
             try:
                 response = requests.get(url=BACKEND_IP + '/activate_branch', params={"id": line_id, 'time_min': alert_time, 'mode': 'auto'}, timeout=(10, 10))
                 response.raise_for_status()
