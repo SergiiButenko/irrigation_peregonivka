@@ -69,13 +69,14 @@ def rissing(channel):
     """Fillup rain table"""
     global RAIN_BUCKET_ITERATION
     time.sleep(0.005)
-    logging.info("False rain bucket movment {0} detected.".format(RAIN_BUCKET_ITERATION))
     if GPIO.input(RAIN_PIN) == 1:
-        logging.info("Rain bucket movment {0} detected.".format(RAIN_BUCKET_ITERATION))
+        logging.info("Rain bucket movement {0} detected.".format(RAIN_BUCKET_ITERATION))
         RAIN_BUCKET_ITERATION += 1
-        time.sleep(1)
-
         database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
+        time.sleep(1)
+    else:
+        logging.info("False rain bucket movement detected. Counter keeps {0}".format(RAIN_BUCKET_ITERATION))
+
 
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
