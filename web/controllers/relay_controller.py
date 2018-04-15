@@ -69,6 +69,7 @@ def rissing(channel):
     """Fillup rain table"""
     global RAIN_BUCKET_ITERATION
     time.sleep(0.005)
+    logging.info("False rain bucket movment {0} detected.".format(RAIN_BUCKET_ITERATION))
     if GPIO.input(RAIN_PIN) == 1:
         logging.info("Rain bucket movment {0} detected.".format(RAIN_BUCKET_ITERATION))
         RAIN_BUCKET_ITERATION += 1
