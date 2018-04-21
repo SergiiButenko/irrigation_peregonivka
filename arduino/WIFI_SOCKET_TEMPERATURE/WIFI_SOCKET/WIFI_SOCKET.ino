@@ -23,28 +23,60 @@ const char* password = "Kobe_2016";
 
 ESP8266WebServer server(80);
 
-const int power_led = D5;
-const int r1 = D7;
-const int r2 = D8;
+const int r1 = D5;
 const int l1 = D6;
-const int l2 = D3;
+const int r2 = D7;
+const int l2 = D8;
 
-
+void blink_connected() {
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+}
 
 void blink_010() {
-  digitalWrite(power_led, 0);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
   delay(500);
-  digitalWrite(power_led, 1);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
   delay(500);
-  digitalWrite(power_led, 0);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
 }
 
 void blink_101() {
-  digitalWrite(power_led, 1);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
   delay(500);
-  digitalWrite(power_led, 0);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
   delay(500);
-  digitalWrite(power_led, 1);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
 }
 
 
@@ -71,13 +103,11 @@ void handleNotFound() {
 
 void setup(void) {
   Serial.println("setup");
-  pinMode(power_led, OUTPUT);
   pinMode(r1, OUTPUT);
   pinMode(r2, OUTPUT);
   pinMode(l1, OUTPUT);
   pinMode(l2, OUTPUT);
 
-  digitalWrite(power_led, 0);
   digitalWrite(r1, 0);
   digitalWrite(r2, 0);
   digitalWrite(l1, 0);
@@ -106,7 +136,7 @@ void setup(void) {
     Serial.println("MDNS responder started");
   }
 
-  blink_101();
+  blink_connected();
 
   server.on("/", handleRoot);
 
@@ -177,7 +207,7 @@ void send_status() {
 }
 
 float getTemperature() {
-  float tempC;
+  float tempC = 0;
   int i = 2;
   for (int i=0; i<=30; i++){
     DS18B20.requestTemperatures(); 

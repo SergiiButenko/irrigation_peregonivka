@@ -78,13 +78,14 @@ def rissing(channel):
         logging.info("False rain bucket movement detected. Counter keeps {0}".format(RAIN_BUCKET_ITERATION))
 
 
-GPIO.setmode(GPIO.BCM)
-GPIO.cleanup()
+def init_lines():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.cleanup()
 
-setup_lines()
+    setup_lines()
 
-GPIO.setup(RAIN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(RAIN_PIN, GPIO.RISING, callback=rissing, bouncetime=200)
+    GPIO.setup(RAIN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.add_event_detect(RAIN_PIN, GPIO.RISING, callback=rissing, bouncetime=200)
 
 
 def detect_pin_state(r_id):

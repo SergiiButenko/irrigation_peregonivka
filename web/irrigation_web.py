@@ -103,18 +103,6 @@ def error_handler(e):
     logging.error('error_handler for socketio. An error has occurred: ' + str(e))
 
 
-# @socketio.on('connect')
-# def connect():
-#     """Log info if user is connected to websocket."""
-#     logging.info('Client connected')
-
-
-# @socketio.on('disconnect')
-# def disconnect():
-#     """Log info if user is disconnected to websocket."""
-#     logging.info('Client disconnected')
-
-
 def send_message(channel, data):
     """Enclose emit method into try except block."""
     try:
@@ -1097,4 +1085,5 @@ def verify():
 
 if __name__ == "__main__":
     get_settings()
+    init_lines()
     socketio.run(app, host='0.0.0.0', port=7542, debug=DEBUG)
