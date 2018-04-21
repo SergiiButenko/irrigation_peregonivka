@@ -1085,5 +1085,6 @@ def verify():
 
 if __name__ == "__main__":
     get_settings()
-    init_lines()
+    garden_controller.init_lines()
+    remote_controller.init_remote_lines()
     socketio.run(app, host='0.0.0.0', port=7542, debug=DEBUG)

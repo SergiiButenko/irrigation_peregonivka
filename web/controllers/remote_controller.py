@@ -39,7 +39,9 @@ def setup_lines_remote_control():
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
 
-setup_lines_remote_control()
+
+def init_remote_lines():
+    setup_lines_remote_control()
 
 
 def on(line_id):

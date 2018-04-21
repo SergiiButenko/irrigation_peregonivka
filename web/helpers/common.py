@@ -149,6 +149,9 @@ def form_date_description(date):
     now = datetime.date.today()
     delta = date - now
 
+    if delta.days == -1:
+        return 'Вчора, ' + get_weekday(date)
+
     if delta.days == 0:
         return 'Сьогодні, ' + get_weekday(date)
 
