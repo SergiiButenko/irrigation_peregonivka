@@ -1042,12 +1042,14 @@ def temperature():
     return jsonify(
         data=temp)
 
+
 @app.route("/temperature2")
 def temperature2():
     """Blablbal."""
     temp = database.get_temperature2()
     return jsonify(
         data=temp)
+
 
 @app.route("/app_settings")
 def app_settings():

@@ -215,7 +215,6 @@ def enable_rule():
 
 
 if __name__ == "__main__":
-    # remote_controller.init_remote_lines()
     setup_sensors_datalogger()
     setup_lines_greenlines()
     setup_app_settings()
