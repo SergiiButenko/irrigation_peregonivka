@@ -57,7 +57,7 @@ def setup_lines():
                 GPIO.setup(LINES[key]['pin'], GPIO.OUT)
 
             if LINES[key]['pump_enabled'] == 1:
-                GPIO.setup(LINES[key]['pump_pin'], GPIO.OUT)
+                GPIO.setup(LINES[key]['pump_pin'], GPIO.OUT, initial=GPIO.LOW)
 
         logging.info(LINES)
         GPIO.setwarnings(True)
@@ -103,7 +103,7 @@ def on(pin):
     """Set pin to high state."""
     try:
         GPIO.output(pin, GPIO.HIGH)
-        # return GPIO.input(pin)
+        logging.info("{0} pin set to HIGH".format(pin))
     except Exception as e:
         logging.error("Exception occured when turning on {0} pin. {1}".format(pin, e))
         GPIO.cleanup()
@@ -114,7 +114,7 @@ def off(pin):
     """Set pin to low state."""
     try:
         GPIO.output(pin, GPIO.LOW)
-        # return GPIO.input(pin)
+        logging.info("{0} pin set to LOW".format(pin))
     except Exception as e:
         logging.error("Exception occured when turning off {0} pin. {1}".format(pin, e))
         GPIO.cleanup()
@@ -133,10 +133,8 @@ def on_group(branch_id):
         for pin, pin_state in pins.items():
             if pin_state == 1:
                 on(pin)
-                logging.info("pin {0} enabled".format(pin))
             else:
                 off(pin)
-                logging.info("pin {0} disabled".format(pin))
 
         en = LINES[branch_id]['en']
         GPIO.output(en, EN_ENABLED)
@@ -159,7 +157,6 @@ def off_group(branch_id):
 
         for pin, pin_state in pins.items():
             off(pin)
-            logging.info("pin {0} disabled".format(pin))
 
     except Exception as e:
         raise e
