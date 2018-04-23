@@ -18,17 +18,21 @@ DallasTemperature DS18B20(&oneWire);
 
 // char temperatureCString[7];
 
-const char* ssid = "faza_2";
-const char* password = "Kobe_2016";
+const char* ssid = "NotebookNet";
+const char* password = "0660101327";
 
 ESP8266WebServer server(80);
 
-const int r1 = D5;
-const int l1 = D6;
-const int r2 = D7;
-const int l2 = D8;
+
+const int l1 = D5;
+const int l2 = D6;
+const int r1 = D7;
+const int r2 = D8;
+
 
 void blink_connected() {
+  int l1_status = digitalRead(r1);
+  int l2_status = digitalRead(r2);
   digitalWrite(l1, 0);
   digitalWrite(l2, 0);
   delay(100);
@@ -55,34 +59,27 @@ void blink_connected() {
   delay(100);
   digitalWrite(l1, 0);
   digitalWrite(l2, 0);
+  digitalWrite(l1, l1_status);
+  digitalWrite(l2, l2_status);
 }
 
-void blink_010() {
+void blink_led() {
+  int l1_status = digitalRead(r1);
+  int l2_status = digitalRead(r2);
   digitalWrite(l1, 0);
   digitalWrite(l2, 0);
-  delay(500);
+  delay(200);
   digitalWrite(l1, 1);
   digitalWrite(l2, 1);
-  delay(500);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-}
-
-void blink_101() {
-  digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
-  delay(500);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-  delay(500);
-  digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
+  delay(200);
+  digitalWrite(l1, l1_status);
+  digitalWrite(l2, l2_status);
 }
 
 
 void handleRoot() {
   server.send(200, "text/plain", "hello from esp8266!");
-  blink_101();
+  blink_led();
 }
 
 void handleNotFound() {
@@ -98,7 +95,7 @@ void handleNotFound() {
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
   server.send(404, "text/plain", message);
-  blink_101();
+  blink_led();
 }
 
 void setup(void) {
@@ -114,16 +111,17 @@ void setup(void) {
   digitalWrite(l2, 0);
 
   Serial.begin(115200);
+  WiFi.setAutoConnect (true);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   Serial.println("");
   Serial.println("done");
-  blink_010();
+  blink_led();
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
-    blink_010();
+    blink_led();
   }
 
   Serial.println("");
@@ -142,7 +140,7 @@ void setup(void) {
 
   server.on("/test", []() {
     server.send(200, "text/plain", "this works as well");
-    blink_101();
+    blink_led();
   });
 
   server.on("/on", []() {
@@ -154,7 +152,7 @@ void setup(void) {
     digitalWrite(l1, r1_status);
     digitalWrite(l2, r2_status);
     send_status();
-    blink_101();
+    blink_led();
   });
 
   server.on("/off", []() {
@@ -166,12 +164,12 @@ void setup(void) {
     send_status();
     digitalWrite(l1, r1_status);
     digitalWrite(l2, r2_status);
-    blink_101();
+    blink_led();
   });
 
   server.on("/status", []() {
     send_status();
-    blink_101();
+    blink_led();
   });
 
   server.on("/air_temperature", []() {
@@ -180,14 +178,14 @@ void setup(void) {
     // Read temperature as Celsius (the default)
     float t = dht.readTemperature();
     server.send(200, "application/json", "{\"temp\":" + String(t) + ", \"hum\":" + String(h) + "}");
-    blink_101();
+    blink_led();
   });
 
   server.on("/ground_temperature", []() {
     delay(1000);
     float tempC = getTemperature();
     server.send(200, "application/json", "{\"temp\":" + String(tempC) + "}");
-    blink_101();
+    blink_led();
   });
 
   server.onNotFound(handleNotFound);

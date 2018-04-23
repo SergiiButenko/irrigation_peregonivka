@@ -76,6 +76,7 @@ void setup(void){
   digitalWrite(l2, 0);
   
   Serial.begin(115200);
+  WiFi.setAutoConnect (true);
   WiFi.mode(WIFI_STA);
   blink_010();
   WiFi.begin(ssid, password);
