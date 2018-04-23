@@ -102,15 +102,15 @@ def notify_users():
     start_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['start_messaging'], '%H:%M').time()
     dnow = datetime.datetime.now().time()
 
-    if time_in_range(start_messaging_time, end_messaging_time, dnow):
-        logging.info("Snooze hours is on. Message won't be send")
-        return json.dumps({'status': 'OK'})
-    else:
-        logging.info(dnow)
-        logging.info(end_messaging_time)
-        logging.info(start_messaging_time)
-        logging.info(dnow > end_messaging_time)
-        logging.info(dnow < start_messaging_time)
+    # if time_in_range(start_messaging_time, end_messaging_time, dnow):
+    #     logging.info("Snooze hours is on. Message won't be send")
+    #     return json.dumps({'status': 'OK'})
+    # else:
+    #     logging.info(dnow)
+    #     logging.info(end_messaging_time)
+    #     logging.info(start_messaging_time)
+    #     logging.info(dnow > end_messaging_time)
+    #     logging.info(dnow < start_messaging_time)
 
     for user in users:
         logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
