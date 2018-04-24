@@ -7,6 +7,7 @@ from itertools import groupby
 from operator import itemgetter
 from helpers import sqlite_database as database
 from helpers.common import *
+import threading
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
@@ -226,9 +227,9 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
         return None
 
     if LINES[branch_id]['multiplex'] == 1:
-        on_group(branch_id)
+        Timer(5.0, on_group, args=[branch_id]).start()
     else:
-        on(LINES[branch_id]['pin'])
+        Timer(5.0, on, args=[LINES[branch_id]['pin']]).start()
 
     if LINES[branch_id]['pump_enabled'] == 0:
         logging.info("Pump won't be turned on with {0} branch id".format(branch_id))
