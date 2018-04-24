@@ -74,8 +74,8 @@ def rissing(channel):
         RAIN_BUCKET_ITERATION += 1
         database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
         time.sleep(1)
-    # else:
-        # logging.info("False rain bucket movement detected. Counter keeps {0}".format(RAIN_BUCKET_ITERATION))
+    else:
+        logging.info("False rain bucket movement detected. Counter keeps {0}".format(RAIN_BUCKET_ITERATION))
 
 
 def init_lines():
