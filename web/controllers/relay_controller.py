@@ -227,9 +227,9 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
         return None
 
     if LINES[branch_id]['multiplex'] == 1:
-        Timer(5.0, on_group, args=[branch_id]).start()
+        threading.Timer(5.0, on_group, args=[branch_id]).start()
     else:
-        Timer(5.0, on, args=[LINES[branch_id]['pin']]).start()
+        threading.Timer(5.0, on, args=[LINES[branch_id]['pin']]).start()
 
     if LINES[branch_id]['pump_enabled'] == 0:
         logging.info("Pump won't be turned on with {0} branch id".format(branch_id))
