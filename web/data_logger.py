@@ -101,20 +101,17 @@ def temp_sensors():
             response = remote_controller.air_sensor(sensor_id)
             logging.info("Air temp: {0}".format(str(response)))
             database.update(database.QUERY[mn() + '_air'].format(
-                                                        response[sensor_id]['id'], 
-                                                        response[sensor_id]['air_temp'], 
-                                                        response[sensor_id]['air_hum'],
-                                                        now.strftime("%Y-%m-%d %H:%M")))
-        
-            response = requests.get(url=BACKEND_IP + '/weather', timeout=(10, 10))
-            response.raise_for_status()
-            json_data = json.loads(response.text)
-            logging.info("Outer temp: {0}".format(str(json_data)))
+                                                                response[sensor_id]['id'], 
+                                                                response[sensor_id]['air_temp'], 
+                                                                response[sensor_id]['air_hum'],
+                                                                now.strftime("%Y-%m-%d %H:%M")))
+        elif sensor['type'] == 'ground_sensor':
+            response = remote_controller.ground_sensor(sensor_id)
+            logging.info("Ground temp: {0}".format(str(response)))
             database.update(database.QUERY[mn() + '_ground'].format(
-                11,  # shity hardcode. need to be changed
-                json_data['temperature'],
+                response[sensor_id]['id'],
+                response[sensor_id]['ground_temp'],
                 now.strftime("%Y-%m-%d %H:%M")))
-    logging.info("Done!")
 
 
 def migrate_data():
