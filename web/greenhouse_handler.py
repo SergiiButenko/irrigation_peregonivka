@@ -8,7 +8,6 @@ import logging
 from helpers import sqlite_database as database
 from helpers.redis import *
 from helpers.common import *
-from controllers import relay_controller as garden_controller
 from controllers import remote_controller as remote_controller
 
 
@@ -71,13 +70,7 @@ def setup_app_settings():
 
 
 def get_line_status(line_id):
-    base_url = LINES[line_id]['base_url']
-    if base_url is None:
-        response = garden_controller.branch_status()
-    else:
-        response = remote_controller.line_status(line_id=line_id)
-
-    return response
+    return remote_controller.line_status(line_id=line_id)
 
 
 def branch_on(line_id, alert_time=7 * 24 * 60):
@@ -215,6 +208,7 @@ def enable_rule():
 
 
 if __name__ == "__main__":
+    remote_controller.init_remote_lines()
     setup_sensors_datalogger()
     setup_lines_greenlines()
     setup_app_settings()
