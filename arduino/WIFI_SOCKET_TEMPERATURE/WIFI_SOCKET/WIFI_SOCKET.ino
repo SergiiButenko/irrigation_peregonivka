@@ -18,8 +18,8 @@ DallasTemperature DS18B20(&oneWire);
 
 // char temperatureCString[7];
 
-const char* ssid = "NotebookNet";
-const char* password = "0660101327";
+const char* ssid = "faza_2";
+const char* password = "Kobe_2016";
 
 ESP8266WebServer server(80);
 
