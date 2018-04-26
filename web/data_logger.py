@@ -120,11 +120,13 @@ def migrate_data():
 
 
 if __name__ == "__main__":
+    logging.info("Start init")
     setup_sensors_datalogger()
     setup_lines_datalogger()
     remote_controller.init_remote_lines()
     # moisture_sensors()
     temp_sensors()
+    logging.info("Done!")
 
 # while True:
 #     # Read all the ADC channel values in a list.
