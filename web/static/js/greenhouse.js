@@ -25,13 +25,13 @@ $(document).ready(function() {
 
 
     //Rename branches
-    $.ajax({
-        url: '/temperature2',
-        success: function(data) {
-            list = data['data']
-            draw_d3js(list);
-        }
-    });
+    // $.ajax({
+    //     url: '/temperature2',
+    //     success: function(data) {
+    //         list = data['data']
+    //         draw_d3js(list);
+    //     }
+    // });
 
 
     $.ajax({
