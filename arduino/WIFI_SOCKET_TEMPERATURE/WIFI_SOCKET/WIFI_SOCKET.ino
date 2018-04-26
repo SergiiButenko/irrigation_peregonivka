@@ -16,13 +16,10 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature DS18B20(&oneWire);
 
-// char temperatureCString[7];
-
-const char* ssid = "faza_2";
-const char* password = "Kobe_2016";
+const char* ssid = "NotebookNet";
+const char* password = "0660101327";
 
 ESP8266WebServer server(80);
-
 
 const int l1 = D5;
 const int l2 = D6;
@@ -62,6 +59,7 @@ void blink_connected() {
   digitalWrite(l1, l1_status);
   digitalWrite(l2, l2_status);
 }
+
 
 void blink_led() {
   int l1_status = digitalRead(r1);
