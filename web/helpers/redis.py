@@ -31,3 +31,29 @@ def get_next_rule_from_redis(branch_id):
         logging.error("Can't get data from redis. Exception occured {0}".format(e))
 
     return json_to_data
+
+
+def get_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK):
+    """"""
+    data = None
+    try:
+        data = redis_db.get(key)
+        if data is None:
+            raise AssertionError("No value in {0} key in reddis db".format(key))
+
+        return convert_to_datetime(data)
+    except Exception as e:
+        logging.error("Can't get data from redis. Exception occured {0}".format(e))
+        return None
+
+
+def set_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK, date=date):
+    """Set next rule in redis."""
+    res = False
+    try:
+        data = date_handler(data)
+        res = redis_db.set(key, data)
+    except Exception as e:
+        logging.error("Can't save data to redis. Exception occured {0}".format(e))
+
+    return res

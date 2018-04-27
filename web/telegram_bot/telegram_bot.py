@@ -88,6 +88,20 @@ def time_in_range(start, end, x):
         return start <= x or x <= end
 
 
+@app.route('/notify_filled', methods=['POST'])
+def notify_filled():
+    logging.debug("received request for notify_filled. post data: {0}".format(request.get_data()))
+    data = json.loads(request.get_data().decode())
+    users = data['users']
+
+    for user in users:
+        logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
+        # bot.send_message(GROUP_CHAT_ID, "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nЗайдіть на сайт, щоб відмнінити цей полив".format(timeout, user_friendly_name, time,))  # rule_id))
+
+    logging.info("Done")
+    return json.dumps({'status': 'OK'})
+
+
 @app.route('/notify_users_irrigation_started', methods=['POST'])
 def notify_users():
     logging.debug("received request for send_message. post data: {0}".format(request.get_data()))

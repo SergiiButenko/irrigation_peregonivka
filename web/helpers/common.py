@@ -21,6 +21,9 @@ USERS = [
     {'name': 'Cottage', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='}
 ]
 
+REDIS_KEY_FOR_UPPER_TANK = 'UPPER_TANK'
+TANK_NOTIFICATION_MINUTES = 15
+
 VIBER_USERS = [
     {'name': 'Sergii', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='},
     {'name': 'Oleg', 'id': 'IRYaSCRnmV1IT1ddtB8Bdw=='},

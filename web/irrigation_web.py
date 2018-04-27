@@ -1077,6 +1077,21 @@ def stop_filling():
     logging.info("INERUPT SIGNAL RESEIVED!")
     database.update(database.QUERY[mn()])
 
+    last_time_sent = get_time_last_notification()
+
+    delta = datetime.datetime.now() - last_time_sent
+    if delta.seconds >= 60 * TANK_NOTIFICATION_MINUTES:
+        try:
+            payload = {'users': USERS}
+            response = requests.post(VIBER_BOT_IP + '/notify_filled', json=payload, timeout=(10, 10), verify=False)
+            response.raise_for_status()
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't send rule to telegram. Ecxeption occured")
+        finally:
+            set_time_last_notification(data=datetime.datetime.now())
+            logging.info("Redis updated")
+
     return json.dumps({'status': 'OK'})
 
 

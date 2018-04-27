@@ -122,39 +122,36 @@ def inspect_conditions(rule):
 
 def send_to_viber_bot(rule):
     """Send messages to viber."""
+    id = rule['id']
+    rule_id = rule['rule_id']
+    line_id = rule['line_id']
+    time = rule['time']
+    interval_id = rule['interval_id']
+    user_friendly_name = rule['user_friendly_name']
+
+    if (rule_id == 2):
+        logging.debug("Turn off rule won't be send to viber")
+        return
+
+    arr = redis_db.lrange(REDIS_KEY_FOR_VIBER, 0, -1)
+    logging.debug("{0} send rule was get from redis".format(arr))
+    if (interval_id.encode() in arr):
+        logging.debug('interval_id {0} is already send'.format(interval_id))
+        return
+
     try:
-        id = rule['id']
-        rule_id = rule['rule_id']
-        line_id = rule['line_id']
-        time = rule['time']
-        interval_id = rule['interval_id']
-        user_friendly_name = rule['user_friendly_name']
-
-        if (rule_id == 2):
-            logging.debug("Turn off rule won't be send to viber")
-            return
-
-        arr = redis_db.lrange(REDIS_KEY_FOR_VIBER, 0, -1)
-        logging.debug("{0} send rule was get from redis".format(arr))
-        if (interval_id.encode() in arr):
-            logging.debug('interval_id {0} is already send'.format(interval_id))
-            return
-
-        try:
-            payload = {'rule_id': id, 'line_id': line_id, 'time': time, 'interval_id': interval_id, 'users': USERS, 'timeout': VIBER_SENT_TIMEOUT, 'user_friendly_name': user_friendly_name}
-            response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started', json=payload, timeout=(10, 10), verify=False)
-            response.raise_for_status()
-        except Exception as e:
-            logging.error(e)
-            logging.error("Can't send rule to viber. Ecxeption occured")
-        finally:
-            redis_db.rpush(REDIS_KEY_FOR_VIBER, interval_id)
-            logging.debug("interval_id: {0} is added to redis".format(interval_id))
-            time = 60 * 60 * 60 * 12
-            redis_db.expire(REDIS_KEY_FOR_VIBER, time)
-            logging.debug("REDIS_KEY_FOR_VIBER: {0} expires in 12 hours".format(REDIS_KEY_FOR_VIBER))
+        payload = {'rule_id': id, 'line_id': line_id, 'time': time, 'interval_id': interval_id, 'users': USERS, 'timeout': VIBER_SENT_TIMEOUT, 'user_friendly_name': user_friendly_name}
+        response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started', json=payload, timeout=(10, 10), verify=False)
+        response.raise_for_status()
     except Exception as e:
-        raise e
+        logging.error(e)
+        logging.error("Can't send rule to viber. Ecxeption occured")
+    finally:
+        redis_db.rpush(REDIS_KEY_FOR_VIBER, interval_id)
+        logging.debug("interval_id: {0} is added to redis".format(interval_id))
+        time = 60 * 60 * 60 * 12
+        redis_db.expire(REDIS_KEY_FOR_VIBER, time)
+        logging.debug("REDIS_KEY_FOR_VIBER: {0} expires in 12 hours".format(REDIS_KEY_FOR_VIBER))
 
 
 def rules_to_log():
