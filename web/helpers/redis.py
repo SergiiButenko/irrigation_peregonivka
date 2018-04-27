@@ -41,6 +41,7 @@ def get_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK):
         if data is None:
             raise AssertionError("No value in {0} key in reddis db".format(key))
 
+        loggin.info(str(data))
         return convert_to_datetime(data)
     except Exception as e:
         logging.error("Can't get data from redis. Exception occured {0}".format(e))
