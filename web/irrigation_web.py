@@ -1085,19 +1085,20 @@ def stop_filling():
     delta = datetime.datetime.now() - last_time_sent
     if delta.seconds > 60 * TANK_NOTIFICATION_MINUTES:
         try:
+            set_time_last_notification(date=datetime.datetime.now())
+            logging.info("Redis updated")
             payload = {'users': USERS}
             response = requests.post(VIBER_BOT_IP + '/notify_filled', json=payload, timeout=(10, 10), verify=False)
             response.raise_for_status()
         except Exception as e:
             logging.error(e)
             logging.error("Can't send rule to telegram. Ecxeption occured")
-        finally:
-            set_time_last_notification(date=datetime.datetime.now())
-            logging.info("Redis updated")
-    else:
-        logging.info("{0} minutes not passed yet. Send message pending.")
+            return json.dumps({'status': "Can't send rule to telegram. Ecxeption occured"})
 
-    return json.dumps({'status': 'OK'})
+        return json.dumps({'status': 'Redis updated'})
+    else:
+        logging.info("{0} minutes not passed yet. Send message pending.".format(TANK_NOTIFICATION_MINUTES))
+        return json.dumps({'status': "{0} minutes not passed yet. Send message pending.".format(TANK_NOTIFICATION_MINUTES)})
 
 
 @app.route("/.well-known/acme-challenge/Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8")
