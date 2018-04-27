@@ -51,9 +51,9 @@ def set_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK, date=date):
     """Set next rule in redis."""
     res = False
     try:
-        data = date_handler(data)
-        res = redis_db.set(key, data)
+        date = date_handler(date)
+        res = redis_db.set(key, date)
     except Exception as e:
-        logging.error("Can't save data to redis. Exception occured {0}".format(e))
+        logging.error("Can't save date to redis. Exception occured {0}".format(e))
 
     return res
