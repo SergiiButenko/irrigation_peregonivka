@@ -1089,7 +1089,7 @@ def stop_filling():
             logging.error(e)
             logging.error("Can't send rule to telegram. Ecxeption occured")
         finally:
-            set_time_last_notification(data=datetime.datetime.now())
+            set_time_last_notification(date=datetime.datetime.now())
             logging.info("Redis updated")
 
     return json.dumps({'status': 'OK'})

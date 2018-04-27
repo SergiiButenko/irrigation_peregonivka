@@ -47,7 +47,7 @@ def get_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK):
         return None
 
 
-def set_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK, date=date):
+def set_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK, date=datetime.datetime.now()):
     """Set next rule in redis."""
     res = False
     try:
