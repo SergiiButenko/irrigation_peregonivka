@@ -3,13 +3,16 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
 
-uint8_t GPIO_Pin = D7;
+uint8_t GPIO_Pin = D6;
 volatile byte state = 0;
 
 const char *host = "http://mozz.asuscomm.com:7542";
 
-const char* ssid = "NotebookNet";
-const char* password = "0660101327";
+//const char* ssid = "NotebookNet";
+//const char* password = "0660101327";
+const char* ssid = "faza_2";
+const char* password = "Kobe_2016";
+
 
 
 void setup() {
