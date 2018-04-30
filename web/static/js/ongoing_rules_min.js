@@ -178,7 +178,7 @@ function form_text(el_in) {
 
     if (schedule_val == 4) {
         $(card).find("#summary").html(
-            schedule_text + ', ' + text + ' o ' + time + '.</br>' +
+            'Тільки ' + text + ' o ' + time + '.</br>' +
             interval + ' рази, по ' + minutes + ' хвилин, з інтервалом в ' + time_wait + ' хвилин'
         );
     } else {
