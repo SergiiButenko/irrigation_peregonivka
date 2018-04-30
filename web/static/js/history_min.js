@@ -9,9 +9,11 @@ $(document).ready(function() {
     var socket = io.connect(server, {
         'sync disconnect on unload': true
     });
+    
     socket.on('connect', function() {
         console.log("connected to websocket");
     });
+
     socket.on('refresh_history', function(msg) {
         console.log('Reload received');
         reload_history();

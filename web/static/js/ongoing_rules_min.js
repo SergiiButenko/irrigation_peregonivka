@@ -38,6 +38,7 @@ $(document).ready(function() {
             if ($(this).data('id') == msg['rule']['rule_id']) {
                 switcher = $(this).find('.active_true_false');
                 $(switcher).prop("checked", msg['rule']['status']);
+                console.log('Done');
             }
         });
     });
@@ -258,7 +259,6 @@ function set_events() {
         console.log(returnVal);
         if (returnVal == false) {
             $(switcher).prop("checked", old_value);
-            // $(switcher).val($(switcher).old_value);
             return;
         }
 
