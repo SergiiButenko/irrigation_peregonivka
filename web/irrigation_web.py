@@ -236,7 +236,7 @@ def branch_settings():
 
 @app.route("/tank")
 @cache.cached(timeout=CACHE_TIMEOUT)
-def lighting():
+def tank():
     """Return branch names."""
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
