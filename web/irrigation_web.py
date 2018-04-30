@@ -119,9 +119,9 @@ def send_branch_status_message(data):
     send_message('branch_status', {'data': json.dumps({'branches': data}, default=date_handler)})
 
 
-def send_ongoing_rule_message(channel, data):
+def send_ongoing_rule_message(data, channel='edit_ongoing_rule'):
     """Convert data in order to send data object."""
-    send_message('edit_ongoing_rule', {'data': json.dumps({'rule': data}, default=date_handler)})
+    send_message(channel, {'data': json.dumps({'rule': data}, default=date_handler)})
 
 
 def send_history_change_message():
@@ -607,8 +607,8 @@ def add_ongoing_rule():
 
         template = render_template('ongoing_rule_single.html', n=rule)
         send_ongoing_rule_message(
-            'add_ongoing_rule',
-            {'template': template, 'rule_id': rule['rule_id'], 'days': rule['days']})
+            channel='add_ongoing_rule',
+            data={'template': template, 'rule_id': rule['rule_id'], 'days': rule['days']})
 
     update_all_rules()
     try:
@@ -632,7 +632,7 @@ def remove_ongoing_rule():
     database.update(database.QUERY[mn() + '_delete_ongoing_rule'].format(rule_id))
     update_all_rules()
 
-    send_ongoing_rule_message('remove_ongoing_rule', {'rule_id': rule_id})
+    send_ongoing_rule_message(channel='remove_ongoing_rule', data={'rule_id': rule_id})
     send_history_change_message()
 
     return json.dumps({'status': 'OK'})
@@ -678,7 +678,7 @@ def edit_ongoing_rule():
         # update_all_rules()
         logging.info("Ongoing rule modified. {0}".format(str(rule)))
 
-        send_ongoing_rule_message('ongoing_rule_state', rule)
+        send_ongoing_rule_message(channel='ongoing_rule_state', data=rule)
 
     send_history_change_message()
     return json.dumps({'status': 'OK'})
@@ -692,7 +692,7 @@ def activate_ongoing_rule():
     database.update(database.QUERY[mn() + '_life'].format(rule_id))
     update_all_rules()
 
-    send_ongoing_rule_message('ongoing_rule_state', {'rule_id': rule_id, 'status': 1})
+    send_ongoing_rule_message(channel='ongoing_rule_state', data={'rule_id': rule_id, 'status': 1})
 
     send_history_change_message()
     return json.dumps({'status': 'OK'})
@@ -706,7 +706,7 @@ def deactivate_ongoing_rule():
     database.update(database.QUERY[mn() + '_life'].format(rule_id))
     update_all_rules()
 
-    send_ongoing_rule_message('ongoing_rule_state', {'rule_id': rule_id, 'status': 0})
+    send_ongoing_rule_message(channel='ongoing_rule_state', data={'rule_id': rule_id, 'status': 0})
 
     send_history_change_message()
     return json.dumps({'status': 'OK'})
