@@ -678,7 +678,7 @@ def edit_ongoing_rule():
         # update_all_rules()
         logging.info("Ongoing rule modified. {0}".format(str(rule)))
 
-        send_ongoing_rule_message(rule)
+        send_ongoing_rule_message('ongoing_rule_state', rule)
 
     send_history_change_message()
     return json.dumps({'status': 'OK'})
