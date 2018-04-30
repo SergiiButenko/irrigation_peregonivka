@@ -234,6 +234,21 @@ def branch_settings():
     return jsonify(list=branch_list)
 
 
+@app.route("/tank")
+@cache.cached(timeout=CACHE_TIMEOUT)
+def lighting():
+    """Return branch names."""
+    branch_list = []
+    for item_id, item in BRANCHES_SETTINGS.items():
+        if item['line_type'] == 'tank':
+            branch_list.append({
+                'id': item['branch_id'],
+                'name': item['name'],
+                'default_time': item['time']})
+
+    return render_template('tank.html', my_list=branch_list)
+
+
 @app.route("/lighting")
 @cache.cached(timeout=CACHE_TIMEOUT)
 def lighting():
@@ -256,6 +271,21 @@ def lighting_settings():
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
         if item['line_type'] == 'lighting':
+            branch_list.append({
+                'id': item['branch_id'],
+                'name': item['name'],
+                'default_time': item['time']})
+
+    return jsonify(list=branch_list)
+
+
+@app.route("/tank_settings")
+@cache.cached(timeout=CACHE_TIMEOUT)
+def tank_settings():
+    """Return branch names."""
+    branch_list = []
+    for item_id, item in BRANCHES_SETTINGS.items():
+        if item['line_type'] == 'tank':
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
@@ -775,6 +805,28 @@ def lighting_status():
                 response_status = remote_controller.line_status(line_id=line_id)
                 lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
             elif line['line_type'] == 'lighting' and line['base_url'] is None:
+                response_status = garden_controller.branch_status()
+                lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
+
+        arr = form_responce_for_branches(lines)
+        send_branch_status_message(arr)
+        return jsonify(branches=arr)
+    except Exception as e:
+        logging.error(e)
+        logging.error("Can't get Raspberri Pi pin status. Exception occured")
+        abort(500)
+
+
+@app.route('/tank_status', methods=['GET'])
+def tank_status():
+    """Return status of lightingn relay."""
+    try:
+        lines = {}
+        for line_id, line in BRANCHES_SETTINGS.items():
+            if line['line_type'] == 'tank' and line['base_url'] is not None:
+                response_status = remote_controller.line_status(line_id=line_id)
+                lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
+            elif line['line_type'] == 'tank' and line['base_url'] is None:
                 response_status = garden_controller.branch_status()
                 lines[line_id] = dict(id=line_id, state=int(response_status[line_id]['state']))
 

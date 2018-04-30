@@ -17,8 +17,7 @@ const char* password = "Kobe_2016";
 
 void setup() {
   Serial.begin(115200);
-  Serial.println(millis());
-  Serial.println("started");
+  Serial.println("Setup");
   attachInterrupt(digitalPinToInterrupt(GPIO_Pin), IntCallback, RISING);
 
   Serial.begin(115200);
@@ -26,28 +25,43 @@ void setup() {
   WiFi.mode(WIFI_STA);
 
   WiFi.begin(ssid, password);
-  Serial.println("");
-  Serial.println("done");
+  Serial.println("Finished");
 
+  Serial.println("Wait for connection");
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
+
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(ssid);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
 }
 
 void loop() {
   if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Wait for connection");
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
       delay(500);
       Serial.print(".");
     }
+
+    Serial.println("");
+    Serial.print("Connected to ");
+    Serial.println(ssid);
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
   }
 
   if (state == 1) {
+    Serial.print("Initialising http connection");
     HTTPClient http;
-
+    
+    Serial.print("Sending GET request");
     http.begin(host + String("/stop_filling"));
     int httpCode = http.GET();            //Send the request
     String payload = http.getString();    //Get the response payload
@@ -63,7 +77,9 @@ void loop() {
 }
 
 void IntCallback() {
+  Serial.print("Interrupt signal received. Checking...");
   if (digitalRead(GPIO_Pin) == HIGH) {
+    Serial.print("Signal is HIGH");
     state = 1;
   }
 }

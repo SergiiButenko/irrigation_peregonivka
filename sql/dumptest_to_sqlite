@@ -140,6 +140,7 @@ insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (1, 'Н
 insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (2, 'Полив з бочки', 16, 17, 18, 19, 20, 1);
 insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (3, 'Полив з системи', null, null, null, null, null, 0);
 insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (4, 'Ліхтар', null, null, null, null, null, 0);
+insert into line_groups (id, name, s0, s1, s2, s3, en, multiplex) VALUES (5, 'Верхня бочка', null, null, null, null, null, 0);
 
 
 insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (1, 1, 'Насос', 10, 2, 15, '2017-06-29 18:34:00', 'irrigation', '', 0, null, 12, 1, 1, 1, null);
@@ -159,3 +160,9 @@ insert into lines(id, number, name, time, intervals, time_wait, start_time, line
 insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (8, 8, 'Кіпариси', 10, 2, 15, '2017-06-29 19:30:00', 'irrigation', null, 0, null, 14, 3, 0, 1, null);
 
 insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (9, 9, 'Смородина', 10, 2, 15, '2017-06-29 18:30:00', 'irrigation', null, 0, null, 15, 3, 0, 1, null);
+
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (13, 13, 'Квіти', 10, 2, 15, '2017-06-29 07:00:00', 'irrigation', null, 1, 5, null, 2, 0, 0, 16, null);
+
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (14, 14, 'Наповнення', 600, 1, 1, '2017-06-29 00:00:00', 'tank', null, 0, null, X, 5, 0, 1, null, null);
