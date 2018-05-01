@@ -247,16 +247,21 @@ def branch_off(branch_id=None, pump_enable=True):
         logging.error("No branch id")
         return None
 
+    if LINES[branch_id]['pump_enabled'] == 1:
+        off(LINES[branch_id]['pump_pin'])
+        time.sleep(5)
+        logging.info("Pump turned off with {0} branch id".format(branch_id))
+
     if LINES[branch_id]['multiplex'] == 1:
         off_group(branch_id)
     else:
         off(LINES[branch_id]['pin'])
 
-    if LINES[branch_id]['pump_enabled'] == 1 and check_if_no_active():
-        off(LINES[branch_id]['pump_pin'])
-        logging.info("Pump turned off with {0} branch id".format(branch_id))
-    else:
-        logging.info("Pump won't be turned off with {0} branch id".format(branch_id))
+    # if LINES[branch_id]['pump_enabled'] == 1 and check_if_no_active():
+    #     off(LINES[branch_id]['pump_pin'])
+    #     logging.info("Pump turned off with {0} branch id".format(branch_id))
+    # else:
+    #     logging.info("Pump won't be turned off with {0} branch id".format(branch_id))
 
     return form_pins_state()
 
