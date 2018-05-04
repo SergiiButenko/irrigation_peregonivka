@@ -28,7 +28,6 @@ const int l2 = D6;
 const int r1 = D7;
 const int r2 = D8;
 
-
 void blink_connected() {
   int l1_status = digitalRead(r1);
   int l2_status = digitalRead(r2);
