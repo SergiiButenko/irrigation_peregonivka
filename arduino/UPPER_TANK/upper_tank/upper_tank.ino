@@ -8,16 +8,18 @@ volatile byte state = 0;
 
 const char *host = "http://mozz.asuscomm.com:7542";
 
-//const char* ssid = "NotebookNet";
-//const char* password = "0660101327";
-const char* ssid = "faza_2";
-const char* password = "Kobe_2016";
+const char* ssid = "NotebookNet";
+const char* password = "0660101327";
+//const char* ssid = "faza_2";
+//const char* password = "Kobe_2016";
 
 
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Setup");
+  
+  pinMode(GPIO_Pin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(GPIO_Pin), IntCallback, RISING);
 
   Serial.begin(115200);

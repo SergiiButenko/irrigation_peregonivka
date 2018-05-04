@@ -166,3 +166,9 @@ insert into lines(id, number, name, time, intervals, time_wait, start_time, line
 
 
 insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (14, 14, 'Верхня бочка', 600, 1, 1, '2017-06-29 00:00:00', 'tank', null, 0, null, 26, 5, 0, 1, null, null);
+
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (15, 15, 'Дитячий майданчик', 300, 1, 1, '2017-06-29 18:34:00', 'lighting', 'butenko.asuscomm.com:7556', 0, 1, null, 4, 0, 1, null);
+
+
+insert into lines(id, number, name, time, intervals, time_wait, start_time, line_type, base_url, pump_enabled, relay_num, pin, group_id, is_pump, is_except, pump_pin) VALUES (16, 16, 'Сад', 300, 1, 1, '2017-06-29 18:34:00', 'lighting', 'butenko.asuscomm.com:7556', 0, 2, null, 4, 0, 1, null);

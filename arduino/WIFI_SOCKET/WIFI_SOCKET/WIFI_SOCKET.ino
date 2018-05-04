@@ -3,41 +3,67 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 
-//const char* ssid = "NotebookNet";
-//const char* password = "0660101327";
-const char* ssid = "faza_2";
-const char* password = "Kobe_2016";
+const char* ssid = "NotebookNet";
+const char* password = "0660101327";
+//const char* ssid = "faza_2";
+//const char* password = "Kobe_2016";
 
 ESP8266WebServer server(80);
 
-const int r1 = D7;
-const int r2 = D8;
 const int l1 = D5;
 const int l2 = D6;
-const int power_led = D3;
+const int r1 = D7;
+const int r2 = D8;
 
-
-void blink_010() {
-  digitalWrite(power_led, 0);
-  delay(500);
-  digitalWrite(power_led, 1);
-  delay(500);
-  digitalWrite(power_led, 0);
+void blink_connected() {
+  int l1_status = digitalRead(r1);
+  int l2_status = digitalRead(r2);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(100);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
+  delay(100);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  digitalWrite(l1, l1_status);
+  digitalWrite(l2, l2_status);
 }
 
-void blink_101() {
-  digitalWrite(power_led, 1);
-  delay(500);
-  digitalWrite(power_led, 0);
-  delay(500);
-  digitalWrite(power_led, 1);
+void blink_led() {
+  int l1_status = digitalRead(r1);
+  int l2_status = digitalRead(r2);
+  digitalWrite(l1, 0);
+  digitalWrite(l2, 0);
+  delay(200);
+  digitalWrite(l1, 1);
+  digitalWrite(l2, 1);
+  delay(200);
+  digitalWrite(l1, l1_status);
+  digitalWrite(l2, l2_status);
 }
-
-
 
 void handleRoot() {
   server.send(200, "text/plain", "hello from esp8266!");
-  blink_101();
+  blink_led();
 }
 
 void handleNotFound(){
@@ -53,7 +79,7 @@ void handleNotFound(){
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
   server.send(404, "text/plain", message);
-  blink_101();
+  blink_led();
 }
 
 
@@ -69,9 +95,7 @@ void setup(void){
   pinMode(r2, OUTPUT);
   pinMode(l1, OUTPUT);
   pinMode(l2, OUTPUT);
-  pinMode(power_led, OUTPUT);
-  
-  digitalWrite(power_led, 0);
+ 
   digitalWrite(r1, 0);
   digitalWrite(r2, 0);
   digitalWrite(l1, 0);
@@ -80,15 +104,14 @@ void setup(void){
   Serial.begin(115200);
   WiFi.setAutoConnect (true);
   WiFi.mode(WIFI_STA);
-  blink_010();
   WiFi.begin(ssid, password);
   Serial.println("");
   Serial.println("done");
-  blink_010();
+  blink_led();
   
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
-    blink_010();    
+    blink_led();   
     Serial.print(".");
   }
   
@@ -102,13 +125,13 @@ void setup(void){
     Serial.println("MDNS responder started");
   }
 
-  blink_101();
+  blink_connected();
 
   server.on("/", handleRoot);
 
   server.on("/test", [](){
     server.send(200, "text/plain", "this works as well");
-    blink_101();
+    blink_led();
   });
 
   server.on("/on", [](){
@@ -120,7 +143,7 @@ void setup(void){
     digitalWrite(l1, r1_status);
     digitalWrite(l2, r2_status);
     send_status();
-    blink_101();
+    blink_led();
   });
 
   server.on("/off", [](){
@@ -132,12 +155,12 @@ void setup(void){
     digitalWrite(l1, r1_status);
     digitalWrite(l2, r2_status);
     send_status();
-    blink_101();
+    blink_led();
   });
 
   server.on("/status", [](){
     send_status();
-    blink_101();
+    blink_led();
   });
 
   server.onNotFound(handleNotFound);
