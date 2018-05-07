@@ -5,6 +5,8 @@
 
 uint8_t GPIO_Pin = D6;
 volatile byte state = 0;
+volatile byte counter = 0;
+uint8_t counter_max = 10;
 
 const char *host = "http://mozz.asuscomm.com:7542";
 
@@ -60,7 +62,7 @@ void loop() {
   }
 
   if (state == 1) {
-    Serial.print("Initialising http connection");
+    Serial.println("Initialising http connection");
     HTTPClient http;
     
     Serial.print("Sending GET request");
@@ -79,9 +81,14 @@ void loop() {
 }
 
 void IntCallback() {
-  Serial.print("Interrupt signal received. Checking...");
+  Serial.println("Interrupt signal received. Checking...");
   if (digitalRead(GPIO_Pin) == HIGH) {
-    Serial.print("Signal is HIGH");
+    Serial.println("Signal is HIGH");
+    counter++;
+  }
+
+  if (counter >= counter_max) {
     state = 1;
+    counter = 0;
   }
 }
