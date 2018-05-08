@@ -8,7 +8,7 @@ GROUP_CHAT_ID = int(os.environ['GROUP_CHAT_ID_COTTAGE'])
 NAME = 'Peregonivka_bot'
 CHANNEL_NAME = '@Butenko_test'
 
-WEBHOOK_HOST = 'butenko.asuscomm.com'
+WEBHOOK_HOST = 'mozz.asuscomm.com'
 WEBHOOK_PORT = 443  # 443, 80, 88 or 8443 (port need to be 'open')
 WEBHOOK_LISTEN = '0.0.0.0'  # In some VPS you may need to put here the IP addr
 
