@@ -1153,6 +1153,15 @@ def stop_filling():
         return json.dumps({'status': "{0} minutes not passed yet. Send message pending.".format(TANK_NOTIFICATION_MINUTES)})
 
 
+@app.route("/im_alive")
+def im_alive():
+    """In order to keep device status"""
+    device_id = str(request.args.get('device_id'))
+    logging.info("Ping signal from {0} device id received".format(device_id))
+    return jsonify(
+        message='confirmed')
+
+
 @app.route("/.well-known/acme-challenge/Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8")
 def verify():
     return app.send_static_file('Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8')

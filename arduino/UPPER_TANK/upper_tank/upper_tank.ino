@@ -4,9 +4,13 @@
 #include <ESP8266HTTPClient.h>
 
 uint8_t GPIO_Pin = D6;
+
 volatile byte state = 0;
 volatile byte counter = 0;
 uint8_t counter_max = 50;
+
+uint8_t TIME_LIMIT_MINUTES = 30;
+unsigned long current_time = 0;
 
 const char *host = "http://mozz.asuscomm.com:7542";
 
@@ -20,7 +24,7 @@ const char* password = "0660101327";
 void setup() {
   Serial.begin(115200);
   Serial.println("Setup");
-  
+
   pinMode(GPIO_Pin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(GPIO_Pin), IntCallback, RISING);
 
@@ -43,6 +47,8 @@ void setup() {
   Serial.println(ssid);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+
+  current_time = millis();
 }
 
 void loop() {
@@ -64,7 +70,7 @@ void loop() {
   if (state == 1) {
     Serial.println("Initialising http connection");
     HTTPClient http;
-    
+
     Serial.print("Sending GET request");
     http.begin(host + String("/stop_filling"));
     int httpCode = http.GET();            //Send the request
@@ -78,6 +84,8 @@ void loop() {
     state = 0;
     delay(5000);
   }
+  
+  ping();
 }
 
 void IntCallback() {
@@ -94,3 +102,24 @@ void IntCallback() {
     counter = 0;
   }
 }
+
+
+void ping() {
+  if ( int(millis() - current_time / 60000) < TIME_LIMIT_MINUTES  ) {
+    Serial.println("Initialising http connection");
+    HTTPClient http;
+
+    Serial.print("Sending GET request");
+    http.begin(host + String("/im_alive?device_id=upper_tank"));
+    int httpCode = http.GET();            //Send the request
+    String payload = http.getString();    //Get the response payload
+
+    Serial.println(httpCode);   //Print HTTP return code
+    Serial.println(payload);    //Print request response payload
+
+    http.end();  //Close connection
+
+    current_time = millis();
+  }
+}
+
