@@ -37,8 +37,6 @@ app = Flask(__name__)
 socketio = SocketIO(app, async_mode='eventlet', engineio_logger=False)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
-DEBUG = False
-
 CACHE_TIMEOUT = 600
 
 
@@ -1157,7 +1155,7 @@ def stop_filling():
 def im_alive():
     """In order to keep device status"""
     device_id = str(request.args.get('device_id'))
-    logging.info("Ping signal from {0} device id received".format(device_id))
+    logging.info("Ping signal from '{0}' device id received".format(device_id))
     return jsonify(
         message='confirmed')
 
@@ -1171,4 +1169,4 @@ if __name__ == "__main__":
     get_settings()
     garden_controller.init_lines()
     remote_controller.init_remote_lines()
-    socketio.run(app, host='0.0.0.0', port=7542, debug=DEBUG)
+    socketio.run(app, host='0.0.0.0', port=7542, debug=False)
