@@ -169,10 +169,11 @@ def ground_sensor(line_id=None):
 
 def line_status(line_id):
     """Return status of raspberryPi relay."""
+    r_dict = {}
+
     try:
         base_url = LINES[line_id]['base_url']
         relay = LINES[line_id]['relay_num']
-        r_dict = {}
 
         response = requests.get(url='http://' + base_url + '/status', timeout=(5, 5))
         response.raise_for_status()
@@ -180,11 +181,11 @@ def line_status(line_id):
         logging.info('response {0}'.format(str(response.text)))
 
         response = json.loads(response.text)
-        
-        r_dict[line_id] = dict(id=line_id, state=int(response[str(relay)]))
-        return r_dict
 
+        r_dict[line_id] = dict(id=line_id, state=int(response[str(relay)]))
     except Exception as e:
         logging.error(e)
-        logging.error("Can't get line status status. Exception occured")
-        raise e
+        logging.error("Can't get line status status. Exception occured. Set status -1")
+        r_dict[line_id] = dict(id=line_id, state=-1)
+
+    return r_dict
