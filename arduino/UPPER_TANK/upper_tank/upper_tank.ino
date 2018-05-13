@@ -91,7 +91,6 @@ void loop() {
 
   ping();
   count_signal();
-  Serial.println(counter);
 }
 
 void count_signal() {
