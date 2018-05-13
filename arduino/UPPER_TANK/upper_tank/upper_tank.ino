@@ -6,7 +6,7 @@
 uint8_t GPIO_Pin = D6;
 volatile byte state = 0;
 volatile byte counter = 0;
-uint8_t counter_max = 10;
+uint8_t counter_max = 50;
 
 const char *host = "http://mozz.asuscomm.com:7542";
 
@@ -85,6 +85,8 @@ void IntCallback() {
   if (digitalRead(GPIO_Pin) == HIGH) {
     Serial.println("Signal is HIGH");
     counter++;
+  } else {
+    counter = 0;
   }
 
   if (counter >= counter_max) {
