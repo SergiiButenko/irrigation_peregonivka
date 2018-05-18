@@ -7,20 +7,20 @@ const char* ssid = "NotebookNet";
 const char* password = "0660101327";
 //const char* ssid = "faza_2";
 //const char* password = "Kobe_2016";
+int state;
 
-uint8_t GPIO_Pin = D5;
-volatile byte state = 0;
-
+uint8_t INPUT_Pin = D5;
+uint8_t OUT_Pin = D6;
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Setup");
   
-  pinMode(GPIO_Pin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(GPIO_Pin), IntCallback, RISING);
+  pinMode(INPUT_Pin, INPUT_PULLUP);
+  pinMode(OUT_Pin, OUTPUT);
 
   Serial.begin(115200);
-  WiFi.setAutoConnect (true);
+  WiFi.setAutoConnect(true);
   WiFi.mode(WIFI_STA);
 
   WiFi.begin(ssid, password);
@@ -38,10 +38,26 @@ void setup() {
   Serial.println(ssid);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+  
+  state = digitalRead(GPIO_Pin);
 }
 
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  Serial.println(digitalRead(OUT_Pin));
+  delay(1000);
+  revert_pin();
 }
+
+
+void revert_pin(){
+  if (digitalRead(INPUT_Pin) != state){
+    state = digitalRead(INPUT_Pin);
+    Serial.println("STATE CHANGED");
+    digitalWrite(OUT_Pin, !digitalRead(OUT_Pin));
+  }
+}
+
+
+
+
