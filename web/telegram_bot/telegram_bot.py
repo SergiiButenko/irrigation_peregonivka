@@ -96,7 +96,7 @@ def notify_filled():
 
     for user in users:
         logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
-        # bot.send_message(GROUP_CHAT_ID, "Верхня бочка заповнена. Вимкніть водопостачання.")
+        bot.send_message(GROUP_CHAT_ID, "Верхня бочка заповнена. Вимкніть водопостачання.")
 
     logging.info("Done")
     return json.dumps({'status': 'OK'})
