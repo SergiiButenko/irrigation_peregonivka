@@ -12,6 +12,7 @@ byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
 
 const char *host = "http://mozz.asuscomm.com:7542";
+String id = "upper_tank";
 
 //const char* ssid = "NotebookNet";
 //const char* password = "0660101327";
@@ -73,7 +74,7 @@ void loop() {
     HTTPClient http;
 
     Serial.println("Sending GET request");
-    http.begin(host + String("/stop_filling"));
+    http.begin(host + String("/stop_filling?device_id=") + String(id));
     int httpCode = http.GET();            //Send the request
     String payload = http.getString();    //Get the response payload
 

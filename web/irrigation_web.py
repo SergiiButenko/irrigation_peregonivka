@@ -1012,10 +1012,14 @@ def retry_branch_off(branch_id):
 
 
 @app.route('/deactivate_branch', methods=['GET'])
-def deactivate_branch():
+def deactivate_branch(branch_id=int(request.args.get('id')),
+                      mode=request.args.get('mode', None)):
     """Route is used to disable branch."""
     """Can be executed manaully - row will be added to database
     or with rules service - no new row will be added to database"""
+    logging.info("branch_id={0}".format(branch_id))
+    logging.info("mode={0}".format(mode))
+
     branch_id = int(request.args.get('id'))
     mode = request.args.get('mode')
     if (mode is None):
@@ -1124,26 +1128,44 @@ def set_settings():
 @app.route("/stop_filling")
 def stop_filling():
     """Blablbal."""
-    logging.info("INERUPT SIGNAL RESEIVED!")
+
+    device_id = 'upper_tank'
+    line_id = LINES_UPPER_TANK.get('device_id', None)
+    if line_id is None:
+        logging.error("Unsupported '{0}' device id!".format(device_id))
+        return json.dumps({'status': "Unsupported '{0}' device id!".format(device_id)})
+
+    logging.info("INERUPT SIGNAL RESEIVED FROM '{0}' device!".format(device_id))
     database.update(database.QUERY[mn()])
 
+    _no_key = False
     last_time_sent = get_time_last_notification()
     if last_time_sent is None:
         set_time_last_notification(date=datetime.datetime.now())
         last_time_sent = get_time_last_notification()
+        _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent
-    if delta.seconds > 60 * TANK_NOTIFICATION_MINUTES:
+    if delta.seconds > 60 * TANK_NOTIFICATION_MINUTES or _no_key is True:
         try:
+            logging.info("Updating redis.")
             set_time_last_notification(date=datetime.datetime.now())
             logging.info("Redis updated")
-            payload = {'users': USERS}
+
+            logging.info("Deactivating line '{0}'.".format(line_id))
+            deactivate_branch(branch_id=line_id, mode='manually')
+            logging.info("Line deactivated")
+
+            _users_list = TELEGRAM_USERS[device_id]
+            logging.info("Sending message to users: '{0}'.".format(str(_users_list)))
+            payload = {'users': _users_list}
             response = requests.post(VIBER_BOT_IP + '/notify_filled', json=payload, timeout=(10, 10), verify=False)
             response.raise_for_status()
+            logging.info("Messages send.")
         except Exception as e:
             logging.error(e)
             logging.error("Can't send rule to telegram. Ecxeption occured")
-            return json.dumps({'status': "Can't send rule to telegram. Ecxeption occured"})
+            return json.dumps({'status': "Can't send rule to telegram. Exception occured"})
 
         return json.dumps({'status': 'Redis updated'})
     else:

@@ -73,21 +73,6 @@ def on_info(message):
     bot.reply_to(message, text_messages['info'])
 
 
-# # Handle all other messages
-# @bot.message_handler(func=lambda message: True, content_types=['text'])
-# def echo_message(message):
-#     logging.info(str(message))
-#     bot.reply_to(message, message.text)
-
-
-def time_in_range(start, end, x):
-    """Return true if x is in the range [start, end]"""
-    if start <= end:
-        return start <= x <= end
-    else:
-        return start <= x or x <= end
-
-
 @app.route('/notify_filled', methods=['POST'])
 def notify_filled():
     logging.debug("received request for notify_filled. post data: {0}".format(request.get_data()))
@@ -107,24 +92,9 @@ def notify_users():
     logging.debug("received request for send_message. post data: {0}".format(request.get_data()))
     data = json.loads(request.get_data().decode())
     users = data['users']
-    rule_id = data['rule_id']
     time = data['time']
     timeout = data['timeout']
     user_friendly_name = data['user_friendly_name']
-
-    end_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['stop_messaging'], '%H:%M').time()
-    start_messaging_time = datetime.datetime.strptime(SNOOZE_HOURS['start_messaging'], '%H:%M').time()
-    dnow = datetime.datetime.now().time()
-
-    # if time_in_range(start_messaging_time, end_messaging_time, dnow):
-    #     logging.info("Snooze hours is on. Message won't be send")
-    #     return json.dumps({'status': 'OK'})
-    # else:
-    #     logging.info(dnow)
-    #     logging.info(end_messaging_time)
-    #     logging.info(start_messaging_time)
-    #     logging.info(dnow > end_messaging_time)
-    #     logging.info(dnow < start_messaging_time)
 
     for user in users:
         logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
