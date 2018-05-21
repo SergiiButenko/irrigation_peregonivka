@@ -1135,7 +1135,7 @@ def stop_filling():
     """Blablbal."""
 
     device_id = 'upper_tank'
-    line_id = LINES_UPPER_TANK.get('device_id', None)
+    line_id = LINES_UPPER_TANK.get(device_id, None)
     if line_id is None:
         logging.error("Unsupported '{0}' device id!".format(device_id))
         return json.dumps({'status': "Unsupported '{0}' device id!".format(device_id)})
