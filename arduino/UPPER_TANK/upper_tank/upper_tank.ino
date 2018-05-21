@@ -76,7 +76,7 @@ void loop() {
     for (int i = 1; i <= retry_limit; i++) {
       Serial.print("Sending GET request for stop. ");
       Serial.print(i);
-      Serial.print(" try of ");
+      Serial.print(" try out of ");
       Serial.println(retry_limit);
       Serial.println("Sending GET request");
 
@@ -125,7 +125,7 @@ void send_ping() {
   for (int i = 1; i <= retry_limit; i++) {
     Serial.print("Sending GET request for ping. ");
     Serial.print(i);
-    Serial.print(" try of ");
+    Serial.print(" try out of ");
     Serial.println(retry_limit);
     http.begin(host + String("/im_alive?device_id=") + String(id));
     int httpCode = http.GET();            //Send the request
