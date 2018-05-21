@@ -6,7 +6,10 @@
 byte GPIO_Pin = D6;
 
 int counter = 0;
-int counter_max = 1000;
+int counter_max = 300;
+int delay_for_counter_millis = 10;
+byte ping_send_status = 0;
+byte report_send_status = 0;
 
 byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
@@ -131,8 +134,10 @@ void send_ping() {
 void increase_counter() {
   if (counter >= 0 and counter <= counter_max) {
     counter++;
+    delay(delay_for_counter_millis);
   } else {
     counter = counter_max;
+    delay(delay_for_counter_millis);
   }
 }
 
@@ -143,4 +148,5 @@ void decrease_counter() {
     counter = 0;
   }
 }
+
 
