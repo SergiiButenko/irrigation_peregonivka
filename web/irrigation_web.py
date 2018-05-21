@@ -1136,12 +1136,13 @@ def stop_filling():
 
     device_id = 'upper_tank'
     line_id = LINES_UPPER_TANK.get(device_id, None)
-    if line_id is None:
-        logging.error("Unsupported '{0}' device id!".format(device_id))
-        return json.dumps({'status': "Unsupported '{0}' device id!".format(device_id)})
 
     logging.info("INERUPT SIGNAL RESEIVED FROM '{0}' device!".format(device_id))
     database.update(database.QUERY[mn()])
+
+    if line_id is None:
+        logging.error("Unsupported '{0}' device id!".format(device_id))
+        return json.dumps({'status': "Unsupported '{0}' device id!".format(device_id)})
 
     _no_key = False
     response_arr = get_line_status(line_id)
