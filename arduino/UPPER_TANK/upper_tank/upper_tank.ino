@@ -8,8 +8,7 @@ byte GPIO_Pin = D6;
 int counter = 0;
 int counter_max = 300;
 int delay_for_counter_millis = 10;
-byte ping_send_status = 0;
-byte report_send_status = 0;
+byte retry_limit = 5;
 
 byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
@@ -21,8 +20,6 @@ String id = "upper_tank";
 //const char* password = "0660101327";
 const char* ssid = "faza_2";
 const char* password = "Kobe_2016";
-
-
 
 void setup() {
   Serial.begin(115200);
@@ -76,18 +73,28 @@ void loop() {
     Serial.println("Initialising http connection");
     HTTPClient http;
 
-    Serial.println("Sending GET request");
-    http.begin(host + String("/stop_filling?device_id=") + String(id));
-    int httpCode = http.GET();            //Send the request
-    String payload = http.getString();    //Get the response payload
+    for (int i = 1; i <= retry_limit; i++) {
+      Serial.print("Sending GET request for stop. ");
+      Serial.print(i);
+      Serial.print(" try of ");
+      Serial.println(retry_limit);
+      Serial.println("Sending GET request");
 
-    Serial.print("httpCode: ");
-    Serial.println(httpCode);   //Print HTTP return code
-    Serial.print("payload: ");
-    Serial.println(payload);    //Print request response payload
+      http.begin(host + String("/stop_filling?device_id=") + String(id));
+      int httpCode = http.GET();            //Send the request
+      String payload = http.getString();    //Get the response payload
 
-    http.end();  //Close connection
+      Serial.print("httpCode: ");
+      Serial.println(httpCode);   //Print HTTP return code
+      Serial.print("payload: ");
+      Serial.println(payload);    //Print request response payload
 
+      http.end();  //Close connection
+      
+      if (httpCode == 200) {
+        break;
+      }
+    }
     counter = 0;
     delay(5000);
   }
@@ -115,17 +122,26 @@ void send_ping() {
   Serial.println("Initialising http connection for ping");
   HTTPClient http;
 
-  Serial.println("Sending GET request for ping");
-  http.begin(host + String("/im_alive?device_id=upper_tank"));
-  int httpCode = http.GET();            //Send the request
-  String payload = http.getString();    //Get the response payload
+  for (int i = 1; i <= retry_limit; i++) {
+    Serial.print("Sending GET request for ping. ");
+    Serial.print(i);
+    Serial.print(" try of ");
+    Serial.println(retry_limit);
+    http.begin(host + String("/im_alive?device_id=") + String(id));
+    int httpCode = http.GET();            //Send the request
+    String payload = http.getString();    //Get the response payload
 
-  Serial.print("httpCode: ");
-  Serial.println(httpCode);   //Print HTTP return code
-  Serial.print("payload: ");
-  Serial.println(payload);    //Print request response payload
+    Serial.print("httpCode: ");
+    Serial.println(httpCode);   //Print HTTP return code
+    Serial.print("payload: ");
+    Serial.println(payload);    //Print request response payload
 
-  http.end();  //Close connection
+    http.end();  //Close connection
+
+    if (httpCode == 200) {
+      break;
+    }
+  }
 
   current_time = millis();
 }
