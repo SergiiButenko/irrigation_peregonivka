@@ -1163,7 +1163,7 @@ def stop_filling():
             logging.info("Redis updated")
 
             logging.info("Deactivating line '{0}'.".format(line_id))
-            deactivate_branch(branch_id=line_id, mode='manually')
+            deactivate_branch(line_id=line_id, mode='manually')
             logging.info("Line deactivated")
 
             _users_list = TELEGRAM_USERS[device_id]
