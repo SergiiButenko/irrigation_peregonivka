@@ -1157,7 +1157,7 @@ def stop_filling():
 
 
 @app.route("/im_alive")
-def im_alive(device_id=str(request.args.get('device_id'))):
+def im_alive():
     """In order to keep device status"""
     logging.info(device_id)
     device_id = str(request.args.get('device_id'))
