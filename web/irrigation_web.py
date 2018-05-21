@@ -1011,14 +1011,40 @@ def retry_branch_off(branch_id):
         raise Exception("Can't turn off {0} branch".format(branch_id))
 
 
+def deactivate_branch(line_id, mode):
+    response_off = get_line_status(line_id)
+    if response_off[line_id]['state'] != 0:
+        try:
+            response_off = retry_branch_off(branch_id=line_id)
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't turn off branch id={0}. Exception occured".format(line_id))
+            raise
+
+        if (mode == 'manually'):
+            now = datetime.datetime.now()
+            if get_next_rule_from_redis(line_id) is not None:
+                database.update(database.QUERY[mn() + '_1'].format(get_next_rule_from_redis(line_id)['interval_id']))
+            else:
+                database.update(database.QUERY[mn() + '_2'].format(line_id, 2, 4, now.date(), now, None))
+
+            set_next_rule_to_redis(line_id, database.get_next_active_rule(line_id))
+            logging.info("Rule '{0}' added".format(str(get_next_rule_from_redis(line_id))))
+
+            logging.info("Line '{0}' deactivated manually".format(line_id))
+        else:
+            logging.info('No new entries is added to database.')
+    else:
+        logging.info("Line '{0}' already deactivated. No action performed".format(line_id))
+
+    return form_responce_for_branches(response_off)
+
+
 @app.route('/deactivate_branch', methods=['GET'])
-def deactivate_branch(branch_id=int(request.args.get('id')),
-                      mode=request.args.get('mode', None)):
+def deactivate_branch_route():
     """Route is used to disable branch."""
     """Can be executed manaully - row will be added to database
     or with rules service - no new row will be added to database"""
-    logging.info("branch_id={0}".format(branch_id))
-    logging.info("mode={0}".format(mode))
 
     branch_id = int(request.args.get('id'))
     mode = request.args.get('mode')
@@ -1026,36 +1052,15 @@ def deactivate_branch(branch_id=int(request.args.get('id')),
         logging.error("no 'mode' parameter passed")
         abort(500)
 
-    response_off = get_line_status(branch_id)
-    if response_off[branch_id]['state'] != 0:
-        try:
-            response_off = retry_branch_off(branch_id=branch_id)
-        except Exception as e:
-            logging.error(e)
-            logging.error("Can't turn off branch id={0}. Exception occured".format(branch_id))
-            abort(500)
+    try:
+        arr = deactivate_branch(line_id=branch_id, mode=mode)
+        send_branch_status_message(arr)
+        send_history_change_message()
 
-        if (mode == 'manually'):
-            now = datetime.datetime.now()
-            if get_next_rule_from_redis(branch_id) is not None:
-                database.update(database.QUERY[mn() + '_1'].format(get_next_rule_from_redis(branch_id)['interval_id']))
-            else:
-                database.update(database.QUERY[mn() + '_2'].format(branch_id, 2, 4, now.date(), now, None))
-
-            set_next_rule_to_redis(branch_id, database.get_next_active_rule(branch_id))
-            logging.info("Rule '{0}' added".format(str(get_next_rule_from_redis(branch_id))))
-
-            logging.info("Branch '{0}' deactivated manually".format(branch_id))
-        else:
-            logging.info('No new entries is added to database.')
-    else:
-        logging.info("Branch '{0}' already deactivated. No action performed".format(branch_id))
-
-    arr = form_responce_for_branches(response_off)
-    send_branch_status_message(arr)
-    send_history_change_message()
-
-    return jsonify(branches=arr)
+        return jsonify(branches=arr)
+    except Exception as e:
+        logging.error(e)
+        abort(500)
 
 
 @app.route("/weather")
