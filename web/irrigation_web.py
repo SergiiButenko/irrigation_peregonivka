@@ -1186,7 +1186,6 @@ def stop_filling():
 @app.route("/im_alive")
 def im_alive():
     """In order to keep device status"""
-    logging.info(device_id)
     device_id = str(request.args.get('device_id'))
     logging.info("Ping signal from '{0}' device id received".format(device_id))
     return jsonify(
@@ -1195,7 +1194,6 @@ def im_alive():
 
 @app.route("/.well-known/acme-challenge/Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8")
 def verify():
-    im_alive(device_id='TEST')
     return app.send_static_file('Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8')
 
 
