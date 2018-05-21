@@ -1127,6 +1127,11 @@ def stop_filling():
     logging.info("INERUPT SIGNAL RESEIVED!")
     database.update(database.QUERY[mn()])
 
+    response_arr = get_line_status(TANK_LINE_ID)
+    if response_arr[TANK_LINE_ID]['state'] == 0:
+        logging.info("Line '{0}' is not active. Message won't be send.".format(TANK_LINE_ID))
+        return json.dumps({'status': "Line '{0}' is not active. Message won't be send.".format(TANK_LINE_ID)})
+
     last_time_sent = get_time_last_notification()
     if last_time_sent is None:
         set_time_last_notification(date=datetime.datetime.now())

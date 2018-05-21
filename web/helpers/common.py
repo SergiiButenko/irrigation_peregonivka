@@ -23,6 +23,7 @@ USERS = [
 
 REDIS_KEY_FOR_UPPER_TANK = 'UPPER_TANK'
 TANK_NOTIFICATION_MINUTES = 1
+TANK_LINE_ID = 14
 
 VIBER_USERS = [
     {'name': 'Sergii', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='},
