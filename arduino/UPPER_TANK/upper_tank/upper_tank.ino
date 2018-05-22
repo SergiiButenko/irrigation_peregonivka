@@ -3,6 +3,8 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
 
+byte MINUTES_TILL_FIRST_PING = 3;
+
 byte GPIO_Pin = D6;
 
 int counter = 0;
@@ -94,7 +96,10 @@ void loop() {
       if (httpCode == 200) {
         break;
       }
+
+      delay(1000);
     }
+    
     counter = 0;
     delay(5000);
   }
@@ -141,6 +146,8 @@ void send_ping() {
     if (httpCode == 200) {
       break;
     }
+
+    delay(1000);
   }
 
   current_time = millis();
