@@ -168,8 +168,8 @@ def enable_rule():
 
         logging.info("Updating rules on start.")
         update_all_rules()
-        logging.info("rules updated")
 
+        logging.info("Synch with redis.")
         sync_rules_from_redis()
         rules_to_log()
 
