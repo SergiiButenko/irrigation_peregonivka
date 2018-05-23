@@ -13,6 +13,10 @@ $(document).ready(function() {
 
                 for (j in list) {
                     item = list[j]
+                    if (item['name'].toLowerCase().indexOf('насос') != -1) {
+                        continue;
+                    }
+
                     branch[item['id']] = {
                         'name': item['name'],
                         'default_time': parseInt(item['default_time']),
@@ -90,7 +94,7 @@ $(document).ready(function() {
                 $('#plann_modal').modal('hide');
             },
             error: function() {
-                alert("error");
+                alert("Помилка. Перевірте з'єднання і спробуйте ще раз");
                 set_status_ok();
             }
         });
