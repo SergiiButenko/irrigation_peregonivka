@@ -23,9 +23,9 @@ QUERY['get_last_start_rule'] = (
     "ORDER BY timer DESC LIMIT 1")
 
 QUERY['history'] = (
-    "SELECT l.interval_id, li.name, l.date, l.timer as \"[timestamp]\", l.active, l.time "
+    "SELECT l.interval_id, li.name, l.date, l.timer as \"[timestamp]\", l.active, l.time, l.state"
     "FROM life as l, lines as li "
-    "WHERE l.rule_id = 1 AND (date(l.timer) BETWEEN date('now', 'localtime') AND date('now', 'localtime', '+{0} day')) AND l.line_id = li.number AND l.state = 1 AND l.active = 1 "
+    "WHERE l.rule_id = 1 AND (l.timer BETWEEN datetime('now', 'localtime') AND datetime('now', 'localtime', '+{0} day')) AND l.line_id = li.number AND l.state = 1 AND l.active = 1 "
     "ORDER BY l.timer DESC")
 
 QUERY['ongoing_rules'] = (
