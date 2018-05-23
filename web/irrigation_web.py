@@ -1199,11 +1199,18 @@ def verify():
 
 
 if __name__ == "__main__":
+    logging.info("Get app settings")
     get_settings()
     # Initialize lines attached to Raspbberry PI
+    logging.info("Initialize lines attached to Raspbberry PI")
     garden_controller.init_lines()
     # Initialize lines marked with base_url in database
+    logging.info("Initialize lines marked with base_url in database")
     remote_controller.init_remote_lines()
-    # Fluch keys in redis in order to keep it updated on start in case power failure
+    # Flush keys in redis in order to keep it updated on start in case power failure
+    logging.info("Flush keys in redis in order to keep it updated on start in case power failure")
     flush_on_start()
+    logging.info("Fill redis database with rules")
+    update_all_rules()
+    logging.info("Staring app")
     socketio.run(app, host='0.0.0.0', port=7542, debug=False)

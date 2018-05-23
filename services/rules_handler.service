@@ -6,10 +6,9 @@ Requires=network.target
 [Service]
 ExecStart=/usr/bin/python3 /var/www/web/rules_handler.py
 
-OnBootSec=6min
+TimeoutSec=6min
 Restart=always
 RestartSec=5
-TimeoutSec=5
 User=root
 
 [Install]
