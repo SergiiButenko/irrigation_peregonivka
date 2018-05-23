@@ -74,6 +74,7 @@ $(document).ready(function() {
         index = $(this).data('id');
         name = branch[index]['name'];
         time = branch[index]['default_time'];
+        start_time = branch[index]['start_time']
 
         $('#tank_minutes').val(time);
         $('#tank_modal').data('id', index);
@@ -85,9 +86,9 @@ $(document).ready(function() {
         console.log(convert_date(null))
 
         irrigation_time = $(this).find('.irrigation_time');
-        console.log(time)
-        $(irrigation_time).val(convert_date_to_time(time));
-        console.log(convert_date_to_time(time))
+        console.log(start_time)
+        $(irrigation_time).val(convert_date_to_time(start_time));
+        console.log(convert_date_to_time(start_time))
         $('#tank_modal').modal('show');
     });
 
