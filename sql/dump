@@ -28,6 +28,7 @@ INSERT INTO "state_of_rule" VALUES(3,'Failed','Не виконано');
 INSERT INTO "state_of_rule" VALUES(4,'Canceled','Скасовано');
 INSERT INTO "state_of_rule" VALUES(5,'Canceled_by_rain','Скасовано через дощ');
 INSERT INTO "state_of_rule" VALUES(6,'Canceled_by_humidity','Скасовано через вологість');
+INSERT INTO "state_of_rule" VALUES(7,'Canceled_by_mistime','Скасовано через помилку з часом');
 
 CREATE TABLE type_of_rule (
     id INTEGER PRIMARY KEY,

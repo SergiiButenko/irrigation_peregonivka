@@ -168,12 +168,13 @@ def enable_rule():
 
         logging.info("Updating rules on start.")
         update_all_rules()
-        logging.debug("rules updated")
+        logging.info("rules updated")
 
         sync_rules_from_redis()
         rules_to_log()
 
-        now_time = datetime.datetime.now()
+        logging.info("Entering While loop")
+        start_time = datetime.datetime.now()
         while True:
             # logging.info("enable_rule_daemon heartbeat. RULES_FOR_BRANCHES: {0}".format(str(RULES_FOR_BRANCHES)))
             time.sleep(10)
@@ -183,21 +184,37 @@ def enable_rule():
                 if rule is None:
                     continue
 
-                delta = datetime.datetime.now() - now_time
+                now_time = datetime.datetime.now()
+
+                # Send message to log ones per 10 minutes
+                delta = now_time - start_time
                 if delta.seconds >= 60 * 10:
                     rules_to_log()
-                    now_time = datetime.datetime.now()
+                    start_time = now_time
 
-                if (datetime.datetime.now() >= (rule['timer'] - datetime.timedelta(minutes=VIBER_SENT_TIMEOUT))):
+                # send message to messenger X minutes  before rules execution started
+                if now_time >= (rule['timer'] - datetime.timedelta(minutes=VIBER_SENT_TIMEOUT)):
                     try:
                         send_to_viber_bot(rule)
                     except Exception as e:
                         logging.error("Can't send rule {0} to viber. Exception occured. {1}".format(str(rule), e))
 
-                if (datetime.datetime.now() >= rule['timer']):
-                    if (inspect_conditions(rule) is False):
-                        logging.info("Rule can't be executed cause of rain volume too high")
+                # Start of execution
+                if now_time >= rule['timer']:
+
+                    # Check rain volume for last X hours
+                    if inspect_conditions(rule) is False:
+                        logging.error("Rule can't be executed cause of rain volume too high")
                         database.update(database.QUERY[mn() + "_canceled_by_rain"].format(rule['id']))
+                        set_next_rule_to_redis(rule['line_id'], database.get_next_active_rule(rule['line_id']))
+                        continue
+
+                    # Troubleshoot case. In case timedelta more than 5 minutes - skip rule
+                    logging.info("Rule '{0}' execution is about to start. Checking time delta not more than '{1}' minutes".format(str(rule), MAX_DELTA_FOR_RULES_SERVICE))
+                    delta = now_time - rule['timer']
+                    if delta.seconds >= 60 * MAX_DELTA_FOR_RULES_SERVICE:
+                        logging.error("Rule execution won't be started since time delta more than'{0}' minutes".format(MAX_DELTA_FOR_RULES_SERVICE))
+                        database.update(database.QUERY[mn() + "_canceled_by_mistime"].format(rule['id']))
                         set_next_rule_to_redis(rule['line_id'], database.get_next_active_rule(rule['line_id']))
                         continue
 

@@ -89,6 +89,7 @@ QUERY['deactivate_branch_2'] = (
 
 QUERY['enable_rule'] = "UPDATE life SET state=2 WHERE id={0}"
 QUERY['enable_rule_canceled_by_rain'] = "UPDATE life SET state=5 WHERE id={0}"
+QUERY['enable_rule_canceled_by_mistime'] = "UPDATE life SET state=7 WHERE id={0}"
 
 QUERY['activate_ongoing_rule_ongoing'] = "UPDATE ongoing_rules SET active=1 WHERE rule_id='{0}'"
 QUERY['activate_ongoing_rule_life'] = "UPDATE life SET active=1 WHERE ongoing_rule_id='{0}'"

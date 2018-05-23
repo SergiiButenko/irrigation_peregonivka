@@ -57,3 +57,7 @@ def set_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK, date=datetime.datet
         logging.error("Can't save date to redis. Exception occured {0}".format(e))
 
     return res
+
+
+def flush_on_start():
+    redis_db.flushdb()

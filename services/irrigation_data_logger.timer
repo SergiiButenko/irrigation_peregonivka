@@ -2,8 +2,8 @@
 Description=data_logger timer
 
 [Timer]
-OnBootSec=1min
-OnUnitActiveSec=10min
+OnBootSec=6min
+OnUnitActiveSec=15min
 StartLimitIntervalSec=5min
 Persistent=true
 Unit=irrigation_data_logger.service

@@ -1200,6 +1200,10 @@ def verify():
 
 if __name__ == "__main__":
     get_settings()
+    # Initialize lines attached to Raspbberry PI
     garden_controller.init_lines()
+    # Initialize lines marked with base_url in database
     remote_controller.init_remote_lines()
+    # Fluch keys in redis in order to keep it updated on start in case power failure
+    flush_on_start()
     socketio.run(app, host='0.0.0.0', port=7542, debug=False)
