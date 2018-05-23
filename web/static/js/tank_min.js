@@ -81,10 +81,11 @@ $(document).ready(function() {
         $('.modal-title').html(name);
 
         irrigation_date = $(this).find('.irrigation_date');
-        $(irrigation_date).val(convert_date(time));
-        console.log(convert_date(time))
+        $(irrigation_date).val(convert_date(null));
+        console.log(convert_date(null))
 
         irrigation_time = $(this).find('.irrigation_time');
+        console.log(time)
         $(irrigation_time).val(convert_date_to_time(time));
         console.log(convert_date_to_time(time))
         $('#tank_modal').modal('show');
