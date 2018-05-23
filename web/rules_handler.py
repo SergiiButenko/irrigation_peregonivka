@@ -220,6 +220,8 @@ def enable_rule():
                         database.update(database.QUERY[mn() + "_canceled_by_mistime"].format(rule['id']))
                         set_next_rule_to_redis(rule['line_id'], database.get_next_active_rule(rule['line_id']))
                         continue
+                    else:
+                        logging.info("Rule execution allowed")
 
                     logging.info("Rule '{0}' execution started".format(str(rule)))
 
