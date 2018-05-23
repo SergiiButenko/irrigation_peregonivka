@@ -198,8 +198,7 @@ def enable_rule():
                 # send message to messenger X minutes  before rules execution started
                 if now_time >= (rule['timer'] - datetime.timedelta(minutes=VIBER_SENT_TIMEOUT)):
                     try:
-                        # send_to_viber_bot(rule)
-                        logging.info("debug")
+                        send_to_viber_bot(rule)
                     except Exception as e:
                         logging.error("Can't send rule {0} to viber. Exception occured. {1}".format(str(rule), e))
 
