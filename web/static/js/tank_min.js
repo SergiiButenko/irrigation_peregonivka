@@ -81,17 +81,14 @@ $(document).ready(function() {
 
         $('.modal-title').html(name);
 
-        var now = new Date();
+        var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
         irrigation_date = $('#tank_modal').find('.irrigation_date');
-        $(irrigation_date).val(convert_date(now));
-        console.log(convert_date(now))
+        $(irrigation_date).val(convert_date(tomorrow));
+        console.log(convert_date(tomorrow))
         console.log(irrigation_date)
 
         irrigation_time = $('#tank_modal').find('.irrigation_time');
-        console.log(start_time)
         $(irrigation_time).val(convert_date_to_time(start_time));
-        console.log(convert_date_to_time(start_time))
-        console.log(irrigation_time)
         $('#tank_modal').modal('show');
     });
 
@@ -130,23 +127,23 @@ $(document).ready(function() {
             });
 
             console.log(json)
-            // $.ajax({
-            //     url: '/add_ongoing_rule',
-            //     type: "post",
-            //     data: JSON.stringify(json),
-            //     contentType: "application/json; charset=utf-8",
-            //     dataType: "json",
-            //     beforeSend: function(xhr, opts) {
-            //         set_status_spinner();
-            //     },
-            //     success: function() {
-            //         $('#tank_modal').modal('hide');
-            //     },
-            //     error: function() {
-            //         alert("Помилка. Перевірте з'єднання і спробуйте ще раз");
-            //         set_status_ok();
-            //     }
-            // });
+            $.ajax({
+                url: '/add_ongoing_rule',
+                type: "post",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                beforeSend: function(xhr, opts) {
+                    set_status_spinner();
+                },
+                success: function() {
+                    $('#tank_modal').modal('hide');
+                },
+                error: function() {
+                    alert("Помилка. Перевірте з'єднання і спробуйте ще раз");
+                    set_status_ok();
+                }
+            });
         }
     });
 
