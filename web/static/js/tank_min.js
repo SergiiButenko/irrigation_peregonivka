@@ -82,12 +82,12 @@ $(document).ready(function() {
         $('.modal-title').html(name);
 
         var now = new Date();
-        irrigation_date = $(this).find('.irrigation_date');
+        irrigation_date = $('#tank_modal').find('.irrigation_date');
         $(irrigation_date).val(convert_date(now));
         console.log(convert_date(now))
         console.log(irrigation_date)
 
-        irrigation_time = $(this).find('.irrigation_time');
+        irrigation_time = $('#tank_modal').find('.irrigation_time');
         console.log(start_time)
         $(irrigation_time).val(convert_date_to_time(start_time));
         console.log(convert_date_to_time(start_time))
