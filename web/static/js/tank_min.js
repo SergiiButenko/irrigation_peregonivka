@@ -162,6 +162,27 @@ $(document).ready(function() {
     });
 
 
+    $(".cancel-filling").click(function() {
+        var interval_id = $(this).data('id');
+        console.log(interval_id + " filling schedule will be canceled");
+
+        $.ajax({
+            url: server + '/cancel_rule',
+            type: "post",
+            data: JSON.stringify({ 'list': [interval_id] }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            beforeSend: function(xhr, opts) {
+                set_status_spinner();
+            },
+            success: function(data) {
+                set_status_ok();
+            },
+            error: function() {
+                set_status_ok();
+            }
+        });
+    });
 });
 
 function branch_on(index, time_minutes) {
