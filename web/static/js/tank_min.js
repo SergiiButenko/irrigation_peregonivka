@@ -138,6 +138,7 @@ $(document).ready(function() {
                 },
                 success: function() {
                     $('#tank_modal').modal('hide');
+                    set_status_ok();
                 },
                 error: function() {
                     alert("Помилка. Перевірте з'єднання і спробуйте ще раз");

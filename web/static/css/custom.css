@@ -75,6 +75,10 @@ h7 {
     display: none;
 }
 
+.cancel-filling {
+    display: none;
+}
+
 .blur {
     filter: blur(3px);
 }
