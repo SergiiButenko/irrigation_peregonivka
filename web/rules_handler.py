@@ -140,12 +140,15 @@ def send_to_viber_bot(rule):
         return
 
     try:
+        logging.info("Sending message to messanger.")
         payload = {'rule_id': id, 'line_id': line_id, 'time': time, 'interval_id': interval_id, 'users': USERS, 'timeout': VIBER_SENT_TIMEOUT, 'user_friendly_name': user_friendly_name}
         response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started', json=payload, timeout=(10, 10), verify=False)
         response.raise_for_status()
     except Exception as e:
         logging.error(e)
         logging.error("Can't send rule to viber. Ecxeption occured")
+    else:
+        logging.info("Send.")
     finally:
         redis_db.rpush(REDIS_KEY_FOR_VIBER, interval_id)
         logging.debug("interval_id: {0} is added to redis".format(interval_id))
@@ -237,7 +240,7 @@ def enable_rule():
                         # Set ok state
                         database.update(database.QUERY[mn()].format(rule['id'], 2))
                     finally:
-                        logging.info("get next active rule")
+                        logging.info("Get next active rule for {0} line id.".format(rule['line_id']))
                         set_next_rule_to_redis(rule['line_id'], database.get_next_active_rule(rule['line_id']))
     except Exception as e:
         logging.error("enable rule thread exception occured. {0}".format(e))
