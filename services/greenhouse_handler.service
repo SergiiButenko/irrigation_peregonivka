@@ -4,7 +4,7 @@ After=network.target
 Requires=network.target
 
 [Service]
-ExecStartPre=/bin/sleep 360
+ExecStartPre=/bin/sleep 40
 ExecStart=/usr/bin/python3 /var/www/web/greenhouse_handler.py
 
 User=root

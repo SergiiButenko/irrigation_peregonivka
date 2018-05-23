@@ -4,11 +4,11 @@ After=network.target
 Requires=network.target
 
 [Service]
-ExecStartPre=/bin/sleep 300
-ExecStart=/usr/bin/python3 /var/www/web/irrigation_web.py 
+ExecStartPre=/bin/sleep 30
+ExecStart=/usr/bin/python3 /var/www/web/irrigation_web.py
 
 Restart=always
-RestartSec=5
+RestartSec=35
 User=root
 
 [Install]

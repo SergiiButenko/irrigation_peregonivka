@@ -4,11 +4,11 @@ After=network.target
 Requires=network.target
 
 [Service]
-ExecStartPre=/bin/sleep 360
+ExecStartPre=/bin/sleep 40
 ExecStart=/usr/bin/python3 /var/www/web/rules_handler.py
 
 Restart=always
-RestartSec=5
+RestartSec=45
 User=root
 
 [Install]
