@@ -23,7 +23,7 @@ QUERY['get_last_start_rule'] = (
     "ORDER BY timer DESC LIMIT 1")
 
 QUERY['history'] = (
-    "SELECT l.interval_id, li.name, l.date, l.timer as \"[timestamp]\", l.active, l.time"
+    "SELECT l.interval_id, li.name, l.date, l.timer as \"[timestamp]\", l.active, l.time "
     "FROM life as l, lines as li "
     "WHERE l.rule_id = 1 AND (date(l.timer) BETWEEN date('now', 'localtime') AND date('now', 'localtime', '+{0} day')) AND l.line_id = li.number AND l.state = 1 AND l.active = 1 "
     "ORDER BY l.timer DESC")
@@ -125,38 +125,30 @@ QUERY['setup_lines_lines'] = (
 QUERY['setup_lines_remote_control'] = (
     "SELECT l.number, l.relay_num, l.is_pump, l.is_except, "
     "l.group_id, l.name, lg.name, l.base_url "
-    "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number"
-    )
+    "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number")
 
-QUERY['setup_sensors_datalogger']  = (
+QUERY['setup_sensors_datalogger'] = (
     "SELECT l.number, l.line_type, l.base_url "
     "FROM lines AS l "
     "WHERE l.line_type like '%sensor' "
-    "ORDER BY l.number"
-    )
+    "ORDER BY l.number")
 
-QUERY['setup_lines_datalogger']  = (
+QUERY['setup_lines_datalogger'] = (
     "SELECT l.number, l.moisture_id "
     "FROM lines AS l "
     "WHERE l.moisture_id is not NULL "
-    "ORDER BY l.number"
-    )
-
+    "ORDER BY l.number")
 
 QUERY['setup_lines_greenlines'] = (
     "SELECT l.number, l.base_url "
     "FROM lines AS l "
-    "ORDER BY l.number"
-    )
+    "ORDER BY l.number")
 
 QUERY['temp_sensors_air'] = (
-    "INSERT into temperature (line_id, temp, hum, datetime) values ({0}, '{1}', '{2}', '{3}')"
-    )
+    "INSERT into temperature (line_id, temp, hum, datetime) values ({0}, '{1}', '{2}', '{3}')")
 
 QUERY['temp_sensors_ground'] = (
-    "INSERT into temperature (line_id, temp, datetime) values ({0}, '{1}', '{2}')"
-    )
-
+    "INSERT into temperature (line_id, temp, datetime) values ({0}, '{1}', '{2}')")
 
 QUERY['enable_rule_cancel_interval'] = "UPDATE life SET state={1} WHERE state=1 AND interval_id='{0}'"
 
