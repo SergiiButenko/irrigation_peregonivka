@@ -4,9 +4,9 @@ After=network.target
 Requires=network.target
 
 [Service]
+ExecStartPre=/bin/sleep 360
 ExecStart=/usr/bin/python3 /var/www/web/viber_bot/viber_bot.py
 
-TimeoutStartSec=6min
 Restart=always
 RestartSec=5
 User=root

@@ -4,9 +4,9 @@ After=network.target
 Requires=network.target
 
 [Service]
+ExecStartPre=/bin/sleep 360
 ExecStart=/usr/bin/python3 /var/www/web/greenhouse_handler.py
 
-TimeoutSec=6min
 User=root
 
 [Install]

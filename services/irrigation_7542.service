@@ -4,9 +4,9 @@ After=network.target
 Requires=network.target
 
 [Service]
+ExecStartPre=/bin/sleep 300
 ExecStart=/usr/bin/python3 /var/www/web/irrigation_web.py
 
-TimeoutStartSec=300s
 Restart=always
 RestartSec=5
 User=root
