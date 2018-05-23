@@ -242,7 +242,7 @@ def tank():
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
-                'default_time': item['time']})
+                'default_time': item['time'],})
 
     return render_template('tank.html', my_list=branch_list)
 
@@ -287,7 +287,8 @@ def tank_settings():
             branch_list.append({
                 'id': item['branch_id'],
                 'name': item['name'],
-                'default_time': item['time']})
+                'default_time': item['time'],
+                'start_time': item['start_time']})
 
     return jsonify(list=branch_list)
 

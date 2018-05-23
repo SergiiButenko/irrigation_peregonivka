@@ -16,7 +16,8 @@ $(document).ready(function() {
                 item = list[j]
                 branch[item['id']] = {
                     'name': item['name'],
-                    'default_time': parseInt(item['default_time'])
+                    'default_time': parseInt(item['default_time']),
+                    'start_time': new Date(item['start_time'])
                 }
             }
         }
@@ -78,6 +79,14 @@ $(document).ready(function() {
         $('#tank_modal').data('id', index);
 
         $('.modal-title').html(name);
+
+        irrigation_date = $(this).find('.irrigation_date');
+        $(irrigation_date).val(convert_date(time));
+        console.log(convert_date(time))
+
+        irrigation_time = $(this).find('.irrigation_time');
+        $(irrigation_time).val(convert_date_to_time(time));
+        console.log(convert_date_to_time(time))
         $('#tank_modal').modal('show');
     });
 
@@ -95,9 +104,44 @@ $(document).ready(function() {
         if ($('#tank_minutes_group').hasClass("has-danger")) {
             console.log("Fill in form correctly");
         } else {
-            console.log(branch[index]['name'] + " will be activated on " + time + " minutes ");
-            branch_on(index, time);
-            $('#tank_modal').modal('hide');
+            var json = { 'rules': [] }
+            var branch_id = index;
+            var name = branch[branch_id]['name'];
+            var time = time;
+            var interval = 1;
+            var time_wait = 0;
+            var date_start = $('#tank_modal').find('.irrigation_date').val();
+            var time_start = $('#tank_modal').find('.irrigation_time').val();
+            json['rules'].push({
+                "line_id": branch_id,
+                'line_name': name,
+                "time": time,
+                "intervals": interval,
+                "time_wait": time_wait,
+                "date_start": date_start,
+                'time_start': time_start,
+                'end_date': date_start,
+                'repeat_value': 4
+            });
+
+            console.log(json)
+            // $.ajax({
+            //     url: '/add_ongoing_rule',
+            //     type: "post",
+            //     data: JSON.stringify(json),
+            //     contentType: "application/json; charset=utf-8",
+            //     dataType: "json",
+            //     beforeSend: function(xhr, opts) {
+            //         set_status_spinner();
+            //     },
+            //     success: function() {
+            //         $('#tank_modal').modal('hide');
+            //     },
+            //     error: function() {
+            //         alert("Помилка. Перевірте з'єднання і спробуйте ще раз");
+            //         set_status_ok();
+            //     }
+            // });
         }
     });
 
