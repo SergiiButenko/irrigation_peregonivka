@@ -1160,6 +1160,12 @@ def stop_filling():
     delta = datetime.datetime.now() - last_time_sent
     if delta.seconds > 60 * TANK_NOTIFICATION_MINUTES or _no_key is True:
         try:
+            _users_list = TELEGRAM_USERS[device_id]
+            logging.info("Sending notify_filled message to users: '{0}'.".format(str(_users_list)))
+            payload = {'users': _users_list}
+            response = requests.post(VIBER_BOT_IP + '/notify_filled', json=payload, timeout=(10, 10), verify=False)
+            logging.info("Messages send.")
+
             logging.info("Updating redis.")
             set_time_last_notification(date=datetime.datetime.now())
             logging.info("Redis updated")
@@ -1168,10 +1174,10 @@ def stop_filling():
             deactivate_branch(line_id=line_id, mode='manually')
             logging.info("Line deactivated")
 
-            _users_list = TELEGRAM_USERS[device_id]
-            logging.info("Sending message to users: '{0}'.".format(str(_users_list)))
-            payload = {'users': _users_list}
-            response = requests.post(VIBER_BOT_IP + '/notify_filled', json=payload, timeout=(10, 10), verify=False)
+            logging.info("Sending line deactivated message to users: '{0}'.".format(str(_users_list)))
+            payload = {'users': _users_list,
+                       'message': 'Водопостачання вимкнено.'}
+            response = requests.post(VIBER_BOT_IP + '/send_message', json=payload, timeout=(10, 10), verify=False)
             response.raise_for_status()
             logging.info("Messages send.")
         except Exception as e:

@@ -18,7 +18,7 @@ APP_SETTINGS = {}
 REDIS_KEY_FOR_VIBER = 'telegram_sent_intervals'
 VIBER_SENT_TIMEOUT = 10
 USERS = [
-    {'name': 'Cottage', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='}
+    {'name': 'Cottage', 'id': '-315337397'}
 ]
 
 # Settings for upper tanks
@@ -26,7 +26,7 @@ REDIS_KEY_FOR_UPPER_TANK = 'UPPER_TANK'
 TANK_NOTIFICATION_MINUTES = 1
 LINES_UPPER_TANK = {'upper_tank': 14, 'upper_tank_sv': 17}
 USERS_SV = [
-    {'name': 'Cottage', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='}
+    {'name': 'SV', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='}
 ]
 TELEGRAM_USERS = {'upper_tank': USERS, 'upper_tank_sv': USERS_SV}
 

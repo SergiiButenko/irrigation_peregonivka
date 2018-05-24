@@ -75,13 +75,28 @@ def on_info(message):
 
 @app.route('/notify_filled', methods=['POST'])
 def notify_filled():
-    logging.debug("received request for notify_filled. post data: {0}".format(request.get_data()))
+    logging.info("received request for notify_filled. post data: {0}".format(request.get_data()))
     data = json.loads(request.get_data().decode())
     users = data['users']
 
     for user in users:
         logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
-        bot.send_message(GROUP_CHAT_ID, "Верхня бочка заповнена. Вимкніть водопостачання.")
+        bot.send_message(user['id'], "Верхня бочка заповнена. Вимкніть водопостачання.")
+
+    logging.info("Done")
+    return json.dumps({'status': 'OK'})
+
+
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    logging.info("received request for send message. post data: {0}".format(request.get_data()))
+    data = json.loads(request.get_data().decode())
+    users = data.get('users')
+    message = data.get('message')
+
+    for user in users:
+        logging.info("Sending message '{0}'' to {1}. id: {2}".format(str(message), user['name'], user['id']))
+        bot.send_message(user['id'], str(message))
 
     logging.info("Done")
     return json.dumps({'status': 'OK'})

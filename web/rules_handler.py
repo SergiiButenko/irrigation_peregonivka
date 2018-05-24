@@ -141,8 +141,15 @@ def send_to_viber_bot(rule):
 
     try:
         logging.info("Sending message to messanger.")
-        payload = {'rule_id': id, 'line_id': line_id, 'time': time, 'interval_id': interval_id, 'users': USERS, 'timeout': VIBER_SENT_TIMEOUT, 'user_friendly_name': user_friendly_name}
-        response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started', json=payload, timeout=(10, 10), verify=False)
+        # need to be fixed. add line type to rules service
+        if line_id == 14:
+            payload = {'users': USERS,
+                       'message': "Через {0} хвилин почнеться наповненния верхньої бочки. Триватиме максимум {1} хвилин.\nЗайдіть на сайт, щоб відмнінити наповнення".format(VIBER_SENT_TIMEOUT, time)}
+            response = requests.post(VIBER_BOT_IP + '/send_message', json=payload, timeout=(10, 10), verify=False)
+        else:
+            payload = {'rule_id': id, 'line_id': line_id, 'time': time, 'interval_id': interval_id, 'users': USERS, 'timeout': VIBER_SENT_TIMEOUT, 'user_friendly_name': user_friendly_name}
+            response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started', json=payload, timeout=(10, 10), verify=False)
+
         response.raise_for_status()
     except Exception as e:
         logging.error(e)
