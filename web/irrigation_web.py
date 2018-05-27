@@ -1160,6 +1160,16 @@ def stop_filling():
     delta = datetime.datetime.now() - last_time_sent
     if delta.seconds > 60 * TANK_NOTIFICATION_MINUTES or _no_key is True:
         try:
+            logging.info("Deactivating line '{0}'.".format(line_id))
+            deactivate_branch(line_id=line_id, mode='manually')
+            logging.info("Line deactivated")
+            message = 'Водопостачання вимкнено.'
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't deactivate line '{0}'. Ecxeption occured".format(line_id))
+            message = 'Помилка. Водопостачання не вимкнено!'
+
+        try:
             _users_list = TELEGRAM_USERS[device_id]
             logging.info("Sending notify_filled message to users: '{0}'.".format(str(_users_list)))
             payload = {'users': _users_list}
@@ -1180,17 +1190,9 @@ def stop_filling():
             logging.error("Can't update redis. Ecxeption occured")
 
         try:
-            logging.info("Deactivating line '{0}'.".format(line_id))
-            deactivate_branch(line_id=line_id, mode='manually')
-            logging.info("Line deactivated")
-        except Exception as e:
-            logging.error(e)
-            logging.error("Can't deactivate line '{0}'. Ecxeption occured".format(line_id))
-
-        try:
             logging.info("Sending line deactivated message to users: '{0}'.".format(str(_users_list)))
             payload = {'users': _users_list,
-                       'message': 'Водопостачання вимкнено.'}
+                       'message': message}
             response = requests.post(VIBER_BOT_IP + '/send_message', json=payload, timeout=(10, 10), verify=False)
             response.raise_for_status()
             logging.info("Messages send.")
