@@ -1164,16 +1164,30 @@ def stop_filling():
             logging.info("Sending notify_filled message to users: '{0}'.".format(str(_users_list)))
             payload = {'users': _users_list}
             response = requests.post(VIBER_BOT_IP + '/notify_filled', json=payload, timeout=(10, 10), verify=False)
+            response.raise_for_status()
             logging.info("Messages send.")
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't send rule to telegram. Ecxeption occured")
+
+        try:
 
             logging.info("Updating redis.")
             set_time_last_notification(date=datetime.datetime.now())
             logging.info("Redis updated")
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't update redis. Ecxeption occured")
 
+        try:
             logging.info("Deactivating line '{0}'.".format(line_id))
             deactivate_branch(line_id=line_id, mode='manually')
             logging.info("Line deactivated")
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't deactivate line '{0}'. Ecxeption occured".format(line_id))
 
+        try:
             logging.info("Sending line deactivated message to users: '{0}'.".format(str(_users_list)))
             payload = {'users': _users_list,
                        'message': 'Водопостачання вимкнено.'}
