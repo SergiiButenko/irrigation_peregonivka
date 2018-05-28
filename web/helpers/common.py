@@ -10,7 +10,7 @@ mn = lambda: inspect.stack()[1][3]
 BACKEND_IP = 'http://0.0.0.0:7542'
 VIBER_BOT_IP = 'https://mozz.asuscomm.com:443'
 
-BRANCHES_LENGTH = 20
+BRANCHES_LENGTH = 25
 RULES_FOR_BRANCHES = [None] * BRANCHES_LENGTH
 BRANCHES_SETTINGS = {}
 APP_SETTINGS = {}
