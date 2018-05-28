@@ -163,12 +163,12 @@ def off_group(branch_id):
         raise e
 
 
-def check_if_no_active():
+def check_if_no_active(except_line=-1):
     """Check if any of branches is active now."""
     try:
         for line_id, line in LINES.items():
             # pump won't turn off, cause it stays on after branch off
-            if line['is_except'] == 1:
+            if line['is_except'] == 1 or line_id == except_line:
                 continue
 
             if line['multiplex'] == 0:
@@ -249,19 +249,19 @@ def branch_off(branch_id=None, pump_enable=True):
 
     if LINES[branch_id]['pump_enabled'] == 1:
         off(LINES[branch_id]['pump_pin'])
-        time.sleep(5)
         logging.info("Pump turned off with {0} branch id".format(branch_id))
 
-    if LINES[branch_id]['multiplex'] == 1:
-        off_group(branch_id)
-    else:
-        off(LINES[branch_id]['pin'])
+    # reduse hidrohit
+    time.sleep(5)
 
-    # if LINES[branch_id]['pump_enabled'] == 1 and check_if_no_active():
-    #     off(LINES[branch_id]['pump_pin'])
-    #     logging.info("Pump turned off with {0} branch id".format(branch_id))
-    # else:
-    #     logging.info("Pump won't be turned off with {0} branch id".format(branch_id))
+    if check_if_no_active(except_line=branch_id):
+        if LINES[branch_id]['multiplex'] == 1:
+            off_group(branch_id)
+            logging.info("Pump turned off with {0} branch id".format(branch_id))
+        else:
+            off(LINES[branch_id]['pin'])
+    else:
+        logging.info("Pump won't be turned off with {0} branch id".format(branch_id))
 
     return form_pins_state()
 
