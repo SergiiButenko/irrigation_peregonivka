@@ -93,7 +93,7 @@ def update_all_rules():
 def sync_rules_from_redis():
     """Synchronize all rules that are present in redis."""
     try:
-        for i in range(1, 18):
+        for i in range(1, len(RULES_FOR_BRANCHES)):
             RULES_FOR_BRANCHES[i] = get_next_rule_from_redis(i)
     except Exception as e:
         logging.error("Exeption occured while synchronizing rules from redis. {0}".format(e))
