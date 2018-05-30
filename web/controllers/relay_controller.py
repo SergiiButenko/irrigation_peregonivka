@@ -163,31 +163,6 @@ def off_group(branch_id):
         raise e
 
 
-def check_if_no_active(except_line=-1):
-    """Check if any of branches is active now."""
-    try:
-        for line_id, line in LINES.items():
-            # pump won't turn off, cause it stays on after branch off
-            if line['is_except'] == 1 or line_id == except_line:
-                continue
-
-            if line['multiplex'] == 0:
-                if GPIO.input(line['pin']) == GPIO.HIGH:
-                    logging.info("branch {0} is active".format(line['id']))
-                    return False
-            else:
-                if GPIO.input(line['en']) == EN_ENABLED:
-                    logging.info("EN pin of {0} group is active".format(line['group_id']))
-                    return False
-
-        logging.info("No active branch")
-        return True
-    except Exception as e:
-        logging.error("Exception occured when checking active {0}".format(e))
-        GPIO.cleanup()
-        raise e
-
-
 def form_pins_state():
     """Form returns arr of dicts."""
     try:
@@ -247,7 +222,7 @@ def branch_off(branch_id=None, pump_enable=True):
         logging.error("No branch id")
         return None
 
-    if LINES[branch_id]['pump_enabled'] == 1:# and check_if_no_active(except_line=branch_id):
+    if LINES[branch_id]['pump_enabled'] == 1:
         off(LINES[branch_id]['pump_pin'])
         logging.info("Pump turned off with {0} branch id".format(branch_id))
 
@@ -258,12 +233,6 @@ def branch_off(branch_id=None, pump_enable=True):
         off_group(branch_id)
     else:
         off(LINES[branch_id]['pin'])
-
-    # if LINES[branch_id]['pump_enabled'] == 1 and check_if_no_active():
-    #     off(LINES[branch_id]['pump_pin'])
-    #     logging.info("Pump turned off with {0} branch id".format(branch_id))
-    # else:
-    #     logging.info("Pump won't be turned off with {0} branch id".format(branch_id))
 
     return form_pins_state()
 
