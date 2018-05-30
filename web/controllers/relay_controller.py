@@ -247,7 +247,7 @@ def branch_off(branch_id=None, pump_enable=True):
         logging.error("No branch id")
         return None
 
-    if LINES[branch_id]['pump_enabled'] == 1 and check_if_no_active(except_line=branch_id):
+    if LINES[branch_id]['pump_enabled'] == 1:# and check_if_no_active(except_line=branch_id):
         off(LINES[branch_id]['pump_pin'])
         logging.info("Pump turned off with {0} branch id".format(branch_id))
 
