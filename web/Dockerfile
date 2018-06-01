@@ -5,8 +5,8 @@ RUN apt-get -y install python3-pip
 RUN apt-get -y install python-dev python-rpi.gpio
 RUN apt-get -y install libpq-dev python3-dev
 # RUN adduser sprinkler gpio
-RUN chown root.gpio /dev/gpiomem
-RUN chmod g+rw /dev/gpiomem
+# RUN chown root.gpio /dev/gpiomem
+# RUN chmod g+rw /dev/gpiomem
 
 RUN mkdir /var/www
 WORKDIR /src
