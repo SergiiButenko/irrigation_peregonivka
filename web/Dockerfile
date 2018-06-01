@@ -1,5 +1,5 @@
-#FROM ubuntu:latest  
-FROM resin/rpi-raspbian:jessie
+FROM ubuntu:latest  
+#FROM resin/rpi-raspbian:jessie
 RUN apt-get update  
 RUN apt-get install --no-install-recommends --no-install-suggests -y curl  
 RUN apt-get -y install python3-pip python-dev python-rpi.gpio
