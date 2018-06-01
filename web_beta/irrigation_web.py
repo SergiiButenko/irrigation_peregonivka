@@ -33,9 +33,10 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)
 logging.getLogger('socketio').setLevel(logging.ERROR)
 logging.getLogger('engineio').setLevel(logging.ERROR)
 
-app = Flask(__name__)
-socketio = SocketIO(app, async_mode='eventlet', engineio_logger=False)
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+
+# app = Flask(__name__)
+# socketio = SocketIO(app, async_mode='eventlet', engineio_logger=False)
+# cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 CACHE_TIMEOUT = 600
 
@@ -1236,4 +1237,10 @@ if __name__ == "__main__":
     logging.info("Fill redis database with rules")
     update_all_rules()
     logging.info("Staring app")
-    socketio.run(app, host='0.0.0.0', port=7542, debug=False)
+
+    global app, socketio, cache
+    app = Flask(__name__)
+    socketio = SocketIO(app, async_mode='eventlet', engineio_logger=False)
+    cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+
+    # socketio.run(app, host='0.0.0.0', port=7542, debug=False)
