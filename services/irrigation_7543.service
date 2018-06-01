@@ -10,7 +10,7 @@ ExecStart=/usr/local/bin/gunicorn \
     -w 1 \
     -b 0.0.0.0:7543 \
     --pythonpath  /var/www/web \
-    gunicorn_rules_handler:app
+    gunicorn_irrigation_web:app
 
 Restart=always
 RestartSec=35
