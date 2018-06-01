@@ -14,7 +14,6 @@ import json
 import requests
 import logging
 import uuid
-import pytemperature
 import time
 from itertools import groupby
 from operator import itemgetter
@@ -1079,8 +1078,9 @@ def weather():
         response = requests.get(url=wurl, timeout=(10, 10))
         response.raise_for_status()
         json_data = json.loads(response.text)
+        c_temp = (int(json_data['main']['temp']) - 32) * 5/9
         return jsonify(
-            temperature=str(round(pytemperature.k2c(json_data['main']['temp']), 2)),
+            temperature=str(round(c_temp, 2)),
             humidity=str(round(json_data['main']['humidity'], 2)),
             rain=str(rain),
             rain_status=rain_status)
