@@ -1222,7 +1222,6 @@ def verify():
     return app.send_static_file('Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8')
 
 
-
 logging.info("Get app settings")
 get_settings()
 # Initialize lines attached to Raspbberry PI
