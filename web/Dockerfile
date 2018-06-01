@@ -4,7 +4,7 @@ RUN apt-get install --no-install-recommends --no-install-suggests -y curl
 RUN apt-get -y install python3-pip
 RUN apt-get -y install python-dev python-rpi.gpio
 RUN apt-get -y install libpq-dev python3-dev
-RUN adduser pi gpio
+RUN adduser sprinkler gpio
 RUN chown root.gpio /dev/gpiomem
 RUN chmod g+rw /dev/gpiomem
 
