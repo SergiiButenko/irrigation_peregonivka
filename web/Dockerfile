@@ -3,6 +3,7 @@ RUN apt-get update
 RUN apt-get install --no-install-recommends --no-install-suggests -y curl  
 RUN apt-get -y install python3-pip
 RUN apt-get -y install python-dev python-rpi.gpio
+RUN apt-get -y install libpq-dev python3-dev
 
 RUN mkdir /var/www
 WORKDIR /src
