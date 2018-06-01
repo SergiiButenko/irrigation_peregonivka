@@ -24,16 +24,6 @@ $(document).ready(function() {
     });
 
 
-    //Rename branches
-    // $.ajax({
-    //     url: '/temperature2',
-    //     success: function(data) {
-    //         list = data['data']
-    //         draw_d3js(list);
-    //     }
-    // });
-
-
     $.ajax({
         url: '/app_settings',
         success: function(data) {
@@ -346,15 +336,46 @@ function toogle_card(element_id, branch) {
 
     branch_state = branch['status']
     if (branch_state == 1) {
+        // $('#card-' + element_id).addClass("card-irrigate-active");
+        // $('#btn-start-' + element_id).hide().addClass("hidden");
+        // $('#btn-start-with-options-' + element_id).hide().addClass("hidden");
+        // $('#btn-stop-' + element_id).css('display', 'inline-block').removeClass("hidden");
+
+        $('#card-' + element_id).removeClass("status-error");
         $('#card-' + element_id).addClass("card-irrigate-active");
+        
+
         $('#btn-start-' + element_id).hide().addClass("hidden");
         $('#btn-start-with-options-' + element_id).hide().addClass("hidden");
         $('#btn-stop-' + element_id).css('display', 'inline-block').removeClass("hidden");
-    } else {
+        $('#card-' + element_id + ' > div.card-footer > span').hide().addClass("hidden");
+    }
+
+    if (branch_state == 0) {
+        // $('#card-' + element_id).removeClass("card-irrigate-active");
+        // $('#btn-stop-' + element_id).hide().addClass("hidden");
+        // $('#btn-start-' + element_id).css('display', 'inline-block').removeClass("hidden");
+        // $('#btn-start-with-options-' + element_id).css('display', 'inline-block').removeClass("hidden");
+        $('#card-' + element_id).removeClass("status-error");
         $('#card-' + element_id).removeClass("card-irrigate-active");
+
         $('#btn-stop-' + element_id).hide().addClass("hidden");
         $('#btn-start-' + element_id).css('display', 'inline-block').removeClass("hidden");
         $('#btn-start-with-options-' + element_id).css('display', 'inline-block').removeClass("hidden");
+        $('#card-' + element_id + ' > div.card-footer > span').hide().addClass("hidden");
+    }
+
+    if (branch_state == -1) {
+        // $('#card-' + element_id).removeClass("card-irrigate-active");
+        // $('#btn-stop-' + element_id).hide().addClass("hidden");
+        // $('#btn-start-' + element_id).css('display', 'inline-block').removeClass("hidden");
+        // $('#btn-start-with-options-' + element_id).css('display', 'inline-block').removeClass("hidden");
+        $('#card-' + element_id).removeClass("card-irrigate-active");
+        $('#card-' + element_id).addClass("status-error");
+        $('#btn-stop-' + element_id).hide().addClass("hidden");
+        $('#btn-start-' + element_id).hide().addClass("hidden");
+        $('#btn-start-with-options-' + element_id).hide().addClass("hidden");
+        $('#card-' + element_id + ' > div.card-footer > span').css('display', 'inline-block').removeClass("hidden");
     }
 
     var options_datetime = {
