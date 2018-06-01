@@ -1222,25 +1222,20 @@ def verify():
     return app.send_static_file('Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8')
 
 
-def app():
-    logging.info("Get app settings")
-    get_settings()
-    # Initialize lines attached to Raspbberry PI
-    logging.info("Initialize lines attached to Raspbberry PI")
-    garden_controller.init_lines()
-    # Initialize lines marked with base_url in database
-    logging.info("Initialize lines marked with base_url in database")
-    remote_controller.init_remote_lines()
-    # Flush keys in redis in order to keep it updated on start in case power failure
-    logging.info("Flush keys in redis in order to keep it updated on start in case power failure")
-    flush_on_start()
-    logging.info("Fill redis database with rules")
-    update_all_rules()
-    logging.info("Staring app")
 
-    global app, socketio, cache
-    app = Flask(__name__)
-    socketio = SocketIO(app, async_mode='eventlet', engineio_logger=False)
-    cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+logging.info("Get app settings")
+get_settings()
+# Initialize lines attached to Raspbberry PI
+logging.info("Initialize lines attached to Raspbberry PI")
+garden_controller.init_lines()
+# Initialize lines marked with base_url in database
+logging.info("Initialize lines marked with base_url in database")
+remote_controller.init_remote_lines()
+# Flush keys in redis in order to keep it updated on start in case power failure
+logging.info("Flush keys in redis in order to keep it updated on start in case power failure")
+flush_on_start()
+logging.info("Fill redis database with rules")
+update_all_rules()
+logging.info("Staring app")
 
-    # socketio.run(app, host='0.0.0.0', port=7542, debug=False)
+# socketio.run(app, host='0.0.0.0', port=7542, debug=False)
