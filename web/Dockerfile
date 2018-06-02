@@ -13,6 +13,6 @@ COPY . /src/
 RUN pip3 install -r requirements.txt
 WORKDIR .
 # Start gunicorn
-EXPOSE 8000
+EXPOSE 7543
 
-CMD ["/usr/local/bin/gunicorn", "--worker-class", "eventlet", "-w", "1", "-b", "0.0.0.0:8000", "--pythonpath", ".", "--user", "root", "gunicorn_irrigation_web:app"]
+CMD ["/usr/local/bin/gunicorn", "--worker-class", "eventlet", "-w", "1", "-b", "0.0.0.0:7543", "--pythonpath", ".", "--user", "root", "gunicorn_irrigation_web:app"]
