@@ -1078,7 +1078,7 @@ def weather():
         response = requests.get(url=wurl, timeout=(10, 10))
         response.raise_for_status()
         json_data = json.loads(response.text)
-        c_temp = (int(json_data['main']['temp']) - 32) * 5/9
+        c_temp = int(json_data['main']['temp']) - 273.15
         return jsonify(
             temperature=str(round(c_temp, 2)),
             humidity=str(round(json_data['main']['humidity'], 2)),

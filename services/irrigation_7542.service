@@ -5,7 +5,13 @@ Requires=network.target
 
 [Service]
 ExecStartPre=/bin/sleep 30
-ExecStart=/usr/bin/python3 /var/www/web/irrigation_web.py
+ExecStart=/usr/local/bin/gunicorn \
+	--worker-class eventlet \
+	-w 1 \
+	-b 0.0.0.0:7542 \
+	--pythonpath . \
+	--user root \
+	gunicorn_irrigation_web:app"
 
 Restart=always
 RestartSec=35
