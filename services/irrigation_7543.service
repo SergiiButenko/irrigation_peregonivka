@@ -1,16 +1,19 @@
 [Unit]
 Description=Backend part of irrigation system for peregonivka port 7543
-After=network.target
-Requires=network.target
+# After=network.target
+# Requires=network.target
+After=docker.service
+Requires=docker.service
 
 [Service]
-ExecStartPre=/bin/sleep 30
-ExecStart=/usr/local/bin/gunicorn \
-    --worker-class eventlet \
-    -w 1 \
-    -b 0.0.0.0:7543 \
-    --pythonpath  /var/www/web \
-    gunicorn_irrigation_web:app
+ExecStartPre=/bin/sleep 30 && docker pull web_7543:beta
+ExecStart=/usr/bin/docker run \
+	--user root \
+	--device /dev/mem:/dev/mem \
+	--privileged \
+	-v /var/sqlite_db/smart_system.sql:/var/sqlite_db/smart_system.sql \
+	--net="host" \
+	web_7543:beta
 
 Restart=always
 RestartSec=35

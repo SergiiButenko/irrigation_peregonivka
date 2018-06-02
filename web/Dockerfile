@@ -6,6 +6,7 @@ RUN apt-get -y install python3-pip python-dev python-rpi.gpio
 RUN apt-get -y install libpq-dev python3-dev
 
 RUN mkdir /var/www
+RUN mkdir /var/sqlite_db
 WORKDIR /src
 COPY . /src/
 
