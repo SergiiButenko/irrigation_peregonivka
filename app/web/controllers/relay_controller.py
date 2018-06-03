@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import sys
-sys.path.append("../..")
+sys.path.append("../../..")
 
 import logging
 import time
