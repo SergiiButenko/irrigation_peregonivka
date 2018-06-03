@@ -5,9 +5,9 @@ import json
 import requests
 import time
 import logging
-from helpers import sqlite_database as database
-from helpers.redis import *
-from helpers.common import *
+from common import sqlite_database as database
+from common.redis import *
+from common.common import *
 from controllers import remote_controller as remote_controller
 
 
