@@ -7,7 +7,7 @@ from collections import OrderedDict
 import ast
 from common.redis import *
 from common.common import *
-from config.config import *
+from config import *
 
 
 QUERY = {}
@@ -254,7 +254,7 @@ def get_last_start_rule(line_id):
 
 def get_rain_volume():
     """Return volume of rain mm/m^2"""
-    rain = select(QUERY[mn()].format(Config.RAIN_HOURS))[0][0]
+    rain = select(QUERY[mn()].format(RAIN_HOURS))[0][0]
     if rain is None:
         rain = 0
 
@@ -263,7 +263,7 @@ def get_rain_volume():
 
 def get_temperature2():
     try:
-        list_arr = select(QUERY[mn()].format(Config.TEMP_HOURS))
+        list_arr = select(QUERY[mn()].format(TEMP_HOURS))
         if list_arr is not None:
             list_arr.sort(key=itemgetter(5), reverse=True)
 
@@ -306,7 +306,7 @@ def get_temperature2():
 
 def get_temperature():
     """Return volume of rain mm/m^2"""
-    list_arr = select(QUERY[mn()].format(Config.TEMP_HOURS))
+    list_arr = select(QUERY[mn()].format(TEMP_HOURS))
 
     if list_arr is not None:
         list_arr.sort(key=itemgetter(0))
