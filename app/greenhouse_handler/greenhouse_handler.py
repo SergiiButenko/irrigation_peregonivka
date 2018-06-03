@@ -11,7 +11,7 @@ import logging
 from common import sqlite_database as database
 from common.redis import *
 from common.common import *
-from controllers import remote_controller as remote_controller
+from web.controllers import remote_controller as remote_controller
 
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
