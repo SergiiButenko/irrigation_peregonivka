@@ -4,7 +4,7 @@ sys.path.append("..")
 
 import inspect
 import os
-from config import *
+from config.config import *
 import telebot
 import logging
 import json
