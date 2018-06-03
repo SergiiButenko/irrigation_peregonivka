@@ -6,7 +6,7 @@ Requires=network.target
 [Service]
 EnvironmentFile=/etc/environment
 ExecStartPre=/bin/sleep 40
-ExecStart=/usr/bin/python3 /var/www/web/app/bots/telegram/telegram_bot.py
+ExecStart=/usr/bin/python3 /var/www/app/bots/telegram/telegram_bot.py
 
 Restart=always
 RestartSec=45
