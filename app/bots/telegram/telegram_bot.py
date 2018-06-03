@@ -12,7 +12,7 @@ from flask import Flask
 from flask import request
 from flask import abort
 import requests
-from helpers.common import *
+from common.common import *
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
