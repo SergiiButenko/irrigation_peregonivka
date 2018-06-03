@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import os.path as path
 import sys
-sys.path.append("../..")
+two_up =  path.abspath(path.join(__file__ ,"../.."))
+sys.path.append(two_up)
 
 import logging
 import time
