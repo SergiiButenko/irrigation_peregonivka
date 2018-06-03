@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import sys
-import os
-print(os.path.dirname(os.path.realpath(__file__)))
-sys.path.append("..")
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+twoup = os.path.dirname(parentdir)
+sys.path.insert(0, parentdir) 
+
 
 import datetime
 import json

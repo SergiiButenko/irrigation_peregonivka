@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import os.path as path
-import sys
-two_up =  path.abspath(path.join(__file__ ,"../.."))
-sys.path.append(two_up)
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+twoup = os.path.dirname(parentdir)
+sys.path.insert(0, twoup) 
+
 
 import logging
 import time
