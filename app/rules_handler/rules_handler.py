@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import sys
-import os.path as path
-two_up =  path.abspath(path.join(__file__ ,".."))
-sys.path.append(two_up)
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir) 
 
 import datetime
 import json
@@ -17,7 +17,6 @@ from common.common import *
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
-logging.info(two_up)
 def branch_on(line_id, alert_time):
     """Blablbal."""
     try:
