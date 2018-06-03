@@ -9,9 +9,9 @@ ExecStart=/usr/local/bin/gunicorn \
 	--worker-class eventlet \
 	-w 1 \
 	-b 0.0.0.0:7542 \
-	--pythonpath . \
+	--pythonpath /var/www/web/ \
 	--user root \
-	gunicorn_irrigation_web:app"
+	gunicorn_irrigation_web:app
 
 Restart=always
 RestartSec=35
