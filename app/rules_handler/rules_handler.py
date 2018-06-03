@@ -11,7 +11,7 @@ import json
 import requests
 import time
 import logging
-from common.sqlite_database import sqlite_database as database
+from common import sqlite_database as database
 from common.redis import *
 from common.common import *
 
