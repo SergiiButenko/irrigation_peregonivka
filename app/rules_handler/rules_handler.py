@@ -1,13 +1,16 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append("..")
+
 import datetime
 import json
 import requests
 import time
 import logging
-from helpers import sqlite_database as database
-from helpers.redis import *
-from helpers.common import *
+from common import sqlite_database as database
+from common.redis import *
+from common.common import *
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)

@@ -4,7 +4,7 @@ After=network.target
 Requires=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 /var/www/web/power_supply_notifier.py
+ExecStart=/usr/bin/python3 /var/www/app/power_supply_notifier/power_supply_notifier.py
 
 RestartSec=5
 TimeoutSec=5

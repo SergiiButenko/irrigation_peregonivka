@@ -5,7 +5,7 @@ Requires=network.target
 
 [Service]
 ExecStartPre=/bin/sleep 40
-ExecStart=/usr/bin/python3 /var/www/web/viber_bot/viber_bot.py
+ExecStart=/usr/bin/python3 /var/www/web/app/bots/viber/viber_bot.py
 
 Restart=always
 RestartSec=45
