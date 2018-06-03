@@ -1,6 +1,9 @@
 
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append("..")
+
 from flask import Flask
 from flask import jsonify, request, render_template
 from flask import abort
