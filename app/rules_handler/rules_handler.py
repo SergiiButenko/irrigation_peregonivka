@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import sys
-sys.path.append("..")
+two_up =  path.abspath(path.join(__file__ ,".."))
+sys.path.append(two_up)
 
 import datetime
 import json
