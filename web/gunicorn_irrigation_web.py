@@ -33,7 +33,7 @@ logging.getLogger('socketio').setLevel(logging.ERROR)
 logging.getLogger('engineio').setLevel(logging.ERROR)
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode='eventlet', engineio_logger=False)
+socketio = SocketIO(app, async_mode='eventlet', engineio_logger=False, message_queue='redis://')
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 CACHE_TIMEOUT = 600
