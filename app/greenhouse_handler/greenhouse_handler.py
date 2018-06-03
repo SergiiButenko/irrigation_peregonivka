@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import sys
+import os
+print(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append("..")
 
 import datetime
