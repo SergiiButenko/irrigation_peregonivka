@@ -1,5 +1,6 @@
 cd /var/www/
 git reset --hard
+git checkout master
 git pull origin master
 msg=`git log -1 --pretty=%B | tr -s ' ' | tr ' ' '_'`
 
