@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append("../..")
+
 import logging
 import time
 import RPi.GPIO as GPIO
