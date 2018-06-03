@@ -12,8 +12,8 @@ import time
 import RPi.GPIO as GPIO
 from itertools import groupby
 from operator import itemgetter
-from app.common import sqlite_database as database
-from app.common.common import *
+from common import sqlite_database as database
+from common.common import *
 import threading
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
