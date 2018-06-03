@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import sys
+import os.path as path
 two_up =  path.abspath(path.join(__file__ ,".."))
 sys.path.append(two_up)
 
