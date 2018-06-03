@@ -1,5 +1,8 @@
-import sys
-sys.path.append("..")
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+twoup = os.path.dirname(parentdir)
+sys.path.insert(0, parentdir) 
 
 import logging
 import time
