@@ -17,7 +17,7 @@ from common.common import *
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
-
+logging.info(two_up)
 def branch_on(line_id, alert_time):
     """Blablbal."""
     try:
