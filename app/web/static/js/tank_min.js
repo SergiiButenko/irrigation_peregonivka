@@ -6,6 +6,18 @@ var arduino_check_broken_connect_sec = 60;
 var branch = [];
 
 $(document).ready(function() {
+    var socket = io.connect(server, {
+        'sync disconnect on unload': true
+    });
+    socket.on('connect', function() {
+        console.log("connected to websocket");
+    });
+
+    socket.on('branch_status', function(msg) {
+        console.log('Message received. New brach status: ' + msg.data);
+        update_branches(JSON.parse(msg.data));
+    });
+
 
     //Rename branches
     $.ajax({
@@ -50,19 +62,6 @@ $(document).ready(function() {
             }
         });
     })();
-
-    var socket = io.connect(server, {
-        'sync disconnect on unload': true
-    });
-    socket.on('connect', function() {
-        console.log("connected to websocket");
-    });
-
-    socket.on('branch_status', function(msg) {
-        console.log('Message received. New brach status: ' + msg.data);
-        update_branches(JSON.parse(msg.data));
-    });
-
 
     // http://rosskevin.github.io/bootstrap-material-design/components/card/
 

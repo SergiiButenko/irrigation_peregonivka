@@ -7,8 +7,23 @@ var branch = [];
 var settings = {};
 
 $(document).ready(function() {
+    var socket = io.connect(server, {'sync disconnect on unload': true});
 
-    //Rename branches
+    socket.on('disconnect', function(data) {
+      alertify.error("sockets disconnect!");
+    });
+
+    socket.on('connect', function() {
+        console.log("connected to websocket");
+    });
+
+    socket.on('branch_status', function(msg) {
+        console.log('Message received. New brach status: ' + msg.data);
+        update_branches(JSON.parse(msg.data));
+    });
+
+
+//Rename branches
     $.ajax({
         url: '/greenhouse_settings',
         success: function(data) {
@@ -19,8 +34,7 @@ $(document).ready(function() {
                     'name': item['name'],
                     'default_time': parseInt(item['default_time'])
                 }
-            }
-        }
+            }        }
     });
 
 
@@ -59,19 +73,6 @@ $(document).ready(function() {
             }
         });
     })();
-
-    var socket = io.connect(server, {
-        'sync disconnect on unload': true
-    });
-    socket.on('connect', function() {
-        console.log("connected to websocket");
-    });
-
-    socket.on('branch_status', function(msg) {
-        console.log('Message received. New brach status: ' + msg.data);
-        update_branches(JSON.parse(msg.data));
-    });
-
 
     // http://rosskevin.github.io/bootstrap-material-design/components/card/
 
