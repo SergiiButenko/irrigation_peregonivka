@@ -1,5 +1,5 @@
 [Unit]
-Description=Backend part of irrigation system for peregonivka for port 7542
+Description=Backend part of irrigation system for peregonivka for port 7543
 After=network.target
 Requires=network.target
 
@@ -9,10 +9,10 @@ ExecStartPre=/bin/sleep 30
 ExecStart=/usr/local/bin/gunicorn \
 	--worker-class eventlet \
 	-w 3 \
-	-b 0.0.0.0:7541 \
+	-b 0.0.0.0:7543 \
 	--pythonpath /var/www/app/web/ \
 	--user root \
-	frontend:app
+	gunicorn_irrigation_web:app
 
 Restart=always
 RestartSec=35
