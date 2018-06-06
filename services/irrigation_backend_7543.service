@@ -1,0 +1,22 @@
+[Unit]
+Description=Backend part of irrigation system for peregonivka for port 7542
+After=network.target
+Requires=network.target
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStartPre=/bin/sleep 30
+ExecStart=/usr/local/bin/gunicorn \
+	--worker-class eventlet \
+	-w 3 \
+	-b 0.0.0.0:7543 \
+	--pythonpath /var/www/app/web/ \
+	--user root \
+	backend:app
+
+Restart=always
+RestartSec=35
+User=root
+
+[Install]
+WantedBy=multi-user.target
