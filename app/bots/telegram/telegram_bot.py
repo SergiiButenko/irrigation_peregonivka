@@ -77,7 +77,7 @@ def send_message():
     for user in users:
         logging.info("Sending message '{0}'' to {1}. id: {2}".format(str(message), user['name'], user['id']))
         res = bot.send_message(user['id'], str(message))
-        logging.debug("Responce: {0}".formta(str(res)))
+        logging.debug("Responce: {0}".format(str(res)))
 
     logging.info("Done")
     return json.dumps({'status': 'OK'})
@@ -95,7 +95,7 @@ def notify_users():
     for user in users:
         logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
         res = bot.send_message(user['id'], "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nЗайдіть на сайт, щоб відмнінити цей полив".format(timeout, user_friendly_name, time))
-        logging.debug("Responce: {0}".formta(str(res)))
+        logging.debug("Responce: {0}".format(str(res)))
 
     logging.info("Done")
     return json.dumps({'status': 'OK'})

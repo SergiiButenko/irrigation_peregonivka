@@ -1192,7 +1192,7 @@ def stop_filling():
             logging.info("Redis updated")
         except Exception as e:
             logging.error(e)
-            logging.error("Can't update redis. Ecxeption occured")
+            logging.error("Can't update redis. Exception occured")
 
         try:
             logging.info("Sending line deactivated message to users: '{0}'.".format(str(_users_list)))
