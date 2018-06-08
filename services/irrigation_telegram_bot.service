@@ -6,7 +6,14 @@ Requires=network.target
 [Service]
 EnvironmentFile=/etc/environment
 ExecStartPre=/bin/sleep 40
-ExecStart=/usr/bin/python3 /var/www/app/bots/telegram/telegram_bot.py
+ExecStart=/usr/local/bin/gunicorn \
+	--certfile /var/www/app/ssl_sertificats/mozz/cert.pem \
+	--keyfile /var/www/app/ssl_sertificats/mozz/privkey.pem \
+	-w 1 \
+	-b 0.0.0.0:443 \
+	--pythonpath /var/www/app/bots/telegram/ \
+	--user root \
+	telegram_bot:app
 
 Restart=always
 RestartSec=45
