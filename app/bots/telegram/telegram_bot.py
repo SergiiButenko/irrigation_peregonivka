@@ -100,18 +100,13 @@ def notify_users():
     logging.info("Done")
     return json.dumps({'status': 'OK'})
 
-if __name__ == '__main__':
-    # Start flask server
-    logging.info('start')
-    # Remove webhook, it fails sometimes the set if there is a previous webhook
-    bot.remove_webhook()
-    time.sleep(0.1)
-    # Set webhook
-    bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
-                    certificate=open(WEBHOOK_SSL_CERT, 'r'))
-    time.sleep(0.1)
 
-    # app.run(host=WEBHOOK_LISTEN,
-    #         port=WEBHOOK_PORT,
-    #         ssl_context=(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV),
-    #         debug=False)
+# Start flask server
+logging.info('start')
+# Remove webhook, it fails sometimes the set if there is a previous webhook
+bot.remove_webhook()
+time.sleep(0.1)
+# Set webhook
+bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
+                certificate=open(WEBHOOK_SSL_CERT, 'r'))
+time.sleep(0.1)
