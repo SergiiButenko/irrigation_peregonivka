@@ -3,11 +3,12 @@ import os,sys,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 twoup = os.path.dirname(parentdir)
-sys.path.insert(0, twoup) 
+sys.path.insert(0, twoup)
 
 
 import inspect
 import os
+import time
 from config.config import *
 import telebot
 import logging
@@ -19,11 +20,37 @@ import requests
 from common.common import *
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
 
 
 bot = telebot.TeleBot(API_TOKEN)
+
+logger = telebot.logger
+telebot.logger.setLevel(logging.DEBUG)  # Outputs debug messages to console.
+
 app = Flask(__name__)
+
+
+# Empty webserver index, return nothing, just http 200
+@app.route('/', methods=['GET', 'HEAD'])
+def index():
+    return 'OK'
+# def webhook():
+#     bot.remove_webhook()
+#     bot.set_webhook(url='https://your_heroku_project.com/' + TOKEN)
+#     return "!", 200
+
+
+# Process webhook calls
+@app.route(WEBHOOK_URL_PATH, methods=['POST'])
+def webhook():
+    if flask.request.headers.get('content-type') == 'application/json':
+        json_string = flask.request.get_data().decode('utf-8')
+        update = telebot.types.Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return ''
+    else:
+        flask.abort(403)
 
 
 @app.route('/notify_filled', methods=['POST'])
@@ -49,7 +76,8 @@ def send_message():
 
     for user in users:
         logging.info("Sending message '{0}'' to {1}. id: {2}".format(str(message), user['name'], user['id']))
-        bot.send_message(user['id'], str(message))
+        res = bot.send_message(user['id'], str(message))
+        logging.debug("Responce: {0}".formta(str(res)))
 
     logging.info("Done")
     return json.dumps({'status': 'OK'})
@@ -66,22 +94,23 @@ def notify_users():
 
     for user in users:
         logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
-        bot.send_message(GROUP_CHAT_ID, "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nЗайдіть на сайт, щоб відмнінити цей полив".format(timeout, user_friendly_name, time,))  # rule_id))
+        res = bot.send_message(user['id'], "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nЗайдіть на сайт, щоб відмнінити цей полив".format(timeout, user_friendly_name, time))
+        logging.debug("Responce: {0}".formta(str(res)))
 
     logging.info("Done")
     return json.dumps({'status': 'OK'})
 
-# Remove webhook, it fails sometimes the set if there is a previous webhook
-bot.remove_webhook()
-
-# Set webhook
-bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
-                certificate=open(WEBHOOK_SSL_CERT, 'r'))
-
-
 if __name__ == '__main__':
     # Start flask server
     logging.info('start')
+    # Remove webhook, it fails sometimes the set if there is a previous webhook
+    bot.remove_webhook()
+    time.sleep(0.1)
+    # Set webhook
+    bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
+                    certificate=open(WEBHOOK_SSL_CERT, 'r'))
+    time.sleep(0.1)
+
     app.run(host=WEBHOOK_LISTEN,
             port=WEBHOOK_PORT,
             ssl_context=(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV),
