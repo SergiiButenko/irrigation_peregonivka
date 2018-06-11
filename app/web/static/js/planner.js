@@ -4,7 +4,7 @@ var json = { 'lines': {} };
 
 $(document).ready(function() {
     $(".select").click(function(event) {
-        var card = $(event.target).closest(".top");
+        var card = $(event.target).closest(".card");
         card.toggleClass("card-selected");
     });
 
@@ -12,7 +12,7 @@ $(document).ready(function() {
     $("#next").click(function() {
         json = { 'lines': {} }
 
-        $(".top").each(function() {
+        $(".card").each(function() {
             var selected = $(this).hasClass('card-selected');
             var id = $(this).data('line_id');
             if (selected == true) {
