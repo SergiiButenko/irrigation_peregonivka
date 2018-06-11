@@ -10,10 +10,10 @@
             </div>
             <div class="modal-body">
                 <select class="form-control" id="select_line" title="Виберіть час початку">
-                <option value="0">Через 10хв.</option> 
-                    <option value="1">Через 1 годину</option> 
-                    <option value="2">Через 2 години</option> 
-                    <option value="3">Через 3 години</option> 
+                    <option value="0">Через 10хв.</option>
+                    <option value="1">Через 1 годину</option>
+                    <option value="2">Через 2 години</option>
+                    <option value="3">Через 3 години</option>
                 </select>
             </div>
             <div class="modal-footer">
@@ -30,11 +30,10 @@
 {% block container %}
 <div id="card-holder">
     <h5>Оберіть, що полити: </h5>
-    <hr style="margin-bottom: 2rem" />
-        {% for name, group in my_list.items() %}
-        <h5>{{group[0]['group_name']}}</h5>
-        <div class="row">
-        {% for n in group %} 
+    <h5>{{group[0]['group_name']}}</h5>
+    <hr style="margin-bottom: 2rem" /> {% for name, group in my_list.items() %}
+    <div class="row">
+        {% for n in group %}
         <div class="col-xs-12 col-sm-5 col-md-6 col-lg-5 top" data-line_id={{n[ 'line_id']}}>
             <div class="card">
                 <div class="card-block">
@@ -47,7 +46,7 @@
         </div>
         {% endfor %}
     </div>
-    </div>
+    {% endfor %}
 </div>
 </br>
 <button type="button" class="btn btn-raised btn-block btn-primary" id="next">
