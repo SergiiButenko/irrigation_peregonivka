@@ -760,6 +760,7 @@ def plan():
         if item['branch_id'] in income_lines:
             line_list.append({
                 'id': item['branch_id'],
+                'name': item['name'],
                 'default_time': item['time'],
                 'default_interval': item['intervals'],
                 'default_time_wait': item['time_wait']})
@@ -780,11 +781,14 @@ def plan():
             'intervals': int(line['default_interval']),
             'time_wait': int(line['default_time_wait']),
             'repeat_value': 4,  # comes from ongoing rule. equal to ONE TIME
+            'date_start' = start_time,
+            'time_start' = start_time,
             'date_time_start': start_time,
             'end_date': start_time,
             'active': 1,
             'rule_id': str(uuid.uuid4()),
-            'days': 0
+            'days': -1,
+            'line_name': line['name']
             }
         rules.append(new_rule)
         new_delta = new_rule['time'] * new_rule['intervals'] + new_rule['time_wait'] * (new_rule['intervals'] - 1)
