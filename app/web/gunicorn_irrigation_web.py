@@ -750,7 +750,9 @@ def plan():
 
     income_lines = []
     for line_id, line in lines.items():
-        income_lines.append(line_id)
+        income_lines.append(int(line_id))
+
+    logging.info("Income lines: {0}".format(str(income_lines)))
 
     # setup lines array
     line_list = []
@@ -761,6 +763,8 @@ def plan():
                 'default_time': item['time'],
                 'default_interval': item['intervals'],
                 'default_time_wait': item['time_wait']})
+
+    logging.info("line_list: {0}".format(str(line_list)))
 
     if timer == 0:
         delta_minutes = 10
@@ -787,7 +791,7 @@ def plan():
         new_delta = new_rule['time'] * new_rule['intervals'] + new_rule['time_wait'] * (new_rule['intervals'] - 1)
         start_time = start_time + datetime.timedelta(minutes=new_delta + 2)  # 2 minutes to avoid overlap
 
-    logging.info(str(rules))
+    logging.info("rules: {0}".format(str(rules)))
     return json.dumps({'status': 'OK'})
 
 
