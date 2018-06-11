@@ -46,10 +46,13 @@ $(document).ready(function() {
             },
             success: function(data) {
                 set_status_ok();
+                $('#plan_modal').modal('hide');
+                window.location.replace("/ongoing_rules");
             },
             error: function() {
                 alert("Сталася помилка. Спробуйте ще.")
                 set_status_ok();
+                $('#plan_modal').modal('hide');
             }
         });
     });
