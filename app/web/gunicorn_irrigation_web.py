@@ -566,12 +566,8 @@ def update_rules_from_ongoing_rules(rule):
             logging.info("Start time: {0}. Stop time: {1} added to database".format(str(date_datetime), str(stop_datetime)))
 
 
-@app.route("/add_ongoing_rule", methods=['POST'])
-def add_ongoing_rule():
-    """Used in add rule modal window."""
-    rules = request.json['rules']
+def add_ongoing_rule(rules):
     now = datetime.datetime.now()
-
     for rule in rules:
         rule['line_id'] = int(rule['line_id'])
         rule['line_name'] = rule['line_name']
@@ -624,6 +620,14 @@ def add_ongoing_rule():
         logging.error("Can't send updated rules. Exception occured")
 
     send_history_change_message()
+
+
+
+@app.route("/add_ongoing_rule", methods=['POST'])
+def add_ongoing_rule_endpoint():
+    """Used in add rule modal window."""
+    add_ongoing_rule(request.json['rules'])
+
     return json.dumps({'status': 'OK'})
 
 
