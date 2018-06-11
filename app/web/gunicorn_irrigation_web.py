@@ -782,7 +782,6 @@ def plan():
             'repeat_value': 4,  # comes from ongoing rule. equal to ONE TIME
             'date_time_start': start_time,
             'end_date': start_time,
-            'rule_id': rule['rule_id'],
             'active': 1,
             'rule_id': str(uuid.uuid4()),
             'days': 0
