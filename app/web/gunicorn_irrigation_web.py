@@ -770,16 +770,16 @@ def plan():
     start_time = datetime.datetime.now() + datetime.timedelta(minutes=delta_minutes)
     for line in line_list:
         new_rule = {
-            'line_id': int(line['id'])
-            'time': int(line['default_time'])
-            'intervals': int(line['default_interval'])
-            'time_wait': int(line['default_time_wait'])
-            'repeat_value': 4  # comes from ongoing rule. equal to ONE TIME
-            'date_time_start': start_time
-            'end_date': start_time
-            'rule_id': rule['rule_id']
-            'active': 1
-            'rule_id': str(uuid.uuid4())
+            'line_id': int(line['id']),
+            'time': int(line['default_time']),
+            'intervals': int(line['default_interval']),
+            'time_wait': int(line['default_time_wait']),
+            'repeat_value': 4,  # comes from ongoing rule. equal to ONE TIME
+            'date_time_start': start_time,
+            'end_date': start_time,
+            'rule_id': rule['rule_id'],
+            'active': 1,
+            'rule_id': str(uuid.uuid4()),
             'days': 0
             }
         rules.append(new_rule)
