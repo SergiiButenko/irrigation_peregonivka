@@ -1,13 +1,12 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
 var branch = [];
-var json = { 'lines': {} }
+var json = { 'lines': {} };
 
 $(document).ready(function() {
-    $(".select").click(function(event){
-            var card = $(event.target).closest(".top");
-            card.toggleClass("card-selected");
-        })
-    }
+    $(".select").click(function(event) {
+        var card = $(event.target).closest(".top");
+        card.toggleClass("card-selected");
+    });
 
 
     $("#next").click(function() {
@@ -17,15 +16,14 @@ $(document).ready(function() {
             var selected = $(this).hasClass('card-selected');
             var id = $(this).data('line_id');
             if (selected == true) {
-                json['lines'][id] = {'id': id}
+                json['lines'][id] = { 'id': id }
             }
         });
-        
+
         $('#plan_modal').modal('show');
     });
 
-
-    #('.plan').click(function(){
+    $('.plan').click(function() {
         json['timer'] = parseInt($("#select_line option:selected").val());
 
         $.ajax({
@@ -46,6 +44,4 @@ $(document).ready(function() {
             }
         });
     });
-
-    }
 });
