@@ -30,19 +30,23 @@
 {% block container %}
 <div id="card-holder">
     <h5>Оберіть, що полити: </h5>
-    <div class="row">
-        {% for n in my_list %}
+    <hr style="margin-bottom: 2rem" />
+        {% for name, group in my_list.items() %}
+        <h5>{{group[0]['group_name']}}</h5>
+        <div class="row">
+        {% for n in group %} 
         <div class="col-xs-12 col-sm-5 col-md-6 col-lg-5 top" data-line_id={{n[ 'line_id']}}>
             <div class="card">
                 <div class="card-block">
                     <h4>{{n['line_name']}}</h4>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-secondary select">Вибрати</a>
+                    <a href="#" class="btn btn-primary select">Вибрати</a>
                 </div>
             </div>
         </div>
         {% endfor %}
+    </div>
     </div>
 </div>
 </br>
@@ -60,5 +64,5 @@
 <a class="btn btn-raised btn-block btn-secondary" href="/add_rule?add_to_date=1" role="button">
                     Запланувати полив на завтра...
                 </a> {% endblock %} {% block custom_scripts %}
-<script src="static/js/add_rule_min.js"></script>
+<script src="static/js/planner.js"></script>
 {% endblock %}

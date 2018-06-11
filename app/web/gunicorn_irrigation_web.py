@@ -721,11 +721,11 @@ def planner():
     for item_id, item in BRANCHES_SETTINGS.items():
         if item['line_type'] == 'irrigation' and item['is_pump'] == 0:
             branch_list.append({
-                'id': item['branch_id'],
+                'line_id': item['branch_id'],
                 'group_id': item['group_id'],
                 'group_name': item['group_name'],
                 'is_pump': item['is_pump'],
-                'name': item['name'],
+                'line_name': item['name'],
                 'default_time': item['time'],
                 'default_interval': item['intervals'],
                 'default_time_wait': item['time_wait'],
