@@ -297,3 +297,10 @@ div.tooltip {
   border-radius: 8px;
   pointer-events: none;
 }
+
+.card-selected {
+    border-top: 10px solid green;
+    border-left: 10px solid green;
+    border-right: 10px solid green;
+    border-bottom: 10px solid green;   
+}

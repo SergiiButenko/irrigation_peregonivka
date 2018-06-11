@@ -715,6 +715,14 @@ def deactivate_ongoing_rule():
     return json.dumps({'status': 'OK'})
 
 
+@app.route("/planner")
+def planner():
+    lines = request.json['lines']
+    timer = request.json['timer']
+    logging.info("lines: {0}, timer: {1}".format(str(lines), timer))
+    return json.dumps({'status': 'OK'})
+
+
 def form_responce_for_branches(payload):
     """Return responce with rules."""
     try:
