@@ -781,8 +781,8 @@ def plan():
             'intervals': int(line['default_interval']),
             'time_wait': int(line['default_time_wait']),
             'repeat_value': 4,  # comes from ongoing rule. equal to ONE TIME
-            'date_start' = start_time,
-            'time_start' = start_time,
+            'date_start': start_time,
+            'time_start': start_time,
             'date_time_start': start_time,
             'end_date': start_time,
             'active': 1,
@@ -792,7 +792,7 @@ def plan():
             }
         rules.append(new_rule)
         new_delta = new_rule['time'] * new_rule['intervals'] + new_rule['time_wait'] * (new_rule['intervals'] - 1)
-        start_time = start_time + datetime.timedelta(minutes=new_delta + 2)  # 2 minutes to avoid overlap
+        start_time = start_time + datetime.timedelta(minutes=new_delta + TIME_TO_FILL_LOWER_TANK)  # 2 minutes to avoid overlap
 
     logging.info("rules: {0}".format(str(rules)))
     add_ongoing_rule(rules)
