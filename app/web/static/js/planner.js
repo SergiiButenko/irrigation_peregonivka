@@ -5,7 +5,16 @@ var json = { 'lines': {} };
 $(document).ready(function() {
     $(".select").click(function(event) {
         var card = $(event.target).closest(".card");
-        card.toggleClass("card-selected");
+        card.addClass("card-selected");
+        card.find(".select").hide().addClass("hidden");
+        card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
+    });
+
+    $(".deselect").click(function(event) {
+        var card = $(event.target).closest(".card");
+        card.removeClass("card-selected");
+        card.find(".deselect").hide().addClass("hidden");
+        card.find(".select").css('display', 'inline-block').removeClass("hidden");
     });
 
 
@@ -23,7 +32,7 @@ $(document).ready(function() {
         $('#plan_modal').modal('show');
     });
 
-    $('.plan').click(function() {
+    $('.master_plan').click(function() {
         json['timer'] = parseInt($("#select_line option:selected").val());
 
         $.ajax({
