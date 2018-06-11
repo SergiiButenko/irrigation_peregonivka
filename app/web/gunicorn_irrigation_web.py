@@ -493,6 +493,8 @@ def ongoing_rules():
         start_dt = convert_to_datetime(date_time_start)
         end_dt = convert_to_datetime(end_date)
 
+        logging.info(start_dt)
+        logging.info(end_dt)
         if start_dt.date() == end_dt.date():
             date_delta = end_dt.date() - now.date()
             if date_delta.days == 0:
@@ -781,10 +783,10 @@ def plan():
             'intervals': int(line['default_interval']),
             'time_wait': int(line['default_time_wait']),
             'repeat_value': 4,  # comes from ongoing rule. equal to ONE TIME
-            'date_start': start_time,
-            'time_start': start_time,
-            'date_time_start': start_time,
-            'end_date': start_time,
+            'date_start': convert_to_datetime(start_time),
+            'time_start': convert_to_datetime(start_time),
+            'date_time_start': convert_to_datetime(start_time),
+            'end_date': convert_to_datetime(start_time),
             'active': 1,
             'rule_id': str(uuid.uuid4()),
             'days': -1,
