@@ -571,7 +571,7 @@ def add_ongoing_rule(rules):
     for rule in rules:
         rule['line_id'] = int(rule['line_id'])
         rule['line_name'] = rule['line_name']
-        rule['time'] = convert_to_datetime(rule['time'])
+        rule['time'] = int(rule['time'])
         rule['intervals'] = int(rule['intervals'])
         rule['time_wait'] = int(rule['time_wait'])
         rule['repeat_value'] = int(rule['repeat_value'])
@@ -747,7 +747,46 @@ def planner():
 def plan():
     lines = request.json['lines']
     timer = request.json['timer']
-    logging.info("lines: {0}, timer: {1}".format(str(lines), timer))
+
+    income_lines = []
+    for line_id, line in lines.items():
+        income_lines.append(line_id)
+
+    # setup lines array
+    line_list = []
+    for item_id, item in BRANCHES_SETTINGS.items():
+        if item['branch_id'] in income_lines:
+            line_list.append({
+                'id': item['branch_id'],
+                'default_time': item['time'],
+                'default_interval': item['intervals'],
+                'default_time_wait': item['time_wait']})
+
+    if timer == 0:
+        delta_minutes = 10
+    else:
+        delta_minutes = timer * 60
+
+    start_time = datetime.datetime.now() + datetime.timedelta(minutes=delta_minutes)
+    for line in line_list:
+        new_rule = {
+            'line_id': int(line['id'])
+            'time': int(line['default_time'])
+            'intervals': int(line['default_interval'])
+            'time_wait': int(line['default_time_wait'])
+            'repeat_value': 4  # comes from ongoing rule. equal to ONE TIME
+            'date_time_start': start_time
+            'end_date': start_time
+            'rule_id': rule['rule_id']
+            'active': 1
+            'rule_id': str(uuid.uuid4())
+            'days': 0
+            }
+        rules.append(new_rule)
+        new_delta = new_rule['time'] * new_rule['intervals'] + new_rule['time_wait'] * (new_rule['intervals'] - 1)
+        start_time = start_time + datetime.timedelta(minutes=new_delta + 2)  # 2 minutes to avoid overlap
+
+    logging.info(str(rules))
     return json.dumps({'status': 'OK'})
 
 
