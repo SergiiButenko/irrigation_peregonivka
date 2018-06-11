@@ -8,12 +8,12 @@ var branch_state = null;
 
 $(document).ready(function() {
 
-    var socket = io.connect(server, {'sync disconnect on unload': true});
+    var socket = io.connect(server, { 'sync disconnect on unload': true });
 
     socket.on('disconnect', function(data) {
-      alertify.error("sockets disconnect!");
+        console.log("sockets disconnect!");
     });
-    
+
     socket.on('connect', function() {
         console.log("connected to websocket");
     });
@@ -67,7 +67,7 @@ $(document).ready(function() {
                 console.log("connected to arduino");
 
                 set_status_ok();
-                update_branches(data);                
+                update_branches(data);
                 setTimeout(worker2, arduino_check_connect_sec * 1000);
             },
             error: function() {
@@ -98,7 +98,7 @@ $(document).ready(function() {
         time_wait = branch[index]['default_time_wait'];
 
         var res = is_any_line_active(index);
-        if (res != null){
+        if (res != null) {
             if (!confirm(`Лінію '${res['line_name']}' буде вимкено. Ви згодні?`)) return;
             branch_off(res['id']);
         }

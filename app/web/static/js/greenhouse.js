@@ -7,10 +7,10 @@ var branch = [];
 var settings = {};
 
 $(document).ready(function() {
-    var socket = io.connect(server, {'sync disconnect on unload': true});
+    var socket = io.connect(server, { 'sync disconnect on unload': true });
 
     socket.on('disconnect', function(data) {
-      alertify.error("sockets disconnect!");
+        console.log("sockets disconnect!");
     });
 
     socket.on('connect', function() {
@@ -23,7 +23,7 @@ $(document).ready(function() {
     });
 
 
-//Rename branches
+    //Rename branches
     $.ajax({
         url: '/greenhouse_settings',
         success: function(data) {
@@ -34,7 +34,8 @@ $(document).ready(function() {
                     'name': item['name'],
                     'default_time': parseInt(item['default_time'])
                 }
-            }        }
+            }
+        }
     });
 
 
@@ -117,7 +118,7 @@ $(document).ready(function() {
             var returnVal = confirm("Автоматичне керування увімкнено. \nВимкнути і перейти до ручного керування?");
             if (returnVal == false)
                 return;
-            
+
             var json = {
                 'list': { 'greenhouse_auto': { 'enabled': '0' } }
             }
@@ -343,7 +344,7 @@ function toogle_card(element_id, branch) {
 
         $('#card-' + element_id).removeClass("status-error");
         $('#card-' + element_id).addClass("card-irrigate-active");
-        
+
 
         $('#btn-start-' + element_id).hide().addClass("hidden");
         $('#btn-start-with-options-' + element_id).hide().addClass("hidden");

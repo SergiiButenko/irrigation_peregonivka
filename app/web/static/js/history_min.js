@@ -1,12 +1,12 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
 
 $(document).ready(function() {
-    var socket = io.connect(server, {'sync disconnect on unload': true});
+    var socket = io.connect(server, { 'sync disconnect on unload': true });
 
     socket.on('disconnect', function(data) {
-      alertify.error("sockets disconnect!");
+        console.log("sockets disconnect!");
     });
-    
+
     socket.on('connect', function() {
         console.log("connected to websocket");
     });
@@ -15,7 +15,7 @@ $(document).ready(function() {
         console.log('Reload received');
         reload_history();
     });
-    
+
     $(".card-rule").each(function() {
         form_text($(this))
     });

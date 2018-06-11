@@ -6,10 +6,10 @@ var arduino_check_broken_connect_sec = 60;
 var branch = [];
 
 $(document).ready(function() {
-    var socket = io.connect(server, {'sync disconnect on unload': true});
+    var socket = io.connect(server, { 'sync disconnect on unload': true });
 
     socket.on('disconnect', function(data) {
-      alertify.error("sockets disconnect!");
+        console.log("sockets disconnect!");
     });
 
     socket.on('connect', function() {
@@ -190,7 +190,7 @@ function toogle_card(element_id, branch) {
     if (branch_state == 1) {
         $('#card-' + element_id).removeClass("status-error");
         $('#card-' + element_id).addClass("card-irrigate-active");
-        
+
 
         $('#btn-start-' + element_id).hide().addClass("hidden");
         $('#btn-start-with-options-' + element_id).hide().addClass("hidden");

@@ -13,6 +13,10 @@ $(document).ready(function() {
         console.log("connected to websocket");
     });
 
+    socket.on('disconnect', function(data) {
+        console.log("sockets disconnect!");
+    });
+
     socket.on('branch_status', function(msg) {
         console.log('Message received. New brach status: ' + msg.data);
         update_branches(JSON.parse(msg.data));
