@@ -717,6 +717,30 @@ def deactivate_ongoing_rule():
 
 @app.route("/planner")
 def planner():
+    branch_list = []
+    for item_id, item in BRANCHES_SETTINGS.items():
+        if item['line_type'] == 'irrigation' and item['is_pump'] == 0:
+            branch_list.append({
+                'id': item['branch_id'],
+                'group_id': item['group_id'],
+                'group_name': item['group_name'],
+                'is_pump': item['is_pump'],
+                'name': item['name'],
+                'default_time': item['time'],
+                'default_interval': item['intervals'],
+                'default_time_wait': item['time_wait'],
+                'start_time': item['start_time']})
+
+    branch_list.sort(key=itemgetter('group_id'))
+    grouped = {}
+    for key, group in groupby(branch_list, itemgetter('group_id')):
+        grouped[key] = (list([thing for thing in group]))
+
+    return render_template('planner.html', my_list=grouped)
+
+
+@app.route("/plan")
+def plan():
     lines = request.json['lines']
     timer = request.json['timer']
     logging.info("lines: {0}, timer: {1}".format(str(lines), timer))
