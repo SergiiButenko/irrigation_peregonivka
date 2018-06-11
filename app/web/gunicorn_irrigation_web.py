@@ -767,6 +767,7 @@ def plan():
     else:
         delta_minutes = timer * 60
 
+    rules = []
     start_time = datetime.datetime.now() + datetime.timedelta(minutes=delta_minutes)
     for line in line_list:
         new_rule = {
