@@ -791,6 +791,8 @@ def plan():
         start_time = start_time + datetime.timedelta(minutes=new_delta + 2)  # 2 minutes to avoid overlap
 
     logging.info("rules: {0}".format(str(rules)))
+    add_ongoing_rule(rules)
+
     return json.dumps({'status': 'OK'})
 
 
