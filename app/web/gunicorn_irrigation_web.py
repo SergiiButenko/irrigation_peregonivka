@@ -739,7 +739,7 @@ def planner():
     return render_template('planner.html', my_list=grouped)
 
 
-@app.route("/plan")
+@app.route("/plan", methods=['POST'])
 def plan():
     lines = request.json['lines']
     timer = request.json['timer']
