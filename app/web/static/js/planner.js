@@ -3,7 +3,7 @@ var branch = [];
 var json = { 'lines': {} };
 
 $(document).ready(function() {
-    $(".select", ".card-block", ".card-footer").click(function(event) {
+    $(".select, .deselect, .card-block, .card-footer").off().on(click, function(event) {
         var card = $(event.target).closest(".card");
         if (card.hasClass("card-selected")) {
             card.removeClass("card-selected");
