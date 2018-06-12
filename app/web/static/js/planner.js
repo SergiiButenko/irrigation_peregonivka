@@ -16,19 +16,6 @@ $(document).ready(function() {
         }
     });
 
-    $(".select, .deselect").on('click', function(event) {
-        var card = $(event.target).closest(".card");
-        if (card.hasClass("card-selected")) {
-            card.removeClass("card-selected");
-            card.find(".deselect").hide().addClass("hidden");
-            card.find(".select").css('display', 'inline-block').removeClass("hidden");
-        } else {
-            card.addClass("card-selected");
-            card.find(".select").hide().addClass("hidden");
-            card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
-        }
-    });
-
     $("#next").click(function() {
         json = { 'lines': {} }
 
