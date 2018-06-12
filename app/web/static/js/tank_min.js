@@ -7,7 +7,8 @@ var branch = [];
 
 $(document).ready(function() {
     var socket = io.connect(server, {
-        'sync disconnect on unload': true
+        'sync disconnect on unload': true,
+        'secure': true
     });
     socket.on('connect', function() {
         console.log("connected to websocket");

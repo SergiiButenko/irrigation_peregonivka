@@ -6,7 +6,10 @@ var arduino_check_broken_connect_sec = 60;
 var branch = [];
 
 $(document).ready(function() {
-    var socket = io.connect(server, { 'sync disconnect on unload': true });
+    var socket = io.connect(server, {
+        'sync disconnect on unload': true,
+        'secure': true
+    });
 
     socket.on('disconnect', function(data) {
         console.log("sockets disconnect!");

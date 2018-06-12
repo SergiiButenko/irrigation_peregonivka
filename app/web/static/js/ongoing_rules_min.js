@@ -3,7 +3,10 @@ branch = []
 
 $(document).ready(function() {
 
-    var socket = io.connect(server, { 'sync disconnect on unload': true });
+    var socket = io.connect(server, {
+        'sync disconnect on unload': true,
+        'secure': true
+    });
 
     socket.on('disconnect', function(data) {
         console.log("sockets disconnect!");
