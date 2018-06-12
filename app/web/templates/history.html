@@ -1,6 +1,7 @@
 {% extends 'base.html' %} {% block nav_item_title %}Розклад{% endblock %} {% block custom_css %} {% endblock %} {% block modals %}{% endblock %} {% block container %}
 <div id="card-holder">
     {% for key, value in my_list.items() %}
+    <hr style="margin-top: 2rem; margin-bottom: 1rem" /> 
     <div class="rule-container">
         <div class="button-header">
             <h5 style='display: inline-block;'>{{value[0]['date_description']}}</h5>
@@ -10,7 +11,8 @@
             {% for n in value %} {% include "rule_single.html" with context %} {% endfor %}
         </div>
     </div>
-    <hr style="margin-top: 2rem; margin-bottom: 1rem" /> {% endfor %}
+    {% endfor %}
+    {% include "radditional_actions.html" with context %}
 </div>
 {% endblock %} {% block custom_scripts %}
 <script src="static/js/history_min.js"></script>{% endblock %}

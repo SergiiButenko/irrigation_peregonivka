@@ -122,19 +122,7 @@
     Запланувати переодичний полив
 </button>
 
-<hr style="margin-top: 2rem; margin-bottom: 2rem" />
-
-<h5>Додаткові дії</h5>
-</br>
-<a class="btn btn-raised btn-block btn-secondary add_rule" role="button">
-                    Полити один раз
-                </a>
-<a class="btn btn-raised btn-block btn-secondary" href="/add_rule?add_to_date=0" role="button">
-                    Запланувати полив на сьогодні...
-                </a>
-<a class="btn btn-raised btn-block btn-secondary" href="/add_rule?add_to_date=1" role="button">
-                    Запланувати полив на завтра...
-                </a> 
+{% include "radditional_actions.html" with context %}
 {% endblock %} {% block custom_scripts %}
 <script src="static/js/ongoing_rules_min.js"></script>
 {% endblock %}

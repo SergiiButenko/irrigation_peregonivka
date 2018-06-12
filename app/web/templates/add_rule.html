@@ -57,17 +57,11 @@
 <button type="button" class="btn btn-raised btn-block btn-primary" id="go_plan">
     Запланувати
 </button>
-<button type="button" class="btn btn-raised btn-block btn-secondary" onclick="window.location.href='/history'">
+<button type="button" class="btn btn-raised btn-block btn-secondary" onclick="window.location.href='/#'">
     Скасувати
 </button>
 
-<hr style="margin-top: 2rem; margin-bottom: 2rem" />
-<h5>Додаткові дії</h5></br>
-<a class="btn btn-raised btn-block btn-secondary" href="/add_rule?add_to_date=0" role="button">
-                    Запланувати полив на сьогодні...
-                </a>
-<a class="btn btn-raised btn-block btn-secondary" href="/add_rule?add_to_date=1" role="button">
-                    Запланувати полив на завтра...
-                </a> {% endblock %} {% block custom_scripts %}
+{% include "radditional_actions.html" with context %}
+{% endblock %} {% block custom_scripts %}
 <script src="static/js/add_rule_min.js"></script>
 {% endblock %}
