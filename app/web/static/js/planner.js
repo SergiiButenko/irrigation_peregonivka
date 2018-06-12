@@ -3,18 +3,8 @@ var branch = [];
 var json = { 'lines': {} };
 
 $(document).ready(function() {
-    $(".select, .deselect, .card-block, .card-footer").off().on('click', function(event) {
-        var card = $(event.target).closest(".card");
-        if (card.hasClass("card-selected")) {
-            card.removeClass("card-selected");
-            card.find(".deselect").hide().addClass("hidden");
-            card.find(".select").css('display', 'inline-block').removeClass("hidden");
-        } else {
-            card.addClass("card-selected");
-            card.find(".select").hide().addClass("hidden");
-            card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
-        }
-    });
+    $(".card-block, .card-footer").on('click', toogle_selected(event));
+    $(".select, .deselect").on('click', toogle_selected(event));
 
     $("#next").click(function() {
         json = { 'lines': {} }
@@ -55,3 +45,18 @@ $(document).ready(function() {
         });
     });
 });
+
+
+
+function toogle_selected(event) {
+    var card = $(event.target).closest(".card");
+    if (card.hasClass("card-selected")) {
+        card.removeClass("card-selected");
+        card.find(".deselect").hide().addClass("hidden");
+        card.find(".select").css('display', 'inline-block').removeClass("hidden");
+    } else {
+        card.addClass("card-selected");
+        card.find(".select").hide().addClass("hidden");
+        card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
+    }
+}
