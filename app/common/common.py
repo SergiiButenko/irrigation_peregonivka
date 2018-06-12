@@ -10,6 +10,7 @@ from pytz import timezone
 # For get function name intro function. Usage mn(). Return string with current function name. Instead 'query' will be database.QUERY[mn()].format(....)
 mn = lambda: inspect.stack()[1][3]
 
+
 def date_handler(obj):
     """Convert datatime to string format."""
     if hasattr(obj, 'isoformat'):

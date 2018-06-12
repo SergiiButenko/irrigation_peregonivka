@@ -791,8 +791,8 @@ def plan():
             'line_name': line['name']
             }
         rules.append(new_rule)
-        new_delta = new_rule['time'] * new_rule['intervals'] + new_rule['time_wait'] * (new_rule['intervals'] - 1)
-        start_time = start_time + datetime.timedelta(minutes=new_delta + TIME_TO_FILL_LOWER_TANK)  # 2 minutes to avoid overlap
+        new_delta = 2 * (new_rule['time'] * new_rule['intervals'] + new_rule['time_wait'] * (new_rule['intervals'] - 1))
+        start_time = start_time + datetime.timedelta(minutes=new_delta)
 
     logging.info("rules: {0}".format(str(rules)))
     add_ongoing_rule(rules)
