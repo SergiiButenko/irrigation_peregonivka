@@ -3,8 +3,13 @@ var branch = [];
 var json = { 'lines': {} };
 
 $(document).ready(function() {
-    $(".card-block, .card-footer").on('click', toogle_selected(event));
-    $(".select, .deselect").on('click', toogle_selected(event));
+    $(".card-block, .card-footer").on('click', function(event) {
+        toogle_selected(event)
+    });
+
+    $(".select, .deselect").on('click', function(event) {
+        toogle_selected(event)
+    });
 
     $("#next").click(function() {
         json = { 'lines': {} }
