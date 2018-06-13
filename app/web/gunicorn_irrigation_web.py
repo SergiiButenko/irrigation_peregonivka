@@ -43,6 +43,8 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 CACHE_TIMEOUT = 600
 
+requests.packages.urllib3.disable_warnings()
+
 
 def update_all_rules():
     """Set next active rules for all branches."""
@@ -1165,7 +1167,7 @@ def weather():
 
     wurl = 'http://api.openweathermap.org/data/2.5/weather?id=698782&appid=319f5965937082b5cdd29ac149bfbe9f'
     try:
-        response = requests.get(url=wurl, timeout=(10, 10))
+        response = requests.get(url=wurl, timeout=(READ_TIMEOUT, RESP_TIMEOUT))
         response.raise_for_status()
         json_data = json.loads(response.text)
         c_temp = int(json_data['main']['temp']) - 273.15
@@ -1263,7 +1265,10 @@ def stop_filling():
             _users_list = TELEGRAM_USERS[device_id]
             logging.info("Sending notify_filled message to users: '{0}'.".format(str(_users_list)))
             payload = {'users': _users_list}
-            response = requests.post(VIBER_BOT_IP + '/notify_filled', json=payload, timeout=(10, 10), verify=False)
+            response = requests.post(VIBER_BOT_IP + '/notify_filled',
+                                     json=payload,
+                                     timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                     verify=False)
             response.raise_for_status()
             logging.info("Messages send.")
         except Exception as e:
@@ -1283,7 +1288,10 @@ def stop_filling():
             logging.info("Sending line deactivated message to users: '{0}'.".format(str(_users_list)))
             payload = {'users': _users_list,
                        'message': message}
-            response = requests.post(VIBER_BOT_IP + '/send_message', json=payload, timeout=(10, 10), verify=False)
+            response = requests.post(VIBER_BOT_IP + '/send_message',
+                                     json=payload, 
+                                     timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                     verify=False)
             response.raise_for_status()
             logging.info("Messages send.")
         except Exception as e:

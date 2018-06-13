@@ -17,6 +17,8 @@ from web.controllers import remote_controller as remote_controller
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
 
+requests.packages.urllib3.disable_warnings()
+
 # Software SPI configuration:
 CLK  = 18
 MISO = 23

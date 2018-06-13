@@ -20,6 +20,7 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)
 
 requests.packages.urllib3.disable_warnings()
 
+
 def branch_on(line_id, alert_time):
     """Blablbal."""
     try:

@@ -21,6 +21,7 @@ from web.controllers import remote_controller as remote_controller
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
+requests.packages.urllib3.disable_warnings()
 
 SENSORS = {}
 LINES = {}
@@ -85,7 +86,10 @@ def branch_on(line_id, alert_time=7 * 24 * 60):
     try:
         for attempt in range(ATTEMPTS):
             try:
-                response = requests.get(url=BACKEND_IP + '/activate_branch', params={"id": line_id, 'time_min': alert_time, 'mode': 'auto'}, timeout=(10, 10))
+                response = requests.get(url=BACKEND_IP + '/activate_branch',
+                                        params={"id": line_id, 'time_min': alert_time, 'mode': 'auto'},
+                                        timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                        verify=False)
                 response.raise_for_status()
                 logging.debug('response {0}'.format(response.text))
 
@@ -116,7 +120,10 @@ def branch_off(line_id):
     try:
         for attempt in range(2):
             try:
-                response = requests.get(url=BACKEND_IP + '/deactivate_branch', params={"id": line_id, 'mode': 'manually'}, timeout=(10, 10))
+                response = requests.get(url=BACKEND_IP + '/deactivate_branch',
+                                        params={"id": line_id, 'mode': 'manually'},
+                                        timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                        verify=False)
                 response.raise_for_status()
                 logging.debug('response {0}'.format(response.text))
 
@@ -169,7 +176,10 @@ def send_to_viber_bot(rule):
 
         try:
             payload = {'rule_id': id, 'line_id': line_id, 'time': time, 'interval_id': interval_id, 'users': USERS, 'timeout': VIBER_SENT_TIMEOUT, 'user_friendly_name': user_friendly_name}
-            response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started', json=payload, timeout=(10, 10))
+            response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started',
+                                     json=payload,
+                                     timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                     verify=False)
             response.raise_for_status()
         except Exception as e:
             logging.error(e)
