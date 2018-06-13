@@ -24,7 +24,10 @@ def branch_on(line_id, alert_time):
     try:
         for attempt in range(2):
             try:
-                response = requests.get(url=BACKEND_IP + '/activate_branch', params={"id": line_id, 'time_min': alert_time, 'mode': 'auto'}, timeout=(10, 10))
+                response = requests.get(url=BACKEND_IP + '/activate_branch',
+                                        params={"id": line_id, 'time_min': alert_time, 'mode': 'auto'},
+                                        timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                        verify=True)
                 response.raise_for_status()
                 logging.debug('response {0}'.format(response.text))
 
@@ -55,7 +58,10 @@ def branch_off(line_id):
     try:
         for attempt in range(2):
             try:
-                response = requests.get(url=BACKEND_IP + '/deactivate_branch', params={"id": line_id, 'mode': 'auto'}, timeout=(10, 10))
+                response = requests.get(url=BACKEND_IP + '/deactivate_branch',
+                                        params={"id": line_id, 'mode': 'auto'},
+                                        timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                        verify=True)
                 response.raise_for_status()
                 logging.debug('response {0}'.format(response.text))
 
@@ -152,11 +158,16 @@ def send_to_viber_bot(rule):
         if line_id == LINES_UPPER_TANK['upper_tank']:
             payload = {'users': USERS,
                        'message': "Через {0} хвилин почнеться наповненния верхньої бочки. Триватиме максимум {1} хвилин.\nЗайдіть на сайт, щоб відмнінити наповнення".format(VIBER_SENT_TIMEOUT, time)}
-            response = requests.post(VIBER_BOT_IP + '/send_message', json=payload, timeout=(10, 10), verify=False)
+            response = requests.post(VIBER_BOT_IP + '/send_message',
+                                     json=payload,
+                                     timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                     verify=True)
         else:
             payload = {'rule_id': id, 'line_id': line_id, 'time': time, 'interval_id': interval_id, 'users': USERS, 'timeout': VIBER_SENT_TIMEOUT, 'user_friendly_name': user_friendly_name}
-            response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started', json=payload, timeout=(10, 10), verify=False)
-
+            response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started',
+                                     json=payload,
+                                     timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                     verify=True)
         response.raise_for_status()
     except Exception as e:
         logging.error(e)
