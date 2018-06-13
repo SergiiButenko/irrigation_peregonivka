@@ -27,7 +27,7 @@ def branch_on(line_id, alert_time):
                 response = requests.get(url=BACKEND_IP + '/activate_branch',
                                         params={"id": line_id, 'time_min': alert_time, 'mode': 'auto'},
                                         timeout=(READ_TIMEOUT, RESP_TIMEOUT),
-                                        verify=WEBHOOK_SSL_CERT)
+                                        cert=(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV))
                 response.raise_for_status()
                 logging.debug('response {0}'.format(response.text))
 
@@ -61,7 +61,7 @@ def branch_off(line_id):
                 response = requests.get(url=BACKEND_IP + '/deactivate_branch',
                                         params={"id": line_id, 'mode': 'auto'},
                                         timeout=(READ_TIMEOUT, RESP_TIMEOUT),
-                                        verify=WEBHOOK_SSL_CERT)
+                                        cert=(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV))
                 response.raise_for_status()
                 logging.debug('response {0}'.format(response.text))
 
@@ -161,13 +161,13 @@ def send_to_viber_bot(rule):
             response = requests.post(VIBER_BOT_IP + '/send_message',
                                      json=payload,
                                      timeout=(READ_TIMEOUT, RESP_TIMEOUT),
-                                     verify=WEBHOOK_SSL_CERT)
+                                     cert=(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV))
         else:
             payload = {'rule_id': id, 'line_id': line_id, 'time': time, 'interval_id': interval_id, 'users': USERS, 'timeout': VIBER_SENT_TIMEOUT, 'user_friendly_name': user_friendly_name}
             response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started',
                                      json=payload,
                                      timeout=(READ_TIMEOUT, RESP_TIMEOUT),
-                                     verify=WEBHOOK_SSL_CERT)
+                                     cert=(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV))
         response.raise_for_status()
     except Exception as e:
         logging.error(e)
