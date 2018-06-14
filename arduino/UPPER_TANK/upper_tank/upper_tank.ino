@@ -16,6 +16,7 @@ byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
 
 const char *host = "http://mozz.asuscomm.com:7542";
+const char *host_https = "https://mozz.asuscomm.com:7542";
 String id = "upper_tank";
 
 //const char* ssid = "NotebookNet";
@@ -72,14 +73,16 @@ void loop() {
     Serial.println(counter);
     Serial.println(counter >= counter_max);
 
-    Serial.println("Initialising http connection");
-    HTTPClient http;
-
     for (int i = 1; i <= retry_limit; i++) {
+      Serial.println("Initialising http connection");
+      HTTPClient http;
+
       Serial.print("Sending GET request for stop. ");
       Serial.print(i);
       Serial.print(" try out of ");
-      Serial.println(retry_limit);
+      Serial.print(retry_limit);
+      Serial.print(". Host: ");
+      Serial.println(host);
       Serial.println("Sending GET request");
 
       http.begin(host + String("/stop_filling?device_id=") + String(id));
@@ -92,14 +95,40 @@ void loop() {
       Serial.println(payload);    //Print request response payload
 
       http.end();  //Close connection
-      
+
       if (httpCode == 200) {
         break;
+      } else {
+        Serial.println("Initialising http connection");
+        HTTPClient http;
+
+        Serial.print("Sending GET request for stop. ");
+        Serial.print(i);
+        Serial.print(" try out of ");
+        Serial.print(retry_limit);
+        Serial.print(". Host: ");
+        Serial.println(host_https);
+        Serial.println("Sending GET request");
+
+        http.begin(host_https + String("/stop_filling?device_id=") + String(id));
+        int httpCode = http.GET();            //Send the request
+        String payload = http.getString();    //Get the response payload
+
+        Serial.print("httpCode: ");
+        Serial.println(httpCode);   //Print HTTP return code
+        Serial.print("payload: ");
+        Serial.println(payload);    //Print request response payload
+
+        http.end();  //Close connection
+
+        if (httpCode == 200) {
+          break;
+        }
       }
 
       delay(1000);
     }
-    
+
     counter = 0;
     delay(5000);
   }
@@ -124,14 +153,17 @@ void ping() {
 
 
 void send_ping() {
-  Serial.println("Initialising http connection for ping");
-  HTTPClient http;
-
   for (int i = 1; i <= retry_limit; i++) {
+    Serial.println("Initialising http connection for ping");
+    HTTPClient http;
+
     Serial.print("Sending GET request for ping. ");
     Serial.print(i);
     Serial.print(" try out of ");
-    Serial.println(retry_limit);
+    Serial.print(retry_limit);
+    Serial.print(". host:");
+    Serial.println(host);
+
     http.begin(host + String("/im_alive?device_id=") + String(id));
     int httpCode = http.GET();            //Send the request
     String payload = http.getString();    //Get the response payload
@@ -145,6 +177,30 @@ void send_ping() {
 
     if (httpCode == 200) {
       break;
+    } else {
+      Serial.println("Initialising https connection for ping");
+      HTTPClient http;
+
+      Serial.print("Sending GET request for ping. ");
+      Serial.print(i);
+      Serial.print(" try out of ");
+      Serial.print(retry_limit);
+      Serial.print(". host:");
+      Serial.println(host_https);
+      http.begin(host_https + String("/im_alive?device_id=") + String(id));
+      int httpCode = http.GET();            //Send the request
+      String payload = http.getString();    //Get the response payload
+
+      Serial.print("httpCode: ");
+      Serial.println(httpCode);   //Print HTTP return code
+      Serial.print("payload: ");
+      Serial.println(payload);    //Print request response payload
+
+      http.end();  //Close connection
+
+      if (httpCode == 200) {
+        break;
+      }
     }
 
     delay(1000);
@@ -171,5 +227,3 @@ void decrease_counter() {
     counter = 0;
   }
 }
-
-

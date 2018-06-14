@@ -7,8 +7,8 @@ Requires=network.target
 EnvironmentFile=/etc/environment
 ExecStartPre=/bin/sleep 30
 ExecStart=/usr/local/bin/gunicorn \
-	--certfile /var/www/app/ssl_sertificats/mozz/cert.pem \
-	--keyfile /var/www/app/ssl_sertificats/mozz/privkey.pem \
+	# --certfile /var/www/app/ssl_sertificats/mozz/cert.pem \
+	# --keyfile /var/www/app/ssl_sertificats/mozz/privkey.pem \
 	--worker-class eventlet \
 	-w 3 \
 	-b 0.0.0.0:7542 \
