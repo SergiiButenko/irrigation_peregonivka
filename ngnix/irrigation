@@ -1,0 +1,8 @@
+server {
+        listen 7543;
+        listen [::]:7543;
+        server_name mozz.asuscomm.com;
+        location / {
+                        proxy_pass http://127.0.0.1:7542;
+                   }
+       }
