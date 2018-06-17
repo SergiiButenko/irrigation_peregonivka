@@ -82,6 +82,10 @@ def temp_sensors():
                                                                  now.strftime("%Y-%m-%d %H:%M")))
         elif sensor['type'] == 'ground_sensor':
             response = remote_controller.ground_sensor(sensor_id)
+            while response[sensor_id]['ground_temp'] == 85.00:
+                logging.info('Sensor send basic temp. Retry.')
+                response = remote_controller.ground_sensor(sensor_id)
+
             logging.info("Ground temp: {0}".format(str(response)))
             database.update(database.QUERY[mn() + '_ground'].format(
                 response[sensor_id]['id'],
