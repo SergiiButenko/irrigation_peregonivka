@@ -15,8 +15,8 @@ byte retry_limit = 5;
 byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
 
-const char *host = "http://mozz.asuscomm.com:7542";
-const char *host_https = "https://mozz.asuscomm.com:7542";
+const char *host = "http://192.168.1.22:8000";
+const char *host_2 = "http://192.168.1.22:7542";
 String id = "upper_tank";
 
 //const char* ssid = "NotebookNet";
@@ -107,10 +107,10 @@ void loop() {
         Serial.print(" try out of ");
         Serial.print(retry_limit);
         Serial.print(". Host: ");
-        Serial.println(host_https);
+        Serial.println(host_2);
         Serial.println("Sending GET request");
 
-        http.begin(host_https + String("/stop_filling?device_id=") + String(id));
+        http.begin(host_2 + String("/stop_filling?device_id=") + String(id));
         int httpCode = http.GET();            //Send the request
         String payload = http.getString();    //Get the response payload
 
@@ -186,8 +186,8 @@ void send_ping() {
       Serial.print(" try out of ");
       Serial.print(retry_limit);
       Serial.print(". host:");
-      Serial.println(host_https);
-      http.begin(host_https + String("/im_alive?device_id=") + String(id));
+      Serial.println(host_2);
+      http.begin(host_2 + String("/im_alive?device_id=") + String(id));
       int httpCode = http.GET();            //Send the request
       String payload = http.getString();    //Get the response payload
 
