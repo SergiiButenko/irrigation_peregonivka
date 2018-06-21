@@ -1,10 +1,7 @@
 [Unit]
-Description=Backend part of irrigation system for peregonivka for port 7542
+Description=Backend part of irrigation system for peregonivka for port 8001
 After=network.target
 Requires=network.target
-
-# --certfile /var/www/app/ssl_sertificats/mozz/cert.pem \
-# --keyfile /var/www/app/ssl_sertificats/mozz/privkey.pem \
 
 [Service]
 EnvironmentFile=/etc/environment
@@ -12,7 +9,7 @@ ExecStartPre=/bin/sleep 30
 ExecStart=/usr/local/bin/gunicorn \
 	--worker-class eventlet \
 	-w 1 \
-	-b 0.0.0.0:8000 \
+	-b 0.0.0.0:8001 \
 	--pythonpath /var/www/app/web/ \
 	--user root \
 	gunicorn_irrigation_web:app
