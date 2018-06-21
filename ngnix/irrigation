@@ -1,9 +1,3 @@
-upstream mozz.asuscomm.com {
-	ip_hash;
-	server 0.0.0.0:8000;
-	server 0.0.0.0:8001 backup;
-}
-
 server {
 		listen 7542;
 		listen [::]:7542;
