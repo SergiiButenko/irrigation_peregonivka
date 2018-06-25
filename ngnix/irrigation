@@ -4,8 +4,8 @@ server {
 	server_name mozz.asuscomm.com;
 
 	ssl on;
-	ssl_certificate /var/www/app/ssl_sertificats/mozz/07-10/cert.pem;
-	ssl_certificate_key /var/www/app/ssl_sertificats/mozz/07-10/privkey.pem;
+	ssl_certificate /var/www/app/ssl_sertificats/mozz/06-09/cert.pem;
+	ssl_certificate_key /var/www/app/ssl_sertificats/mozz/06-09/privkey.pem;
 
 	error_page 497  https://$host:$server_port$request_uri;
 
@@ -45,8 +45,8 @@ server {
 	listen 443 ssl;
 	server_name mozz.asuscomm.com;
 
-	ssl_certificate /var/www/app/ssl_sertificats/mozz/07-10/cert.pem;
-	ssl_certificate_key /var/www/app/ssl_sertificats/mozz/07-10/privkey.pem;
+	ssl_certificate /var/www/app/ssl_sertificats/mozz/06-09/cert.pem;
+	ssl_certificate_key /var/www/app/ssl_sertificats/mozz/06-09/privkey.pem;
 
 	error_page 497  https://$host:$server_port$request_uri;
 
