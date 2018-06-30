@@ -135,7 +135,12 @@ $(document).ready(function() {
                     settings = data['data'];
                     console.log(settings);
                     toggle_buttons();
-                }
+                },
+            error: function(data) {
+                console.error("Can't save settings");
+                console.error(data);
+                alert("Сталася помилка при збереженні параметрів. Спробуйте ще раз.")
+            }
             });
         }
 
@@ -165,6 +170,11 @@ $(document).ready(function() {
                     settings = data['data'];
                     console.log(settings);
                     toggle_buttons();
+                },
+                error: function(data) {
+                    console.error("Can't save settings");
+                    console.error(data);
+                    alert("Сталася помилка при збереженні параметрів. Спробуйте ще раз.")
                 }
             });
         }
@@ -200,7 +210,13 @@ $(document).ready(function() {
             success: function(data) {
                 settings = data['data'];
                 console.log(settings);
-                $('#greenhouse_settings_modal').modal('show');
+                $('#greenhouse_settings_modal').modal('hide');
+            },
+            error: function(data) {
+                console.error("Can't save settings");
+                console.error(data);
+                $('#greenhouse_settings_modal').modal('hide');
+                alert("Сталася помилка при збереженні параметрів. Спробуйте ще раз.")
             }
         });
 
@@ -226,6 +242,11 @@ $(document).ready(function() {
                 console.log(settings);
                 toggle_buttons();
                 alert("Aвтоматичне керування увімкнено");
+            },
+            error: function(data) {
+                console.error("Can't save settings");
+                console.error(data);
+                alert("Сталася помилка при збереженні параметрів. Спробуйте ще раз.")
             }
         });
 
@@ -250,6 +271,11 @@ $(document).ready(function() {
                 console.log(settings);
                 toggle_buttons();
                 alert("Aвтоматичне керування вимкнено");
+            },
+            error: function(data) {
+                console.error("Can't save settings");
+                console.error(data);
+                alert("Сталася помилка при збереженні параметрів. Спробуйте ще раз.")
             }
         });
     });

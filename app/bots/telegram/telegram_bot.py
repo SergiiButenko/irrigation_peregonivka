@@ -35,10 +35,6 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'HEAD'])
 def index():
     return 'OK'
-# def webhook():
-#     bot.remove_webhook()
-#     bot.set_webhook(url='https://your_heroku_project.com/' + TOKEN)
-#     return "!", 200
 
 
 # Process webhook calls
@@ -107,6 +103,5 @@ logging.info('start')
 bot.remove_webhook()
 time.sleep(0.1)
 # Set webhook
-bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
-                certificate=open(WEBHOOK_SSL_CERT, 'r'))
+bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
 time.sleep(0.1)

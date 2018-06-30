@@ -2,11 +2,12 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
-
-byte MINUTES_TILL_FIRST_PING = 3;
+#include <ESP8266mDNS.h>
 
 byte GPIO_Pin = D6;
 
+byte delay_between_requests = 1000;
+byte delay_between_filled_requests = 5000;
 int counter = 0;
 int counter_max = 300;
 int delay_for_counter_millis = 10;
@@ -16,13 +17,35 @@ byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
 
 const char *host = "http://192.168.1.22:8000";
-const char *host_2 = "http://192.168.1.22:7542";
-String id = "upper_tank";
+
+String device_id = "upper_tank";
 
 //const char* ssid = "NotebookNet";
 //const char* password = "0660101327";
 const char* ssid = "faza_2";
 const char* password = "Kobe_2016";
+
+ESP8266WebServer server(80);
+
+void handleRoot() {
+  server.send(200, "application/json", "{\"device_id\":" + String(device_id) + ", \"counter\":" + String(counter) + "}");
+}
+
+void handleNotFound(){
+  String message = "File Not Found\n\n";
+  message += "URI: ";
+  message += server.uri();
+  message += "\nMethod: ";
+  message += (server.method() == HTTP_GET)?"GET":"POST";
+  message += "\nArguments: ";
+  message += server.args();
+  message += "\n";
+  for (uint8_t i=0; i<server.args(); i++){
+    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
+  }
+  server.send(404, "text/plain", message);
+}
+
 
 void setup() {
   Serial.begin(115200);
@@ -31,7 +54,7 @@ void setup() {
   pinMode(GPIO_Pin, INPUT_PULLUP);
 
   Serial.begin(115200);
-  WiFi.setAutoConnect (true);
+  WiFi.setAutoConnect(true);
   WiFi.mode(WIFI_STA);
 
   WiFi.begin(ssid, password);
@@ -50,87 +73,29 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
+  if (MDNS.begin("esp8266")) {
+    Serial.println("MDNS responder started");
+  }
+
+  server.on("/", handleRoot);
+  server.onNotFound(handleNotFound);
+  server.begin();
+
   send_ping();
 }
 
 void loop() {
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("Wait for connection");
-    WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-    }
-
-    Serial.println("");
-    Serial.print("Connected to ");
-    Serial.println(ssid);
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
-  }
+  check_wifi_connection();
+  server.handleClient();
 
   if (counter >= counter_max) {
     Serial.println(counter);
     Serial.println(counter >= counter_max);
 
-    for (int i = 1; i <= retry_limit; i++) {
-      Serial.println("Initialising http connection");
-      HTTPClient http;
-
-      Serial.print("Sending GET request for stop. ");
-      Serial.print(i);
-      Serial.print(" try out of ");
-      Serial.print(retry_limit);
-      Serial.print(". Host: ");
-      Serial.println(host);
-      Serial.println("Sending GET request");
-
-      http.begin(host + String("/stop_filling?device_id=") + String(id));
-      int httpCode = http.GET();            //Send the request
-      String payload = http.getString();    //Get the response payload
-
-      Serial.print("httpCode: ");
-      Serial.println(httpCode);   //Print HTTP return code
-      Serial.print("payload: ");
-      Serial.println(payload);    //Print request response payload
-
-      http.end();  //Close connection
-
-      if (httpCode == 200) {
-        break;
-      } else {
-        Serial.println("Initialising http connection");
-        HTTPClient http;
-
-        Serial.print("Sending GET request for stop. ");
-        Serial.print(i);
-        Serial.print(" try out of ");
-        Serial.print(retry_limit);
-        Serial.print(". Host: ");
-        Serial.println(host_2);
-        Serial.println("Sending GET request");
-
-        http.begin(host_2 + String("/stop_filling?device_id=") + String(id));
-        int httpCode = http.GET();            //Send the request
-        String payload = http.getString();    //Get the response payload
-
-        Serial.print("httpCode: ");
-        Serial.println(httpCode);   //Print HTTP return code
-        Serial.print("payload: ");
-        Serial.println(payload);    //Print request response payload
-
-        http.end();  //Close connection
-
-        if (httpCode == 200) {
-          break;
-        }
-      }
-
-      delay(1000);
-    }
-
+    send_request(host + String("/stop_filling?device_id=") + String(device_id));
+    
     counter = 0;
-    delay(5000);
+    delay(delay_between_filled_requests);
   }
 
   ping();
@@ -148,67 +113,14 @@ void count_signal() {
 void ping() {
   if ( int((millis() - current_time) / 60000) >= TIME_LIMIT_MINUTES ) {
     send_ping();
+    current_time = millis();
   }
 }
 
 
 void send_ping() {
-  for (int i = 1; i <= retry_limit; i++) {
-    Serial.println("Initialising http connection for ping");
-    HTTPClient http;
-
-    Serial.print("Sending GET request for ping. ");
-    Serial.print(i);
-    Serial.print(" try out of ");
-    Serial.print(retry_limit);
-    Serial.print(". host:");
-    Serial.println(host);
-
-    http.begin(host + String("/im_alive?device_id=") + String(id));
-    int httpCode = http.GET();            //Send the request
-    String payload = http.getString();    //Get the response payload
-
-    Serial.print("httpCode: ");
-    Serial.println(httpCode);   //Print HTTP return code
-    Serial.print("payload: ");
-    Serial.println(payload);    //Print request response payload
-
-    http.end();  //Close connection
-
-    if (httpCode == 200) {
-      break;
-    } else {
-      Serial.println("Initialising https connection for ping");
-      HTTPClient http;
-
-      Serial.print("Sending GET request for ping. ");
-      Serial.print(i);
-      Serial.print(" try out of ");
-      Serial.print(retry_limit);
-      Serial.print(". host:");
-      Serial.println(host_2);
-      http.begin(host_2 + String("/im_alive?device_id=") + String(id));
-      int httpCode = http.GET();            //Send the request
-      String payload = http.getString();    //Get the response payload
-
-      Serial.print("httpCode: ");
-      Serial.println(httpCode);   //Print HTTP return code
-      Serial.print("payload: ");
-      Serial.println(payload);    //Print request response payload
-
-      http.end();  //Close connection
-
-      if (httpCode == 200) {
-        break;
-      }
-    }
-
-    delay(1000);
-  }
-
-  current_time = millis();
+  send_request(host + String("/im_alive?device_id=") + String(device_id))
 }
-
 
 void increase_counter() {
   if (counter >= 0 and counter <= counter_max) {
@@ -225,5 +137,55 @@ void decrease_counter() {
     counter--;
   } else {
     counter = 0;
+  }
+}
+
+
+void check_wifi_connection(){
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Wait for connection");
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+
+    Serial.println("");
+    Serial.print("Connected to ");
+    Serial.println(ssid);
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+  }
+}
+
+void send_request(String req){
+  for (int i = 1; i <= retry_limit; i++) {
+    HTTPClient http;
+
+    Serial.println("Sending GET request:");
+    Serial.println(reg);
+    Serial.print(i);
+    Serial.print(" try out of ");
+    Serial.print(retry_limit);
+    Serial.print(". host:");
+    Serial.println(host);
+
+    http.begin(req);
+    
+    int httpCode = http.GET();            //Send the request
+    String payload = http.getString();    //Get the response payload
+
+    Serial.print("httpCode: ");
+    Serial.println(httpCode);   //Print HTTP return code
+    Serial.print("payload: ");
+    Serial.println(payload);    //Print request response payload
+
+    http.end();  //Close connection
+
+    if (httpCode == 200) {
+      break;
+    }
+
+    delay(delay_between_requests);
   }
 }
