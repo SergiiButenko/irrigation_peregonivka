@@ -46,7 +46,7 @@ server {
 server {
 	listen 443 ssl;
     listen [::]:443 ssl;
-	server_name poliv.mozz.asuscomm.com www.poliv.mozz.asuscomm.com;
+	server_name poliv.mozz.asuscomm.com;
 
 	ssl on;
 	ssl_certificate /var/www/app/ssl_sertificats/mozz/06-09/cert.pem;
@@ -86,13 +86,13 @@ server {
 server {
     listen 80;
     listen [::]:80;
-    server_name poliv.mozz.asuscomm.com www.poliv.mozz.asuscomm.com;
+    server_name poliv.mozz.asuscomm.com;
     return 301 https://poliv.mozz.asuscomm.com$request_uri;
 }
 
 server {
 	listen 88 ssl;
-	server_name poliv.mozz.asuscomm.com www.poliv.mozz.asuscomm.com;
+	server_name poliv.mozz.asuscomm.com;
 
 	ssl_certificate /var/www/app/ssl_sertificats/mozz/06-09/cert.pem;
 	ssl_certificate_key /var/www/app/ssl_sertificats/mozz/06-09/privkey.pem;
