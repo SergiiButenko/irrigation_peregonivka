@@ -33,26 +33,3 @@ server {
 		      proxy_set_header Connection "upgrade";
 		    }
        }
-
-
-server {
-        listen 80;
-        listen [::]:80;
-        server_name mozz.asuscomm.com;
-
-        location / {
-  					return 404;
-                   }
-       }
-
-
-server {
-        listen 80;
-        listen [::]:80;
-        server_name poliv.mozz.asuscomm.com;
-
-        location / {
-  					return 405;
-                   }
-       }
-
