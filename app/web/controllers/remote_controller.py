@@ -1,11 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+twoup = os.path.dirname(parentdir)
+sys.path.insert(0, twoup)
 import logging
 import requests
 import json
 import time
-from itertools import groupby
-from operator import itemgetter
 from common import sqlite_database as database
 from common.common import *
 
@@ -26,14 +29,15 @@ def setup_lines_remote_control():
                 continue
 
             LINES[key] = {'id': row[0],
-                             'relay_num': row[1],
-                             'is_pump': row[2],
-                             'is_except': row[3],
-                             'group_id': row[4],
-                             'line_name': row[5],
-                             'group_name': row[6],
-                             'base_url': row[7],
-                             'state': -1}
+                          'relay_num': row[1],
+                          'is_pump': row[2],
+                          'is_except': row[3],
+                          'group_id': row[4],
+                          'line_name': row[5],
+                          'group_name': row[6],
+                          'base_url': row[7],
+                          'device_id': row[8],
+                          'state': -1}
 
         logging.info(LINES)
     except Exception as e:
@@ -187,5 +191,31 @@ def line_status(line_id):
         logging.error(e)
         logging.error("Can't get line status status. Exception occured. Set status -1")
         r_dict[line_id] = dict(id=line_id, state=-1)
+
+    return r_dict
+
+
+def check_tank_status(line_id):
+    r_dict = {}
+
+    try:
+        base_url = LINES[line_id]['base_url']
+        device_id = LINES[line_id]['device_id']
+
+        response = requests.get(url='http://' + base_url, timeout=(5, 5))
+        response.raise_for_status()
+
+        logging.info('response {0}'.format(str(response.text)))
+
+        response = json.loads(response.text)
+        if response['device_id'] == device_id:
+            r_dict[line_id] = dict(id=line_id, device_state=1)
+        else:
+            r_dict[line_id] = dict(id=line_id, device_state=-1)
+
+    except Exception as e:
+        logging.error(e)
+        logging.error("Can't check tank status. Exception occured. Set status -1")
+        r_dict[line_id] = dict(id=line_id, device_state=-1)
 
     return r_dict

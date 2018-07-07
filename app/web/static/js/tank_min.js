@@ -4,6 +4,7 @@ var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
 
 var branch = [];
+var devices = {};
 
 $(document).ready(function() {
     var socket = io.connect(server, {
@@ -37,6 +38,16 @@ $(document).ready(function() {
                     'start_time': new Date(item['start_time'])
                 }
             }
+        }
+    });
+
+
+    //Check devices
+    $.ajax({
+        url: '/device_status',
+        success: function(data) {
+            devices = date['devices']
+            update_devices(data);
         }
     });
 
@@ -87,9 +98,7 @@ $(document).ready(function() {
 
         var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
         irrigation_date = $('#tank_modal').find('.irrigation_date');
-        $(irrigation_date).val(convert_date(tomorrow));
-        console.log(convert_date(tomorrow))
-        console.log(irrigation_date)
+        $(irrigation_date).val(convert_date(tomorrow));        
 
         irrigation_time = $('#tank_modal').find('.irrigation_time');
         $(irrigation_time).val(convert_date_to_time(start_time));
@@ -190,6 +199,12 @@ $(document).ready(function() {
 });
 
 function branch_on(index, time_minutes) {
+    if (devices[index]['device_state'] == 0) {
+        var returnVal = confirm("Я не зміг підлючитися до датчика, що вимикає наповнення. \n Наповнення вимкнеться через "+time_minutes+" хвилин. \n Ви згодні?");
+            if (returnVal == false)
+                return;
+    }
+
     $.ajax({
         url: '/activate_branch',
         type: "get",
@@ -242,6 +257,23 @@ function update_branches_request() {
             set_status_error();
         }
     });
+}
+
+function update_devices(arr) {
+    arr = json['devices']
+
+    for (key in arr) {
+        toogle_device_for_card(key, arr[key]);
+    }    
+}
+
+function toogle_device_for_card(element_id, device) {
+    device_state = device['device_state']
+    if (device_state == 1) {
+        $('#device-' + element_id).hide().addClass("hidden");        
+    } else {
+        $('#device-' + element_id).css('display', 'inline-block').removeClass("hidden");
+    }
 }
 
 function update_branches(json) {

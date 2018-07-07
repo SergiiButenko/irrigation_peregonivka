@@ -625,7 +625,6 @@ def add_ongoing_rule(rules):
     send_history_change_message()
 
 
-
 @app.route("/add_ongoing_rule", methods=['POST'])
 def add_ongoing_rule_endpoint():
     """Used in add rule modal window."""
@@ -791,8 +790,7 @@ def plan():
             'active': 1,
             'rule_id': str(uuid.uuid4()),
             'days': -1,
-            'line_name': line['name']
-            }
+            'line_name': line['name']}
         rules.append(new_rule)
         new_delta = 2 * (new_rule['time'] * new_rule['intervals'] + new_rule['time_wait'] * (new_rule['intervals'] - 1))
         start_time = start_time + datetime.timedelta(minutes=new_delta)
@@ -902,6 +900,23 @@ def lighting_status():
         arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
         return jsonify(branches=arr)
+    except Exception as e:
+        logging.error(e)
+        logging.error("Can't get Raspberri Pi pin status. Exception occured")
+        abort(500)
+
+
+@app.route('/device_status', methods=['GET'])
+def device_status():
+    """Return status of lightingn relay."""
+    try:
+        lines = {}
+        for line_id, line in BRANCHES_SETTINGS.items():
+            if line['line_type'] == 'device':
+                response_status = remote_controller.check_tank_status(line_id=line_id)
+                lines[line_id] = dict(id=line_id, device_state=int(response_status[line_id]['device_state']))
+
+        return jsonify(devices=lines)
     except Exception as e:
         logging.error(e)
         logging.error("Can't get Raspberri Pi pin status. Exception occured")

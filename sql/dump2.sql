@@ -95,23 +95,23 @@ CREATE TABLE lines (
     is_pump integer not null default 0, 
     is_except integer not null default 0, 
     pump_pin integer,
-    moisture_id integer,
+    device_id text,
     FOREIGN KEY(group_id) REFERENCES line_groups(id));
-INSERT INTO lines VALUES(1,1,'Насос AL-KO',10,2,15,'2017-06-29 18:34:00','irrigation',NULL,0,NULL,16,1,1,1,NULL,NULL);
-INSERT INTO lines VALUES(2,2,'Полуниця клумба',10,2,15,'2017-06-29 19:00:00','irrigation',NULL,1,15,NULL,2,0,0,16,1);
-INSERT INTO lines VALUES(3,3,'Квіти',15,2,15,'2017-06-29 07:00:00','irrigation',NULL,1,14,NULL,2,0,0,16,2);
-INSERT INTO lines VALUES(4,4,'Малина',10,2,15,'2017-06-29 20:00:00','irrigation',NULL,1,13,NULL,2,0,0,16,3);
-INSERT INTO lines VALUES(5,5,'Огірки',10,2,15,'2017-06-29 21:00:00','irrigation',NULL,1,2,NULL,2,0,0,16,4);
-INSERT INTO lines VALUES(6,6,'Томати',10,2,15,'2017-06-29 06:00:00','irrigation',NULL,1,1,NULL,2,0,0,16,5);
-INSERT INTO lines VALUES(7,7,'Ліхтар',300,1,1,'2017-06-29 18:34:00','lighting','192.168.1.133',0,2,NULL,4,0,1,NULL,NULL);
-INSERT INTO lines VALUES(10,10,'Повітря в теплиці',0,0,0,'2017-06-29 18:30:00','air_sensor','192.168.1.102',0,NULL,NULL,5,0,1,NULL,NULL);
-INSERT INTO lines VALUES(11,11,'Повітря на вулиці',0,0,0,'2017-06-29 18:30:00','ground_sensor','192.168.1.102',0,NULL,NULL,5,0,1,NULL,NULL);
-INSERT INTO lines VALUES(12,12,'Підігрів',10800,1,1,'2017-06-29 18:34:00','greenhouse','192.168.1.102',0,1,NULL,4,0,1,NULL,NULL);
-INSERT INTO lines VALUES(13,13,'Полуниця альтанка',10,2,15,'2017-06-29 08:00:00','irrigation',NULL,1,5,NULL,2,0,0,16,NULL);
-INSERT INTO lines VALUES(14,14,'Верхня бочка',480,1,1,'2017-06-29 00:00:00','tank',NULL,0,NULL,20,5,0,1,NULL,NULL);
-INSERT INTO lines VALUES(16,16,'Будиночок',300,1,1,'2017-06-29 18:34:00','lighting','192.168.1.234',0,2,NULL,4,0,1,NULL,NULL);
-INSERT INTO lines VALUES(5,5, 'Огірки',10,2,15,'2017-06-29 21:00:00','irrigation',NULL,1,2,NULL,2,0,0,16,4);
-INSERT INTO lines VALUES(19,19,'Газон',10,2,15,'2017-06-29 01:00:00','irrigation',NULL,1,3,NULL,2,0,0,16,NULL);
+INSERT INTO lines VALUES(1,1,'Насос AL-KO',10,2,15,'2017-06-29 18:34:00','irrigation',NULL,0,NULL,16,1,1,1,NULL);
+INSERT INTO lines VALUES(2,2,'Полуниця клумба',10,2,15,'2017-06-29 19:00:00','irrigation',NULL,1,15,NULL,2,0,0,16);
+INSERT INTO lines VALUES(3,3,'Квіти',15,2,15,'2017-06-29 07:00:00','irrigation',NULL,1,14,NULL,2,0,0,16);
+INSERT INTO lines VALUES(4,4,'Малина',10,2,15,'2017-06-29 20:00:00','irrigation',NULL,1,13,NULL,2,0,0,16);
+INSERT INTO lines VALUES(5,5,'Огірки',10,2,15,'2017-06-29 21:00:00','irrigation',NULL,1,2,NULL,2,0,0,16);
+INSERT INTO lines VALUES(6,6,'Томати',10,2,15,'2017-06-29 06:00:00','irrigation',NULL,1,1,NULL,2,0,0,16);
+INSERT INTO lines VALUES(7,7,'Ліхтар',300,1,1,'2017-06-29 18:34:00','lighting','192.168.1.133',0,2,NULL,4,0,1,NULL);
+INSERT INTO lines VALUES(10,10,'Повітря в теплиці',0,0,0,'2017-06-29 18:30:00','air_sensor','192.168.1.102',0,NULL,NULL,5,0,1,NULL);
+INSERT INTO lines VALUES(11,11,'Повітря на вулиці',0,0,0,'2017-06-29 18:30:00','ground_sensor','192.168.1.102',0,NULL,NULL,5,0,1,NULL);
+INSERT INTO lines VALUES(12,12,'Підігрів',10800,1,1,'2017-06-29 18:34:00','greenhouse','192.168.1.102',0,1,NULL,4,0,1,NULL);
+INSERT INTO lines VALUES(13,13,'Полуниця альтанка',10,2,15,'2017-06-29 08:00:00','irrigation',NULL,1,5,NULL,2,0,0,16);
+INSERT INTO lines VALUES(14,14,'Верхня бочка',480,1,1,'2017-06-29 00:00:00','tank',NULL,0,NULL,20,5,0,1,NULL, 'upper_tank');
+INSERT INTO lines VALUES(16,16,'Будиночок',300,1,1,'2017-06-29 18:34:00','lighting','192.168.1.234',0,2,NULL,4,0,1,NULL);
+INSERT INTO lines VALUES(5,5, 'Огірки',10,2,15,'2017-06-29 21:00:00','irrigation',NULL,1,2,NULL,2,0,0,16);
+INSERT INTO lines VALUES(19,19,'Газон',10,2,15,'2017-06-29 01:00:00','irrigation',NULL,1,3,NULL,2,0,0,16);
 
 CREATE TABLE temperature (
     id INTEGER PRIMARY KEY,

@@ -4,9 +4,7 @@ import os,sys,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 twoup = os.path.dirname(parentdir)
-sys.path.insert(0, twoup) 
-
-
+sys.path.insert(0, twoup)
 import logging
 import time
 import RPi.GPIO as GPIO
@@ -30,7 +28,7 @@ def setup_lines():
     """Fill up settings array to save settings for branches."""
     try:
         GPIO.setwarnings(False)
-        lines = database.select(database.QUERY[mn() + '_lines'])             
+        lines = database.select(database.QUERY[mn() + '_lines'])
         for row in lines:
             key = row[0]
 
