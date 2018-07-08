@@ -193,7 +193,7 @@ $(document).ready(function() {
 
 function branch_on(index, time_minutes) {
     if (devices[index]['device_state'] != 1) {
-        var returnVal = confirm("Я не зміг підлючитися до датчика, що вимикає наповнення. \n Наповнення вимкнеться через "+time_minutes+" хвилин. \n Ви згодні?");
+        var returnVal = confirm("Я не зміг підлючитися до датчика, що вимикає наповнення.\nНаповнення вимкнеться через "+time_minutes+" хвилин.\nВи згодні?");
             if (returnVal == false)
                 return;
     }
@@ -277,14 +277,17 @@ function update_devices(json) {
 function toogle_device_for_card(element_id, device) {
     device_state = device['device_state']
     if (device_state == 1) {
-        $('#device-' + element_id).hide().addClass("hidden");        
+        $('#device-error-' + element_id).hide().addClass("hidden");
+        $('#device-ok-' + element_id).css('display', 'inline-block').removeClass("hidden");
     } else {
-        $('#device-' + element_id).css('display', 'inline-block').removeClass("hidden");
+        $('#device-ok-' + element_id).hide().addClass("hidden");
+        $('#device-error-' + element_id).css('display', 'inline-block').removeClass("hidden");
     }
 }
 
 function set_device_error() {
-    $("[id^=device]").css('display', 'inline-block').removeClass("hidden");
+    $("[id^=device-ok]").hide().addClass("hidden");
+    $("[id^=device-error]").css('display', 'inline-block').removeClass("hidden");
 }
 
 function update_branches(json) {
