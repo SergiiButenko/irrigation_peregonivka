@@ -1,3 +1,8 @@
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+twoup = os.path.dirname(parentdir)
+sys.path.insert(0, twoup)
 import sqlite3
 import logging
 import json
@@ -7,7 +12,7 @@ from collections import OrderedDict
 import ast
 from common.redis import *
 from common.common import *
-from config import *
+from config.config import *
 
 
 QUERY = {}
@@ -294,9 +299,9 @@ def get_temperature2():
             _avr_temp_out_air = round(_sum_temp_out_air / (_quant_11 or 1), 1)
 
             grouped_by_line_id[key] = {'temp_air': _avr_temp_air,
-            'hum_air': _avr_hum_air,
-            'temp_out': _avr_temp_out_air,
-            'hour': key}
+                                       'hum_air': _avr_hum_air,
+                                       'temp_out': _avr_temp_out_air,
+                                       'hour': key}
 
         return grouped_by_line_id
 
@@ -313,12 +318,8 @@ def get_temperature():
 
         grouped = {}
         for key, group in groupby(list_arr, itemgetter(0)):
-            grouped[key] = {
-            'sensor_id': key,
-            # 'sensor_name': 
-            # 'sensor_type': 
-            'values': [list(thing) for thing in group]
-            }
+            grouped[key] = {'sensor_id': key,
+                            'values': [list(thing) for thing in group]}
 
         for s_id, sensor in grouped.items():
             sensor['values'].sort(key=itemgetter(5), reverse=True)

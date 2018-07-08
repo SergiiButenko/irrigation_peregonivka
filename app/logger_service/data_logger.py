@@ -2,7 +2,7 @@ import os,sys,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 twoup = os.path.dirname(parentdir)
-sys.path.insert(0, parentdir) 
+sys.path.insert(0, parentdir)
 
 import logging
 import time
@@ -20,15 +20,11 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)
 requests.packages.urllib3.disable_warnings()
 
 # Software SPI configuration:
-CLK  = 18
+CLK = 18
 MISO = 23
 MOSI = 24
-CS   = 25
+CS = 25
 mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
-
-#GPIO.setmode(GPIO.BCM)
-#GPIO.setup(15, GPIO.OUT, initial=GPIO.LOW)
-
 
 SENSORS = {}
 LINES = {}
@@ -106,14 +102,3 @@ if __name__ == "__main__":
     remote_controller.init_remote_lines()
     temp_sensors()
     logging.info("Done!")
-
-# while True:
-#     # Read all the ADC channel values in a list.
-#     values = [0]*8
-#     for i in range(8):
-#         # The read_adc function will get the value of the specified channel (0-7).
-#         values[i] = mcp.read_adc(i)
-#     # Print the ADC values.
-#     print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
-#     # Pause for half a second.
-#     time.sleep(0.5)

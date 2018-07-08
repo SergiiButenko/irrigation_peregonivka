@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import os,sys,inspect
+import os, sys, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 twoup = os.path.dirname(parentdir)
@@ -11,6 +11,7 @@ import json
 import time
 from common import sqlite_database as database
 from common.common import *
+from config.config import *
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)

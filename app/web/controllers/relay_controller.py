@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import os,sys,inspect
+import os, sys, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 twoup = os.path.dirname(parentdir)
@@ -12,6 +12,7 @@ from itertools import groupby
 from operator import itemgetter
 from common import sqlite_database as database
 from common.common import *
+from config.config import *
 import threading
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
@@ -36,22 +37,22 @@ def setup_lines():
                 continue
 
             LINES[key] = {'id': row[0],
-                             's0': row[1],
-                             's1': row[2],
-                             's2': row[3],
-                             's3': row[4],
-                             'en': row[5],
-                             'pump_enabled': row[6],
-                             'pin': row[7],
-                             'multiplex': row[8],
-                             'relay_num': row[9],
-                             'is_pump': row[10],
-                             'is_except': row[11],
-                             'group_id': row[12],
-                             'pump_pin': row[13],
-                             'line_name': row[14],
-                             'group_name': row[15],
-                             'state': -1}
+                          's0': row[1],
+                          's1': row[2],
+                          's2': row[3],
+                          's3': row[4],
+                          'en': row[5],
+                          'pump_enabled': row[6],
+                          'pin': row[7],
+                          'multiplex': row[8],
+                          'relay_num': row[9],
+                          'is_pump': row[10],
+                          'is_except': row[11],
+                          'group_id': row[12],
+                          'pump_pin': row[13],
+                          'line_name': row[14],
+                          'group_name': row[15],
+                          'state': -1}
 
             if LINES[key]['multiplex'] == 1:
                 GPIO.setup(LINES[key]['s0'], GPIO.OUT, initial=GPIO.LOW)

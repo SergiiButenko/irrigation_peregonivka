@@ -46,7 +46,7 @@ $(document).ready(function() {
     $.ajax({
         url: '/device_status',
         success: function(data) {
-            devices = date['devices']
+            devices = data['devices']
             update_devices(data);
         }
     });

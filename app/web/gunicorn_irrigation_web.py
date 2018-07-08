@@ -29,6 +29,7 @@ from controllers import remote_controller as remote_controller
 from common import sqlite_database as database
 from common.redis import *
 from common.common import *
+from config.config import *
 import ast
 
 eventlet.monkey_patch()
