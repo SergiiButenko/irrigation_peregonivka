@@ -42,15 +42,7 @@ $(document).ready(function() {
     });
 
 
-    //Check devices
-    $.ajax({
-        url: '/device_status',
-        success: function(data) {
-            devices = data['devices']
-            update_devices(data);
-        }
-    });
-
+    
 
     (function worker2() {
         $.ajax({
@@ -66,6 +58,7 @@ $(document).ready(function() {
                 console.log("connected to raspberry");
 
                 update_branches(data);
+                update_devices_request();
 
                 set_status_ok();
                 setTimeout(worker2, arduino_check_connect_sec * 1000);
@@ -259,6 +252,19 @@ function update_branches_request() {
     });
 }
 
+function update_devices_request() {
+    //Check devices
+    $.ajax({
+        url: '/device_status',
+            success: function(data) {
+                devices = data['devices']
+                update_devices(data);
+            },
+            error: function() {
+                set_device_error();
+            }});
+}
+
 function update_devices(json) {
     arr = json['devices']
     console.log(arr)
@@ -275,6 +281,10 @@ function toogle_device_for_card(element_id, device) {
     } else {
         $('#device-' + element_id).css('display', 'inline-block').removeClass("hidden");
     }
+}
+
+function set_device_error() {
+    $("[id^=device]").css('display', 'inline-block').removeClass("hidden");
 }
 
 function update_branches(json) {
