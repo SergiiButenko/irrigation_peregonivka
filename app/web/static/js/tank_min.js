@@ -261,9 +261,10 @@ function update_branches_request() {
 
 function update_devices(arr) {
     arr = json['devices']
-
+    console.log(arr)
     for (key in arr) {
         toogle_device_for_card(key, arr[key]);
+        console.log(arr[key])
     }    
 }
 

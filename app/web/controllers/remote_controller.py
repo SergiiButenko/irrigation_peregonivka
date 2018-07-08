@@ -25,7 +25,7 @@ def setup_lines_remote_control():
         for row in lines:
             key = row[0]
 
-            if row[7] is None or row[9] is None:
+            if row[7] is None and row[9] is None:
                 continue
 
             LINES[key] = {'id': row[0],
