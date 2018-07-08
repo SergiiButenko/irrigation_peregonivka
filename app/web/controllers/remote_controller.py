@@ -25,7 +25,7 @@ def setup_lines_remote_control():
         for row in lines:
             key = row[0]
 
-            if row[7] is None:
+            if row[7] is None or row[9] is None:
                 continue
 
             LINES[key] = {'id': row[0],
@@ -37,6 +37,7 @@ def setup_lines_remote_control():
                           'group_name': row[6],
                           'base_url': row[7],
                           'device_id': row[8],
+                          'device_url': row[9],
                           'state': -1}
 
         logging.info(LINES)
@@ -53,7 +54,7 @@ def on(line_id):
     try:
         relay = LINES[line_id]['relay_num']
         base_url = LINES[line_id]['base_url']
-        response_on = requests.get(url='http://' + base_url + '/on', params={'relay': relay}, timeout=(5, 5))
+        response_on = requests.get(url='http://' + base_url + '/on', params={'relay': relay}, timeout=(READ_TIMEOUT, RESP_TIMEOUT))
         response_on.raise_for_status()
 
         logging.info('response {0}'.format(str(response_on.text)))
@@ -70,7 +71,7 @@ def off(line_id):
     try:
         relay = LINES[line_id]['relay_num']
         base_url = LINES[line_id]['base_url']
-        response_off = requests.get(url='http://' + base_url + '/off', params={'relay': relay}, timeout=(5, 5))
+        response_off = requests.get(url='http://' + base_url + '/off', params={'relay': relay}, timeout=(READ_TIMEOUT, RESP_TIMEOUT))
         response_off.raise_for_status()
 
         logging.info('response {0}'.format(str(response_off.text)))
@@ -85,7 +86,7 @@ def air_s(line_id):
     for attempt in range(2):
         try:
             base_url = LINES[line_id]['base_url']
-            response_air = requests.get(url='http://' + base_url + '/air_temperature', timeout=(10, 10))
+            response_air = requests.get(url='http://' + base_url + '/air_temperature', timeout=(READ_TIMEOUT, RESP_TIMEOUT))
             response_air.raise_for_status()
 
             logging.info('response {0}'.format(str(response_air.text)))
@@ -106,7 +107,7 @@ def ground_s(line_id):
     for attempt in range(2):
         try:
             base_url = LINES[line_id]['base_url']
-            response_air = requests.get(url='http://' + base_url + '/ground_temperature', timeout=(10, 10))
+            response_air = requests.get(url='http://' + base_url + '/ground_temperature', timeout=(READ_TIMEOUT, RESP_TIMEOUT))
             response_air.raise_for_status()
 
             logging.info('response {0}'.format(str(response_air.text)))
@@ -179,7 +180,7 @@ def line_status(line_id):
         base_url = LINES[line_id]['base_url']
         relay = LINES[line_id]['relay_num']
 
-        response = requests.get(url='http://' + base_url + '/status', timeout=(5, 5))
+        response = requests.get(url='http://' + base_url + '/status', timeout=(READ_TIMEOUT, RESP_TIMEOUT))
         response.raise_for_status()
 
         logging.info('response {0}'.format(str(response.text)))
@@ -199,10 +200,10 @@ def check_tank_status(line_id):
     r_dict = {}
 
     try:
-        base_url = LINES[line_id]['base_url']
         device_id = LINES[line_id]['device_id']
+        device_url = LINES[line_id]['device_url']
 
-        response = requests.get(url='http://' + base_url, timeout=(5, 5))
+        response = requests.get(url='http://' + device_url, timeout=(READ_TIMEOUT, RESP_TIMEOUT))
         response.raise_for_status()
 
         logging.info('response {0}'.format(str(response.text)))
@@ -214,7 +215,7 @@ def check_tank_status(line_id):
             r_dict[line_id] = dict(id=line_id, device_state=-1)
 
     except Exception as e:
-        logging.error(e)
+        logging.exception(e)
         logging.error("Can't check tank status. Exception occured. Set status -1")
         r_dict[line_id] = dict(id=line_id, device_state=-1)
 

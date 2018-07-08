@@ -125,7 +125,7 @@ QUERY['setup_lines_lines'] = (
 
 QUERY['setup_lines_remote_control'] = (
     "SELECT l.number, l.relay_num, l.is_pump, l.is_except, "
-    "l.group_id, l.name, lg.name, l.base_url, l.device_id "
+    "l.group_id, l.name, lg.name, l.base_url, l.device_id, l.device_url "
     "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number")
 
 QUERY['setup_sensors_datalogger'] = (
