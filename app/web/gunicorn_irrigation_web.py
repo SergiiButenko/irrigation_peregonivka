@@ -912,7 +912,7 @@ def device_status():
     try:
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
-            if line['line_type'] == 'device':
+            if line['line_type'] == 'tank':
                 response_status = remote_controller.check_tank_status(line_id=line_id)
                 lines[line_id] = dict(id=line_id, device_state=int(response_status[line_id]['device_state']))
 
