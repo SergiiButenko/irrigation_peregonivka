@@ -199,7 +199,7 @@ $(document).ready(function() {
 });
 
 function branch_on(index, time_minutes) {
-    if (devices[index]['device_state'] == 0) {
+    if (devices[index]['device_state'] == 1) {
         var returnVal = confirm("Я не зміг підлючитися до датчика, що вимикає наповнення. \n Наповнення вимкнеться через "+time_minutes+" хвилин. \n Ви згодні?");
             if (returnVal == false)
                 return;
@@ -270,9 +270,11 @@ function update_devices(json) {
 
 function toogle_device_for_card(element_id, device) {
     device_state = device['device_state']
-    if (device_state == 1) {
+    if (device_state == -1) {
+        console.log('hide')
         $('#device-' + element_id).hide().addClass("hidden");        
     } else {
+        console.log('show')
         $('#device-' + element_id).css('display', 'inline-block').removeClass("hidden");
     }
 }
