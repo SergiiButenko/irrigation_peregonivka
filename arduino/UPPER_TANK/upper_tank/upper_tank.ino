@@ -28,7 +28,7 @@ const char* password = "Kobe_2016";
 ESP8266WebServer server(80);
 
 void handleRoot() {
-  server.send(200, "application/json", "{\"device_id\":" + String(device_id) + ", \"counter\":" + String(counter) + "}");
+  server.send(200, "application/json", "{\"device_id\": \"" + String(device_id) + "\", \"counter\":" + String(counter) + "}");
 }
 
 void handleNotFound(){

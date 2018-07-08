@@ -259,7 +259,7 @@ function update_branches_request() {
     });
 }
 
-function update_devices(arr) {
+function update_devices(json) {
     arr = json['devices']
     console.log(arr)
     for (key in arr) {
