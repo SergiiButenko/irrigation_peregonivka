@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!-- Bootstrap Material Design generic -->
-    <link rel="stylesheet" type="text/css" href="static/css/boostrap/bootstrap-material-design.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
     <!-- Custom styles for this template -->
     <link href="static/css/custom.css" type="text/css" rel="stylesheet"> {% block custom_css %}{% endblock %}
     <link rel='shortcut icon' type='image/x-icon' href='static/icon/favicon.ico' />
@@ -127,7 +127,7 @@
                 <a class="list-group-item" href='/tank'><i class="material-icons" role="presentation">report</i>Бочка</a>
                 <a class="list-group-item" href='/ongoing_rules'><i class="material-icons" role="presentation">report</i>Щоденник поливу</a>
                 <a class="list-group-item" href='/history'><i class="material-icons" role="presentation">alarm</i>Розклад</a>
-                <a class="list-group-item" href='/pumps'><i class="material-icons" role="presentation">forum</i>Насос</a> 
+                <a class="list-group-item" href='/pumps'><i class="material-icons" role="presentation">forum</i>Насос</a>
             </ul>
         </div>
         <main class="bmd-layout-content">
@@ -136,9 +136,11 @@
             </div>
         </main>
     </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.rawgit.com/HubSpot/tether/v1.3.4/dist/js/tether.min.js"></script>
-    <script type="text/javascript" src="static/js/boostrap/bootstrap-material-design.min.js"></script>
+    <!-- <script type="text/javascript" src="static/js/boostrap/bootstrap-material-design.min.js"></script> -->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/js/ie10-viewport-bug-workaround.js"></script>
     <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
