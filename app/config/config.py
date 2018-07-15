@@ -30,7 +30,7 @@ LINE_HEAT_SENSOR = 11
 LINE_HEAT_HUN_SENSOR = 10
 
 RAIN_HOURS = 12
-RAIN_MAX = 15  # mm per m^2
+RAIN_MAX = 1500  # mm per m^2
 RAIN_CONSTANT_VOLUME = 0.73  # 8.2  ml per 120cm^2 -- 0.069 mm per m^2
 
 TEMP_HOURS = 12
