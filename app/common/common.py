@@ -1,10 +1,17 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-
+import os
+import sys
+import inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+twoup = os.path.dirname(parentdir)
+sys.path.insert(0, parentdir)
 import inspect
 import datetime
 import json
 from pytz import timezone
+from common.common import *
 from common import sqlite_database as database
 import logging
 
