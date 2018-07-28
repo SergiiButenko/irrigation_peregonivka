@@ -45,6 +45,7 @@ requests.packages.urllib3.disable_warnings()
 
 BRANCHES_SETTINGS = {}
 
+
 @app.route("/")
 @cache.cached(timeout=CACHE_TIMEOUT)
 def index():
@@ -301,6 +302,6 @@ def planner():
 
 
 logging.info("Get app settings")
-BRANCHES_SETTINGS = get_settings()
+BRANCHES_SETTINGS = database.get_settings()
 
 logging.info("Staring app")
