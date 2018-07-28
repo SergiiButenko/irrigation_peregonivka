@@ -8,7 +8,7 @@ EnvironmentFile=/etc/environment
 ExecStartPre=/bin/sleep 40
 ExecStart=/usr/local/bin/gunicorn \
 	-w 1 \
-	-b 0.0.0.0:8001 \
+	-b 0.0.0.0:8010 \
 	--pythonpath /var/www/app/bots/telegram/ \
 	--user root \
 	telegram_bot:app

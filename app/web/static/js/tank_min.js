@@ -1,4 +1,5 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+var API_ENDPOINT = '/api/v1/'
 
 var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
@@ -27,7 +28,7 @@ $(document).ready(function() {
 
     //Rename branches
     $.ajax({
-        url: '/tank_settings',
+        url: '/tank_settings' + API_ENDPOINT,
         success: function(data) {
             list = data['list']
             for (j in list) {
@@ -46,7 +47,7 @@ $(document).ready(function() {
 
     (function worker2() {
         $.ajax({
-            url: '/tank_status',
+            url: '/tank_status' + API_ENDPOINT,
             beforeSend: function(xhr, opts) {
                 set_status_spinner();
 
@@ -134,7 +135,7 @@ $(document).ready(function() {
 
             console.log(json)
             $.ajax({
-                url: '/add_ongoing_rule',
+                url: '/add_ongoing_rule' + API_ENDPOINT,
                 type: "post",
                 data: JSON.stringify(json),
                 contentType: "application/json; charset=utf-8",
@@ -173,7 +174,7 @@ $(document).ready(function() {
         console.log(interval_id + " filling schedule will be canceled");
 
         $.ajax({
-            url: server + '/cancel_rule',
+            url: server + '/cancel_rule' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify({ 'list': [interval_id] }),
             contentType: "application/json; charset=utf-8",
@@ -199,7 +200,7 @@ function branch_on(index, time_minutes) {
     }
 
     $.ajax({
-        url: '/activate_branch',
+        url: '/activate_branch' + API_ENDPOINT,
         type: "get",
         data: {
             'id': index,
@@ -221,7 +222,7 @@ function branch_on(index, time_minutes) {
 
 function branch_off(index) {
     $.ajax({
-        url: '/deactivate_branch',
+        url: '/deactivate_branch' + API_ENDPOINT,
         type: "get",
         data: {
             'id': index,
@@ -241,7 +242,7 @@ function branch_off(index) {
 
 function update_branches_request() {
     $.ajax({
-        url: '/tank_status',
+        url: '/tank_status' + API_ENDPOINT,
         success: function(data) {
             update_branches(data);
         },
@@ -255,7 +256,7 @@ function update_branches_request() {
 function update_devices_request() {
     //Check devices
     $.ajax({
-        url: '/device_status',
+        url: '/device_status' + API_ENDPOINT,
             success: function(data) {
                 devices = data['devices']
                 update_devices(data);

@@ -1,4 +1,5 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+var API_ENDPOINT = '/api/v1/'
 
 var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
@@ -28,7 +29,7 @@ $(document).ready(function() {
 
     //Rename branches
     $.ajax({
-        url: '/greenhouse_settings',
+        url: '/greenhouse_settings' + API_ENDPOINT,
         success: function(data) {
             list = data['list']
             for (j in list) {
@@ -43,7 +44,7 @@ $(document).ready(function() {
 
 
     $.ajax({
-        url: '/app_settings',
+        url: '/app_settings' + API_ENDPOINT,
         success: function(data) {
             settings = data['data'];
             console.log(settings);
@@ -54,7 +55,7 @@ $(document).ready(function() {
 
     (function worker2() {
         $.ajax({
-            url: '/greenhouse_status',
+            url: '/greenhouse_status' + API_ENDPOINT,
             beforeSend: function(xhr, opts) {
                 set_status_spinner();
 
@@ -126,7 +127,7 @@ $(document).ready(function() {
                 'list': { 'greenhouse_auto': { 'enabled': '0' } }
             }
             $.ajax({
-                url: '/set_settings',
+                url: '/set_settings' + API_ENDPOINT,
                 type: "post",
                 data: JSON.stringify(json),
                 contentType: "application/json; charset=utf-8",
@@ -161,7 +162,7 @@ $(document).ready(function() {
                 'list': { 'greenhouse_auto': { 'enabled': '0' } }
             }
             $.ajax({
-                url: '/set_settings',
+                url: '/set_settings' + API_ENDPOINT,
                 type: "post",
                 data: JSON.stringify(json),
                 contentType: "application/json; charset=utf-8",
@@ -202,7 +203,7 @@ $(document).ready(function() {
             'list': { 'temp_min_max': { 'min': min, 'max': max } }
         }
         $.ajax({
-            url: '/set_settings',
+            url: '/set_settings' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
@@ -232,7 +233,7 @@ $(document).ready(function() {
             'list': { 'greenhouse_auto': { 'enabled': '1' } }
         }
         $.ajax({
-            url: '/set_settings',
+            url: '/set_settings' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
@@ -261,7 +262,7 @@ $(document).ready(function() {
             'list': { 'greenhouse_auto': { 'enabled': '0' } }
         }
         $.ajax({
-            url: '/set_settings',
+            url: '/set_settings' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
@@ -299,7 +300,7 @@ function toggle_buttons() {
 
 function branch_on(index, time_minutes) {
     $.ajax({
-        url: '/activate_branch',
+        url: '/activate_branch' + API_ENDPOINT,
         type: "get",
         data: {
             'id': index,
@@ -321,7 +322,7 @@ function branch_on(index, time_minutes) {
 
 function branch_off(index) {
     $.ajax({
-        url: '/deactivate_branch',
+        url: '/deactivate_branch' + API_ENDPOINT,
         type: "get",
         data: {
             'id': index,

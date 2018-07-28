@@ -1,4 +1,6 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+var API_ENDPOINT = '/api/v1/'
+
 var branch = [];
 var json = { 'lines': {} };
 
@@ -34,7 +36,7 @@ $(document).ready(function() {
         json['timer'] = parseInt($("#select_line option:selected").val());
 
         $.ajax({
-            url: server + '/plan',
+            url: server + '/plan' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",

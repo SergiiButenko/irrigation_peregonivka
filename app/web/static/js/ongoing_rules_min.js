@@ -1,4 +1,6 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+var API_ENDPOINT = '/api/v1/'
+
 branch = []
 
 $(document).ready(function() {
@@ -100,7 +102,7 @@ $(document).ready(function() {
 
     //Rename branches
     $.ajax({
-        url: '/branch_settings',
+        url: '/branch_settings' + API_ENDPOINT,
         success: function(data) {
             list = data['list']
             for (j in list) {
@@ -238,7 +240,7 @@ function set_events() {
 
         var id = $(this).data('id');
         $.ajax({
-            url: '/remove_ongoing_rule',
+            url: '/remove_ongoing_rule' + API_ENDPOINT,
             type: "get",
             data: {
                 'id': id
@@ -271,7 +273,7 @@ function set_events() {
         var id = $(switcher).data('id')
         if (old_value == false) {
             $.ajax({
-                url: '/activate_ongoing_rule',
+                url: '/activate_ongoing_rule' + API_ENDPOINT,
                 type: "get",
                 data: {
                     'id': id
@@ -288,7 +290,7 @@ function set_events() {
             });
         } else {
             $.ajax({
-                url: '/deactivate_ongoing_rule',
+                url: '/deactivate_ongoing_rule' + API_ENDPOINT,
                 type: "get",
                 data: {
                     'id': id
@@ -330,7 +332,7 @@ function set_events() {
         }
 
         $.ajax({
-            url: '/add_ongoing_rule',
+            url: '/add_ongoing_rule' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
@@ -377,7 +379,7 @@ function set_events() {
         }
 
         $.ajax({
-            url: '/edit_ongoing_rule',
+            url: '/edit_ongoing_rule' + API_ENDPOINT,
             type: "put",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
