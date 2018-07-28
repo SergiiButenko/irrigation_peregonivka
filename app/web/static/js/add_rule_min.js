@@ -1,4 +1,5 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+var API_ENDPOINT = '/api/v1/'
 var branch = [];
 
 $(document).ready(function() {
@@ -52,7 +53,7 @@ $(document).ready(function() {
         });
         
         $.ajax({
-            url: '/add_ongoing_rule',
+            url: '/add_ongoing_rule' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",

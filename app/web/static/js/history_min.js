@@ -1,4 +1,5 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+var API_ENDPOINT = '/api/v1/'
 
 $(document).ready(function() {
     var socket = io.connect(server, {
@@ -57,7 +58,7 @@ function set_events() {
         interval_id = $(schedule_card).data('interval_id');
 
         $.ajax({
-            url: '/cancel_rule',
+            url: '/cancel_rule' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify({ 'list': [interval_id] }),
             contentType: "application/json; charset=utf-8",
@@ -84,7 +85,7 @@ function set_events() {
         });
 
         $.ajax({
-            url: '/cancel_rule',
+            url: '/cancel_rule' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify(list),
             contentType: "application/json; charset=utf-8",

@@ -1,12 +1,12 @@
 var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
-
+var API_ENDPOINT = '/api/v1/'
 var branch = [];
 
 $(document).ready(function() {
     $(".add_rule").on('click', function() {
         $.ajax({
-            url: '/branch_settings',
+            url: '/branch_settings' + API_ENDPOINT,
             success: function(data) {
                 list = data['list']
                 $("#branch_select_plann_modal").find('option').remove();
@@ -81,7 +81,7 @@ $(document).ready(function() {
         });
 
         $.ajax({
-            url: '/add_ongoing_rule',
+            url: '/add_ongoing_rule' + API_ENDPOINT,
             type: "post",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
@@ -103,7 +103,7 @@ $(document).ready(function() {
     //Add arduino touch script to determine if connection is alive
     (function update_weather() {
         $.ajax({
-            url: '/weather',
+            url: '/weather' + API_ENDPOINT,
             success: function(data) {
                 $("#temp").text(data['temperature']);
                 $("#hum").text(data['humidity']);
