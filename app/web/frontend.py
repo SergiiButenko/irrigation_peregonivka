@@ -303,6 +303,6 @@ def planner():
 
 
 logging.info("Get app settings")
-BRANCHES_SETTINGS = database.get_settings()
+BRANCHES_SETTINGS = database.get_settings()[0]
 
 logging.info("Staring app")
