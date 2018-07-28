@@ -47,6 +47,9 @@ CACHE_TIMEOUT = 600
 
 requests.packages.urllib3.disable_warnings()
 
+BRANCHES_SETTINGS = {}
+APP_SETTINGS = {}
+
 
 def update_all_rules():
     """Set next active rules for all branches."""
@@ -1082,7 +1085,7 @@ def verify():
 
 
 logging.info("Get app settings")
-get_settings()
+BRANCHES_SETTINGS, APP_SETTINGS = get_settings()
 # Initialize lines attached to Raspbberry PI
 logging.info("Initialize lines attached to Raspbberry PI")
 garden_controller.init_lines()

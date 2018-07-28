@@ -301,6 +301,6 @@ def planner():
 
 
 logging.info("Get app settings")
-BRANCHES_SETTINGS = get_settings()[0]
+BRANCHES_SETTINGS = get_settings()
 
 logging.info("Staring app")
