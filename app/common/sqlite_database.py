@@ -350,7 +350,7 @@ def get_settings():
     APP_SETTINGS = {}
     """Fill up settings array to save settings for branches."""
     try:
-        branches = select(database.QUERY[mn()])
+        branches = select(QUERY[mn()])
         for row in branches:
             branch_id = row[0]
             name = row[1]
