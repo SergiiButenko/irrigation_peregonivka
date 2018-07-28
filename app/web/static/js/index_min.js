@@ -1,5 +1,5 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-var API_ENDPOINT = '/api/v1/'
+var API_ENDPOINT = '/api/v1'
 
 var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
@@ -29,7 +29,7 @@ $(document).ready(function() {
 
 
     $.ajax({
-        url: '/branch_settings' + API_ENDPOINT,
+        url: API_ENDPOINT + '/branch_settings',
         success: function(data) {
             list = data['list']
             for (j in list) {
@@ -46,7 +46,7 @@ $(document).ready(function() {
     });
 
     $.ajax({
-        url: '/moisture' + API_ENDPOINT,
+        url: API_ENDPOINT + '/moisture',
         success: function(data) {
             list = data['data']
             for (j in list) {
@@ -59,7 +59,7 @@ $(document).ready(function() {
 
     (function worker2() {
         $.ajax({
-            url: '/irrigation_status' + API_ENDPOINT,
+            url: API_ENDPOINT + '/irrigation_status',
             beforeSend: function(xhr, opts) {
                 set_status_spinner();
 
@@ -170,7 +170,7 @@ $(document).ready(function() {
         console.log(interval_id + " irrigation schedule will be canceled");
 
         $.ajax({
-            url: '/cancel_rule' + API_ENDPOINT,
+            url: API_ENDPOINT + '/cancel_rule',
             type: "post",
             data: JSON.stringify({ 'list': [interval_id] }),
             contentType: "application/json; charset=utf-8",
@@ -197,7 +197,7 @@ function branch_on(index, time_minutes, interval_quantity, time_wait) {
 
 
     $.ajax({
-        url: '/activate_branch' + API_ENDPOINT,
+        url: API_ENDPOINT + '/activate_branch',
         type: "get",
         data: {
             'mode': mode,
@@ -225,7 +225,7 @@ function branch_on(index, time_minutes, interval_quantity, time_wait) {
 
 function branch_off(index) {
     $.ajax({
-        url: '/deactivate_branch' + API_ENDPOINT,
+        url: API_ENDPOINT + '/deactivate_branch',
         type: "get",
         data: {
             'id': index,
@@ -271,7 +271,7 @@ function is_any_line_active(line_id) {
 
 function update_branches_request() {
     $.ajax({
-        url: '/irrigation_status' + API_ENDPOINT,
+        url: API_ENDPOINT + '/irrigation_status',
         success: function(data) {
             update_branches(data);
         },

@@ -1,5 +1,5 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-var API_ENDPOINT = '/api/v1/'
+var API_ENDPOINT = '/api/v1'
 
 branch = []
 
@@ -102,7 +102,7 @@ $(document).ready(function() {
 
     //Rename branches
     $.ajax({
-        url: '/branch_settings' + API_ENDPOINT,
+        url: API_ENDPOINT + '/branch_settings',
         success: function(data) {
             list = data['list']
             for (j in list) {
@@ -240,7 +240,7 @@ function set_events() {
 
         var id = $(this).data('id');
         $.ajax({
-            url: '/remove_ongoing_rule' + API_ENDPOINT,
+            url: API_ENDPOINT + '/remove_ongoing_rule',
             type: "get",
             data: {
                 'id': id
@@ -273,7 +273,7 @@ function set_events() {
         var id = $(switcher).data('id')
         if (old_value == false) {
             $.ajax({
-                url: '/activate_ongoing_rule' + API_ENDPOINT,
+                url: API_ENDPOINT + '/activate_ongoing_rule',
                 type: "get",
                 data: {
                     'id': id
@@ -290,7 +290,7 @@ function set_events() {
             });
         } else {
             $.ajax({
-                url: '/deactivate_ongoing_rule' + API_ENDPOINT,
+                url: API_ENDPOINT + '/deactivate_ongoing_rule',
                 type: "get",
                 data: {
                     'id': id
@@ -332,7 +332,7 @@ function set_events() {
         }
 
         $.ajax({
-            url: '/add_ongoing_rule' + API_ENDPOINT,
+            url: API_ENDPOINT + '/add_ongoing_rule',
             type: "post",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
@@ -379,7 +379,7 @@ function set_events() {
         }
 
         $.ajax({
-            url: '/edit_ongoing_rule' + API_ENDPOINT,
+            url: API_ENDPOINT + '/edit_ongoing_rule',
             type: "put",
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
