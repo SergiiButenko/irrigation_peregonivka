@@ -138,6 +138,12 @@ def send_history_change_message():
     send_message('refresh_history', {'data': {'refresh': 1}})
 
 
+@app.route("/")
+def main():
+    return jsonify(line_settings=BRANCHES_SETTINGS,
+                   app_settings=APP_SETTINGS)
+
+
 @app.route("/update_all_rules")
 def update_rules():
     """Synchronize rules with database."""
