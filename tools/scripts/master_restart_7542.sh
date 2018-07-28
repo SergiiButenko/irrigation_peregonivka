@@ -10,6 +10,9 @@ systemctl daemon-reload
 
 echo 'systemctl restart irrigation_8000.service'
 systemctl restart irrigation_8000.service
+echo 'systemctl restart irrigation_8001.service'
+systemctl restart irrigation_8001.service
+
 echo 'systemctl restart rules_handler.service'
 systemctl restart rules_handler.service
 echo 'systemctl restart greenhouse_handler.service'
