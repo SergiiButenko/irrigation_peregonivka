@@ -391,3 +391,4 @@ def get_settings():
 
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
+        raise e
