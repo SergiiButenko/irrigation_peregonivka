@@ -19,15 +19,22 @@ $(document).ready(function() {
     });
 
     $("#next").click(function() {
-        json = { 'lines': {} }
+        var json = { 'lines': {} };
+        var at_least_one = false;
 
         $(".card").each(function() {
             var selected = $(this).hasClass('card-selected');
             var id = $(this).data('line_id');
             if (selected == true) {
-                json['lines'][id] = { 'id': id }
+                json['lines'][id] = { 'id': id };
+                at_least_one = true;
             }
         });
+
+        if (at_least_one == false) {
+            alert("Виберіть хоча б одну лінію. Дякую.");
+            return;
+        }
 
         $('#plan_modal').modal('show');
     });
