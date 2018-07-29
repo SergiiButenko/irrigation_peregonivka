@@ -1,5 +1,5 @@
 [Unit]
-Description=Backend part of irrigation system for peregonivka for port 8000
+Description=Frontend part of irrigation system for peregonivka for port 8000
 After=network.target
 Requires=network.target
 

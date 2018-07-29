@@ -5,7 +5,7 @@ Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
-ExecStartPre=/bin/sleep 40
+ExecStartPre=/bin/sleep 20
 ExecStart=/usr/local/bin/gunicorn \
 	-w 1 \
 	-b 0.0.0.0:8010 \

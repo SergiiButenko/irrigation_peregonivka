@@ -5,7 +5,7 @@ Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
-ExecStartPre=/bin/sleep 30
+ExecStartPre=/bin/sleep 15
 ExecStart=/usr/local/bin/gunicorn \
 	--worker-class eventlet \
 	-w 1 \

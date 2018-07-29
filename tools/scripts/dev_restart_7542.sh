@@ -10,10 +10,6 @@ systemctl daemon-reload
 
 echo 'systemctl restart irrigation_*'
 systemctl restart irrigation_*
-echo 'systemctl restart rules_handler.service'
-systemctl restart rules_handler.service
-echo 'systemctl restart greenhouse_handler.service'
-systemctl restart greenhouse_handler.service
 
 cd /var/www/ngnix
 cp -uv * /etc/nginx/sites-available
