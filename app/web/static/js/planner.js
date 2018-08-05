@@ -19,7 +19,7 @@ $(document).ready(function() {
     });
 
     $("#next").click(function() {
-        var json = { 'lines': {} };
+        json = { 'lines': {} };
         var at_least_one = false;
 
         $(".card").each(function() {
