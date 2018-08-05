@@ -8,10 +8,12 @@ $(document).ready(function() {
     $(".card-block, .card-footer").on('click', function(event) {
         var card = $(event.target).closest(".card");
         if (card.hasClass("card-selected")) {
+            console.log("Card selected");
             card.removeClass("card-selected");
             card.find(".deselect").hide().addClass("hidden");
             card.find(".select").css('display', 'inline-block').removeClass("hidden");
         } else {
+            console.log("Card deselected");
             card.addClass("card-selected");
             card.find(".select").hide().addClass("hidden");
             card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
@@ -23,6 +25,7 @@ $(document).ready(function() {
 
         $(".card").each(function() {
             var selected = $(this).hasClass('card-selected');
+            console.log(selected == true);
             var id = $(this).data('line_id');
             if (selected == true) {
                 json['lines'][id] = { 'id': id }
