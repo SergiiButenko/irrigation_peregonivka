@@ -13,6 +13,7 @@ from operator import itemgetter
 from common import sqlite_database as database
 from common.common import *
 from config.config import *
+from common.redis import *
 import threading
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
@@ -77,11 +78,10 @@ def rissing(channel):
     global RAIN_BUCKET_ITERATION
     time.sleep(0.005)
     if GPIO.input(RAIN_PIN) == 1:
-        last_time_set = get_time_last_notification()
+        last_time_set = get_time_last_notification(key=REDIS_KEY_FOR_RAIN)
         if last_time_set is None:
-            set_time_last_notification(key=REDIS_KEY_FOR_RAIN,
-                                       date=datetime.datetime.now())
-            last_time_set = get_time_last_notification()
+            set_time_last_notification(key=REDIS_KEY_FOR_RAIN)
+            last_time_set = get_time_last_notification(key=REDIS_KEY_FOR_RAIN)
             _no_key = True
 
         delta = datetime.datetime.now() - last_time_set
@@ -100,7 +100,7 @@ def init_lines():
     setup_lines()
 
     GPIO.setup(RAIN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(RAIN_PIN, GPIO.RISING, callback=rissing, bouncetime=200)
+    GPIO.add_event_detect(RAIN_PIN, GPIO.RISING, callback=rissing, bouncetime=1000)
 
 
 def detect_pin_state(r_id):
