@@ -76,7 +76,6 @@ def setup_lines():
 def rissing(channel):
     """Fillup rain table"""
     global RAIN_BUCKET_ITERATION
-    time.sleep(0.005)
     if GPIO.input(RAIN_PIN) == 1:
         last_time_set = get_time_last_notification(key=REDIS_KEY_FOR_RAIN)
         if last_time_set is None:
