@@ -75,6 +75,7 @@ def setup_lines():
 
 def rissing(channel):
     """Fillup rain table"""
+    logging.info("Rain bucket movement {0} detected.".format(RAIN_BUCKET_ITERATION))
     global RAIN_BUCKET_ITERATION
     _no_key = False
 
@@ -87,10 +88,10 @@ def rissing(channel):
 
         delta = datetime.datetime.now() - last_time_set
         if delta.seconds > 60 * RAIN_NOTIFICATION_MINUTES or _no_key is True:
-            logging.info("Rain bucket movement {0} detected.".format(RAIN_BUCKET_ITERATION))
-            RAIN_BUCKET_ITERATION += 1
-            database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
+            # database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
             set_time_last_notification(key=REDIS_KEY_FOR_RAIN)
+            RAIN_BUCKET_ITERATION += 1
+            logging.info("Rain bucket movement confirmed amd registered.".format(RAIN_BUCKET_ITERATION))
         else:
             logging.info("{0} seconds not passed. Counter keeps {1}".format(60 * RAIN_NOTIFICATION_MINUTES, RAIN_BUCKET_ITERATION))
 
