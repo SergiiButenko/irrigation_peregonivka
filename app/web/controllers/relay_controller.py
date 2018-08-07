@@ -80,21 +80,19 @@ def rissing(channel):
 
     if GPIO.input(RAIN_PIN) == 1:
         last_time_set = get_time_last_notification(key=REDIS_KEY_FOR_RAIN)
-        logging.info("Last time is {}".format(last_time_set))
         if last_time_set is None:
             set_time_last_notification(key=REDIS_KEY_FOR_RAIN)
             last_time_set = get_time_last_notification(key=REDIS_KEY_FOR_RAIN)
             _no_key = True
 
         delta = datetime.datetime.now() - last_time_set
-        logging.info("Delta is {}".format(delta.seconds))
         if delta.seconds > 60 * RAIN_NOTIFICATION_MINUTES or _no_key is True:
             logging.info("Rain bucket movement {0} detected.".format(RAIN_BUCKET_ITERATION))
             RAIN_BUCKET_ITERATION += 1
             database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
             set_time_last_notification(key=REDIS_KEY_FOR_RAIN)
         else:
-            logging.info("{} seconds not passed. Counter keeps {0}".format(60 * RAIN_NOTIFICATION_MINUTES))
+            logging.info("{0} seconds not passed. Counter keeps {1}".format(60 * RAIN_NOTIFICATION_MINUTES, RAIN_BUCKET_ITERATION))
 
 
 def init_lines():
