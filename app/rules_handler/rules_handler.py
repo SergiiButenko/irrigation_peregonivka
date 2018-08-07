@@ -127,7 +127,7 @@ def inspect_conditions(rule):
         if rain < RAIN_MAX:
             return True
         else:
-            logging.info("Rain volume for last {0} hours is {1}mm".format(RAIN_HOURS, rain))
+            logging.info("Rule won't be executed. Rain volume for last {0} hours is {1}mm exceed max allowed value: {2}.".format(RAIN_HOURS, rain, RAIN_MAX))
             return False
     except Exception as e:
         logging.error("Exeption occured while getting rain volume. {0}".format(e))

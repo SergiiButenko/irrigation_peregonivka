@@ -92,6 +92,7 @@ def rissing(channel):
             logging.info("Rain bucket movement {0} detected.".format(RAIN_BUCKET_ITERATION))
             RAIN_BUCKET_ITERATION += 1
             database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
+            set_time_last_notification(key=REDIS_KEY_FOR_RAIN)
         else:
             logging.info("{} seconds not passed. Counter keeps {0}".format(60 * RAIN_NOTIFICATION_MINUTES))
 
