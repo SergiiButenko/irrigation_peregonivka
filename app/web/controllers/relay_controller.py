@@ -87,10 +87,13 @@ def rissing(channel):
             last_time_set = get_time_last_notification(key=REDIS_KEY_FOR_RAIN)
             _no_key = True
 
-        delta = datetime.datetime.now() - last_time_set
+        now = datetime.datetime.now()
+        delta = now - last_time_set
         if delta.seconds > 60 * RAIN_NOTIFICATION_MINUTES or _no_key is True:
             # database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
-            set_time_last_notification(key=REDIS_KEY_FOR_RAIN)
+            set_time_last_notification(key=REDIS_KEY_FOR_RAIN,
+                                       date=now)
+            logging.info(get_time_last_notification(key=REDIS_KEY_FOR_RAIN))
             RAIN_BUCKET_ITERATION += 1
             logging.info("Rain bucket movement confirmed and registered.".format(RAIN_BUCKET_ITERATION))
         else:
