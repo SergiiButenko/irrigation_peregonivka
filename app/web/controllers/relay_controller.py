@@ -75,11 +75,11 @@ def setup_lines():
 
 def rissing(channel):
     """Fillup rain table"""
-    logging.info("Rain bucket movement {0} detected.".format(RAIN_BUCKET_ITERATION))
     global RAIN_BUCKET_ITERATION
     _no_key = False
 
     if GPIO.input(RAIN_PIN) == 1:
+        logging.info("Rain bucket movement detected.")
         last_time_set = get_time_last_notification(key=REDIS_KEY_FOR_RAIN)
         if last_time_set is None:
             set_time_last_notification(key=REDIS_KEY_FOR_RAIN)
