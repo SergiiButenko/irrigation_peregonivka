@@ -13,6 +13,7 @@ from operator import itemgetter
 from common import sqlite_database as database
 from common.common import *
 from config.config import *
+from common.redis import *
 import threading
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
