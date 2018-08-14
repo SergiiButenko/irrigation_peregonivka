@@ -159,7 +159,7 @@ def send_to_viber_bot(rule):
         # need to be fixed. add line type to rules service
         if line_id == LINES_UPPER_TANK['upper_tank']:
             payload = {'users': USERS,
-                       'message': "Через {0} хвилин почнеться наповненния верхньої бочки. Триватиме максимум {1} хвилин.\nЗайдіть на сайт, щоб відмнінити наповнення".format(VIBER_SENT_TIMEOUT, time)}
+                       'message': "Через {0} хвилин почнеться наповненния верхньої бочки. Триватиме максимум {1} хвилин.".format(VIBER_SENT_TIMEOUT, time)}
             response = requests.post(VIBER_BOT_IP + '/send_message',
                                      json=payload,
                                      timeout=(READ_TIMEOUT, RESP_TIMEOUT),

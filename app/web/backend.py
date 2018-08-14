@@ -1026,7 +1026,7 @@ def stop_filling():
             logging.info("Deactivating line '{0}'.".format(line_id))
             deactivate_branch(line_id=line_id, mode='manually')
             logging.info("Line deactivated")
-            message = 'Водопостачання вимкнено.'
+            message = 'Водопостачання вимкнено автоматично.'
         except Exception as e:
             logging.error(e)
             logging.error("Can't deactivate line '{0}'. Ecxeption occured".format(line_id))

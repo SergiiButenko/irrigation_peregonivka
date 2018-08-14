@@ -90,7 +90,7 @@ def notify_users():
 
     for user in users:
         logging.info("Sending message to {0}. id: {1}".format(user['name'], user['id']))
-        res = bot.send_message(user['id'], "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.\nЗайдіть на сайт, щоб відмнінити цей полив".format(timeout, user_friendly_name, time))
+        res = bot.send_message(user['id'], "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.".format(timeout, user_friendly_name, time))
         logging.debug("Responce: {0}".format(str(res)))
 
     logging.info("Done")
