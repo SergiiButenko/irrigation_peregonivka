@@ -1,21 +1,20 @@
 [Unit]
-Description=Backend part of irrigation system for peregonivka for port 8001
+Description=Frontend part of irrigation system for peregonivka for port 8000
 After=network.target
 Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
-ExecStartPre=/bin/sleep 15
 ExecStart=/usr/local/bin/gunicorn \
 	--worker-class eventlet \
 	-w 1 \
 	-b 0.0.0.0:8001 \
 	--pythonpath /var/www/app/web/ \
 	--user root \
-	backend:app
+	frontend:app
 
 Restart=always
-RestartSec=35
+RestartSec=5
 User=root
 
 [Install]

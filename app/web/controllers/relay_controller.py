@@ -19,8 +19,6 @@ import threading
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
-RAIN_PIN = 21
-RAIN_BUCKET_ITERATION = 1
 LINES = {}
 EN_ENABLED = GPIO.LOW
 EN_DISABLED = GPIO.HIGH
@@ -73,38 +71,11 @@ def setup_lines():
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
 
 
-def rissing(channel):
-    """Fillup rain table"""
-    global RAIN_BUCKET_ITERATION
-    _no_key = False
-
-    if GPIO.input(RAIN_PIN) == 1:
-        last_time_set = get_time_last_notification(key=REDIS_KEY_FOR_RAIN)
-        if last_time_set is None:
-            set_time_last_notification(key=REDIS_KEY_FOR_RAIN)
-            last_time_set = get_time_last_notification(key=REDIS_KEY_FOR_RAIN)
-            _no_key = True
-
-        now = datetime.datetime.now()
-        delta = now - last_time_set
-        if delta.seconds > 60 * RAIN_NOTIFICATION_MINUTES or _no_key is True:
-            # database.update(database.QUERY[mn()].format(RAIN_CONSTANT_VOLUME))
-            set_time_last_notification(key=REDIS_KEY_FOR_RAIN,
-                                       date=now)
-            RAIN_BUCKET_ITERATION += 1
-            logging.info("Rain bucket movement detected and registered.".format(RAIN_BUCKET_ITERATION))
-        else:
-            logging.debug("Rain bucket movement detected. {0} seconds not passed. Counter keeps {1}".format(60 * RAIN_NOTIFICATION_MINUTES, RAIN_BUCKET_ITERATION))
-
-
 def init_lines():
     GPIO.setmode(GPIO.BCM)
     GPIO.cleanup()
 
     setup_lines()
-
-    GPIO.setup(RAIN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(RAIN_PIN, GPIO.RISING, callback=rissing, bouncetime=1000)
 
 
 def detect_pin_state(r_id):
