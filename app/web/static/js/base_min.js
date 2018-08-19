@@ -378,7 +378,7 @@ $('.master_plan').click(function() {
         success: function(data) {
             set_status_ok();
             $('#plan_modal').modal('hide');
-            window.location.replace("/ongoing_rules");
+            window.location.replace("/history");
         },
         error: function() {
             alert("Сталася помилка. Спробуйте ще.")
