@@ -1,11 +1,13 @@
-{% extends 'base.html' %} {% block nav_item_title %}Майстер полива{% endblock %} {% block custom_css %} {% endblock %} {% block modals %}
-{% endblock %}
+{% extends 'base.html' %} {% block nav_item_title %}Майстер полива{% endblock %} {% block custom_css %} {% endblock %} {% block modals %} {% endblock %}
 <!-- Custom styles for this template -->
 {% block container %}
+<button type="button" class="btn btn-raised btn-block btn-secondary irrigate_all">
+    Полити все...
+</button>
+<h5>Або оберіть, що полити </h5>
 <div id="card-holder">
-    <h5>Оберіть, що полити: </h5>
     {% for name, group in my_list.items() %}
-    <hr style="margin-bottom: 2rem" /> 
+    <hr style="margin-bottom: 2rem" />
     <h5>{{group[0]['group_name']}}</h5>
     <div class="row">
         {% for n in group %}
@@ -27,12 +29,6 @@
 </br>
 <button type="button" class="btn btn-raised btn-block btn-primary" id="next">
     Визначити час поливу...
-</button>
-<button type="button" class="btn btn-raised btn-block btn-secondary irrigate_all">
-    Полити все...
-</button>
-<button type="button" class="btn btn-raised btn-block btn-secondary" onclick="window.location.href='/#'">
-    На головну
 </button>
 {% include "additional_actions.html" with context %}{% endblock %} {% block custom_scripts %}
 <script type="text/javascript" src="static/js/planner.js"></script>
