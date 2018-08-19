@@ -527,11 +527,25 @@ def plan():
 
     if timer == 0:
         delta_minutes = 0
+        start_point = datetime.datetime.now()
+    elif timer == 1:
+        last_ongoing_rule = database.get_last_ongoing_rule()
+        if last_ongoing_rule is None:
+            start_point = start_point = datetime.datetime.now()
+        else:
+            start_point = last_ongoing_rule['end_timestamp']
+        delta_minutes = 2 * (last_ongoing_rule['time'] * last_ongoing_rule['intervals'] + last_ongoing_rule['time_wait'] * (last_ongoing_rule['intervals'] - 1))
     else:
-        delta_minutes = timer * 60
+        start_point = datetime.datetime.now()
+        delta_minutes = (timer - 1) * 60  # 1 hour has value 2 in dropdown.
+
+    start_time = start_point + datetime.timedelta(minutes=delta_minutes)
+
+    logging.info(start_point)
+    logging.info(delta_minutes)
+    return json.dumps({'status': 'OK'})
 
     rules = []
-    start_time = datetime.datetime.now() + datetime.timedelta(minutes=delta_minutes)
     for line in line_list:
         new_rule = {
             'line_id': int(line['id']),
@@ -1105,4 +1119,3 @@ flush_on_start()
 logging.info("Fill redis database with rules")
 update_all_rules()
 logging.info("Staring app")
-# socketio.run(app, host='0.0.0.0', port=7542, debug=False)

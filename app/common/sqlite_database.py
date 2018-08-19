@@ -6,6 +6,7 @@ sys.path.insert(0, twoup)
 import sqlite3
 import logging
 import json
+import datetime
 from itertools import groupby
 from operator import itemgetter
 from collections import OrderedDict
@@ -27,6 +28,11 @@ QUERY['get_last_start_rule'] = (
     "FROM life AS l "
     "WHERE l.state = 2 AND l.active=1 AND l.rule_id = 1 AND l.line_id={0} AND timer<=datetime('now', 'localtime') "
     "ORDER BY timer DESC LIMIT 1")
+
+QUERY['get_last_ongoing_rule'] = (
+    "SELECT end_date, date_time_start, time, time_wait, intervals from ongoing_rules "
+    "WHERE end_date > datetime('now', 'localtime') "
+    "ORDER BY end_date DESC LIMIT 1")
 
 QUERY['history'] = (
     "SELECT l.interval_id, li.name, l.date, l.timer as \"[timestamp]\", l.active, l.time "
@@ -392,3 +398,23 @@ def get_settings():
     except Exception as e:
         logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
         raise e
+
+
+def get_last_ongoing_rule():
+    #  "SELECT end_date, date_time_start, time, time_wait, intervals from ongoing_rules "
+    list_arr = select(QUERY[mn()])
+
+    if list_arr is None:
+        return None
+
+    end_date = convert_to_datetime(list_arr[0]).date()
+    date_time_start = convert_to_datetime(list_arr[0]).time()
+    end_timestemp = datetime.datetime.combine(end_date, date_time_start)
+
+    last_rule = {}
+    last_rule['end_timestamp'] = end_timestemp
+    last_rule['time'] = time
+    last_rule['time_wait'] = time_wait
+    last_rule['intervals'] = intervals
+
+    return last_rule
