@@ -23,7 +23,8 @@ $(document).ready(function() {
                         'default_time': parseInt(item['default_time']),
                         'default_interval': parseInt(item['default_interval']),
                         'default_time_wait': parseInt(item['default_time_wait']),
-                        'start_time': new Date(item['start_time'])
+                        'start_time': new Date(item['start_time']),
+                        'is_pump': parseInt(item['is_pump'])
                     }
 
                     $("#branch_select_plann_modal").append(
@@ -326,11 +327,38 @@ function reload_history() {
 }
 
 $('.irrigate_all').click(function() {
-    for (id in branch) {
-        if (branch[id]['is_pump'] == false) {
-            planner_lines['lines'][id] = { 'id': id };
+    $.ajax({
+        url: API_ENDPOINT + '/branch_settings',
+        success: function(data) {
+            list = data['list']
+
+            for (j in list) {
+                item = list[j]
+                if (item['name'].toLowerCase().indexOf('насос') != -1) {
+                    continue;
+                }
+
+                branch[item['id']] = {
+                    'name': item['name'],
+                    'default_time': parseInt(item['default_time']),
+                    'default_interval': parseInt(item['default_interval']),
+                    'default_time_wait': parseInt(item['default_time_wait']),
+                    'start_time': new Date(item['start_time']),
+                    'is_pump': parseInt(item['is_pump'])
+                }
+            }
         }
+    });
+
+
+    for (id in branch) {
+        if (branch[id]['is_pump'] == 1) {
+            continue;
+        }
+
+        planner_lines['lines'][id] = { 'id': id };
     }
+    
     $('#plan_modal').modal('show');
 });
 

@@ -39,7 +39,8 @@ $(document).ready(function() {
                     'default_time': parseInt(item['default_time']),
                     'default_interval': parseInt(item['default_interval']),
                     'default_time_wait': parseInt(item['default_time_wait']),
-                    'start_time': new Date(item['start_time'])
+                    'start_time': new Date(item['start_time']),
+                    'is_pump': parseInt(item['is_pump'])
                 }
             }
         }
