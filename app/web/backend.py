@@ -531,7 +531,7 @@ def plan():
     elif timer == 1:
         last_ongoing_rule = database.get_last_ongoing_rule()
         if last_ongoing_rule is None:
-            start_point = start_point = datetime.datetime.now()
+            start_point = datetime.datetime.now()
         else:
             start_point = last_ongoing_rule['end_timestamp']
         delta_minutes = 2 * (last_ongoing_rule['time'] * last_ongoing_rule['intervals'] + last_ongoing_rule['time_wait'] * (last_ongoing_rule['intervals'] - 1))
