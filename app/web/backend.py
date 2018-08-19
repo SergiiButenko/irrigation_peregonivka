@@ -526,7 +526,7 @@ def plan():
     logging.info("line_list: {0}".format(str(line_list)))
 
     if timer == 0:
-        delta_minutes = 10
+        delta_minutes = 0
     else:
         delta_minutes = timer * 60
 

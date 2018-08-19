@@ -140,6 +140,7 @@ def send_to_viber_bot(rule):
     rule_id = rule['rule_id']
     line_id = rule['line_id']
     time = rule['time']
+    rule_timer = rule['timer']
     interval_id = rule['interval_id']
     user_friendly_name = rule['user_friendly_name']
 
@@ -153,23 +154,28 @@ def send_to_viber_bot(rule):
         logging.debug('interval_id {0} is already send'.format(interval_id))
         return
 
+    _delta = datetime.datetime.now() - rule_timer
+    delta_min = int(_delta.seconds / 60)
+    logging.info("Delta: {}".format(delta_min))
+    if delta_min <= 1:
+        message = "Меньше ніж через хвилину почнеться полив гілки '{1}'. Триватиме {2} хвилин.".format(user_friendly_name, time)
+    else:
+        message = "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.".format(VIBER_SENT_TIMEOUT, user_friendly_name, time)
+
+        # need to be fixed. add line type to rules service
+    if line_id == LINES_UPPER_TANK['upper_tank']:
+        message = "Через {0} хвилин почнеться наповненния верхньої бочки. Триватиме максимум {1} хвилин.".format(VIBER_SENT_TIMEOUT, time)
+
     try:
         logging.info("Sending message to messenger.")
 
-        # need to be fixed. add line type to rules service
-        if line_id == LINES_UPPER_TANK['upper_tank']:
-            payload = {'users': USERS,
-                       'message': "Через {0} хвилин почнеться наповненния верхньої бочки. Триватиме максимум {1} хвилин.".format(VIBER_SENT_TIMEOUT, time)}
-            response = requests.post(VIBER_BOT_IP + '/send_message',
-                                     json=payload,
-                                     timeout=(READ_TIMEOUT, RESP_TIMEOUT),
-                                     verify=False)
-        else:
-            payload = {'rule_id': id, 'line_id': line_id, 'time': time, 'interval_id': interval_id, 'users': USERS, 'timeout': VIBER_SENT_TIMEOUT, 'user_friendly_name': user_friendly_name}
-            response = requests.post(VIBER_BOT_IP + '/notify_users_irrigation_started',
-                                     json=payload,
-                                     timeout=(READ_TIMEOUT, RESP_TIMEOUT),
-                                     verify=False)
+        payload = {'users': USERS,
+                   'message': message}
+        response = requests.post(VIBER_BOT_IP + '/send_message',
+                                 json=payload,
+                                 timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                                 verify=False)
+
         response.raise_for_status()
     except Exception as e:
         logging.error(e)
