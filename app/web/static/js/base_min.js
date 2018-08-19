@@ -326,8 +326,8 @@ function reload_history() {
 }
 
 $('.irrigate_all').click(function() {
-    for (line in branch) {
-        planner_lines['lines'][id] = { 'id': line };
+    for (id in branch) {
+        planner_lines['lines'][id] = { 'id': id };
     }
     $('#plan_modal').modal('show');
 });
