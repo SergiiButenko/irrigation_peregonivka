@@ -164,7 +164,8 @@ def branch_settings():
                 'default_time': item['time'],
                 'default_interval': item['intervals'],
                 'default_time_wait': item['time_wait'],
-                'start_time': item['start_time']})
+                'start_time': item['start_time'],
+                'is_pump': item['is_pump']})
 
     return jsonify(list=branch_list)
 
