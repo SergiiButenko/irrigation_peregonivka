@@ -526,15 +526,17 @@ def plan():
     logging.info("line_list: {0}".format(str(line_list)))
 
     if timer == 0:
-        delta_minutes = 0
         start_point = datetime.datetime.now()
+        delta_minutes = 0
     elif timer == 1:
         last_ongoing_rule = database.get_last_ongoing_rule()
+        
         if last_ongoing_rule is None:
             start_point = datetime.datetime.now()
+            delta_minutes = 0
         else:
             start_point = last_ongoing_rule['end_timestamp']
-        delta_minutes = 2 * (last_ongoing_rule['time'] * last_ongoing_rule['intervals'] + last_ongoing_rule['time_wait'] * (last_ongoing_rule['intervals'] - 1))
+            delta_minutes = 2 * (last_ongoing_rule['time'] * last_ongoing_rule['intervals'] + last_ongoing_rule['time_wait'] * (last_ongoing_rule['intervals'] - 1))
     else:
         start_point = datetime.datetime.now()
         delta_minutes = (timer - 1) * 60  # 1 hour has value 2 in dropdown.
