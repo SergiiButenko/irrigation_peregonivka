@@ -530,7 +530,7 @@ def plan():
         delta_minutes = 0
     elif timer == 1:
         last_ongoing_rule = database.get_last_ongoing_rule()
-        
+
         if last_ongoing_rule is None:
             start_point = datetime.datetime.now()
             delta_minutes = 0
