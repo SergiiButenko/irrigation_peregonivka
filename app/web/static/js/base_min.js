@@ -359,13 +359,13 @@ $('.irrigate_all').click(function() {
         planner_lines_base['lines'][id] = { 'id': id };
     }
 
-    $('#plan_modal').data('lines', planner_lines_base);
+    $('#plan_modal').data('lines', JSON.stringify(planner_lines_base));
     $('#plan_modal').modal('show');
 });
 
 
 $('.master_plan').click(function() {
-    planner_lines_base=$('#plan_modal').data('lines');
+    planner_lines_base = JSON.parse($('#plan_modal').data('lines'));
     planner_lines_base['timer'] = parseInt($("#select_line option:selected").val());
 
     $.ajax({

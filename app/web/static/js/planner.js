@@ -36,7 +36,7 @@ $(document).ready(function() {
             return;
         }
 
-        $('#plan_modal').data('lines', planner_lines);
+        $('#plan_modal').data('lines', JSON.stringify(planner_lines));
         $('#plan_modal').modal('show');
     });
 });
