@@ -158,7 +158,7 @@ def send_to_viber_bot(rule):
     delta_min = int(_delta.seconds / 60)
     logging.info("Delta: {}".format(delta_min))
     if delta_min <= 1:
-        message = "Меньше ніж через хвилину почнеться полив гілки '{1}'. Триватиме {2} хвилин.".format(user_friendly_name, time)
+        message = "Меньше ніж через хвилину почнеться полив гілки '{0}'. Триватиме {1} хвилин.".format(user_friendly_name, time)
     else:
         message = "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.".format(VIBER_SENT_TIMEOUT, user_friendly_name, time)
 
