@@ -326,7 +326,7 @@ function reload_history() {
 }
 
 $('.irrigate_all').click(function() {
-    for line in branch {
+    for (line in branch) {
         planner_lines['lines'][id] = { 'id': line };
     }
     $('#plan_modal').modal('show');
