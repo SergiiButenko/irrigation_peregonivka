@@ -2,7 +2,7 @@ var arduino_check_connect_sec = 60 * 5;
 var arduino_check_broken_connect_sec = 60;
 var API_ENDPOINT = '/api/v1'
 var branch = {};
-var planner_lines = { 'lines': {} };
+var planner_lines_base = { 'lines': {} };
 
 $(document).ready(function() {
     $(".add_rule").on('click', function() {
@@ -356,20 +356,22 @@ $('.irrigate_all').click(function() {
             continue;
         }
 
-        planner_lines['lines'][id] = { 'id': id };
+        planner_lines_base['lines'][id] = { 'id': id };
     }
-    
+
+    $('#plan_modal').data('lines', planner_lines_base);
     $('#plan_modal').modal('show');
 });
 
 
 $('.master_plan').click(function() {
-    planner_lines['timer'] = parseInt($("#select_line option:selected").val());
+    planner_lines_base=$('#plan_modal').data('lines');
+    planner_lines_base['timer'] = parseInt($("#select_line option:selected").val());
 
     $.ajax({
         url: API_ENDPOINT + '/plan',
         type: "post",
-        data: JSON.stringify(planner_lines),
+        data: JSON.stringify(planner_lines_base),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         beforeSend: function(xhr, opts) {
