@@ -407,14 +407,14 @@ def get_last_ongoing_rule():
     if list_arr is None:
         return None
 
-    end_date = convert_to_datetime(list_arr[0]).date()
-    date_time_start = convert_to_datetime(list_arr[0]).time()
+    end_date = convert_to_datetime(list_arr[0][0]).date()
+    date_time_start = convert_to_datetime(list_arr[0][1]).time()
     end_timestemp = datetime.datetime.combine(end_date, date_time_start)
 
     last_rule = {}
     last_rule['end_timestamp'] = end_timestemp
-    last_rule['time'] = time
-    last_rule['time_wait'] = time_wait
-    last_rule['intervals'] = intervals
+    last_rule['time'] = list_arr[0][2]
+    last_rule['time_wait'] = list_arr[0][3]
+    last_rule['intervals'] = list_arr[0][4]
 
     return last_rule
