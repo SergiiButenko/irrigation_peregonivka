@@ -334,7 +334,7 @@ $('.irrigate_all').click(function() {
 
             for (j in list) {
                 item = list[j]
-                if (item['name'].toLowerCase().indexOf('насос') != -1) {
+                if (item['name']['is_pump'] == 1) {
                     continue;
                 }
 
@@ -347,20 +347,19 @@ $('.irrigate_all').click(function() {
                     'is_pump': parseInt(item['is_pump'])
                 }
             }
+
+            for (id in branch) {
+                if (branch[id]['is_pump'] == 1) {
+                    continue;
+                }
+
+                planner_lines_base['lines'][id] = { 'id': id };
+            }
+
+            $('#plan_modal').data('lines', JSON.stringify(planner_lines_base));
+            $('#plan_modal').modal('show');
         }
     });
-
-
-    for (id in branch) {
-        if (branch[id]['is_pump'] == 1) {
-            continue;
-        }
-
-        planner_lines_base['lines'][id] = { 'id': id };
-    }
-
-    $('#plan_modal').data('lines', JSON.stringify(planner_lines_base));
-    $('#plan_modal').modal('show');
 });
 
 
