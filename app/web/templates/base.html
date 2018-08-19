@@ -20,6 +20,40 @@
 
 <body>
     {% block modals %}{% endblock %}
+    <div id="plan_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="irrigate_modal-label" aria-hidden="true" data-id='0'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title ">Виберіть час початку</h4>
+            </div>
+            <div class="modal-body">
+                <select class="form-control" id="select_line" title="Виберіть час початку">
+                    <option value="0">Через 10хв.</option>
+                    <option value="1">Через 1 годину</option>
+                    <option value="2">Через 2 години</option>
+                    <option value="3">Через 3 години</option>
+                    <option value="4">Через 4 години</option>
+                    <option value="5">Через 5 годин</option>
+                    <option value="6">Через 6 годин</option>
+                    <option value="7">Через 7 годин</option>
+                    <option value="8">Через 8 годин</option>
+                    <option value="9">Через 9 годин</option>
+                    <option value="10">Через 10 годин</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                <button type="button" class="btn btn-primary master_plan">Запланувати</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
     <div id="plann_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="plann_modal-label" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -102,10 +136,13 @@
                                 <i class="material-icons">more_vert</i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="more-menu">
+                                <a class="dropdown-header">Майстер поливу</a>
+                                <a class="dropdown-item irrigate_all">Полити все</a>
+                                <a href="/planner" class="dropdown-item">Майстер Поливу</a>
+                                <a class="dropdown-header">Детальне планування</a>
                                 <a class="dropdown-item add_rule">Полити щось одне</a>
                                 <a href="/add_rule?add_to_date=0" class="dropdown-item" id="irrigate_today">Запланувати полив на сьогодні</a>
                                 <a href="/add_rule?add_to_date=1" class="dropdown-item" id="irrigate_tommorow">Запланувати полив на завтра</a>
-                                <a href="/planner" class="dropdown-item">Майстер поливу</a>
                             </div>
                         </div>
                     </li>

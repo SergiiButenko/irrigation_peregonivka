@@ -2,7 +2,7 @@ var server = location.protocol + '//' + location.hostname + (location.port ? ':'
 var API_ENDPOINT = '/api/v1'
 
 var branch = [];
-var json = { 'lines': {} };
+var planner_lines = { 'lines': {} };
 
 $(document).ready(function() {
     $(".card-block, .card-footer").on('click', function(event) {
@@ -19,14 +19,14 @@ $(document).ready(function() {
     });
 
     $("#next").click(function() {
-        json = { 'lines': {} };
+        planner_lines = { 'lines': {} };
         var at_least_one = false;
 
         $(".card").each(function() {
             var selected = $(this).hasClass('card-selected');
             var id = $(this).data('line_id');
             if (selected == true) {
-                json['lines'][id] = { 'id': id };
+                planner_lines['lines'][id] = { 'id': id };
                 at_least_one = true;
             }
         });
@@ -37,30 +37,5 @@ $(document).ready(function() {
         }
 
         $('#plan_modal').modal('show');
-    });
-
-    $('.master_plan').click(function() {
-        json['timer'] = parseInt($("#select_line option:selected").val());
-
-        $.ajax({
-            url: API_ENDPOINT + '/plan',
-            type: "post",
-            data: JSON.stringify(json),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            beforeSend: function(xhr, opts) {
-                set_status_spinner();
-            },
-            success: function(data) {
-                set_status_ok();
-                $('#plan_modal').modal('hide');
-                window.location.replace("/ongoing_rules");
-            },
-            error: function() {
-                alert("Сталася помилка. Спробуйте ще.")
-                set_status_ok();
-                $('#plan_modal').modal('hide');
-            }
-        });
     });
 });
