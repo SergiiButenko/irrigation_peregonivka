@@ -19,7 +19,7 @@ QUERY = {}
 QUERY['get_next_active_rule'] = (
     "SELECT l.id, l.line_id, l.rule_id, l.timer as \"[timestamp]\", l.interval_id, l.time, li.name "
     "FROM life AS l, lines as li "
-    "WHERE l.state = 1 AND l.active=1 AND l.line_id={0} AND li.number = l.line_id AND timer>=datetime('now', 'localtime') "
+    "WHERE l.state = 1 AND l.active=1 AND l.line_id={0} AND li.number = l.line_id AND timer>=datetime('now', 'localtime' '-30 seconds') "
     "ORDER BY timer LIMIT 1")
 
 QUERY['get_last_start_rule'] = (
