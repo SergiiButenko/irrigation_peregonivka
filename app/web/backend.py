@@ -510,7 +510,7 @@ def plan():
     for line_id, line in income_lines.items():
         income_lines_id.append(int(line_id))
 
-    logging.info("Income lines: {0}".format(str(income_lines_id)))
+    logging.info("Income lines: {0}".format(str(income_lines)))
 
     # setup lines array
     line_list = []
