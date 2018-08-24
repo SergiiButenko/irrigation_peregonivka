@@ -309,3 +309,7 @@ div.tooltip {
     border-bottom: 2px solid #8dbdf7;
     background: #dae7f7;
 }
+
+.footer-selected {
+    background: #dae7f7;
+}
