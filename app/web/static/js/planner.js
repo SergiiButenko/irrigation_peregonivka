@@ -29,7 +29,7 @@ $(document).ready(function() {
         toogle_card_state(card);
     });
 
-    $(".card").on('dblclick', function(event) {
+    $(".card-block").on('dblclick', function(event) {
         var card = $(event.target).closest(".card");
         
         toogle_card_state(event.target);
