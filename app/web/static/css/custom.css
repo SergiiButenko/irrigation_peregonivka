@@ -303,9 +303,9 @@ div.tooltip {
 }
 
 .card-selected {
-/*    border-top: 10px solid green;
-    border-left: 1px solid green;
-    border-right: 1px solid green;
-    border-bottom: 1px solid green;  */ 
+    border-top: 2px solid #8dbdf7;
+    border-left: 2px solid #8dbdf7;
+    border-right: 2px solid #8dbdf7;
+    border-bottom: 2px solid #8dbdf7;
     background: #dae7f7;
 }

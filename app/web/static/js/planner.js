@@ -28,12 +28,12 @@ $(document).ready(function() {
         var footer = $(card).find('.card-footer')
         if (card.hasClass("card-selected")) {
             card.removeClass("card-selected");
-            footer.removeClass("card-selected");
+            footer.removeClass("footer-selected");
             card.find(".deselect").hide().addClass("hidden");
             card.find(".select").css('display', 'inline-block').removeClass("hidden");
         } else {
             card.addClass("card-selected");
-            footer.addClass("card-selected");
+            footer.addClass("footer-selected");
             card.find(".select").hide().addClass("hidden");
             card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
         }
