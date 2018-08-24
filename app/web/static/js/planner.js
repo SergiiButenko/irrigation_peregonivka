@@ -35,7 +35,7 @@ $(document).ready(function() {
         toogle_card_state(card);
     });
 
-    $('.more-water').on('click', function(event) {
+    $('.more-water').on('click', function(event) {        
         var card = $(event.target).closest('.card');
         var footer = $(card).find('.card-footer');
         var more_water = $(card).find('.more-water')
@@ -197,12 +197,15 @@ function toogle_card_state(card) {
         footer.removeClass("footer-selected");
         card.find(".deselect").hide().addClass("hidden");
         card.find(".select").css('display', 'inline-block').removeClass("hidden");
-
+        
 
         var time = parseInt($(card).find('.irrigation_minutes').val());
-        $(card).find('.irrigation_minutes').val(time - 5);
-        more_water.addClass('greyout');
-        $(card).data('more-water', 0)
+        if (more_water_mode == 1) {
+            $(card).find('.irrigation_minutes').val(time - 5);
+            more_water.addClass('greyout');
+            $(card).data('more-water', 0)
+        }
+
     } else {
         card.addClass("card-selected");
         footer.addClass("footer-selected");
