@@ -29,11 +29,11 @@ $(document).ready(function() {
         toogle_card_state(card);
     });
 
-    $(".card-block").on('dblclick', function(event) {
-        var card = $(event.target).closest(".card");
+    // $(".card-block").on('dblclick', function(event) {
+    //     var card = $(event.target).closest(".card");
 
-        toogle_card_state(card);
-    });
+    //     toogle_card_state(card);
+    // });
 
     $('.more-water').on('click', function(event) {        
         var card = $(event.target).closest('.card');
