@@ -25,12 +25,15 @@ $(document).ready(function() {
 
     $(".card-title, .card-footer").on('click', function(event) {
         var card = $(event.target).closest(".card");
+        var footer = $(card).find('.card-footer')
         if (card.hasClass("card-selected")) {
             card.removeClass("card-selected");
+            footer.removeClass("card-selected");
             card.find(".deselect").hide().addClass("hidden");
             card.find(".select").css('display', 'inline-block').removeClass("hidden");
         } else {
             card.addClass("card-selected");
+            footer.addClass("card-selected");
             card.find(".select").hide().addClass("hidden");
             card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
         }
