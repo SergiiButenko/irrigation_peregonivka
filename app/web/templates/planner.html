@@ -10,7 +10,7 @@
         <div class="col-xs-12 col-sm-5 col-md-6 col-lg-5">
             <div class="card" data-line_id={{n[ 'line_id']}}>
                 <div class="card-block">
-                    <h4>{{n['line_name']}}</h4>
+                    <h4 class="card-title">{{n['line_name']}}</h4>
                     <p class="card-text">
                         <span id="last-{{n['line_id']}}"></span>
                         <span id="next-{{n['line_id']}}"></span>
@@ -28,7 +28,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-5">
-                                <div class="form-group" id="irrigation_time_wait_group" style="display:none">
+                                <div class="form-group" id="irrigation_time_wait_group">
                                     <label>Час між поливами</label>
                                     <input type="number" pattern="\d*" class="form-control irrigation_time_wait" required value={{n[ 'default_time_wait']}}>
                                 </div>

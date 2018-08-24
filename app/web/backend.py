@@ -503,32 +503,32 @@ def deactivate_ongoing_rule():
 
 @app.route("/plan", methods=['POST'])
 def plan():
-    lines = request.json['lines']
-    timer = request.json['timer']
+    income_lines = request.json['lines']
+    income_timer = request.json['timer']
 
-    income_lines = []
-    for line_id, line in lines.items():
-        income_lines.append(int(line_id))
+    income_lines_id = []
+    for line_id, line in income_lines.items():
+        income_lines_id.append(int(line_id))
 
-    logging.info("Income lines: {0}".format(str(income_lines)))
+    logging.info("Income lines: {0}".format(str(income_lines_id)))
 
     # setup lines array
     line_list = []
-    for item_id, item in BRANCHES_SETTINGS.items():
-        if item['branch_id'] in income_lines:
+    for line_id, line in BRANCHES_SETTINGS.items():
+        if line_id in income_lines_id:
             line_list.append({
-                'id': item['branch_id'],
-                'name': item['name'],
-                'default_time': item['time'],
-                'default_interval': item['intervals'],
-                'default_time_wait': item['time_wait']})
+                'id': line_id,
+                'name': line['name'],
+                'default_time': income_lines[line_id]['time'],
+                'default_interval': income_lines[line_id]['intervals'],
+                'default_time_wait': income_lines[line_id]['time_wait']})
 
     logging.info("line_list: {0}".format(str(line_list)))
 
-    if timer == 0:
+    if income_timer == 0:
         start_point = datetime.datetime.now()
         delta_minutes = 0
-    elif timer == 1:
+    elif income_timer == 1:
         last_ongoing_rule = database.get_last_ongoing_rule()
 
         if last_ongoing_rule is None:
