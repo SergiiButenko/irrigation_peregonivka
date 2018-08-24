@@ -23,7 +23,7 @@ $(document).ready(function() {
         }
     });
 
-    $(".card-title, .card-footer").on('click', function(event) {
+    $(".card-footer").on('click', function(event) {
         var card = $(event.target).closest(".card");
 
         toogle_card_state(card);
