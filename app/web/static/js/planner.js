@@ -48,12 +48,12 @@ $(document).ready(function() {
             console.log(selected == true);
             var id = $(this).data('line_id');
             var time = $(this).find('.irrigation_minutes').val();
-            var interval = $(this).find('.irrigation_intervals').val();
+            var intervals = $(this).find('.irrigation_intervals').val();
             var time_wait = $(this).find('.irrigation_time_wait').val();
             if (selected == true) {
                 planner_lines['lines'][id] = {'id': id,
                                               'time': time,
-                                              'interval': interval,
+                                              'intervals': intervals,
                                               'time_wait': time_wait};
                 at_least_one = true;
             }
