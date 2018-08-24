@@ -46,17 +46,6 @@ $(document).ready(function() {
         }
     });
 
-    $.ajax({
-        url: API_ENDPOINT + '/moisture',
-        success: function(data) {
-            list = data['data']
-            for (j in list) {
-                console.log(j);
-                draw_d3js(j, list[j]);
-            }
-        }
-    });
-
 
     (function worker2() {
         $.ajax({

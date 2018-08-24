@@ -47,7 +47,7 @@ requests.packages.urllib3.disable_warnings()
 BRANCHES_SETTINGS = {}
 
 
-@app.route("/")
+@app.route("/detailed")
 @cache.cached(timeout=CACHE_TIMEOUT)
 def index():
     """Index page."""
@@ -278,7 +278,7 @@ def ongoing_rules():
     return render_template('ongoing_rules.html', my_list=rows)
 
 
-@app.route("/planner")
+@app.route("/")
 def planner():
     branch_list = []
     for item_id, item in BRANCHES_SETTINGS.items():
