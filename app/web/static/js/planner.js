@@ -30,6 +30,8 @@ $(document).ready(function() {
     });
 
     $(".card").on('dblclick', function(event) {
+        var card = $(event.target).closest(".card");
+        
         toogle_card_state(event.target);
     });
 
