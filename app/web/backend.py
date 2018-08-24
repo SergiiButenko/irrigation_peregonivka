@@ -543,6 +543,8 @@ def plan():
 
     start_time = start_point + datetime.timedelta(minutes=delta_minutes)
 
+    return json.dumps({'status': 'OK'})
+
     rules = []
     for line in line_list:
         new_rule = {
