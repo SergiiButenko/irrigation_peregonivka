@@ -31,6 +31,7 @@ $(document).ready(function() {
 
     $('.more-water').click(function(event) {
         var card = $(event.target).closest('.top');
+        var footer = $(card).find('.card-footer');
         var more_water = $(card).find('.more-water')
         var more_water_mode = $(card).data('more-water');
 
