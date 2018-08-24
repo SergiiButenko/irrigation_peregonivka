@@ -4,7 +4,7 @@ var API_ENDPOINT = '/api/v1'
 var branch = [];
 var planner_lines = { 'lines': {} };
 
-$(document).ready(function() {
+$(document).load(function() {
     $.ajax({
         url: API_ENDPOINT + '/branch_settings',
         success: function(data) {
