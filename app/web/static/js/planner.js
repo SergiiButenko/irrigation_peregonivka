@@ -29,6 +29,10 @@ $(document).ready(function() {
         toogle_card_state(card);
     });
 
+    $(".card").on('dblclick', function(event) {
+        toogle_card_state(event.target);
+    });
+
     $('.more-water').on('click', function(event) {        
         var card = $(event.target).closest('.card');
         var footer = $(card).find('.card-footer');
