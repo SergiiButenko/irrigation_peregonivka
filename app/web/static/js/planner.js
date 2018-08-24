@@ -4,7 +4,7 @@ var API_ENDPOINT = '/api/v1'
 var branch = [];
 var planner_lines = { 'lines': {} };
 
-$(document).load(function() {
+$(document).ready(function() {
     $.ajax({
         url: API_ENDPOINT + '/branch_settings',
         success: function(data) {
@@ -29,7 +29,7 @@ $(document).load(function() {
         toogle_card_state(card);
     });
 
-    $('.more-water').click(function(event) {
+    $('body').on('click', '.more-water', function(event) {
         var card = $(event.target).closest('.top');
         var footer = $(card).find('.card-footer');
         var more_water = $(card).find('.more-water')
