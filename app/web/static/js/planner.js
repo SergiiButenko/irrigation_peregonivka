@@ -31,8 +31,8 @@ $(document).ready(function() {
 
     $(".card-block").on('dblclick', function(event) {
         var card = $(event.target).closest(".card");
-        
-        toogle_card_state(event.target);
+
+        toogle_card_state(card);
     });
 
     $('.more-water').on('click', function(event) {        
