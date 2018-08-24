@@ -10,7 +10,8 @@
         <div class="col-xs-12 col-sm-5 col-md-6 col-lg-5">
             <div class="card" data-line_id={{n[ 'line_id']}}>
                 <div class="card-block" style="padding-bottom: 0">
-                    <h4 class="card-title" style="margin-bottom: 1rem">{{n['line_name']}}</h4>
+                    <h4 class="card-title" style="margin-bottom: 1rem; display: inline-block; float: left;">{{n['line_name']}}</h4>
+                    <img class='more-water' style='display: inline-block; float: right;' src="static/icon/drop.png" alt="Збільшити час поливу на 5 хвилин">
                     <p class="card-text">
                         <span id="last-{{n['line_id']}}"></span>
                         <span id="next-{{n['line_id']}}"></span>

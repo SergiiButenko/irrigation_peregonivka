@@ -358,7 +358,7 @@ function set_events() {
 
     $('.ongoing-rule-save').off().on('click', function(e) {
         var json = { 'rules': [] }
-        var card = $(e.target).closest('.top')
+        var card = $(e.target).closest('.card')
 
         json['rules'].push({
             'line_id': $(card).find('#line_id').data('id'),

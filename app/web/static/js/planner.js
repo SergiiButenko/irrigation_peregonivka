@@ -25,19 +25,32 @@ $(document).ready(function() {
 
     $(".card-title, .card-footer").on('click', function(event) {
         var card = $(event.target).closest(".card");
-        var footer = $(card).find('.card-footer')
-        if (card.hasClass("card-selected")) {
-            card.removeClass("card-selected");
-            footer.removeClass("footer-selected");
-            card.find(".deselect").hide().addClass("hidden");
-            card.find(".select").css('display', 'inline-block').removeClass("hidden");
-        } else {
+
+        toogle_card_state(card);
+    });
+
+    $('.more-water').click(function(event) {
+        var card = $(e.target).closest('.top');
+        var more_water = $(card).find('.more-water')
+        var more_water_mode = $(card).data('more-water');
+
+        if (card.hasClass("card-selected") == false) {
             card.addClass("card-selected");
             footer.addClass("footer-selected");
             card.find(".select").hide().addClass("hidden");
             card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
         }
+
+        var time = $(card).find('.irrigation_minutes').val();
+        if (more_water_mode == 1) {
+            $(card).find('.irrigation_minutes').val(time - 5);
+            more_water.addClass('greyout');
+        } else {
+            $(card).find('.irrigation_minutes').val(time + 5);
+            more_water.removeClass('greyout');
+        }
     });
+
 
     $("#next").click(function() {
         planner_lines = { 'lines': {} };
@@ -51,10 +64,12 @@ $(document).ready(function() {
             var intervals = $(this).find('.irrigation_intervals').val();
             var time_wait = $(this).find('.irrigation_time_wait').val();
             if (selected == true) {
-                planner_lines['lines'][id] = {'id': id,
-                                              'time': time,
-                                              'intervals': intervals,
-                                              'time_wait': time_wait};
+                planner_lines['lines'][id] = {
+                    'id': id,
+                    'time': time,
+                    'intervals': intervals,
+                    'time_wait': time_wait
+                };
                 at_least_one = true;
             }
         });
@@ -162,5 +177,20 @@ function toogle_card(element_id, branch) {
         $('#next-' + element_id).html("</br>Наступний полив: немає запису");
         $('#next-' + element_id).hide().addClass("hidden");
         $('#btn-cancel-' + element_id).hide().addClass("hidden");
+    }
+}
+
+function toogle_card_state(card) {
+    var footer = $(card).find('.card-footer');
+    if (card.hasClass("card-selected")) {
+        card.removeClass("card-selected");
+        footer.removeClass("footer-selected");
+        card.find(".deselect").hide().addClass("hidden");
+        card.find(".select").css('display', 'inline-block').removeClass("hidden");
+    } else {
+        card.addClass("card-selected");
+        footer.addClass("footer-selected");
+        card.find(".select").hide().addClass("hidden");
+        card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
     }
 }

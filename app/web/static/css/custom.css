@@ -313,3 +313,8 @@ div.tooltip {
 .footer-selected {
     background: #dae7f7;
 }
+
+img.greyout
+{
+    opacity:0.5;
+}
