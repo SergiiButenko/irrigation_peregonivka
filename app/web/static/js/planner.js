@@ -191,11 +191,14 @@ function toogle_card(element_id, branch) {
 
 function toogle_card_state(card) {
     var footer = $(card).find('.card-footer');
+    var more_water = $(card).find('.more-water')
     if (card.hasClass("card-selected")) {
         card.removeClass("card-selected");
         footer.removeClass("footer-selected");
         card.find(".deselect").hide().addClass("hidden");
         card.find(".select").css('display', 'inline-block').removeClass("hidden");
+        more_water.addClass('greyout');
+        $(card).data('more-water', 0)
     } else {
         card.addClass("card-selected");
         footer.addClass("footer-selected");
