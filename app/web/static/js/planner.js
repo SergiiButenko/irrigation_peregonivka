@@ -164,9 +164,6 @@ function toogle_card(element_id, branch) {
         $('#next-' + element_id).css('display', 'inline-block').removeClass("hidden");
         $('#next-' + element_id).html("Наступний полив: " + next_rule);
 
-        $('#btn-cancel-' + element_id).data('id', branch['next_rule']['interval_id'])
-        $('#btn-cancel-' + element_id).css('display', 'inline-block').removeClass("hidden");
-
     } else if (branch['next_rule'] && branch['next_rule']['rule_id'] == 2) {
         next_rule = convertDateToUTC(new Date(branch['next_rule']['timer']))
         if (daydiff(now, next_rule) == 0) {
@@ -181,11 +178,9 @@ function toogle_card(element_id, branch) {
 
         $('#next-' + element_id).css('display', 'inline-block').removeClass("hidden");
         $('#next-' + element_id).html("Полив зупиниться: " + next_rule);
-        $('#btn-cancel-' + element_id).hide().addClass("hidden");
     } else {
         $('#next-' + element_id).html("</br>Наступний полив: немає запису");
         $('#next-' + element_id).hide().addClass("hidden");
-        $('#btn-cancel-' + element_id).hide().addClass("hidden");
     }
 }
 
@@ -193,7 +188,7 @@ function toogle_card_state(card) {
     var footer = $(card).find('.card-footer');
     var more_water = $(card).find('.more-water')
     var more_water_mode = $(card).data('more-water');
-    
+
     if (card.hasClass("card-selected")) {
         card.removeClass("card-selected");
         footer.removeClass("footer-selected");
