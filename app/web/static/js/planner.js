@@ -29,8 +29,9 @@ $(document).ready(function() {
         toogle_card_state(card);
     });
 
-    $('.more-water').bind('click', function(event) {
-        var card = $(event.target).closest('.top');
+    $('.more-water').on('click', function(event) {
+        console.log('fired')
+        var card = $(event.target).closest('.card');
         var footer = $(card).find('.card-footer');
         var more_water = $(card).find('.more-water')
         var more_water_mode = $(card).data('more-water');
