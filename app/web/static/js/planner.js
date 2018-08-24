@@ -29,7 +29,7 @@ $(document).ready(function() {
         toogle_card_state(card);
     });
 
-    $('body').on('click', '.more-water', function(event) {
+    $('.more-water').bind('click', function(event) {
         var card = $(event.target).closest('.top');
         var footer = $(card).find('.card-footer');
         var more_water = $(card).find('.more-water')
