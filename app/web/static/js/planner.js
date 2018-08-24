@@ -29,8 +29,7 @@ $(document).ready(function() {
         toogle_card_state(card);
     });
 
-    $('.more-water').on('click', function(event) {
-        console.log('fired')
+    $('.more-water').on('click', function(event) {        
         var card = $(event.target).closest('.card');
         var footer = $(card).find('.card-footer');
         var more_water = $(card).find('.more-water')
@@ -43,13 +42,15 @@ $(document).ready(function() {
             card.find(".deselect").css('display', 'inline-block').removeClass("hidden");
         }
 
-        var time = $(card).find('.irrigation_minutes').val();
+        var time = parseInt($(card).find('.irrigation_minutes').val());
         if (more_water_mode == 1) {
             $(card).find('.irrigation_minutes').val(time - 5);
             more_water.addClass('greyout');
+            $(card).data('more-water', 0)
         } else {
             $(card).find('.irrigation_minutes').val(time + 5);
             more_water.removeClass('greyout');
+            $(card).data('more-water', 1)
         }
     });
 
