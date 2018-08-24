@@ -503,7 +503,7 @@ def deactivate_ongoing_rule():
 
 @app.route("/plan", methods=['POST'])
 def plan():
-    income_lines = request.json['lines']
+    income_lines = json.loads(request.json['lines'])
     income_timer = request.json['timer']
 
     income_lines_id = []
