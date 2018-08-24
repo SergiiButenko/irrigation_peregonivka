@@ -23,16 +23,6 @@ $(document).ready(function() {
         }
     });
 
-    $('.irrigation_intervals').on('input', function(e) {
-        var input = parseInt($(this).val());
-        if (input <= 1 || isNaN(input)) {
-            $('#irrigation_time_wait_group').hide();
-        } else {
-            $('#irrigation_time_wait_group').css('display', 'inline-block');
-        }
-    });
-
-
     $(".card-title, .card-footer").on('click', function(event) {
         var card = $(event.target).closest(".card");
         if (card.hasClass("card-selected")) {
