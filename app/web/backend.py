@@ -503,7 +503,7 @@ def deactivate_ongoing_rule():
 
 @app.route("/plan", methods=['POST'])
 def plan():
-    income_lines = json.loads(request.json['lines'])
+    income_lines = request.json['lines']
     income_timer = request.json['timer']
 
     income_lines_id = []
@@ -519,9 +519,9 @@ def plan():
             line_list.append({
                 'id': line_id,
                 'name': line['name'],
-                'default_time': income_lines[line_id]['time'],
-                'default_interval': income_lines[line_id]['intervals'],
-                'default_time_wait': income_lines[line_id]['time_wait']})
+                'default_time': income_lines[str(line_id)]['time'],
+                'default_interval': income_lines[str(line_id)]['intervals'],
+                'default_time_wait': income_lines[str(line_id)]['time_wait']})
 
     logging.info("line_list: {0}".format(str(line_list)))
 
