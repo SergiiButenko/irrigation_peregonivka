@@ -121,6 +121,19 @@ function toogle_card(element_id, branch) {
     if (branch == null)
         return;
 
+    branch_state = branch['status']
+    if (branch_state == 1) {
+        $('#card-' + element_id).addClass("card-irrigate-active-planner");
+    }
+
+    if (branch_state == 0) {
+        $('#card-' + element_id).removeClass("card-irrigate-active-planner");
+    }
+
+    if (branch_state == -1) {
+        $('#card-' + element_id).removeClass("card-irrigate-active-planner");
+    }
+
     var options_datetime = {
         weekday: "long",
         month: "short",

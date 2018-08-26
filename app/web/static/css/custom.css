@@ -318,3 +318,10 @@ img.greyout
 {
     opacity:0.3;
 }
+
+.card-irrigate-active-planner {
+    border-top: 10px solid green;
+    border-left: 2px solid green;
+    border-right: 2px solid green;
+    border-bottom: 2px solid green;
+}
