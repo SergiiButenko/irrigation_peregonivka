@@ -5,6 +5,24 @@ var branch = [];
 var planner_lines = { 'lines': {} };
 
 $(document).ready(function() {
+    var socket = io.connect(server, {
+        'sync disconnect on unload': true,
+        'secure': true
+    });
+
+    socket.on('disconnect', function(data) {
+        console.log("sockets disconnect!");
+    });
+
+    socket.on('connect', function() {
+        console.log("connected to websocket");
+    });
+
+    socket.on('branch_status', function(msg) {
+        console.log('Message received. New brach status: ' + msg.data);
+        update_branches(JSON.parse(msg.data));
+    });
+    
     $.ajax({
         url: API_ENDPOINT + '/branch_settings',
         success: function(data) {
