@@ -72,3 +72,18 @@ server {
 					proxy_set_header X-Forwarded-Ssl on;
 	}
 }
+
+server {
+	listen 9000;
+	listen [::]:9000;
+	server_name mozz.asuscomm.com;
+
+	access_log /var/log/nginx/weather-access.log;
+	error_log  /var/log/nginx/weather-error.log error;
+
+	location / {
+					include proxy_params;
+					proxy_pass http://0.0.0.0:8000/;
+	}
+
+}

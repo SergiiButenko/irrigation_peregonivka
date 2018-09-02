@@ -1103,6 +1103,14 @@ def verify():
     return app.send_static_file('Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8')
 
 
+@app.route("/weather_station")
+def weather_station():
+    device_id = str(request.args.get('device_id'))
+    logging.info("weather_station signal from '{0}' device id received".format(device_id))
+    return jsonify(
+        message='confirmed')
+
+
 logging.info("Get app settings")
 BRANCHES_SETTINGS, APP_SETTINGS = database.get_settings()
 # Initialize lines attached to Raspbberry PI
