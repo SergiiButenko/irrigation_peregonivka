@@ -353,7 +353,12 @@ $('.irrigate_all').click(function() {
                     continue;
                 }
 
-                planner_lines_base['lines'][id] = { 'id': id };
+                 planner_lines_base['lines'][id] = {
+                    'id': id,
+                    'time': branch[id]['default_time'],
+                    'intervals': branch[id]['default_interval'],
+                    'time_wait': branch[id]['default_time_wait']
+                };
             }
 
             $('#plan_modal').data('lines', JSON.stringify(planner_lines_base));
