@@ -9,11 +9,6 @@ from common import sqlite_database as database
 from common.common import *
 from web.controllers import remote_controller as remote_controller
 
-# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(currentdir)
-# twoup = os.path.dirname(parentdir)
-# sys.path.insert(0, parentdir)
-
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",

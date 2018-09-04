@@ -12,14 +12,11 @@ from helpers.common import *
 from viberbot import Api
 from viberbot.api.bot_configuration import BotConfiguration
 from viberbot.api.messages.text_message import TextMessage
-from viberbot.api.viber_requests import (ViberFailedRequest,
-                                         ViberMessageRequest,
-                                         ViberSubscribedRequest)
-
-# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(currentdir)
-# sys.path.insert(0, parentdir)
-
+from viberbot.api.viber_requests import (
+    ViberFailedRequest,
+    ViberMessageRequest,
+    ViberSubscribedRequest,
+)
 
 
 logger = logging.getLogger()
