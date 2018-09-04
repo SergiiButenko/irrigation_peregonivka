@@ -1,37 +1,36 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import ast
+import datetime
+import inspect
+import json
+import logging
 import os
 import sys
-import inspect
+import time
+import uuid
+from collections import OrderedDict
+from itertools import groupby
+from operator import itemgetter
+
+import requests
+from flask import Flask, abort, jsonify, render_template, request
+from flask.ext.cache import Cache
+
+import eventlet
+from common import sqlite_database as database
+from common.common import *
+from common.redis import *
+from config.config import *
+from controllers import relay_controller as garden_controller
+from controllers import remote_controller as remote_controller
+from eventlet import wsgi
+from flask_socketio import SocketIO, emit
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 twoup = os.path.dirname(parentdir)
 sys.path.insert(0, parentdir)
-from flask import Flask
-from flask import jsonify, request, render_template
-from flask import abort
-from flask.ext.cache import Cache
-from eventlet import wsgi
-import eventlet
-from flask_socketio import SocketIO
-from flask_socketio import emit
-import datetime
-import json
-import requests
-import logging
-import uuid
-import time
-from itertools import groupby
-from operator import itemgetter
-from collections import OrderedDict
-from controllers import relay_controller as garden_controller
-from controllers import remote_controller as remote_controller
-from common import sqlite_database as database
-from common.redis import *
-from common.common import *
-from config.config import *
-import ast
 
 eventlet.monkey_patch()
 logging.basicConfig(

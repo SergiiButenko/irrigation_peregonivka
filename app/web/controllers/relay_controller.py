@@ -1,23 +1,30 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import os, sys, inspect
+import inspect
+import logging
+import os
+import sys
+import threading
+import time
+from itertools import groupby
+from operator import itemgetter
+
+import RPi.GPIO as GPIO
+from common import sqlite_database as database
+from common.common import *
+from common.redis import *
+from config.config import *
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 twoup = os.path.dirname(parentdir)
 sys.path.insert(0, twoup)
-import logging
-import time
-import RPi.GPIO as GPIO
-from itertools import groupby
-from operator import itemgetter
-from common import sqlite_database as database
-from common.common import *
-from config.config import *
-from common.redis import *
-import threading
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
+    datefmt="%m/%d/%Y %I:%M:%S %p",
+    level=logging.INFO,
+)
 
 LINES = {}
 EN_ENABLED = GPIO.LOW
@@ -28,47 +35,53 @@ def setup_lines():
     """Fill up settings array to save settings for branches."""
     try:
         GPIO.setwarnings(False)
-        lines = database.select(database.QUERY[mn() + '_lines'])
+        lines = database.select(database.QUERY[mn() + "_lines"])
         for row in lines:
             key = row[0]
 
             if row[16] is not None:
                 continue
 
-            LINES[key] = {'id': row[0],
-                          's0': row[1],
-                          's1': row[2],
-                          's2': row[3],
-                          's3': row[4],
-                          'en': row[5],
-                          'pump_enabled': row[6],
-                          'pin': row[7],
-                          'multiplex': row[8],
-                          'relay_num': row[9],
-                          'is_pump': row[10],
-                          'is_except': row[11],
-                          'group_id': row[12],
-                          'pump_pin': row[13],
-                          'line_name': row[14],
-                          'group_name': row[15],
-                          'state': -1}
+            LINES[key] = {
+                "id": row[0],
+                "s0": row[1],
+                "s1": row[2],
+                "s2": row[3],
+                "s3": row[4],
+                "en": row[5],
+                "pump_enabled": row[6],
+                "pin": row[7],
+                "multiplex": row[8],
+                "relay_num": row[9],
+                "is_pump": row[10],
+                "is_except": row[11],
+                "group_id": row[12],
+                "pump_pin": row[13],
+                "line_name": row[14],
+                "group_name": row[15],
+                "state": -1,
+            }
 
-            if LINES[key]['multiplex'] == 1:
-                GPIO.setup(LINES[key]['s0'], GPIO.OUT, initial=GPIO.LOW)
-                GPIO.setup(LINES[key]['s1'], GPIO.OUT, initial=GPIO.LOW)
-                GPIO.setup(LINES[key]['s2'], GPIO.OUT, initial=GPIO.LOW)
-                GPIO.setup(LINES[key]['s3'], GPIO.OUT, initial=GPIO.LOW)
-                GPIO.setup(LINES[key]['en'], GPIO.OUT, initial=EN_DISABLED)
+            if LINES[key]["multiplex"] == 1:
+                GPIO.setup(LINES[key]["s0"], GPIO.OUT, initial=GPIO.LOW)
+                GPIO.setup(LINES[key]["s1"], GPIO.OUT, initial=GPIO.LOW)
+                GPIO.setup(LINES[key]["s2"], GPIO.OUT, initial=GPIO.LOW)
+                GPIO.setup(LINES[key]["s3"], GPIO.OUT, initial=GPIO.LOW)
+                GPIO.setup(LINES[key]["en"], GPIO.OUT, initial=EN_DISABLED)
             else:
-                GPIO.setup(LINES[key]['pin'], GPIO.OUT)
+                GPIO.setup(LINES[key]["pin"], GPIO.OUT)
 
-            if LINES[key]['pump_enabled'] == 1:
-                GPIO.setup(LINES[key]['pump_pin'], GPIO.OUT, initial=GPIO.LOW)
+            if LINES[key]["pump_enabled"] == 1:
+                GPIO.setup(LINES[key]["pump_pin"], GPIO.OUT, initial=GPIO.LOW)
 
         logging.info(LINES)
         GPIO.setwarnings(True)
     except Exception as e:
-        logging.error("Exceprion occured when trying to get settings for all branches. {0}".format(e))
+        logging.error(
+            "Exceprion occured when trying to get settings for all branches. {0}".format(
+                e
+            )
+        )
 
 
 def init_lines():
@@ -79,7 +92,7 @@ def init_lines():
 
 
 def detect_pin_state(r_id):
-    return list('{0:04b}'.format(r_id))
+    return list("{0:04b}".format(r_id))
 
 
 def get_relay_num(bitlist):
@@ -113,12 +126,14 @@ def off(pin):
 
 def on_group(branch_id):
     try:
-        relay = LINES[branch_id]['relay_num']
+        relay = LINES[branch_id]["relay_num"]
         _pins = detect_pin_state(relay)
-        pins = {LINES[branch_id]['s0']: int(_pins[3]),
-                LINES[branch_id]['s1']: int(_pins[2]),
-                LINES[branch_id]['s2']: int(_pins[1]),
-                LINES[branch_id]['s3']: int(_pins[0])}
+        pins = {
+            LINES[branch_id]["s0"]: int(_pins[3]),
+            LINES[branch_id]["s1"]: int(_pins[2]),
+            LINES[branch_id]["s2"]: int(_pins[1]),
+            LINES[branch_id]["s3"]: int(_pins[0]),
+        }
 
         for pin, pin_state in pins.items():
             if pin_state == 1:
@@ -126,7 +141,7 @@ def on_group(branch_id):
             else:
                 off(pin)
 
-        en = LINES[branch_id]['en']
+        en = LINES[branch_id]["en"]
         GPIO.output(en, EN_ENABLED)
         logging.info("EN pin {0} enabled".format(en))
     except Exception as e:
@@ -136,14 +151,16 @@ def on_group(branch_id):
 
 def off_group(branch_id):
     try:
-        en = LINES[branch_id]['en']
+        en = LINES[branch_id]["en"]
         GPIO.output(en, EN_DISABLED)
         logging.info("EN pin disabled")
 
-        pins = {LINES[branch_id]['s0']: 0,
-                LINES[branch_id]['s1']: 0,
-                LINES[branch_id]['s2']: 0,
-                LINES[branch_id]['s3']: 0}
+        pins = {
+            LINES[branch_id]["s0"]: 0,
+            LINES[branch_id]["s1"]: 0,
+            LINES[branch_id]["s2"]: 0,
+            LINES[branch_id]["s3"]: 0,
+        }
 
         for pin, pin_state in pins.items():
             off(pin)
@@ -156,50 +173,52 @@ def form_pins_state():
     """Form returns arr of dicts."""
     try:
         for line_id, line in LINES.items():
-            if line['multiplex'] == 0:
-                line['state'] = GPIO.input(line['pin'])
-            elif GPIO.input(line['en']) == EN_DISABLED:
-                line['state'] = 0
+            if line["multiplex"] == 0:
+                line["state"] = GPIO.input(line["pin"])
+            elif GPIO.input(line["en"]) == EN_DISABLED:
+                line["state"] = 0
             else:
-                s0 = GPIO.input(line['s0'])
-                s1 = GPIO.input(line['s1'])
-                s2 = GPIO.input(line['s2'])
-                s3 = GPIO.input(line['s3'])
+                s0 = GPIO.input(line["s0"])
+                s1 = GPIO.input(line["s1"])
+                s2 = GPIO.input(line["s2"])
+                s3 = GPIO.input(line["s3"])
                 relay_num = get_relay_num([s3, s2, s1, s0])
-                if line['relay_num'] == relay_num:
-                    line['state'] = 1
+                if line["relay_num"] == relay_num:
+                    line["state"] = 1
                 else:
-                    line['state'] = 0
+                    line["state"] = 0
 
         logging.debug("Pins state are {0}".format(str(LINES)))
 
         return LINES
     except Exception as e:
-        logging.error("Exception occured during forming of branches status. {0}".format(e))
+        logging.error(
+            "Exception occured during forming of branches status. {0}".format(e)
+        )
         GPIO.cleanup()
         raise e
 
 
 def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
     """Turn on branch by id."""
-    if (branch_id is None):
+    if branch_id is None:
         logging.error("No branch id")
         return None
 
-    if (branch_alert is None):
+    if branch_alert is None:
         logging.error("No branch alert time")
         return None
 
-    if LINES[branch_id]['multiplex'] == 1:
+    if LINES[branch_id]["multiplex"] == 1:
         on_group(branch_id)
     else:
-        on(LINES[branch_id]['pin'])
+        on(LINES[branch_id]["pin"])
 
-    if LINES[branch_id]['pump_enabled'] == 0:
+    if LINES[branch_id]["pump_enabled"] == 0:
         logging.info("Pump won't be turned on with {0} branch id".format(branch_id))
     else:
         time.sleep(5)
-        on(LINES[branch_id]['pump_pin'])
+        on(LINES[branch_id]["pump_pin"])
         logging.info("Pump turned on with {0} branch id".format(branch_id))
 
     return form_pins_state()
@@ -207,21 +226,21 @@ def branch_on(branch_id=None, branch_alert=None, pump_enable=True):
 
 def branch_off(branch_id=None, pump_enable=True):
     """Turn off branch by id."""
-    if (branch_id is None):
+    if branch_id is None:
         logging.error("No branch id")
         return None
 
-    if LINES[branch_id]['pump_enabled'] == 1:
-        off(LINES[branch_id]['pump_pin'])
+    if LINES[branch_id]["pump_enabled"] == 1:
+        off(LINES[branch_id]["pump_pin"])
         logging.info("Pump turned off with {0} branch id".format(branch_id))
 
     # reduse hidrohit
     time.sleep(5)
 
-    if LINES[branch_id]['multiplex'] == 1:
+    if LINES[branch_id]["multiplex"] == 1:
         off_group(branch_id)
     else:
-        off(LINES[branch_id]['pin'])
+        off(LINES[branch_id]["pin"])
 
     return form_pins_state()
 

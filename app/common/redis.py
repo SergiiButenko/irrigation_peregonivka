@@ -1,6 +1,7 @@
-import redis
-import logging
 import json
+import logging
+
+import redis
 from common.common import *
 from config.config import *
 
@@ -48,7 +49,9 @@ def get_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK):
         return None
 
 
-def set_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK, date=datetime.datetime.now()):
+def set_time_last_notification(
+    key=REDIS_KEY_FOR_UPPER_TANK, date=datetime.datetime.now()
+):
     """Set next rule in redis."""
     res = False
     try:

@@ -1,37 +1,45 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import sqlite3
 import inspect
 import logging
-import redis
+import sqlite3
+
 import requests
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
+import redis
+
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
+    datefmt="%m/%d/%Y %I:%M:%S %p",
+    level=logging.DEBUG,
+)
 
 # For get function name intro function. Usage mn(). Return string with current function name. Instead 'query' will be QUERY[mn()].format(....)
 mn = lambda: inspect.stack()[1][3]
 
 redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
 
-VIBER_BOT_IP = 'https://mozart.hopto.org:7443'
+VIBER_BOT_IP = "https://mozart.hopto.org:7443"
 
 USERS = [
-    {'name': 'Sergii', 'id': 'cHxBN+Zz1Ldd/60xd62U/w=='},
-    {'name': 'Oleg', 'id': 'IRYaSCRnmV1IT1ddtB8Bdw=='}
+    {"name": "Sergii", "id": "cHxBN+Zz1Ldd/60xd62U/w=="},
+    {"name": "Oleg", "id": "IRYaSCRnmV1IT1ddtB8Bdw=="},
 ]
 
 
 QUERY = {}
-QUERY['worker'] = "insert into power_statistics(state) VALUES ({0})"
+QUERY["worker"] = "insert into power_statistics(state) VALUES ({0})"
 
 
 # executes query and returns fetch* result
-def execute_request(query, method='fetchall'):
+def execute_request(query, method="fetchall"):
     """Use this method in case you need to get info from database."""
     conn = None
     try:
-        conn = sqlite3.connect('/var/sqlite_db/test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        conn = sqlite3.connect(
+            "/var/sqlite_db/test_v4",
+            detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
+        )
         # conn = sqlite3.connect('/home/sergey/repos/irrigation_peregonivka/test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         # conn = sqlite3.connect('C:\\repos\\irrigation_peregonivka\\test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 
@@ -59,7 +67,10 @@ def update_db_request(query):
     conn = None
     lastrowid = 0
     try:
-        conn = sqlite3.connect('/var/sqlite_db/test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        conn = sqlite3.connect(
+            "/var/sqlite_db/test_v4",
+            detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
+        )
         # conn = sqlite3.connect('/home/sergey/repos/irrigation_peregonivka/test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         # conn = sqlite3.connect('C:\\repos\\irrigation_peregonivka\\test_v4', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
@@ -83,14 +94,16 @@ def update_db_request(query):
 
 STATE_BAT = 0
 STATE_POWER = 1
-REDIS_KEY = 'power_state'
+REDIS_KEY = "power_state"
 
 
 def send_message(msg_text):
     """Send message to viber."""
     try:
-        payload = {'users': USERS, 'msg_text': msg_text}
-        response = requests.post(VIBER_BOT_IP + '/send_message', json=payload, timeout=(10, 10))
+        payload = {"users": USERS, "msg_text": msg_text}
+        response = requests.post(
+            VIBER_BOT_IP + "/send_message", json=payload, timeout=(10, 10)
+        )
         response.raise_for_status()
     except Exception as e:
         logging.error("Can't send rule to viber. Ecxeption occured")
@@ -110,31 +123,38 @@ def worker():
     try:
         previous_state = redis_db.get(REDIS_KEY)
         current_state = get_power_current_state()
-        if (current_state == STATE_POWER):
-            text = 'Напруга подається із мережі.'
+        if current_state == STATE_POWER:
+            text = "Напруга подається із мережі."
         else:
-            text = 'Напруга подається з батареї.'
+            text = "Напруга подається з батареї."
 
         if previous_state is None:
             logging.info("Seems like Rapberry just started")
             redis_db.set(REDIS_KEY, current_state)
             update_db_request(QUERY[mn()].format(current_state))
-            send_message(msg_text='Зміна стану напруги. \nСервер був перезавантажен. \n{0}'.format(text))
+            send_message(
+                msg_text="Зміна стану напруги. \nСервер був перезавантажен. \n{0}".format(
+                    text
+                )
+            )
             return
 
         previous_state = int(previous_state.decode())
 
-        if (get_power_current_state() == previous_state):
+        if get_power_current_state() == previous_state:
             logging.info("Power - no change")
             return
 
         redis_db.set(REDIS_KEY, current_state)
-        logging.info("Power - changed. Current state {0}: {1}".format(current_state, text))
+        logging.info(
+            "Power - changed. Current state {0}: {1}".format(current_state, text)
+        )
         update_db_request(QUERY[mn()].format(current_state))
-        send_message(msg_text='Зміна стану напруги. \n{0}'.format(text))
+        send_message(msg_text="Зміна стану напруги. \n{0}".format(text))
 
     except Exception as e:
         logging.error(e)
+
 
 if __name__ == "__main__":
     worker()

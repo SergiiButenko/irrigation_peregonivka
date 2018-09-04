@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import inspect
 import datetime
+import inspect
 import json
+
 from pytz import timezone
 
 # For get function name intro function. Usage mn(). Return string with current function name. Instead 'query' will be database.QUERY[mn()].format(....)
@@ -11,8 +12,8 @@ mn = lambda: inspect.stack()[1][3]
 
 def date_handler(obj):
     """Convert datatime to string format."""
-    if hasattr(obj, 'isoformat'):
-        datetime_obj_utc = obj.replace(tzinfo=timezone('UTC'))
+    if hasattr(obj, "isoformat"):
+        datetime_obj_utc = obj.replace(tzinfo=timezone("UTC"))
         return datetime_obj_utc.isoformat()
     else:
         raise TypeError
@@ -89,31 +90,35 @@ def date_hook(json_dict):
 
 def get_weekday(date):
     """Conver date into day of week in UA."""
-    week = ['Понеділок',
-            'Вівторок',
-            'Середа',
-            'Четверг',
-            'П\'ятниця',
-            'Субота',
-            'Неділя']
+    week = [
+        "Понеділок",
+        "Вівторок",
+        "Середа",
+        "Четверг",
+        "П'ятниця",
+        "Субота",
+        "Неділя",
+    ]
 
     return week[date.weekday()]
 
 
 def get_month(date):
     """Used in hostory request."""
-    monthes = ['Січня',
-               'Лютого',
-               'Березня',
-               'Квітня',
-               'Травня',
-               'Червня',
-               'Липня',
-               'Серпня',
-               'Вересня',
-               'Жовтня',
-               'Листопада',
-               'Грудня']
+    monthes = [
+        "Січня",
+        "Лютого",
+        "Березня",
+        "Квітня",
+        "Травня",
+        "Червня",
+        "Липня",
+        "Серпня",
+        "Вересня",
+        "Жовтня",
+        "Листопада",
+        "Грудня",
+    ]
     return monthes[date.month - 1]
 
 
@@ -124,12 +129,14 @@ def form_date_description(date):
     delta = date - now
 
     if delta.days == -1:
-        return 'Вчора, ' + get_weekday(date)
+        return "Вчора, " + get_weekday(date)
 
     if delta.days == 0:
-        return 'Сьогодні, ' + get_weekday(date)
+        return "Сьогодні, " + get_weekday(date)
 
     if delta.days == 1:
-        return 'Завтра, ' + get_weekday(date)
+        return "Завтра, " + get_weekday(date)
 
-    return "{0}, {1} {2}".format(get_weekday(date), date.strftime('%d'), get_month(date))
+    return "{0}, {1} {2}".format(
+        get_weekday(date), date.strftime("%d"), get_month(date)
+    )
