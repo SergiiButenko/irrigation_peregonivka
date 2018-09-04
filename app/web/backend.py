@@ -22,11 +22,6 @@ from controllers import remote_controller as remote_controller
 from eventlet import wsgi
 from flask_socketio import SocketIO, emit
 
-# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(currentdir)
-# twoup = os.path.dirname(parentdir)
-# sys.path.insert(0, parentdir)
-
 eventlet.monkey_patch()
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",

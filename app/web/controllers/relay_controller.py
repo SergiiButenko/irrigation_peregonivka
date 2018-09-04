@@ -9,10 +9,6 @@ from common.common import *
 from common.redis import *
 from config.config import *
 
-# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(currentdir)
-# twoup = os.path.dirname(parentdir)
-# sys.path.insert(0, twoup)
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
