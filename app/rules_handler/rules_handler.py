@@ -1,11 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import datetime
-import inspect
 import json
 import logging
-import os
-import sys
 import time
 
 import requests
@@ -14,10 +11,10 @@ from common import sqlite_database as database
 from common.common import *
 from common.redis import *
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-twoup = os.path.dirname(parentdir)
-sys.path.insert(0, parentdir)
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# twoup = os.path.dirname(parentdir)
+# sys.path.insert(0, parentdir)
 
 
 logging.basicConfig(

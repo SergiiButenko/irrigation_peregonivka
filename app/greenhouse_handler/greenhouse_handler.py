@@ -1,11 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import datetime
-import inspect
 import json
 import logging
-import os
-import sys
 import time
 
 import requests
@@ -15,10 +11,10 @@ from common.common import *
 from common.redis import *
 from web.controllers import remote_controller as remote_controller
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-twoup = os.path.dirname(parentdir)
-sys.path.insert(0, parentdir)
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# twoup = os.path.dirname(parentdir)
+# sys.path.insert(0, parentdir)
 
 
 

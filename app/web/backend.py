@@ -1,15 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import ast
 import datetime
-import inspect
 import json
 import logging
-import os
-import sys
 import time
 import uuid
-from collections import OrderedDict
 from itertools import groupby
 from operator import itemgetter
 
@@ -27,10 +22,10 @@ from controllers import remote_controller as remote_controller
 from eventlet import wsgi
 from flask_socketio import SocketIO, emit
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-twoup = os.path.dirname(parentdir)
-sys.path.insert(0, parentdir)
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# twoup = os.path.dirname(parentdir)
+# sys.path.insert(0, parentdir)
 
 eventlet.monkey_patch()
 logging.basicConfig(

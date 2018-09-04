@@ -5,7 +5,7 @@ Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
-ExecStart=/usr/bin/python3 /var/www/app/power_supply_notifier/power_supply_notifier.py
+ExecStart=PYTHONPATH=/var/www/app/ /usr/bin/python3 /var/www/app/power_supply_notifier/power_supply_notifier.py
 
 RestartSec=5
 TimeoutSec=5

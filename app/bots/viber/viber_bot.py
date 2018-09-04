@@ -1,10 +1,7 @@
-import inspect
 import json
 import logging
-import os
 import re
 import sched
-import sys
 import threading
 import time
 
@@ -14,17 +11,14 @@ from flask import Flask, Response, request
 from helpers.common import *
 from viberbot import Api
 from viberbot.api.bot_configuration import BotConfiguration
-from viberbot.api.messages.keyboard_message import KeyboardMessage
-from viberbot.api.messages.rich_media_message import RichMediaMessage
 from viberbot.api.messages.text_message import TextMessage
-from viberbot.api.messages.url_message import URLMessage
 from viberbot.api.viber_requests import (ViberFailedRequest,
                                          ViberMessageRequest,
                                          ViberSubscribedRequest)
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir)
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# sys.path.insert(0, parentdir)
 
 
 

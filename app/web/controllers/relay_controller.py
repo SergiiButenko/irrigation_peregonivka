@@ -1,13 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import inspect
 import logging
-import os
-import sys
-import threading
 import time
-from itertools import groupby
-from operator import itemgetter
 
 import RPi.GPIO as GPIO
 from common import sqlite_database as database
@@ -15,10 +9,10 @@ from common.common import *
 from common.redis import *
 from config.config import *
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-twoup = os.path.dirname(parentdir)
-sys.path.insert(0, twoup)
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# twoup = os.path.dirname(parentdir)
+# sys.path.insert(0, twoup)
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
