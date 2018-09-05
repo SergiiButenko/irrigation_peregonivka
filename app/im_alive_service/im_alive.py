@@ -12,7 +12,7 @@ logging.basicConfig(
 app = Flask(__name__)
 
 
-@app.route("/im_alive")
+@app.route("/")
 def im_alive():
     """In order to keep device status"""
     device_id = str(request.args.get("device_id"))
