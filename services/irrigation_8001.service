@@ -10,9 +10,8 @@ ExecStart=/usr/local/bin/gunicorn \
 	--worker-class eventlet \
 	-w 1 \
 	-b 0.0.0.0:8001 \
-	--pythonpath /var/www/app/ \
+	--pythonpath /var/www/app/web/ \
 	--user root \
-	--chdir /var/www/app/web \
 	frontend:app
 
 Restart=always

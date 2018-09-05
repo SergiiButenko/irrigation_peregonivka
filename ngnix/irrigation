@@ -33,6 +33,11 @@ server {
 					proxy_set_header X-Forwarded-Ssl on;
 	}
 
+	location /im_alive/ {
+					include proxy_params;
+					proxy_pass http://0.0.0.0:8002/;
+	}
+
 
 	# Requests for socket.io are passed on to Node on port 8001
 	 location ~* \.io {

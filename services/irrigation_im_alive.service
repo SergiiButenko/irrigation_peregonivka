@@ -1,21 +1,20 @@
 [Unit]
-Description=Backend part of irrigation system for peregonivka for port 8001
+Description=Telegram Bot service
 After=network.target
 Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
-ExecStartPre=/bin/sleep 15
+ExecStartPre=/bin/sleep 20
 ExecStart=/usr/local/bin/gunicorn \
-	--worker-class eventlet \
 	-w 1 \
-	-b 0.0.0.0:8000 \
-	--pythonpath /var/www/app/web/ \
+	-b 0.0.0.0:8002 \
+	--pythonpath /var/www/app/im_alive_service \
 	--user root \
-	backend:app
+	im_alive:app
 
 Restart=always
-RestartSec=35
+RestartSec=45
 User=root
 
 [Install]
