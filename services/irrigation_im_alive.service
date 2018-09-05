@@ -1,5 +1,5 @@
 [Unit]
-Description=Telegram Bot service
+Description=Ping service
 After=network.target
 Requires=network.target
 

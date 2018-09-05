@@ -33,7 +33,7 @@ server {
 					proxy_set_header X-Forwarded-Ssl on;
 	}
 
-	location /im_alive/ {
+	location /im_alive {
 					include proxy_params;
 					proxy_pass http://0.0.0.0:8002/;
 	}
@@ -58,6 +58,21 @@ server {
 }
 
 server {
+	listen 9000;
+	listen [::]:9000;
+	server_name mozz.asuscomm.com;
+
+	access_log /var/log/nginx/weather-access.log;
+	error_log  /var/log/nginx/weather-error.log error;
+
+	location / {
+					include proxy_params;
+					proxy_pass http://0.0.0.0:8000/;
+	}
+
+}
+
+server {
 	listen 88 ssl;
 	server_name mozz.asuscomm.com;
 
@@ -76,19 +91,4 @@ server {
 					proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 					proxy_set_header X-Forwarded-Ssl on;
 	}
-}
-
-server {
-	listen 9000;
-	listen [::]:9000;
-	server_name mozz.asuscomm.com;
-
-	access_log /var/log/nginx/weather-access.log;
-	error_log  /var/log/nginx/weather-error.log error;
-
-	location / {
-					include proxy_params;
-					proxy_pass http://0.0.0.0:8000/;
-	}
-
 }
