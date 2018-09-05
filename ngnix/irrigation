@@ -1,4 +1,11 @@
 ###################### Irrigation ######################
+# ssl 7542/api/v1   :8000 - common backend
+# ssl 7542/.io      :8000 - sockets backend
+# ssl 7542/         :8001 - frontend
+# ssl 88/           :8010 - telegram bot
+# 9000/             :8000 - common for devices without https support
+# 9000/im_alive     :8002 - ping service
+
 server {
 	listen 7542;
 	listen [::]:7542;
@@ -33,13 +40,7 @@ server {
 					proxy_set_header X-Forwarded-Ssl on;
 	}
 
-	location /im_alive {
-					include proxy_params;
-					proxy_pass http://0.0.0.0:8002/;
-	}
-
-
-	# Requests for socket.io are passed on to Node on port 8001
+	# Requests for socket.io are passed on to Node on port 8000
 	 location ~* \.io {
 		  proxy_set_header X-Real-IP $remote_addr;
 		  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -62,12 +63,17 @@ server {
 	listen [::]:9000;
 	server_name mozz.asuscomm.com;
 
-	access_log /var/log/nginx/weather-access.log;
-	error_log  /var/log/nginx/weather-error.log error;
+	access_log /var/log/nginx/no-ssl-access.log;
+	error_log  /var/log/nginx/no-ssl-error.log error;
 
 	location / {
 					include proxy_params;
-					proxy_pass http://0.0.0.0:8000/;
+					proxy_pass http://0.0.0.0:8000;
+	}
+
+	location /im_alive {
+					include proxy_params;
+					proxy_pass http://0.0.0.0:8002/;
 	}
 
 }
