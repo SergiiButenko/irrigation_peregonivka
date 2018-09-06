@@ -3,6 +3,7 @@ var arduino_check_broken_connect_sec = 60;
 var API_ENDPOINT = '/api/v1'
 var branch = {};
 var planner_lines_base = { 'lines': {} };
+var enforced_time = 5;
 
 $(document).ready(function() {
     $(".add_rule").on('click', function() {
@@ -361,8 +362,8 @@ $('.irrigate_all').click(function() {
                 };
             }
 
-            $('#plan_modal').data('lines', JSON.stringify(planner_lines_base));
-            $('#plan_modal').modal('show');
+            $('#plan_modal_all').data('lines', JSON.stringify(planner_lines_base));
+            $('#plan_modal_all').modal('show');
         }
     });
 });
@@ -371,6 +372,50 @@ $('.irrigate_all').click(function() {
 $('.master_plan').click(function() {
     planner_lines_base = JSON.parse($('#plan_modal').data('lines'));
     planner_lines_base['timer'] = parseInt($("#select_line option:selected").val());
+
+    $.ajax({
+        url: API_ENDPOINT + '/plan',
+        type: "post",
+        data: JSON.stringify(planner_lines_base),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function(xhr, opts) {
+            set_status_spinner();
+        },
+        success: function(data) {
+            set_status_ok();
+            $('#plan_modal').modal('hide');
+            window.location.replace("/history");
+        },
+        error: function() {
+            alert("Сталася помилка. Спробуйте ще.")
+            set_status_ok();
+            $('#plan_modal').modal('hide');
+        }
+    });
+});
+
+$('.master_plan_all').click(function() {
+    planner_lines_base = JSON.parse($('#plan_modal_all').data('lines'));
+    planner_lines_base['timer'] = parseInt($("#select_line_all option:selected").val());
+
+    var enforced = parseInt($("#irrigation_volume option:selected").val());
+
+    console.log(enforced);
+
+    if (enforced == 1) {
+        console.log("Time increased");
+        for (line_id in planner_lines_base['lines']) {
+         planner_lines_base['lines'][line_id]['time'] += enforced_time;
+        }
+    }
+
+    if (enforced == 2) {
+        console.log("intervals increased");
+        for (line_id in planner_lines_base['lines']) {
+         planner_lines_base['lines'][line_id]['intervals'] += 1;
+        }
+    }
 
     $.ajax({
         url: API_ENDPOINT + '/plan',

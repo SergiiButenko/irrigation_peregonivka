@@ -1,5 +1,6 @@
 var server = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
 var API_ENDPOINT = '/api/v1'
+var enforced_time = 5;
 
 var branch = [];
 var planner_lines = { 'lines': {} };
@@ -68,11 +69,11 @@ $(document).ready(function() {
 
         var time = parseInt($(card).find('.irrigation_minutes').val());
         if (more_water_mode == 1) {
-            $(card).find('.irrigation_minutes').val(time - 5);
+            $(card).find('.irrigation_minutes').val(time - enforced_time);
             more_water.addClass('greyout');
             $(card).data('more-water', 0)
         } else {
-            $(card).find('.irrigation_minutes').val(time + 5);
+            $(card).find('.irrigation_minutes').val(time + enforced_time);
             more_water.removeClass('greyout');
             $(card).data('more-water', 1)
         }
@@ -229,7 +230,7 @@ function toogle_card_state(card) {
 
         var time = parseInt($(card).find('.irrigation_minutes').val());
         if (more_water_mode == 1) {
-            $(card).find('.irrigation_minutes').val(time - 5);
+            $(card).find('.irrigation_minutes').val(time - enforced_time);
             more_water.addClass('greyout');
             $(card).data('more-water', 0)
         }

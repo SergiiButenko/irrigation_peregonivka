@@ -1,7 +1,9 @@
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
-#include <ESP8266mDNS.h>
+#include "DHT.h"
+ 
+#define DHTPIN D2     // what pin we're connected to
+#define DHTTYPE DHT22   // DHT 22  (AM2302)
 
 byte delay_between_requests = 1000;
 byte delay_between_filled_requests = 5000;
@@ -21,26 +23,8 @@ String device_id = "weather_station";
 char ssid[] = "NotebookNet"; //SSID of your Wi-Fi router
 char password[] = "0660101327"; //Password of your Wi-Fi router
 
-ESP8266WebServer server(80);
-
-void handleRoot() {
-  server.send(200, "application/json", "{\"device_id\": \"" + String(device_id) + "\"");
-}
-
-void handleNotFound(){
-  String message = "File Not Found\n\n";
-  message += "URI: ";
-  message += server.uri();
-  message += "\nMethod: ";
-  message += (server.method() == HTTP_GET)?"GET":"POST";
-  message += "\nArguments: ";
-  message += server.args();
-  message += "\n";
-  for (uint8_t i=0; i<server.args(); i++){
-    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
-  }
-  server.send(404, "text/plain", message);
-}
+DHT dht(DHTPIN, DHTTYPE);
+char str_humidity[10], str_temperature[10];
 
 void check_wifi_connection(){
   if (WiFi.status() != WL_CONNECTED) {
@@ -94,38 +78,19 @@ void send_request(String req){
 void setup()
 {
   Serial.begin(115200);
-  delay(10);
+  delay(2000);
 
-  // Connect to Wi-Fi network
-  Serial.println();
-  Serial.println();
-  Serial.print("Connecting to...");
-  Serial.println(ssid);
-
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.println("Wi-Fi connected successfully");
-
-  if (MDNS.begin("esp8266")) {
-    Serial.println("MDNS responder started");
-  }
-
-  server.on("/", handleRoot);
-  server.onNotFound(handleNotFound);
-  server.begin();
-}
-
-
-void loop()
-{
   check_wifi_connection();
-  server.handleClient();
-  send_request(host + String("/weather_station?device_id=") + String(device_id));
-  ESP.deepSleep(0.1 * 60 * 1000000); // deepSleep time is defined in microseconds.
+  dht.begin();
   
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+
+  dtostrf(h, 1, 2, str_humidity);
+  dtostrf(t, 1, 2, str_temperature);
+
+  send_request(host + String("/weather_station?device_id= \"") + String(device_id) + "\"&temp=" + String(str_temperature) + "&hum=" + String(str_humidity));
+  ESP.deepSleep(20e6); // 20e6 is 20 microseconds
 }
+
+void loop() { }
