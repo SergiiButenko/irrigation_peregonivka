@@ -373,6 +373,24 @@ $('.master_plan').click(function() {
     planner_lines_base = JSON.parse($('#plan_modal').data('lines'));
     planner_lines_base['timer'] = parseInt($("#select_line option:selected").val());
 
+    var enforced = parseInt($("#irrigation_volume option:selected").val());
+
+    console.log(enforced);
+
+    // if (enforced == 1) {
+    //     console.log("Time increased");
+    //     for (line_id in planner_lines_base['lines']) {
+    //      planner_lines_base['lines'][line_id]['time'] += enforced_time;
+    //     }
+    // }
+
+    // if (enforced == 2) {
+    //     console.log("intervals increased");
+    //     for (line_id in planner_lines_base['lines']) {
+    //      planner_lines_base['lines'][line_id]['intervals'] += 1;
+    //     }
+    // }
+    
     $.ajax({
         url: API_ENDPOINT + '/plan',
         type: "post",
