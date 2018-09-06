@@ -377,40 +377,26 @@ $('.master_plan').click(function() {
 
     console.log(enforced);
 
-    if (enforced == 1) {
-        console.log("Time increased");
-        for (line_id in planner_lines_base['lines']) {
-         planner_lines_base['lines'][line_id]['time'] += enforced_time;
+    $.ajax({
+        url: API_ENDPOINT + '/plan',
+        type: "post",
+        data: JSON.stringify(planner_lines_base),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function(xhr, opts) {
+            set_status_spinner();
+        },
+        success: function(data) {
+            set_status_ok();
+            $('#plan_modal').modal('hide');
+            window.location.replace("/history");
+        },
+        error: function() {
+            alert("Сталася помилка. Спробуйте ще.")
+            set_status_ok();
+            $('#plan_modal').modal('hide');
         }
-    }
-
-    if (enforced == 2) {
-        console.log("intervals increased");
-        for (line_id in planner_lines_base['lines']) {
-         planner_lines_base['lines'][line_id]['intervals'] += 1;
-        }
-    }
-    
-    // $.ajax({
-    //     url: API_ENDPOINT + '/plan',
-    //     type: "post",
-    //     data: JSON.stringify(planner_lines_base),
-    //     contentType: "application/json; charset=utf-8",
-    //     dataType: "json",
-    //     beforeSend: function(xhr, opts) {
-    //         set_status_spinner();
-    //     },
-    //     success: function(data) {
-    //         set_status_ok();
-    //         $('#plan_modal').modal('hide');
-    //         window.location.replace("/history");
-    //     },
-    //     error: function() {
-    //         alert("Сталася помилка. Спробуйте ще.")
-    //         set_status_ok();
-    //         $('#plan_modal').modal('hide');
-    //     }
-    // });
+    });
 });
 
 $('.master_plan_all').click(function() {
@@ -435,24 +421,24 @@ $('.master_plan_all').click(function() {
         }
     }
 
-    // $.ajax({
-    //     url: API_ENDPOINT + '/plan',
-    //     type: "post",
-    //     data: JSON.stringify(planner_lines_base),
-    //     contentType: "application/json; charset=utf-8",
-    //     dataType: "json",
-    //     beforeSend: function(xhr, opts) {
-    //         set_status_spinner();
-    //     },
-    //     success: function(data) {
-    //         set_status_ok();
-    //         $('#plan_modal').modal('hide');
-    //         window.location.replace("/history");
-    //     },
-    //     error: function() {
-    //         alert("Сталася помилка. Спробуйте ще.")
-    //         set_status_ok();
-    //         $('#plan_modal').modal('hide');
-    //     }
-    // });
+    $.ajax({
+        url: API_ENDPOINT + '/plan',
+        type: "post",
+        data: JSON.stringify(planner_lines_base),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function(xhr, opts) {
+            set_status_spinner();
+        },
+        success: function(data) {
+            set_status_ok();
+            $('#plan_modal').modal('hide');
+            window.location.replace("/history");
+        },
+        error: function() {
+            alert("Сталася помилка. Спробуйте ще.")
+            set_status_ok();
+            $('#plan_modal').modal('hide');
+        }
+    });
 });
