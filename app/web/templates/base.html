@@ -64,6 +64,8 @@
                     <h4 class="modal-title ">Полити всі лінії</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="form-group">
+                        <label for="select_line_all" class="col-sm-2 control-label">Час початку</label>
                     <select class="form-control" id="select_line_all" title="Виберіть час початку">
                         <option value="0">Зараз</option>
                         <option value="1">Додати до останнього поливу</option>
@@ -76,11 +78,15 @@
                         <option value="8">Через 7 годин</option>
                         <option value="9">Через 8 годин</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="irrigation_volume" class="col-sm-2 control-label">Інтенсивність</label>
                     <select class="form-control" id="irrigation_volume" title="Інтенсивність">
                         <option value="0">Звичайна</option>
-                        <option value="1">Полити на 5 хвилин довще</option>
+                        <option value="1">Полити на 5 хвилин довше</option>
                         <option value="2">Полити на 1 раз більше</option>
                     </select>
+                </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
