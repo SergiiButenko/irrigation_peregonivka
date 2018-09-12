@@ -1334,8 +1334,10 @@ def verify():
 @app.route("/weather_station")
 def weather_station():
     device_id = str(request.args.get("device_id"))
+    temp = str(request.args.get("temp"))
+    hum = str(request.args.get("hum"))
     logging.info(
-        "weather_station signal from '{0}' device id received".format(device_id)
+        "weather_station signal from '{}' device id received. temp={}; hum={}".format(device_id, temp, hum)
     )
     return jsonify(message="confirmed")
 
