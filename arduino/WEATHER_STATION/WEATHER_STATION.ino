@@ -15,6 +15,8 @@ byte retry_limit = 5;
 byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
 
+int deep_sleep_microsec = 15 * 60 * 1000000;
+
 const char *host = "http://mozz.asuscomm.com:9000";
 
 String device_id = "weather_station";
@@ -78,10 +80,10 @@ void send_request(String req){
 void setup()
 {
   Serial.begin(115200);
-  delay(2000);
 
   check_wifi_connection();
   dht.begin();
+  delay(4000);
   
   float h = dht.readHumidity();
   float t = dht.readTemperature();
@@ -90,7 +92,8 @@ void setup()
   dtostrf(t, 1, 2, str_temperature);
 
   send_request(host + String("/weather_station?device_id=") + String(device_id) + "&temp=" + String(str_temperature) + "&hum=" + String(str_humidity));
-  ESP.deepSleep(60 * 15 * 1000000); // 15 mimutes
+
+  ESP.deepSleep(deep_sleep_microsec); // 15 minutes
 }
 
 void loop() { }
