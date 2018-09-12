@@ -84,10 +84,27 @@ void setup()
   check_wifi_connection();
   dht.begin();
   delay(4000);
-  
-  float h = dht.readHumidity();
-  float t = dht.readTemperature();
+      
+  for (int i = 1; i <= retry_limit; i++) {
+    float h = dht.readHumidity();
+    if (isnan(h)) {
+      h = dht.readHumidity();
+    } else {
+      break;
+    }
+    delay(1000)
+  }
 
+  for (int i = 1; i <= retry_limit; i++) {
+    float t = dht.readTemperature();
+    if (isnan(h)) {
+      t = dht.readTemperature();
+    } else {
+      break;
+    }
+    delay(1000)
+  }
+  
   dtostrf(h, 1, 2, str_humidity);
   dtostrf(t, 1, 2, str_temperature);
 
