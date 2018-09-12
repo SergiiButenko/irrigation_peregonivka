@@ -90,7 +90,7 @@ void setup()
   dtostrf(t, 1, 2, str_temperature);
 
   send_request(host + String("/weather_station?device_id=") + String(device_id) + "&temp=" + String(str_temperature) + "&hum=" + String(str_humidity));
-  ESP.deepSleep(20e6); // 20e6 is 20 microseconds
+  ESP.deepSleep(60 * 15 * 1000000); // 15 mimutes
 }
 
 void loop() { }
