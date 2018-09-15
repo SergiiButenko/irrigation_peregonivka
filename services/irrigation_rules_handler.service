@@ -5,7 +5,7 @@ Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
-ExecStartPre=/bin/sleep 20
+ExecStartPre=/bin/sleep 10
 ExecStart=/usr/bin/python3 /var/www/app/rules_handler/rules_handler.py
 
 Restart=always
