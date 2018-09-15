@@ -1336,8 +1336,9 @@ def weather_station():
     device_id = str(request.args.get("device_id"))
     temp = str(request.args.get("temp"))
     hum = str(request.args.get("hum"))
+    press = str(request.args.get("press"))
     logging.info(
-        "weather_station signal from '{}' device id received. temp={}; hum={}".format(device_id, temp, hum)
+        "weather_station signal from '{}' device id received. temp={}; hum={}; press={}".format(device_id, temp, hum, press)
     )
     return jsonify(message="confirmed")
 

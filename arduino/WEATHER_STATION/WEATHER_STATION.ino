@@ -1,9 +1,26 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-#include "DHT.h"
- 
-#define DHTPIN D2     // what pin we're connected to
-#define DHTTYPE DHT22   // DHT 22  (AM2302)
+#include <Wire.h>
+#include <SPI.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BMP280.h>
+
+// assign the ESP8266 pins to arduino pins
+#define D1 5
+#define D2 4
+#define D3 0
+#define D5 14
+
+// assign the SPI bus to pins
+#define BME_SCK D1
+#define BME_MISO D5
+#define BME_MOSI D2
+#define BME1_CS D3
+
+#define SEALEVELPRESSURE_HPA (1013.25)
+
+Adafruit_BMP280 bme1(BME1_CS, BME_MOSI, BME_MISO, BME_SCK); // software SPI
+
 
 byte delay_between_requests = 1000;
 byte delay_between_filled_requests = 5000;
@@ -22,13 +39,15 @@ const char *host = "http://mozz.asuscomm.com:9000";
 String device_id = "weather_station";
 
 //SSID of your network
-char ssid[] = "NotebookNet"; //SSID of your Wi-Fi router
-char password[] = "0660101327"; //Password of your Wi-Fi router
+//char ssid[] = "NotebookNet"; //SSID of your Wi-Fi router
+//char password[] = "0660101327"; //Password of your Wi-Fi router
 
-DHT dht(DHTPIN, DHTTYPE);
-char str_humidity[10], str_temperature[10];
+char ssid[] = "faza_2"; //SSID of your Wi-Fi router
+char password[] = "Kobe_2016"; //Password of your Wi-Fi router
 
-void check_wifi_connection(){
+char str_pressure[10], str_temperature[10];
+
+void check_wifi_connection() {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Wait for connection");
     WiFi.begin(ssid, password);
@@ -45,7 +64,7 @@ void check_wifi_connection(){
   }
 }
 
-void send_request(String req){
+void send_request(String req) {
   for (int i = 1; i <= retry_limit; i++) {
     HTTPClient http;
 
@@ -58,7 +77,7 @@ void send_request(String req){
     Serial.println(host);
 
     http.begin(req);
-    
+
     int httpCode = http.GET();            //Send the request
     String payload = http.getString();    //Get the response payload
 
@@ -79,36 +98,54 @@ void send_request(String req){
 
 void setup()
 {
+  float p;
+  float t;
+
   Serial.begin(115200);
 
   check_wifi_connection();
-  dht.begin();
-  delay(4000);
-      
-  for (int i = 1; i <= retry_limit; i++) {
-    float h = dht.readHumidity();
-    if (isnan(h)) {
-      h = dht.readHumidity();
-    } else {
-      break;
-    }
-    delay(1000)
+
+  Serial.println(F("BME280 test"));
+
+  bool status;
+
+  // default settings
+  status = bme1.begin();
+  if (!status) {
+    Serial.println("Could not find a valid BME280 sensor 1 , check wiring!");
   }
 
-  for (int i = 1; i <= retry_limit; i++) {
-    float t = dht.readTemperature();
-    if (isnan(h)) {
-      t = dht.readTemperature();
+
+
+
+  for (byte i = 1; i <= retry_limit; i++) {
+    p = bme1.readPressure() / 100.0F;
+    Serial.print("Pressure = ");
+    Serial.print(p);
+    Serial.println(" hPa");
+    if (isnan(p)) {
+      delay(2000);
     } else {
       break;
     }
-    delay(1000)
   }
-  
-  dtostrf(h, 1, 2, str_humidity);
+
+  for (byte i = 1; i <= retry_limit; i++) {
+    t = bme1.readTemperature();
+    Serial.print("Temperature = ");
+    Serial.print(t);
+    Serial.println(" *C");
+    if (isnan(t)) {
+      delay(2000);
+    } else {
+      break;
+    }
+  }
+
+  dtostrf(p, 1, 2, str_pressure);
   dtostrf(t, 1, 2, str_temperature);
 
-  send_request(host + String("/weather_station?device_id=") + String(device_id) + "&temp=" + String(str_temperature) + "&hum=" + String(str_humidity));
+  send_request(host + String("/weather_station?device_id=") + String(device_id) + "&temp=" + String(str_temperature) + "&press=" + String(str_pressure));
 
   ESP.deepSleep(deep_sleep_microsec); // 15 minutes
 }
