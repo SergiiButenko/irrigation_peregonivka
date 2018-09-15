@@ -505,8 +505,7 @@ def get_last_ongoing_rule():
 
 
 def insert_weather(sensor_shortname, temp=None, hum=None, press=None):
-    sensor_id = select(QUERY[mn()+'_select_id'].format(sensor_shortname))
-    logging.info(sensor_id[0][0])
+    sensor_id = select(QUERY[mn()+'_select_id'].format(sensor_shortname))[0][0]
     if sensor_id is None:
         logging.error("{} sensor is absent in database".format(sensor_shortname))
         return False
