@@ -236,7 +236,7 @@ QUERY[
 
 
 QUERY['insert_weather_select_id'] = "SELECT sensor_id from sensors where short_name = '{}'"
-QUERY['insert_weather_insert_weather'] = "INSERT INTO weather_station (sensor_id, temp, hum, press) VALUES ({}, {}, {}, {})"
+QUERY['insert_weather_insert_weather'] = "INSERT INTO weather_station (sensor_id, temp, hum, press) VALUES (?,?,?,?)"
 
 
 def get_connection_poll():
@@ -272,14 +272,18 @@ def select(query, method="fetchall"):
 
 
 # executes query and returns fetch* result
-def update(query):
+def update(query, values=None):
     """Doesn't have fetch* methods. Returns lastrowid after database insert command."""
     lastrowid = -1
     global DB_CONNECTION
     try:
         cursor = DB_CONNECTION.cursor()
         # execute our Query
-        cursor.execute(query)
+        if values is None:
+            cursor.execute(query)
+        else:
+            cursor.execute(query, values)
+
         conn.commit()
         logging.debug("db request '{0}' executed".format(query))
         lastrowid = cursor.lastrowid
@@ -509,7 +513,7 @@ def insert_weather(sensor_shortname, temp=None, hum=None, press=None):
     if sensor_id is None:
         logging.error("{} sensor is absent in database".format(sensor_shortname))
         return False
-
-    update(QUERY[mn()+'_insert_weather'].format(sensor_id, temp, hum, press))
+    values = (sensor_id, temp, hum, press)
+    update(QUERY[mn()+'_insert_weather'], values=values)
 
     return True
