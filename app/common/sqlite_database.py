@@ -235,18 +235,29 @@ QUERY[
 ] = "INSERT into stop_fill (datetime) values (datetime('now', 'localtime'));"
 
 
-# executes query and returns fetch* result
-def select(query, method="fetchall"):
-    """Use this method in case you need to get info from database."""
-    conn = None
-    try:
-        conn = sqlite3.connect(
+QUERY['insert_weather_select_id'] = "SELECT sensor_id from sensors where short_name = '{}'"
+QUERY['insert_weather_insert_weather'] = "INSERT INTO weather_station (sensor_id, temp, hum, press) VALUES ({}, {}, {}, {})"
+
+
+def get_connection_poll():
+    conn = sqlite3.connect(
             "/var/sqlite_db/smart_system.sql",
             detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
         )
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
+    conn.row_factory = sqlite3.Row
+
+    return conn
+
+DB_CONNECTION = get_connection_poll()
+
+
+# executes query and returns fetch* result
+def select(query, method="fetchall"):
+    """Use this method in case you need to get info from database."""
+    global DB_CONNECTION
+    try:
+        cursor = DB_CONNECTION.cursor()
         # execute our Query
         cursor.execute(query)
         logging.debug("db request '{0}' executed".format(query))
@@ -257,25 +268,16 @@ def select(query, method="fetchall"):
                 e, query
             )
         )
-        return None
-    finally:
-        try:
-            if conn is not None:
-                conn.close()
-        except Exception as e:
-            logging.error("Error while closing connection with database: {0}".format(e))
+        raise e
 
 
 # executes query and returns fetch* result
 def update(query):
     """Doesn't have fetch* methods. Returns lastrowid after database insert command."""
-    conn = None
     lastrowid = -1
+    global DB_CONNECTION
     try:
-        conn = sqlite3.connect(
-            "/var/sqlite_db/smart_system.sql",
-            detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
-        )
+        cursor = DB_CONNECTION.cursor()
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         cursor = conn.cursor()
         # execute our Query
@@ -290,13 +292,7 @@ def update(query):
                 e, query
             )
         )
-    finally:
-        try:
-            if conn is not None:
-                conn.close()
-        except Exception as e:
-            logging.error("Error while closing connection with database: {0}".format(e))
-            return None
+        raise e
 
 
 def get_next_active_rule(line_id):
@@ -508,3 +504,14 @@ def get_last_ongoing_rule():
     last_rule["intervals"] = intervals
 
     return last_rule
+
+
+def insert_weather(sensor_shortname, temp=None, hum=None, press=None):
+    sensor_id = select(QUERY[mn()+'_select_id'].format(sensor_shortname))
+    if sensor_id is None:
+        logging.error("{} sensor is absent in database".format(sensor_shortname))
+        return False
+
+    update(QUERY[mn()+'_insert_weather'].format(sensor_id, temp, hum, press))
+
+    return True

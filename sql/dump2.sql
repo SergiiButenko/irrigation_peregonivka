@@ -122,6 +122,26 @@ CREATE TABLE temperature (
     hum REAL NOT NULL DEFAULT 0
 );
 
+CREATE TABLE sensors (
+    id INTEGER PRIMARY KEY,
+    sensor_id integer NOT NULL,
+    short_name text,
+    description text
+);
+
+INSERT INTO sensors VALUES(1,1,'weather_station', 'Погодна станція');
+
+CREATE TABLE weather_station (
+    id INTEGER PRIMARY KEY,
+    datetime time without time zone DEFAULT (datetime('now','localtime')),
+    sensor_id integer NOT NULL,
+    temp REAL NOT NULL DEFAULT 0,
+    hum REAL NOT NULL DEFAULT 0,
+    press REAL NOT NULL DEFAULT 0,
+    FOREIGN KEY(sensor_id) REFERENCES sensors(sensor_id)
+);
+
+
 CREATE TABLE settings (
     id INTEGER PRIMARY KEY,
     name text,
