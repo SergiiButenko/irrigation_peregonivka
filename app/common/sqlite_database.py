@@ -284,7 +284,7 @@ def update(query, values=None):
         else:
             cursor.execute(query, values)
 
-        conn.commit()
+        DB_CONNECTION.commit()
         logging.debug("db request '{0}' executed".format(query))
         lastrowid = cursor.lastrowid
         return lastrowid
