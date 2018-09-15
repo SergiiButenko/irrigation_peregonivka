@@ -278,8 +278,6 @@ def update(query):
     global DB_CONNECTION
     try:
         cursor = DB_CONNECTION.cursor()
-        # conn.cursor will return a cursor object, you can use this cursor to perform queries
-        cursor = conn.cursor()
         # execute our Query
         cursor.execute(query)
         conn.commit()
