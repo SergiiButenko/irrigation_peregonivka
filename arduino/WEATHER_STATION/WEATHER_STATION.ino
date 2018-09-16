@@ -28,6 +28,7 @@ int counter = 0;
 int counter_max = 300;
 int delay_for_counter_millis = 10;
 byte retry_limit = 5;
+byte conn_retry_limit = 40;
 
 byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
@@ -39,28 +40,35 @@ const char *host = "http://mozz.asuscomm.com:9000";
 String device_id = "weather_station";
 
 //SSID of your network
-//char ssid[] = "NotebookNet"; //SSID of your Wi-Fi router
-//char password[] = "0660101327"; //Password of your Wi-Fi router
+char ssid[] = "NotebookNet"; //SSID of your Wi-Fi router
+char password[] = "0660101327"; //Password of your Wi-Fi router
 
-char ssid[] = "faza_2"; //SSID of your Wi-Fi router
-char password[] = "Kobe_2016"; //Password of your Wi-Fi router
+//char ssid[] = "faza_2"; //SSID of your Wi-Fi router
+//char password[] = "Kobe_2016"; //Password of your Wi-Fi router
 
 char str_pressure[10], str_temperature[10];
 
-void check_wifi_connection() {
+bool check_wifi_connection() {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Wait for connection");
     WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-    }
 
-    Serial.println("");
-    Serial.print("Connected to ");
-    Serial.println(ssid);
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
+    for (int i = 1; i <= conn_retry_limit; i++) {
+      if (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+      } else {
+        Serial.println("");
+        Serial.print("Connected to ");
+        Serial.println(ssid);
+        Serial.print("IP address: ");
+        Serial.println(WiFi.localIP());
+
+        return true;
+      }
+    }
+    Serial.println("Can't wait till connected.");
+    return false;
   }
 }
 
@@ -103,7 +111,10 @@ void setup()
 
   Serial.begin(115200);
 
-  check_wifi_connection();
+  if (check_wifi_connection() == false){
+    Serial.println("Put to sleep.");
+    ESP.deepSleep(deep_sleep_microsec); // 15 minutes
+  }
 
   Serial.println(F("BME280 test"));
 
@@ -112,11 +123,8 @@ void setup()
   // default settings
   status = bme1.begin();
   if (!status) {
-    Serial.println("Could not find a valid BME280 sensor 1 , check wiring!");
+    Serial.println("Could not find a valid BME280 sensor. Check wiring!");
   }
-
-
-
 
   for (byte i = 1; i <= retry_limit; i++) {
     p = bme1.readPressure() / 100.0F;

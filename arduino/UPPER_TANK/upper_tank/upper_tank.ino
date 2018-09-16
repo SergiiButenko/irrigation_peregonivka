@@ -16,7 +16,7 @@ byte retry_limit = 5;
 byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
 
-const char *host = "http://192.168.1.22:8000";
+const char *host = "http://mozz.asuscomm.com:9000";
 
 String device_id = "upper_tank";
 
@@ -119,7 +119,7 @@ void ping() {
 
 
 void send_ping() {
-  send_request(host + String("/im_alive?device_id=") + String(device_id))
+  send_request(host + String("/im_alive?device_id=") + String(device_id));
 }
 
 void increase_counter() {
@@ -163,7 +163,7 @@ void send_request(String req){
     HTTPClient http;
 
     Serial.println("Sending GET request:");
-    Serial.println(reg);
+    Serial.println(req);
     Serial.print(i);
     Serial.print(" try out of ");
     Serial.print(retry_limit);

@@ -237,6 +237,11 @@ QUERY[
 
 QUERY['insert_weather_select_id'] = "SELECT sensor_id from sensors where short_name = '{}'"
 QUERY['insert_weather_insert_weather'] = "INSERT INTO weather_station (sensor_id, temp, hum, press) VALUES (?,?,?,?)"
+# select strftime('%Y-%m-%dT%H:00:00.000', w.datetime), s.description, round(avg(w.temp),2) 
+# from weather_station as w 
+# join sensors as s on 
+# w.sensor_id = s.sensor_id
+# group by strftime('%Y-%m-%dT%H:00:00.000', w.datetime);
 
 
 def get_connection_poll():
