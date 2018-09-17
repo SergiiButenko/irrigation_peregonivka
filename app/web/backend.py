@@ -1337,8 +1337,9 @@ def weather_station():
     temp = str(request.args.get("temp"))
     hum = str(request.args.get("hum"))
     press = str(request.args.get("press"))
+    voltage = str(request.args.get("voltage"))
     logging.info(
-        "weather_station signal from '{}' device id received. temp={}; hum={}; press={}".format(device_id, temp, hum, press)
+        "weather_station signal from '{}' device id received. temp={}; hum={}; press={}; voltage={}".format(device_id, temp, hum, press, voltage)
     )
 
     if database.insert_weather(sensor_shortname=device_id, temp=temp, hum=hum, press=press) is True:

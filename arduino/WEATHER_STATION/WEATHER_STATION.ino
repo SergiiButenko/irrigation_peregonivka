@@ -48,6 +48,9 @@ char password[] = "0660101327"; //Password of your Wi-Fi router
 
 char str_pressure[10], str_temperature[10];
 
+const int numReadings = 10;
+int inputPin = A0;
+
 bool check_wifi_connection() {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Wait for connection");
@@ -109,6 +112,15 @@ void setup()
   float p;
   float t;
 
+  analogReference(INTERNAL);
+  float avr = 0;
+  int sum = 0;
+  for (int thisReading = 0; thisReading < numReadings; thisReading++) {
+    sum = sum + analogRead(inputPin);
+    delay(100);
+  }
+  avr = sum / numReadings;
+
   Serial.begin(115200);
 
   if (check_wifi_connection() == false){
@@ -153,7 +165,7 @@ void setup()
   dtostrf(p, 1, 2, str_pressure);
   dtostrf(t, 1, 2, str_temperature);
 
-  send_request(host + String("/weather_station?device_id=") + String(device_id) + "&temp=" + String(str_temperature) + "&press=" + String(str_pressure));
+  send_request(host + String("/weather_station?device_id=") + String(device_id) + "&temp=" + String(str_temperature) + "&press=" + String(str_pressure) + "&voltage=" + String(avr));
 
   ESP.deepSleep(deep_sleep_microsec); // 15 minutes
 }
