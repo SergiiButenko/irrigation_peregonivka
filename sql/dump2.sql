@@ -138,6 +138,7 @@ CREATE TABLE weather_station (
     temp REAL NOT NULL DEFAULT 0,
     hum REAL NOT NULL DEFAULT 0,
     press REAL NOT NULL DEFAULT 0,
+    voltage REAL NOT NULL DEFAULT 0,
     FOREIGN KEY(sensor_id) REFERENCES sensors(sensor_id)
 );
 

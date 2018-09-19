@@ -1342,10 +1342,10 @@ def weather_station():
         "weather_station signal from '{}' device id received. temp={}; hum={}; press={}; voltage={}".format(device_id, temp, hum, press, voltage)
     )
 
-    if database.insert_weather(sensor_shortname=device_id, temp=temp, hum=hum, press=press) is True:
+    if database.insert_weather(sensor_shortname=device_id, temp=temp, hum=hum, press=press, voltage=voltage) is True:
         logging.info("Info registered in database.")
     else:
-        logging.error("Error while insert occured.")
+        logging.error("Error while insert occured. ")
 
     return jsonify(message="confirmed")
 
