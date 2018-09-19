@@ -112,7 +112,6 @@ void setup()
   float p;
   float t;
 
-  analogReference(INTERNAL);
   float avr = 0;
   int sum = 0;
   for (int thisReading = 0; thisReading < numReadings; thisReading++) {
