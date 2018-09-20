@@ -43,66 +43,111 @@ CREATE TABLE rain (
     volume REAL NOT NULL
 );
 
+
+CREATE TABLE users (
+    id INTEGER NOT NULL PRIMARY KEY,
+    short_name text
+);
+
+INSERT INTO users VALUES(1, 'peregonivka');
+
 ## LINES ##
 
-CREATE TABLE line_settings (
+CREATE TABLE settings (
+    short_name text PRIMARY KEY,
+    python_type text NOT NULL
+);
+
+INSERT INTO settings VALUES('type', 'str');
+INSERT INTO settings VALUES('is_pump', 'int');
+INSERT INTO settings VALUES('pump_enabled', 'int');
+INSERT INTO settings VALUES('pump_pin', 'int');
+INSERT INTO settings VALUES('pin', 'int');
+INSERT INTO settings VALUES('s0', 'int');
+INSERT INTO settings VALUES('s1', 'int');
+INSERT INTO settings VALUES('s2', 'int');
+INSERT INTO settings VALUES('s3', 'int');
+INSERT INTO settings VALUES('en', 'int');
+INSERT INTO settings VALUES('multiplex', 'int');
+INSERT INTO settings VALUES('irrigation_time', 'int');
+INSERT INTO settings VALUES('intervals', 'int');
+INSERT INTO settings VALUES('irrigation_time_wait', 'int');
+INSERT INTO settings VALUES('irrigation_start_time', 'datetime');
+INSERT INTO settings VALUES('relay_num', 'int');
+INSERT INTO settings VALUES('linked_sensor_id', 'int');
+INSERT INTO settings VALUES('base_url', 'str');
+
+CREATE TABLE units (          
+    user_id INTEGER NOT NULL,
+    short_name text NOT NULL,
+    description text,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    PRIMARY KEY (user_id, short_name)
+);
+
+INSERT INTO units VALUES(1, 'pump_alko','Насос AL-KO');
+INSERT INTO units VALUES(1, 'strauberry_1','Полуниця клумба');
+INSERT INTO units VALUES(1, 'strauberry_2','Полуниця альтанка');
+-- INSERT INTO units VALUES(1, 'flowers','Квіти');
+-- INSERT INTO units VALUES(1, 'raspberry','Малина'); ,10,2,15,'2017-06-29 20:00:00','irrigation',NULL,1,13,NULL,2,0,0,16,NULL,NULL);
+-- INSERT INTO units VALUES(1, 'cucumbers','Огірки'); ,10,2,15,'2017-06-29 21:00:00','irrigation',NULL,1,2,NULL,2,0,0,16,NULL,NULL);
+-- INSERT INTO units VALUES(1, 'tomatoes','Томати'); ,10,2,15,'2017-06-29 06:00:00','irrigation',NULL,1,1,NULL,2,0,0,16,NULL,NULL);
+-- INSERT INTO units VALUES(1, 'in_air_greenhouse','Повітря в теплиці'); ,0,0,0,'2017-06-29 18:30:00','air_sensor','192.168.1.102',0,NULL,NULL,5,0,1,NULL,NULL,NULL);
+-- INSERT INTO units VALUES(1, 'out_air_greenhouse','Повітря на вулиці'); ,0,0,0,'2017-06-29 18:30:00','ground_sensor','192.168.1.102',0,NULL,NULL,5,0,1,NULL,NULL,NULL);
+-- INSERT INTO units VALUES(1, 'floor_greenhouse','Підігрів'); ,10800,1,1,'2017-06-29 18:34:00','greenhouse','192.168.1.102',0,1,NULL,4,0,1,NULL,NULL,NULL)
+-- INSERT INTO units VALUES(1, 'upper_tank','Верхня бочка'); ,480,1,1,'2017-06-29 02:00:00','tank',NULL,0,NULL,20,5,0,1,NULL, 'upper_tank', '192.168.1.55');
+-- INSERT INTO units VALUES(1, 'kids_house','Дитячий будинок'); ,300,1,1,'2017-06-29 18:34:00','lighting','192.168.1.234',0,2,NULL,4,0,1,NULL,NULL,NULL);
+-- INSERT INTO units VALUES(1, 'grass','Газон'); ,15,2,15,'2017-06-29 01:00:00','irrigation',NULL,1,3,NULL,2,0,0,16,NULL,NULL);
+
+CREATE TABLE unit_settings (
     id INTEGER PRIMARY KEY,
-    name text NOT NULL,
-    type text NOT NULL,
-    is_pump integer not null,
-    pump_enabled integer,
-    pump_pin integer,
-    pin integer,
-    s0 integer, 
-    s1 integer, 
-    s2 integer, 
-    s3 integer, 
-    en integer, 
-    multiplex integer,
-    base_url text
-);
-INSERT INTO line_settings VALUES(1, 'Полив з бочки', 'irrigation');
-INSERT INTO line_settings VALUES(2, 'Освітлення', 'lighting');
-INSERT INTO line_settings VALUES(3, 'Теплиця', 'greenhouse');
-INSERT INTO line_settings VALUES(4, 'Верхня бочка', 'tank');
-
-CREATE TABLE linked_sensors (
-    id INTEGER PRIMARY KEY,
-    name text NOT NULL,
-    base_url text
-);
-INSERT INTO linked_sensors VALUES(1, 'upper_tank', '192.168.1.55');
-
-
-CREATE TABLE lines (          
-    id INTEGER PRIMARY KEY,             
-    name text NOT NULL,           
-    time integer NOT NULL,
-    intervals integer NOT NULL,
-    time_wait integer NOT NULL,
-    start_time time without time zone NOT NULL,
-    line_setting integer NOT NULL,
-    relay_num integer,
-    device_id integer,
-    FOREIGN KEY(line_setting) REFERENCES line_settings(id),
-    FOREIGN KEY(device_id) REFERENCES linked_sensors(id)
+    user_id INTEGER NOT NULL,
+    unit_name text NOT NULL,
+    settings text NOT NULL,
+    value text NOT NULL,
+    FOREIGN KEY(settings) REFERENCES settings(short_name),
+    FOREIGN KEY(user_id, unit_name) REFERENCES units(user_id, short_name)
 );
 
-INSERT INTO lines VALUES(1,1,'Насос AL-KO',10,2,15,'2017-06-29 18:34:00','irrigation',NULL,0,NULL,16,1,1,1,NULL,NULL,NULL);
-INSERT INTO lines VALUES(2,2,'Полуниця клумба',10,2,15,'2017-06-29 19:00:00','irrigation',NULL,1,15,NULL,2,0,0,16,NULL,NULL);
-INSERT INTO lines VALUES(3,3,'Квіти',15,2,15,'2017-06-29 07:00:00','irrigation',NULL,1,14,NULL,2,0,0,16,NULL,NULL);
-INSERT INTO lines VALUES(4,4,'Малина',10,2,15,'2017-06-29 20:00:00','irrigation',NULL,1,13,NULL,2,0,0,16,NULL,NULL);
-INSERT INTO lines VALUES(5,5,'Огірки',10,2,15,'2017-06-29 21:00:00','irrigation',NULL,1,2,NULL,2,0,0,16,NULL,NULL);
-INSERT INTO lines VALUES(6,6,'Томати',10,2,15,'2017-06-29 06:00:00','irrigation',NULL,1,1,NULL,2,0,0,16,NULL,NULL);
-INSERT INTO lines VALUES(10,10,'Повітря в теплиці',0,0,0,'2017-06-29 18:30:00','air_sensor','192.168.1.102',0,NULL,NULL,5,0,1,NULL,NULL,NULL);
-INSERT INTO lines VALUES(11,11,'Повітря на вулиці',0,0,0,'2017-06-29 18:30:00','ground_sensor','192.168.1.102',0,NULL,NULL,5,0,1,NULL,NULL,NULL);
-INSERT INTO lines VALUES(12,12,'Підігрів',10800,1,1,'2017-06-29 18:34:00','greenhouse','192.168.1.102',0,1,NULL,4,0,1,NULL,NULL,NULL);
-INSERT INTO lines VALUES(13,13,'Полуниця альтанка',10,2,15,'2017-06-29 08:00:00','irrigation',NULL,1,5,NULL,2,0,0,16,NULL,NULL);
-INSERT INTO lines VALUES(14,14,'Верхня бочка',480,1,1,'2017-06-29 02:00:00','tank',NULL,0,NULL,20,5,0,1,NULL, 'upper_tank', '192.168.1.55');
-INSERT INTO lines VALUES(16,16,'Дитячий будинок',300,1,1,'2017-06-29 18:34:00','lighting','192.168.1.234',0,2,NULL,4,0,1,NULL,NULL,NULL);
-INSERT INTO lines VALUES(19,19,'Газон',15,2,15,'2017-06-29 01:00:00','irrigation',NULL,1,3,NULL,2,0,0,16,NULL,NULL);
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'pump', 'type', 'pump');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'pump', 'is_pump', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'pump', 'pin', '16');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'pump', 'base_url', 'http://');
 
-INSERT INTO lines VALUES(7,7,'Ліхтар',300,1,1,'2017-06-29 18:34:00','lighting','192.168.1.133',0,2,NULL,4,0,1,NULL,NULL);
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'type', 'irrigation');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'is_pump', '0');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'pump_pin', '16');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'irrigation_time', '10');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'intervals', '2');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'irrigation_time_wait', '15');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'irrigation_start_time', '19:00:00');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'relay', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 's0', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 's1', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 's2', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 's3', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'en', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'multiplex', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_1', 'base_url', 'http://');
+
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'type', 'irrigation');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'is_pump', '0');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'pump_pin', '16');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'irrigation_time', '10');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'intervals', '2');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'irrigation_time_wait', '15');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'irrigation_start_time', '18:00:00');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'relay', '2');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 's0', '2');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 's1', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 's2', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 's3', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'en', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'multiplex', '1');
+INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'base_url', 'http://');
+
+
+
 
 CREATE TABLE temperature (
     id INTEGER PRIMARY KEY,
