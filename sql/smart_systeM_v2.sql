@@ -1,5 +1,14 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
+
+## USERS ## 
+CREATE TABLE users (
+    id INTEGER NOT NULL PRIMARY KEY,
+    short_name text
+);
+INSERT INTO users VALUES(1, 'peregonivka');
+
+
 ## RULES ##
 CREATE TABLE state_of_rule (
     id INTEGER PRIMARY KEY,
@@ -14,6 +23,7 @@ INSERT INTO state_of_rule VALUES(5,'Canceled_by_rain','Скасовано чер
 INSERT INTO state_of_rule VALUES(6,'Canceled_by_ground_humidity','Скасовано через вологість грунту');
 INSERT INTO state_of_rule VALUES(7,'Canceled_by_mistime','Скасовано через помилку з часом');
 
+
 CREATE TABLE type_of_rule (
     id INTEGER PRIMARY KEY,
     short_name text NOT NULL,
@@ -22,42 +32,26 @@ CREATE TABLE type_of_rule (
 INSERT INTO type_of_rule VALUES(1, 'start', 'Почати полив');
 INSERT INTO type_of_rule VALUES(2, 'stop', 'Зупинити полив');
 
+
 CREATE TABLE life (
     id INTEGER PRIMARY KEY,
-    line_id integer NOT NULL,
-    rule_id integer NOT NULL,
+    unit_name text NOT NULL,
+    rule_type integer NOT NULL,
     execution_start_time timestamp without time zone NOT NULL,
     execution_time integer default 0 NOT NULL,
     state integer DEFAULT 1,
     interval_id text,
-    FOREIGN KEY(line_id) REFERENCES lines(id),
-    FOREIGN KEY(rule_id) REFERENCES type_of_rule(id),
+    FOREIGN KEY(unit_name) REFERENCES units(short_name),
+    FOREIGN KEY(rule_type) REFERENCES type_of_rule(id),
     FOREIGN KEY(state) REFERENCES state_of_rule(id)
 );
 
-## RAIN MEASURMENTS ##
-
-CREATE TABLE rain (
-    id INTEGER PRIMARY KEY,
-    datetime time without time zone NOT NULL DEFAULT (datetime('now','localtime')),
-    volume REAL NOT NULL
-);
-
-
-CREATE TABLE users (
-    id INTEGER NOT NULL PRIMARY KEY,
-    short_name text
-);
-
-INSERT INTO users VALUES(1, 'peregonivka');
 
 ## LINES ##
-
 CREATE TABLE settings (
     short_name text PRIMARY KEY,
     python_type text NOT NULL
 );
-
 INSERT INTO settings VALUES('type', 'str');
 INSERT INTO settings VALUES('is_pump', 'int');
 INSERT INTO settings VALUES('pump_enabled', 'int');
@@ -76,6 +70,14 @@ INSERT INTO settings VALUES('irrigation_start_time', 'datetime');
 INSERT INTO settings VALUES('relay_num', 'int');
 INSERT INTO settings VALUES('linked_sensor_id', 'int');
 INSERT INTO settings VALUES('base_url', 'str');
+INSERT INTO settings VALUES('temp_max', 'float');
+INSERT INTO settings VALUES('temp_min', 'float');
+INSERT INTO settings VALUES('greenhouse_auto', 'int');
+
+-- INSERT INTO settings VALUES(1,'Температура в теплиці','temp_min_max',NULL,'{''min'': ''14'', ''max'': ''18''}');
+-- INSERT INTO settings VALUES(2,'Автоматичне керування температурой в теплиці','greenhouse_auto',NULL,'{''enabled'': ''0''}');
+-- INSERT INTO settings VALUES(3,'Автоматичне керування температурой в теплиці','greenhouse_auto',NULL,'{''enabled'': ''0''}');
+
 
 CREATE TABLE units (          
     user_id INTEGER NOT NULL,
@@ -147,25 +149,6 @@ INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'straub
 INSERT INTO unit_settings(user_id, unit_name, settings, value) VALUES(1, 'strauberry_2', 'base_url', 'http://');
 
 
-
-
-CREATE TABLE temperature (
-    id INTEGER PRIMARY KEY,
-    datetime time without time zone NOT NULL DEFAULT (datetime('now','localtime')),
-    line_id integer NOT NULL,
-    temp REAL NOT NULL DEFAULT 0,
-    hum REAL NOT NULL DEFAULT 0
-);
-
-CREATE TABLE sensors (
-    id INTEGER PRIMARY KEY,
-    sensor_id integer NOT NULL,
-    short_name text,
-    description text
-);
-
-INSERT INTO sensors VALUES(1,1,'weather_station', 'Погодна станція');
-
 CREATE TABLE weather_station (
     id INTEGER PRIMARY KEY,
     datetime time without time zone DEFAULT (datetime('now','localtime')),
@@ -176,16 +159,4 @@ CREATE TABLE weather_station (
     voltage REAL NOT NULL DEFAULT 0,
     FOREIGN KEY(sensor_id) REFERENCES sensors(sensor_id)
 );
-
-
-CREATE TABLE settings (
-    id INTEGER PRIMARY KEY,
-    name text,
-    short_name text,
-    value int,
-    json_value json
-);
-INSERT INTO settings VALUES(1,'Температура в теплиці','temp_min_max',NULL,'{''min'': ''14'', ''max'': ''18''}');
-INSERT INTO settings VALUES(2,'Автоматичне керування температурой в теплиці','greenhouse_auto',NULL,'{''enabled'': ''0''}');
-INSERT INTO settings VALUES(3,'Автоматичне керування температурой в теплиці','greenhouse_auto',NULL,'{''enabled'': ''0''}');
 COMMIT;
