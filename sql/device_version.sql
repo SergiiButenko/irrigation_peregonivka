@@ -45,8 +45,8 @@ CREATE TABLE user_roles (
     FOREIGN KEY(user_id) REFERENCES users(id),
     FOREIGN KEY(role_name) REFERENCES roles(name)
 );
-INSERT INTO user_roles(user_id, name) VALUES (1, 'branch_admin');
-INSERT INTO user_roles(user_id, name) VALUES (2, 'user');
+INSERT INTO user_roles(user_id, role_name) VALUES (1, 'branch_admin');
+INSERT INTO user_roles(user_id, role_name) VALUES (2, 'user');
 
 
 -- HUB SERCTION ---
@@ -81,14 +81,14 @@ CREATE TABLE hub_settings (
     FOREIGN KEY (hub_id) REFERENCES hub_settings(id),
     FOREIGN KEY (setting) REFERENCES hub_parameters(name)
 );
-INSERT INTO hub_settings (hub_id, 'base_url', 'http://mozz.asuscomm.com:7542');
-INSERT INTO hub_settings (hub_id, 's0', 2);
-INSERT INTO hub_settings (hub_id, 's1', 1);
-INSERT INTO hub_settings (hub_id, 's2', 2);
-INSERT INTO hub_settings (hub_id, 's3', 3);
-INSERT INTO hub_settings (hub_id, 'en', 5);
-INSERT INTO hub_settings (hub_id, 'pump1_name', 'Насос AL-KO');
-INSERT INTO hub_settings (hub_id, 'pump1_pin', '16');
+INSERT INTO hub_settings (hub_id, setting, value) VALUES (1, 'base_url', 'http://mozz.asuscomm.com:7542');
+INSERT INTO hub_settings (hub_id, setting, value) VALUES (1, 's0', 2);
+INSERT INTO hub_settings (hub_id, setting, value) VALUES (1, 's1', 1);
+INSERT INTO hub_settings (hub_id, setting, value) VALUES (1, 's2', 2);
+INSERT INTO hub_settings (hub_id, setting, value) VALUES (1, 's3', 3);
+INSERT INTO hub_settings (hub_id, setting, value) VALUES (1, 'en', 5);
+INSERT INTO hub_settings (hub_id, setting, value) VALUES (1, 'pump1_name', 'Насос AL-KO');
+INSERT INTO hub_settings (hub_id, setting, value) VALUES (1, 'pump1_pin', '16');
 
 CREATE TABLE user_hub (
     id INTEGER NOT NULL PRIMARY KEY,
@@ -97,8 +97,8 @@ CREATE TABLE user_hub (
     FOREIGN KEY(user_id) REFERENCES users(id),
     FOREIGN KEY(hub_id) REFERENCES hub(id)
 );
-INSERT INTO user_hub(user_id, hub_id) VALUES (1, 1)
-INSERT INTO user_hub(user_id, hub_id) VALUES (2, 1)
+INSERT INTO user_hub(user_id, hub_id) VALUES (1, 1);
+INSERT INTO user_hub(user_id, hub_id) VALUES (2, 1);
 
 
 -- DEVICE SERCTION ---
@@ -137,41 +137,34 @@ CREATE TABLE device_hub (
     FOREIGN KEY(hub_id) REFERENCES hub(id),
     FOREIGN KEY(device_id) REFERENCES device(id)
 );
-INSERT INTO hub_id(hub_id, device_id) VALUES (1, 1)
-INSERT INTO device_hub(hub_id, device_id) VALUES (1, 2)
+INSERT INTO device_hub(hub_id, device_id) VALUES (1, 1);
+INSERT INTO device_hub(hub_id, device_id) VALUES (1, 2);
 
 -- IRRIGATION SERCTION ---
-    
-    irrigation_time INTEGER NOT NULL,
-    irrigation_intervals INTEGER NOT NULL,
-    irrigation_time_wait INTEGER NOT NULL,
-    relay_num INTEGER NOT NULL,
-    pump_mode TEXT DEFAULT 'no pump', -- need table with allowed settings
-    
 
 CREATE TABLE line_parameters (
     name text NOT NULL PRIMARY KEY,
     description text NOT NULL
 );
-INSERT INTO device_parameters(name, description) VALUES('operation_execution_time', 'Дефолтний час виконання');
-INSERT INTO device_parameters(name, description) VALUES('operation_intervals', 'Дефолтне значення кількості повторів');
-INSERT INTO device_parameters(name, description) VALUES('operation_time_wait', 'Дефолтне значення часу очікування');
-INSERT INTO device_parameters(name, description) VALUES('relay_num', 'Номер реле');
-INSERT INTO device_parameters(name, description) VALUES('pump_mode', 'Який насос вмикати, якщо взашалі вмикати');
-INSERT INTO device_parameters(name, description) VALUES('type', 'Тип лінії. Потенційно потрібен');
+INSERT INTO line_parameters(name, description) VALUES('operation_execution_time', 'Дефолтний час виконання');
+INSERT INTO line_parameters(name, description) VALUES('operation_intervals', 'Дефолтне значення кількості повторів');
+INSERT INTO line_parameters(name, description) VALUES('operation_time_wait', 'Дефолтне значення часу очікування');
+INSERT INTO line_parameters(name, description) VALUES('relay_num', 'Номер реле');
+INSERT INTO line_parameters(name, description) VALUES('pump_mode', 'Який насос вмикати, якщо взашалі вмикати');
+INSERT INTO line_parameters(name, description) VALUES('type', 'Тип лінії. Потенційно потрібен');
 
 CREATE TABLE lines (      
     id INTEGER NOT NULL PRIMARY KEY,
     description text NOT NULL
 );
-INSERT INTO lines(id, description) VALUES ('Полуниця клумба');
-INSERT INTO lines(id, description) VALUES ('Полуниця альтанка');
-INSERT INTO lines(id, description) VALUES ('Полуниця альтанка');
-INSERT INTO lines(id, description) VALUES ('Квіти');
-INSERT INTO lines(id, description) VALUES ('Огірки');
-INSERT INTO lines(id, description) VALUES ('Томати');
-INSERT INTO lines(id, description) VALUES ('Газон');
-INSERT INTO lines(id, description) VALUES ('Верхня бочка');
+INSERT INTO lines(description) VALUES ('Полуниця клумба');
+INSERT INTO lines(description) VALUES ('Полуниця альтанка');
+INSERT INTO lines(description) VALUES ('Полуниця альтанка');
+INSERT INTO lines(description) VALUES ('Квіти');
+INSERT INTO lines(description) VALUES ('Огірки');
+INSERT INTO lines(description) VALUES ('Томати');
+INSERT INTO lines(description) VALUES ('Газон');
+INSERT INTO lines(description) VALUES ('Верхня бочка');
 
 CREATE TABLE line_settings (
     id INTEGER NOT NULL PRIMARY KEY,
@@ -254,53 +247,54 @@ INSERT INTO line_hub(hub_id, line_id) VALUES (1, 7);
 INSERT INTO line_hub(hub_id, line_id) VALUES (1, 8);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE TABLE lines (          
+CREATE TABLE rule_type (
     id INTEGER NOT NULL PRIMARY KEY,
-    description text NOT NULL,
-    irrigation_time INTEGER NOT NULL,
-    irrigation_intervals INTEGER NOT NULL,
-    irrigation_time_wait INTEGER NOT NULL,
-    relay_num INTEGER NOT NULL,
-    pump_mode TEXT DEFAULT 'no pump', -- need table with allowed settings
-    hub_id INTEGER NOT NULL,
-    FOREIGN KEY(hub_id) REFERENCES hub(id)
+    name TEXT NOT NULL,
+    description TEXT
 );
-
-INSERT INTO lines(id, description, irrigation_time, irrigation_intervals, irrigation_time_wait, relay_num, pump_mode, hub_id) VALUES (2, 'Полуниця клумба', 10, 2, 15, 1, 'pump1', 1);
-INSERT INTO lines(id, description, irrigation_time, irrigation_intervals, irrigation_time_wait, relay_num, pump_mode, hub_id) VALUES (3, 'Полуниця альтанка', 10, 2, 15, 2, 'pump1', 1);
-INSERT INTO lines(id, description, irrigation_time, irrigation_intervals, irrigation_time_wait, relay_num, pump_mode, hub_id) VALUES (4, 'Полуниця альтанка', 10, 2, 15, 3, 'pump1', 1);
-INSERT INTO lines(id, description, irrigation_time, irrigation_intervals, irrigation_time_wait, relay_num, pump_mode, hub_id) VALUES (5, 'Квіти', 15, 2, 15, 4, 'pump1', 1);
-INSERT INTO lines(id, description, irrigation_time, irrigation_intervals, irrigation_time_wait, relay_num, pump_mode, hub_id) VALUES (6, 'Огірки', 10, 2, 15, 5, 'pump1', 1);
-INSERT INTO lines(id, description, irrigation_time, irrigation_intervals, irrigation_time_wait, relay_num, pump_mode, hub_id) VALUES (7, 'Томати', 10, 2, 15, 6, 'pump1', 1);
-INSERT INTO lines(id, description, irrigation_time, irrigation_intervals, irrigation_time_wait, relay_num, pump_mode, hub_id) VALUES (8, 'Газон', 15, 2, 15, 7, 'pump1', 1);
-INSERT INTO lines(id, description, irrigation_time, irrigation_intervals, irrigation_time_wait, relay_num, pump_mode, hub_id) VALUES (8, 'Верхня бочка', 480, 1, 0, 13, 'no pump', 1, 1);
+INSERT INTO rule_type(id, name) VALUES(1, 'Почати полив');
+INSERT INTO rule_type(id, name) VALUES(2, 'Зупинити полив');
 
 
-CREATE TABLE line_linked_device (
+CREATE TABLE rule_states (
+    id INTEGER PRIMARY KEY,
+    short_name text NOT NULL,
+    full_name text NOT NULL
+);
+INSERT INTO rule_states VALUES(1, 'Pending','Заплановано');
+INSERT INTO rule_states VALUES(2, 'Done', 'Виконано');
+INSERT INTO rule_states VALUES(3, 'Failed','Не виконано');
+INSERT INTO rule_states VALUES(4,'Canceled','Скасовано');
+INSERT INTO rule_states VALUES(5,'Canceled_by_rain','Скасовано через дощ');
+INSERT INTO rule_states VALUES(6,'Canceled_by_humidity','Скасовано через вологість');
+INSERT INTO rule_states VALUES(7,'Canceled_by_mistime','Скасовано через помилку з часом');
+
+
+CREATE TABLE rules_line(
     id INTEGER NOT NULL PRIMARY KEY,
     line_id INTEGER NOT NULL,
-    device_id INTEGER NOT NULL,
+    rule_id INTEGER NOT NULL,
+    --device_id INTEGER NOT NULL, ???
+    state integer DEFAULT 1 NOT NULL,
+    interval_id text, 
+    -- ongoing rule ???
     FOREIGN KEY(line_id) REFERENCES lines(id),
-    FOREIGN KEY(device_id) REFERENCES device(id)
+    FOREIGN KEY(rule_id) REFERENCES rule_type(id),
+    FOREIGN KEY(state) REFERENCES rule_states(id)
+
+    -- FOREIGN KEY(device_id) REFERENCES device(id)
 );
+
+-- CREATE TABLE ongoing_rules (
+--     id INTEGER PRIMARY KEY,
+--     line_id integer NOT NULL,
+--     time integer NOT NULL,
+--     intervals integer NOT NULL,
+--     time_wait integer NOT NULL,
+--     repeat_value integer NOT NULL,
+--     date_time_start timestamp without time zone NOT NULL,
+--     end_date timestamp without time zone,
+--     active integer NOT NULL DEFAULT 1, 
+--     rule_id text, 
+--     FOREIGN KEY(line_id) REFERENCES lines(number)
+-- );

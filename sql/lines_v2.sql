@@ -56,53 +56,8 @@ INSERT INTO line_personal_settings(line_id, setting, value) VALUES (7, 'relay_nu
 INSERT INTO line_personal_settings(line_id, setting, value) VALUES (8, 'relay_num', 7);
 INSERT INTO line_personal_settings(line_id, setting, value) VALUES (9, 'relay_num', 1);
 
-CREATE TABLE permission (
-    name text NOT NULL PRIMARY KEY,
-    description text
-);
-INSERT INTO permission(name, description) VALUES ('create_branch', 'Ability to add branches for user');
-INSERT INTO permission(name, description) VALUES ('read_branch', 'Ability to add branches for user');
-INSERT INTO permission(name, description) VALUES ('update_branch', 'Ability to add branches for user');
-INSERT INTO permission(name, description) VALUES ('delete_branch', 'Ability to delete branches for user');
 
 
-CREATE TABLE roles (
-    name text NOT NULL PRIMARY KEY,
-    description text
-);
-INSERT INTO roles(name, description) VALUES ('user', 'Simple user');
-INSERT INTO roles(name, description) VALUES ('branch_admin', 'User with ability to create branches');
-
-CREATE TABLE role_permissions (
-    role_name INTEGER NOT NULL PRIMARY KEY,
-    permission_name INTEGER NOT NULL,
-    FOREIGN KEY(permission_name) REFERENCES permission(name),
-    FOREIGN KEY(role_name) REFERENCES roles(name)
-);
-INSERT INTO role_permissions (role_name, permission_name) VALUES ('branch_admin', 'create_branch');
-INSERT INTO role_permissions (role_name, permission_name) VALUES ('branch_admin', 'read_branch');
-INSERT INTO role_permissions (role_name, permission_name) VALUES ('branch_admin', 'update_branch');
-INSERT INTO role_permissions (role_name, permission_name) VALUES ('branch_admin', 'delete_branch');
-
-INSERT INTO role_permissions (role_name, permission_name) VALUES ('user', 'read_branch');
-
-CREATE TABLE users (
-    id INTEGER NOT NULL PRIMARY KEY,
-    email text NOT NULL,
-    password text NOT NULL,
-    salt text NOT NULL
-);
-INSERT INTO users (email, password, salt) VALUES ('test@test.com', 'qwerty', '123456')
-
-
-CREATE TABLE user_roles (
-    id INTEGER NOT NULL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    role_name INTEGER NOT NULL,
-    FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(role_name) REFERENCES roles(name)
-);
-INSERT INTO user_roles(user_id, name) VALUES (1, 'branch_admin')
 
 CREATE TABLE user_lines (
     id INTEGER NOT NULL PRIMARY KEY,
