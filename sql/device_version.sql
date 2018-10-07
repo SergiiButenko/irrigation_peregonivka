@@ -4,9 +4,13 @@ CREATE TABLE permission (
     description text
 );
 INSERT INTO permission(name, description) VALUES ('create_branch', 'Ability to add branches for user');
-INSERT INTO permission(name, description) VALUES ('read_branch', 'Ability to add branches for user');
-INSERT INTO permission(name, description) VALUES ('update_branch', 'Ability to add branches for user');
+INSERT INTO permission(name, description) VALUES ('read_branch', 'Ability to read branches for user');
+INSERT INTO permission(name, description) VALUES ('update_branch', 'Ability to update branches for user');
 INSERT INTO permission(name, description) VALUES ('delete_branch', 'Ability to delete branches for user');
+INSERT INTO permission(name, description) VALUES ('create_device', 'Ability to add devices for user');
+INSERT INTO permission(name, description) VALUES ('read_device', 'Ability to read devices for user');
+INSERT INTO permission(name, description) VALUES ('update_device', 'Ability to update devices for user');
+INSERT INTO permission(name, description) VALUES ('delete_device', 'Ability to delete devices for user');
 
 
 CREATE TABLE roles (
@@ -15,6 +19,7 @@ CREATE TABLE roles (
 );
 INSERT INTO roles(name, description) VALUES ('user', 'Simple user');
 INSERT INTO roles(name, description) VALUES ('branch_admin', 'User with ability to create branches');
+INSERT INTO roles(name, description) VALUES ('device_admin', 'User with ability to create devices');
 
 CREATE TABLE role_permissions (
     id INTEGER NOT NULL PRIMARY KEY,
@@ -27,7 +32,19 @@ INSERT INTO role_permissions (role_name, permission_name) VALUES ('branch_admin'
 INSERT INTO role_permissions (role_name, permission_name) VALUES ('branch_admin', 'read_branch');
 INSERT INTO role_permissions (role_name, permission_name) VALUES ('branch_admin', 'update_branch');
 INSERT INTO role_permissions (role_name, permission_name) VALUES ('branch_admin', 'delete_branch');
+INSERT INTO role_permissions (role_name, permission_name) VALUES ('device_admin', 'create_device');
+INSERT INTO role_permissions (role_name, permission_name) VALUES ('device_admin', 'read_device');
+INSERT INTO role_permissions (role_name, permission_name) VALUES ('device_admin', 'update_device');
+INSERT INTO role_permissions (role_name, permission_name) VALUES ('device_admin', 'delete_device');
 INSERT INTO role_permissions (role_name, permission_name) VALUES ('user', 'read_branch');
+INSERT INTO role_permissions (role_name, permission_name) VALUES ('user', 'read_device');
+
+
+CREATE TABLE groups (
+    id INTEGER NOT NULL PRIMARY KEY,
+    description TEXT NOT NULL 
+);
+INSERT INTO groups (id, description) VALUES (1, 'pere')
 
 CREATE TABLE users (
     id INTEGER NOT NULL PRIMARY KEY,
@@ -38,15 +55,26 @@ CREATE TABLE users (
 INSERT INTO users (email, password, salt) VALUES ('test@test.com', 'qwerty', '123456');
 INSERT INTO users (email, password, salt) VALUES ('test2@test.com', 'qwerty', '123456');
 
-CREATE TABLE user_roles (
+CREATE TABLE group_roles (
     id INTEGER NOT NULL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
     role_name INTEGER NOT NULL,
-    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(group_id) REFERENCES groups(id),
     FOREIGN KEY(role_name) REFERENCES roles(name)
 );
-INSERT INTO user_roles(user_id, role_name) VALUES (1, 'branch_admin');
-INSERT INTO user_roles(user_id, role_name) VALUES (2, 'user');
+INSERT INTO user_roles(user_id, group_id) VALUES (1, 'branch_admin');
+INSERT INTO user_roles(user_id, group_id) VALUES (2, 'user');
+
+
+CREATE TABLE user_groups (
+    id INTEGER NOT NULL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(group_id) REFERENCES groups(id)
+);
+
+
 
 
 -- HUB SERCTION ---
