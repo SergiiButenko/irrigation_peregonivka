@@ -2,7 +2,7 @@ import React from 'react';
 import {Provider} from 'react-redux'
 import ReactDOM from 'react-dom';
 
-import store from './js/store'
+import store from './store'
 import App from './App'
 
 const title = 'My Minimal React Webpack Babel Setup';

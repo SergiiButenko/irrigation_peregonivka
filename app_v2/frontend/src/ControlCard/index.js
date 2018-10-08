@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import compose from 'recompose/compose';
-import * as actionCreators from './actionCreators'
+import * as actionCreators from '../actions/actionCreators'
 
 console.log(actionCreators)
 
@@ -51,35 +51,22 @@ class ControlCard extends React.Component {
     constructor(props) { 
       super(props);  
       const {dispatch} = props;
-      // Here's a good use case for bindActionCreators:
-      // You want a child component to be completely unaware of Redux.
-      // We create bound versions of these functions now so we can
-      // pass them down to our child later.
       this.boundActionCreators = bindActionCreators(actionCreators, dispatch)
       console.log(this.boundActionCreators)
-      // {
-      //   addTodo: Function,
-      //   removeTodo: Function
-      // }
     }
 
-  componentDidMount() {
-    // Injected by react-redux:
-    let { dispatch } = this.props
-    // Note: this won't work:
-    // TodoActionCreators.addTodo('Use Redux')
-    // You're just calling a function that creates an action.
-    // You must dispatch the action, too!
-    // This will work:
-    let action = actionCreators.selectCard(1)
-    dispatch(action)
-  }
-
   state = {
-    selected: false
+    selected: 0
   }
 
   toggleSelected = () => {
+    if (this.state.selected == 1) {
+      let action = actionCreators.set_state(1, 1)
+      dispatch(action)
+
+    }
+
+
     this.setState({
       selected: !this.state.selected,
     });
@@ -87,7 +74,6 @@ class ControlCard extends React.Component {
 
   render() {
     const { classes } = this.props;
-    //<Card className={classNames(classes.card, this.state.selected && classes.cardSelected)}>
 
     return (
       <React.Fragment>
@@ -105,7 +91,7 @@ class ControlCard extends React.Component {
           <Button 
           color="primary" 
           className={classes.button}
-          onClick={() => this.toggleSelected()}
+          onClick={this.toggleSelected}
           >
           Обрати
         </Button>
@@ -120,12 +106,5 @@ class ControlCard extends React.Component {
 ControlCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
-export default compose(
-  withStyles(styles, {
-    name: 'ControlCard',
-  }),
-  connect(state => ({ classes: state.classes }))
-)(ControlCard);
 
 export default withStyles(styles)(connect(state => ({ classes: state.classes }))(ControlCard));

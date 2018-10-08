@@ -4,10 +4,7 @@ import {Route, BrowserRouter} from 'react-router-dom';
 
 import { hot } from 'react-hot-loader';
 
-import LoginPage from './components/LoginPage';
-import DashboardPage from './components/DashboardPage';
-import NewUploadPage from './components/NewUploadPage';
-import UploadManagerPage from './components/UploadManagerPage';
+import IrrigationPage from './IrrigationPage';
 
 
 const App = () => {
@@ -15,10 +12,9 @@ const App = () => {
     return (
         <BrowserRouter>
             <div>
-                <Route exact path="/" component={ LoginPage }/>
-                <Route exact path="/dashboard" component={ DashboardPage }/>
-                <Route exact path="/upload_manager" component={ UploadManagerPage }/>
-                <Route exact path="/upload_new" component={ NewUploadPage }/>
+                <Route exact path="/" component={ IrrigationPage }/>
+                <Route exact path="/settings" component={ IrrigationPage }/>
+                <Route exact path="/devices" component={ IrrigationPage }/>
             </div>
         </BrowserRouter>
     );

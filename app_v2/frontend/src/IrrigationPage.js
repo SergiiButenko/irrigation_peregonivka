@@ -1,11 +1,11 @@
 import React from 'react';
 
-import NewUpload from './NewUpload';
+import IrrigationForm from './Irrigation';
 
-const UploadPage = () => (
+const IrrigationPage = () => (
     <div>
-        <NewUpload/>
+        <IrrigationForm/>
     </div>
 );
 
-export default UploadPage;
+export default IrrigationPage;

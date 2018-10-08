@@ -7,7 +7,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import ControlCard from '../ControlCard'
+//import ControlCard from '../ControlCard'
+import ToolbarAppWeb from '../ToolbarApp'
 
 const styles = theme => ({
   card: {
@@ -45,28 +46,29 @@ const styles = theme => ({
 });
 
 class IrrigationForm extends React.Component {
-
+// <ControlCard />
+//                   <ControlCard />
+//                   <ControlCard />
+//                   <ControlCard />
+//                   <ControlCard />
+//                   <ControlCard />
+//                   <ControlCard />
+//                   <ControlCard />
+//                   <ControlCard />
+//                   <ControlCard />
   render() {
   const { classes } = this.props;
 
   return (
     <React.Fragment>
      <div className={classes.grid_root}>
+     <ToolbarAppWeb/>
                <Grid container 
                    spacing={24}
                    direction="row"
                    justify="flex-start"
                    alignItems="flex-start">
-                  <ControlCard />
-                  <ControlCard />
-                  <ControlCard />
-                  <ControlCard />
-                  <ControlCard />
-                  <ControlCard />
-                  <ControlCard />
-                  <ControlCard />
-                  <ControlCard />
-                  <ControlCard />
+                  
                   
                </Grid>
                  <Button variant="extendedFab" color="primary" className={classes.button_float}>

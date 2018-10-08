@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 
-import * as reducers from "../reducers/index";
+import * as reducers from "../reducers";
 
 function logger({ getState }) {
   return next => action => {

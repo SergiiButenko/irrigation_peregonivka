@@ -1,6 +1,6 @@
 import {handleActions} from 'redux-actions';
 
-const defaultState = {lines: {line_id: {id: -1, state: -1}} };
+const defaultState = {lines: {0: {id: 0, state: -1}} };
 
 export const test = handleActions({
     UPDATE_CARD: (state, action) => {

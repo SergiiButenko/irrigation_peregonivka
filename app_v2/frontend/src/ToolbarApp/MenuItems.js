@@ -9,16 +9,18 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import {Link} from 'react-router-dom'
 
 export const mainListItems = (
   <div>
-    <ListItem button>
+    <ListItem component={Link} to="/" button>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Полив" />
     </ListItem>
-    <ListItem button>
+
+    <ListItem component={Link} to="/devices"  button>
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
@@ -30,7 +32,7 @@ export const mainListItems = (
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem button>
+    <ListItem component={Link} to="/settings"  button>
       <ListItemIcon>
         <AssignmentIcon />
       </ListItemIcon>

@@ -14,8 +14,7 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from './ListItems';
-import IrrigationForm from '../../IrrigationForm'
+import { mainListItems, secondaryListItems } from './MenuItems';
 import Grid from '@material-ui/core/Grid';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
@@ -199,14 +198,6 @@ class ToolbarAppWeb extends React.Component {
             <List>{secondaryListItems}</List>
           </div>
         </SwipeableDrawer>
-
-          <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
-            
-           <IrrigationForm/>
-          
-
-          </main>
         </div>
       </React.Fragment>
     );

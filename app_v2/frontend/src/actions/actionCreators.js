@@ -1,15 +1,8 @@
 import {createAction} from 'redux-actions';
 
-export function set_active(line_id) {
+export function set_state(line_id, state) {
   return {
     type: 'UPDATE_CARD',
-    payload: {line_id, 1}
-  }
-}
-
-export function set_inactive(line_id) {
-  return {
-    type: 'UPDATE_CARD',
-    payload: {line_id, 0}
+    payload: {id: line_id, state: state == true ? 1 : 0}
   }
 }
