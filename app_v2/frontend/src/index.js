@@ -4,21 +4,10 @@ import ReactDOM from 'react-dom';
 
 import store from './store'
 import App from './App'
+import {theme} from './theme'
+import {MuiThemeProvider} from '@material-ui/core/styles';
 
 const title = 'My Minimal React Webpack Babel Setup';
-
-import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#a31919',
-        },
-        secondary: {
-            main: 'rgb(55, 46, 142)',
-        },
-    },
-});
 
 
 ReactDOM.render(

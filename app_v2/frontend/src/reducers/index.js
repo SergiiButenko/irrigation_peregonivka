@@ -8,8 +8,8 @@ export const test = handleActions({
             ...state,
             lines: {
             	...state.lines, 
-            	[action.payload.line_id]: 
-            		{id:action.payload.line_id,
+            	[action.payload.id]: 
+            		{id:action.payload.id,
             		 state:action.payload.state}}
         };
     }

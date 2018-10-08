@@ -56,17 +56,22 @@ class ControlCard extends React.Component {
     }
 
   state = {
-    selected: 0
+    selected: 0,
+    id: -1,
+  }
+
+    componentDidMount() {
+    let { dispatch } = this.props
+
+    let action = actionCreators.set_state(1, 0)
+    dispatch(action)
   }
 
   toggleSelected = () => {
-    if (this.state.selected == 1) {
-      let action = actionCreators.set_state(1, 1)
-      dispatch(action)
-
-    }
-
-
+    let { dispatch } = this.props
+    let action = actionCreators.set_state(1, !this.state.selected)
+    dispatch(action)
+    
     this.setState({
       selected: !this.state.selected,
     });
@@ -80,7 +85,7 @@ class ControlCard extends React.Component {
       <Grid item>
       <Card className={classes.card, this.state.selected ? classes.cardSelected : ''}>
         <CardContent className={classes.content}>        
-          <Typography className={classes.title} variant="headline" component="h2">
+          <Typography className={classes.title} component="h2">
             Томати
           </Typography>
           <Typography component="p">
@@ -107,4 +112,10 @@ ControlCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(connect(state => ({ classes: state.classes }))(ControlCard));
+function mapStateToProps (state) {
+  return {
+    lines: state
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps)(ControlCard));

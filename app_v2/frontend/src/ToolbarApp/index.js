@@ -24,9 +24,6 @@ const styles = theme => ({
   root: {
     display: 'flex',
   },
-  grid_root: {
-    flexGrow: 1,
-  },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
   },
@@ -42,14 +39,6 @@ const styles = theme => ({
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
     }),
   },
   menuButton: {
@@ -95,7 +84,11 @@ const styles = theme => ({
   tableContainer: {
     height: 320,
   },
+  h5: {
+    marginBottom: theme.spacing.unit * 2,
+  },
 });
+
 
 class ToolbarAppWeb extends React.Component {
 
@@ -132,7 +125,7 @@ class ToolbarAppWeb extends React.Component {
         <div className={classes.root}>
           <AppBar
             position="absolute"
-            className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
+            className={classes.appBar}
           >
             <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
               <IconButton
@@ -153,7 +146,7 @@ class ToolbarAppWeb extends React.Component {
                 noWrap
                 className={classes.title}
               >
-                ToolbarAppWeb
+                My Home
               </Typography>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">

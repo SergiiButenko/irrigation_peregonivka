@@ -1,8 +1,9 @@
 import React from 'react';
-
 import {Route, BrowserRouter} from 'react-router-dom';
-
 import { hot } from 'react-hot-loader';
+//import 'typeface-roboto';
+
+
 
 import IrrigationPage from './IrrigationPage';
 
