@@ -49,19 +49,19 @@ const styles = theme => ({
 class ControlCard extends React.Component {
 
     constructor(props) { 
-    super(props);  
-    const {dispatch} = props;
-    // Here's a good use case for bindActionCreators:
-    // You want a child component to be completely unaware of Redux.
-    // We create bound versions of these functions now so we can
-    // pass them down to our child later.
-    this.boundActionCreators = bindActionCreators(actionCreators, dispatch)
-    console.log(this.boundActionCreators)
-    // {
-    //   addTodo: Function,
-    //   removeTodo: Function
-    // }
-  }
+      super(props);  
+      const {dispatch} = props;
+      // Here's a good use case for bindActionCreators:
+      // You want a child component to be completely unaware of Redux.
+      // We create bound versions of these functions now so we can
+      // pass them down to our child later.
+      this.boundActionCreators = bindActionCreators(actionCreators, dispatch)
+      console.log(this.boundActionCreators)
+      // {
+      //   addTodo: Function,
+      //   removeTodo: Function
+      // }
+    }
 
   componentDidMount() {
     // Injected by react-redux:
@@ -75,7 +75,6 @@ class ControlCard extends React.Component {
     dispatch(action)
   }
 
-
   state = {
     selected: false
   }
@@ -87,34 +86,35 @@ class ControlCard extends React.Component {
   };
 
   render() {
-  const { classes } = this.props;
+    const { classes } = this.props;
+    //<Card className={classNames(classes.card, this.state.selected && classes.cardSelected)}>
 
-  return (
-    <React.Fragment>
-    <Grid item>
-    <Card className={classes.card, this.state.selected ? classes.cardSelected : ''}>
-      <CardContent className={classes.content}>        
-        <Typography className={classes.title} variant="headline" component="h2">
-          Томати
-        </Typography>
-        <Typography component="p">
-          Наступний полив: завтра, 22:00
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button 
-        color="primary" 
-        className={classes.button}
-        onClick={() => this.toggleSelected()}
-        >
-        Обрати
-      </Button>
-      </CardActions>
-    </Card>
-    </Grid>
-    </React.Fragment>
-  );
-}
+    return (
+      <React.Fragment>
+      <Grid item>
+      <Card className={classes.card, this.state.selected ? classes.cardSelected : ''}>
+        <CardContent className={classes.content}>        
+          <Typography className={classes.title} variant="headline" component="h2">
+            Томати
+          </Typography>
+          <Typography component="p">
+            Наступний полив: завтра, 22:00
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button 
+          color="primary" 
+          className={classes.button}
+          onClick={() => this.toggleSelected()}
+          >
+          Обрати
+        </Button>
+        </CardActions>
+      </Card>
+      </Grid>
+      </React.Fragment>
+    );
+  }
 }
 
 ControlCard.propTypes = {

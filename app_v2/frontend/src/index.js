@@ -2,7 +2,6 @@ import React from 'react';
 import {Provider} from 'react-redux'
 import ReactDOM from 'react-dom';
 import ToolbarAppWeb from './ToolbarApp/Web'
-import ToolbarAppMobile from './ToolbarApp/Mobile'
 import ControlCard from './ControlCard'
 import store from './js/store'
 
@@ -28,8 +27,7 @@ function isMobile() {
 ReactDOM.render(
 	 <Provider store={store}>
         <ToolbarAppWeb />
-     </Provider>
- ,
+     </Provider>,
 document.getElementById('app')
 );
 
