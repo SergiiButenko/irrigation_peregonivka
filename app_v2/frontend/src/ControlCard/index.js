@@ -121,11 +121,11 @@ ControlCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-// export default compose(
-//   withStyles(styles, {
-//     name: 'ControlCard',
-//   }),
-//   connect(state => ({ classes: state.classes }))
-// )(ControlCard);
+export default compose(
+  withStyles(styles, {
+    name: 'ControlCard',
+  }),
+  connect(state => ({ classes: state.classes }))
+)(ControlCard);
 
 export default withStyles(styles)(connect(state => ({ classes: state.classes }))(ControlCard));

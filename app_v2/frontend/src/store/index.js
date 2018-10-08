@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 
-import selectedCardsCounter from "../reducers/index";
+import * as reducers from "../reducers/index";
 
 function logger({ getState }) {
   return next => action => {
@@ -17,8 +17,12 @@ function logger({ getState }) {
   }
 }
 
+const combinedReducer = combineReducers({
+   ...reducers
+});
+
 const store = createStore(
-  selectedCardsCounter,
+  combinedReducer,
   applyMiddleware(logger)
 )
 

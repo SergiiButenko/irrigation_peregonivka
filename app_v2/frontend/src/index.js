@@ -1,34 +1,31 @@
 import React from 'react';
 import {Provider} from 'react-redux'
 import ReactDOM from 'react-dom';
-import ToolbarAppWeb from './ToolbarApp/Web'
-import ControlCard from './ControlCard'
+
 import store from './js/store'
+import App from './App'
 
 const title = 'My Minimal React Webpack Babel Setup';
 
-function isMobile() {
-   if( navigator.userAgent.match(/Android/i)
- || navigator.userAgent.match(/webOS/i)
- || navigator.userAgent.match(/iPhone/i)
- || navigator.userAgent.match(/iPad/i)
- || navigator.userAgent.match(/iPod/i)
- || navigator.userAgent.match(/BlackBerry/i)
- || navigator.userAgent.match(/Windows Phone/i)
- ){
-    return true;
-  }
- else {
-    return false;
-  }
-}
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#a31919',
+        },
+        secondary: {
+            main: 'rgb(55, 46, 142)',
+        },
+    },
+});
 
 
 ReactDOM.render(
 	 <Provider store={store}>
-        <ToolbarAppWeb />
+        <MuiThemeProvider theme={theme}>
+            <App/>
+        </MuiThemeProvider>
      </Provider>,
 document.getElementById('app')
 );
-
-module.hot.accept();
