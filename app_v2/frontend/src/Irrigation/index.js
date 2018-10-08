@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import ControlCard from '../ControlCard'
 import ToolbarAppWeb from '../ToolbarApp'
-
+import Fab from './Fab'
 const styles = theme => ({
   card: {
     minWidth: 275,
@@ -60,7 +60,6 @@ class IrrigationForm extends React.Component {
                    direction="row"
                    justify="flex-start"
                    alignItems="flex-start">
-                
                 <ControlCard />
                 <ControlCard />
                 <ControlCard />
@@ -71,9 +70,7 @@ class IrrigationForm extends React.Component {
                 <ControlCard />
                 <ControlCard />
                </Grid>
-                 <Button variant="extendedFab" color="primary" className={classes.button_float}>
-        Почати полив
-      </Button>
+               <Fab />
       </main>
     </React.Fragment>
   );

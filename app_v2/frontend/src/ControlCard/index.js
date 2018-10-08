@@ -60,7 +60,7 @@ class ControlCard extends React.Component {
     id: -1,
   }
 
-    componentDidMount() {
+  componentDidMount() {
     let { dispatch } = this.props
 
     let action = actionCreators.set_state(1, 0)
