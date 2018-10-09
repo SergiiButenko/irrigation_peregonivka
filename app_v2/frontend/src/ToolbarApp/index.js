@@ -17,6 +17,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './MenuItems';
 import Grid from '@material-ui/core/Grid';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Paper from '@material-ui/core/Paper';
 
 import Fab from '../Irrigation/Fab'
 import ControlCard from '../ControlCard'
@@ -26,6 +27,9 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     display: 'flex',
+  },
+  page_header: {
+    paddingBottom: 24, // keep right padding when drawer closed
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -201,6 +205,11 @@ state = {
         </SwipeableDrawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
+            <div>
+                 <Typography variant="h6" component="h3" className={classes.page_header}>
+              Оберіть, що поливати
+         </Typography>
+    </div>
             <Grid container 
                    spacing={24}>
                 <ControlCard />
