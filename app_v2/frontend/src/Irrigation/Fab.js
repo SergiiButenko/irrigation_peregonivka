@@ -12,7 +12,7 @@ import { connect } from 'react-redux'
 import compose from 'recompose/compose';
 import * as actionCreators from '../actions/actionCreators'
 import store from '../store'
-console.log(actionCreators)
+import * as selectors from '../selectors'
 
 const styles = theme => ({
   button_float: {
@@ -29,18 +29,20 @@ class Fab extends React.Component {
 
   constructor(props) { 
     super(props);  
-      console.log("Store is:", store.getState())
+    console.log("Store is:", store.getState())
     }
 
   state = {
     active: 0,
   }
-  
+
+  currentValue = null
+  previousValue = null
   
   handleChange = () => {
-    let currentValue
-    let previousValue = currentValue
-    currentValue = store.getState()
+    let currentValue = null
+    let previousValue = null
+    currentValue = selectors.get_lines(store)
 
     if (previousValue !== currentValue) {
       console.log(

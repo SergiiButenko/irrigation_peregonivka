@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -10,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import ControlCard from '../ControlCard'
 import ToolbarAppWeb from '../ToolbarApp'
 import Fab from './Fab'
+
 const styles = theme => ({
   card: {
     minWidth: 275,
@@ -53,13 +55,12 @@ class IrrigationForm extends React.Component {
 
   return (
     <React.Fragment>
-    <ToolbarAppWeb/>     
-      <main className={classes.content_main}>
+     <CssBaseline />
+    <div className={classes.root}>
+      <ToolbarAppWeb/>     
+      <main className={classes.content}>
                <Grid container 
-                   spacing={24}
-                   direction="row"
-                   justify="flex-start"
-                   alignItems="flex-start">
+                   spacing={24}>
                 <ControlCard />
                 <ControlCard />
                 <ControlCard />
@@ -71,7 +72,8 @@ class IrrigationForm extends React.Component {
                 <ControlCard />
                </Grid>
                <Fab />
-      </main>
+          </main>
+      </div>
     </React.Fragment>
   );
 }

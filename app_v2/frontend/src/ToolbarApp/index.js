@@ -41,6 +41,14 @@ const styles = theme => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
   },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
   menuButton: {
     marginLeft: 12,
     marginRight: 36,
@@ -89,10 +97,8 @@ const styles = theme => ({
   },
 });
 
-
 class ToolbarAppWeb extends React.Component {
-
-  state = {
+state = {
     open: false,
     top: false,
     left: false,
@@ -121,11 +127,10 @@ class ToolbarAppWeb extends React.Component {
 
     return (
       <React.Fragment>
-        <CssBaseline />
-        <div className={classes.root}>
+        <CssBaseline />        
           <AppBar
             position="absolute"
-            className={classes.appBar}
+            className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
           >
             <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
               <IconButton
@@ -141,12 +146,12 @@ class ToolbarAppWeb extends React.Component {
               </IconButton>
               <Typography
                 component="h1"
-                variant="title"
+                variant="h6"
                 color="inherit"
                 noWrap
                 className={classes.title}
               >
-                My Home
+                ToolbarAppWeb
               </Typography>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
@@ -172,7 +177,6 @@ class ToolbarAppWeb extends React.Component {
             <Divider />
             <List>{secondaryListItems}</List>
           </Drawer>
-          
           <SwipeableDrawer
           open={this.state.left}
           onClose={this.toggleDrawer('left', false)}
@@ -191,7 +195,6 @@ class ToolbarAppWeb extends React.Component {
             <List>{secondaryListItems}</List>
           </div>
         </SwipeableDrawer>
-        </div>
       </React.Fragment>
     );
   }

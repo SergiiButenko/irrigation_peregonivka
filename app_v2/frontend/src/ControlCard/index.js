@@ -12,7 +12,6 @@ import { connect } from 'react-redux'
 import compose from 'recompose/compose';
 import * as actionCreators from '../actions/actionCreators'
 
-console.log(actionCreators)
 
 const styles = theme => ({
   card: {
@@ -83,25 +82,25 @@ class ControlCard extends React.Component {
     return (
       <React.Fragment>
       <Grid item>
-      <Card className={classes.card, this.state.selected ? classes.cardSelected : ''}>
-        <CardContent className={classes.content}>        
-          <Typography className={classes.title} component="h2">
-            Томати
-          </Typography>
-          <Typography component="p">
-            Наступний полив: завтра, 22:00
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button 
-          color="primary" 
-          className={classes.button}
-          onClick={this.toggleSelected}
-          >
-          Обрати
-        </Button>
-        </CardActions>
-      </Card>
+        <Card className={classes.card, this.state.selected ? classes.cardSelected : ''}>
+          <CardContent className={classes.content}>        
+            <Typography className={classes.title} component="h2">
+              Томати
+            </Typography>
+            <Typography component="p">
+              Наступний полив: завтра, 22:00
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button 
+            color="primary" 
+            className={classes.button}
+            onClick={this.toggleSelected}
+            >
+            Обрати
+          </Button>
+          </CardActions>
+        </Card>
       </Grid>
       </React.Fragment>
     );
