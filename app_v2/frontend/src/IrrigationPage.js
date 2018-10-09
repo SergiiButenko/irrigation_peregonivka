@@ -1,11 +1,11 @@
 import React from 'react';
-
 import IrrigationForm from './Irrigation';
 
+
 const IrrigationPage = () => (
-    <div>
-        <IrrigationForm/>
-    </div>
+	<div>
+        	<IrrigationForm/>
+     </div>
 );
 
 export default IrrigationPage;

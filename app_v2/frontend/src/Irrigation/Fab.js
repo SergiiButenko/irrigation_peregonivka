@@ -13,6 +13,8 @@ import compose from 'recompose/compose';
 import * as actionCreators from '../actions/actionCreators'
 import store from '../store'
 import * as selectors from '../selectors'
+import * as utils from '../Utils'
+
 
 const styles = theme => ({
   button_float: {
@@ -28,43 +30,42 @@ const styles = theme => ({
 class Fab extends React.Component {
 
   constructor(props) { 
-    super(props);  
-    console.log("Store is:", store.getState())
+    super(props);
+    this.previousValue = null
     }
 
   state = {
     active: 0,
   }
-
-  currentValue = null
-  previousValue = null
+  
   
   handleChange = () => {
-    let currentValue = null
-    let previousValue = null
-    currentValue = selectors.get_lines(store)
+    let currentValue = selectors.get_lines(store)
 
-    if (previousValue !== currentValue) {
-      console.log(
-        'Some deep nested property changed from',
-        previousValue,
-        'to',
-        currentValue
+    if (this.previousValue !== currentValue) {
+      this.previousValue = currentValue
+      this.setButtonState(
+        Object.values(currentValue.lines).some((line) => {return line.state == 1})
       )
     }
   }
 
   componentDidMount() {
-    store.subscribe(this.handleChange)
+    this.unsubscribe = store.subscribe(this.handleChange)
     console.log("Subscribed")
   }
   
+  componentWillUnmount() {
+        // and unsubscribe later
+        console.log("UnSubscribed")
+        this.unsubscribe()
+  }
 
-  toggleSelected = () => {  
+  setButtonState = (active) => {  
     this.setState({
-      active: !this.state.active,
+      active: active,
     });
-  };
+  }
 
   render() {
     const { classes } = this.props;
@@ -72,6 +73,7 @@ class Fab extends React.Component {
     return (
       <React.Fragment>
           <Button 
+          disabled={!this.state.active}
           variant="extendedFab" 
           color="primary" 
           className={classes.button_float}>

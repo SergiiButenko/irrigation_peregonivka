@@ -18,6 +18,9 @@ import { mainListItems, secondaryListItems } from './MenuItems';
 import Grid from '@material-ui/core/Grid';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
+import Fab from '../Irrigation/Fab'
+import ControlCard from '../ControlCard'
+
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -127,7 +130,8 @@ state = {
 
     return (
       <React.Fragment>
-        <CssBaseline />        
+          <CssBaseline />
+        <div className={classes.root}>
           <AppBar
             position="absolute"
             className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
@@ -136,7 +140,7 @@ state = {
               <IconButton
                 color="inherit"
                 aria-label="Open drawer"
-                onClick={this.toggleDrawer('left', true)}
+                onClick={this.handleDrawerOpen}
                 className={classNames(
                   classes.menuButton,
                   this.state.open && classes.menuButtonHidden,
@@ -151,7 +155,7 @@ state = {
                 noWrap
                 className={classes.title}
               >
-                ToolbarAppWeb
+                Dashboard
               </Typography>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
@@ -177,24 +181,23 @@ state = {
             <Divider />
             <List>{secondaryListItems}</List>
           </Drawer>
-          <SwipeableDrawer
-          open={this.state.left}
-          onClose={this.toggleDrawer('left', false)}
-          onOpen={this.toggleDrawer('left', true)}
-          //swipeAreaWidth="30"
-        >
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={this.toggleDrawer('left', false)}
-            onKeyDown={this.toggleDrawer('left', false)}
-          >
-            <Divider />
-            <List>{mainListItems}</List>
-            <Divider />
-            <List>{secondaryListItems}</List>
-          </div>
-        </SwipeableDrawer>
+          <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
+            <Grid container 
+                   spacing={24}>
+                <ControlCard />
+                <ControlCard />
+                <ControlCard />
+                <ControlCard />
+                <ControlCard />
+                <ControlCard />
+                <ControlCard />
+                <ControlCard />
+                <ControlCard />
+               </Grid>
+               <Fab />
+          </main>
+        </div>
       </React.Fragment>
     );
   }

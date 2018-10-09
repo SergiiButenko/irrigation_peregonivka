@@ -32,7 +32,7 @@ export const mainListItems = (
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem component={Link} to="/settings"  button>
+    <ListItem component={Link} to="/toolbar"  button>
       <ListItemIcon>
         <AssignmentIcon />
       </ListItemIcon>

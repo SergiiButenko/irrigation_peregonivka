@@ -8,9 +8,10 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import ControlCard from '../ControlCard'
+
 import ToolbarAppWeb from '../ToolbarApp'
 import Fab from './Fab'
+import ControlCard from '../ControlCard'
 
 const styles = theme => ({
   card: {
@@ -47,6 +48,9 @@ const styles = theme => ({
     overflow: 'auto',
   },
   appBarSpacer: theme.mixins.toolbar,
+  root: {
+    display: 'flex',
+  },
 });
 
 class IrrigationForm extends React.Component {
@@ -55,25 +59,12 @@ class IrrigationForm extends React.Component {
 
   return (
     <React.Fragment>
-     <CssBaseline />
-    <div className={classes.root}>
+    <CssBaseline />
+      <div className={styles.root}>
       <ToolbarAppWeb/>     
-      <main className={classes.content}>
-               <Grid container 
-                   spacing={24}>
-                <ControlCard />
-                <ControlCard />
-                <ControlCard />
-                <ControlCard />
-                <ControlCard />
-                <ControlCard />
-                <ControlCard />
-                <ControlCard />
-                <ControlCard />
-               </Grid>
-               <Fab />
-          </main>
-      </div>
+      <main className={classes.content}>               
+        </main>
+        </div>
     </React.Fragment>
   );
 }

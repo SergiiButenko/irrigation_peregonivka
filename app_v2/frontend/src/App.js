@@ -6,6 +6,7 @@ import { hot } from 'react-hot-loader';
 
 
 import IrrigationPage from './IrrigationPage';
+import ToolbarAppWeb from './ToolbarApp';
 
 
 const App = () => {
@@ -14,7 +15,7 @@ const App = () => {
         <BrowserRouter>
             <div>
                 <Route exact path="/" component={ IrrigationPage }/>
-                <Route exact path="/settings" component={ IrrigationPage }/>
+                <Route exact path="/toolbar" component={ ToolbarAppWeb }/>
                 <Route exact path="/devices" component={ IrrigationPage }/>
             </div>
         </BrowserRouter>

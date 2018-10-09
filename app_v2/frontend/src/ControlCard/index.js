@@ -11,7 +11,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import compose from 'recompose/compose';
 import * as actionCreators from '../actions/actionCreators'
-
+import * as utils from '../Utils'
 
 const styles = theme => ({
   card: {
@@ -51,7 +51,8 @@ class ControlCard extends React.Component {
       super(props);  
       const {dispatch} = props;
       this.boundActionCreators = bindActionCreators(actionCreators, dispatch)
-      console.log(this.boundActionCreators)
+      this.id = utils.guid()
+
     }
 
   state = {
@@ -62,13 +63,20 @@ class ControlCard extends React.Component {
   componentDidMount() {
     let { dispatch } = this.props
 
-    let action = actionCreators.set_state(1, 0)
+    let action = actionCreators.add_card(this.id)
     dispatch(action)
+  }
+
+  componentWillUnmount() {
+    // let { dispatch } = this.props
+
+    // let action = actionCreators.remove_card(this.id)
+    // dispatch(action)
   }
 
   toggleSelected = () => {
     let { dispatch } = this.props
-    let action = actionCreators.set_state(1, !this.state.selected)
+    let action = actionCreators.set_state(this.id, !this.state.selected)
     dispatch(action)
     
     this.setState({
@@ -82,7 +90,9 @@ class ControlCard extends React.Component {
     return (
       <React.Fragment>
       <Grid item>
-        <Card className={classes.card, this.state.selected ? classes.cardSelected : ''}>
+        <Card className={classes.card, this.state.selected ? classes.cardSelected : ''}
+          onClick={this.toggleSelected}
+          >
           <CardContent className={classes.content}>        
             <Typography className={classes.title} component="h2">
               Томати
@@ -91,15 +101,6 @@ class ControlCard extends React.Component {
               Наступний полив: завтра, 22:00
             </Typography>
           </CardContent>
-          <CardActions>
-            <Button 
-            color="primary" 
-            className={classes.button}
-            onClick={this.toggleSelected}
-            >
-            Обрати
-          </Button>
-          </CardActions>
         </Card>
       </Grid>
       </React.Fragment>

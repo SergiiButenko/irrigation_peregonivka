@@ -1,4 +1,4 @@
-export function isMobile() {
+export const isMobile = () => {
    if( navigator.userAgent.match(/Android/i)
  || navigator.userAgent.match(/webOS/i)
  || navigator.userAgent.match(/iPhone/i)
@@ -12,4 +12,14 @@ export function isMobile() {
  else {
     return false;
   }
+}
+
+
+export const guid = () => {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
