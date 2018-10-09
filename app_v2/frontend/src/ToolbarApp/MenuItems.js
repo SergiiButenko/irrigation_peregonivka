@@ -31,7 +31,7 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
+    <ListSubheader inset>Адміністрування</ListSubheader>
     <ListItem component={Link} to="/toolbar"  button>
       <ListItemIcon>
         <AssignmentIcon />

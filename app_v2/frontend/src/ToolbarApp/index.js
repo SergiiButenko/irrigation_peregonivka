@@ -140,7 +140,7 @@ state = {
               <IconButton
                 color="inherit"
                 aria-label="Open drawer"
-                onClick={this.handleDrawerOpen}
+                onClick={this.toggleDrawer('left', true)}
                 className={classNames(
                   classes.menuButton,
                   this.state.open && classes.menuButtonHidden,
@@ -181,6 +181,24 @@ state = {
             <Divider />
             <List>{secondaryListItems}</List>
           </Drawer>
+          <SwipeableDrawer
+          open={this.state.left}
+          onClose={this.toggleDrawer('left', false)}
+          onOpen={this.toggleDrawer('left', true)}
+          //swipeAreaWidth="30"
+          >
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={this.toggleDrawer('left', false)}
+            onKeyDown={this.toggleDrawer('left', false)}
+          >
+            <Divider />
+            <List>{mainListItems}</List>
+            <Divider />
+            <List>{secondaryListItems}</List>
+          </div>
+        </SwipeableDrawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Grid container 
