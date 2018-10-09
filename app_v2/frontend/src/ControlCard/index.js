@@ -147,12 +147,13 @@ class ControlCard extends React.Component {
           <CardContent className={classes.content}>        
             <div 
                 onClick={this.handleCollapse}
-                onMouseEnter={() => {
-                  document.body.style.cursor = "pointer";
-                }}
-                onMouseLeave={() => {
-                  document.body.style.cursor = "default";
-                }}>
+                // onMouseEnter={() => {
+                //   document.body.style.cursor = "pointer";
+                // }}
+                // onMouseLeave={() => {
+                //   document.body.style.cursor = "default";
+                // }}
+                >
             <Typography className={classes.title} variant="h5" align='left'>
               Томати
             </Typography>
