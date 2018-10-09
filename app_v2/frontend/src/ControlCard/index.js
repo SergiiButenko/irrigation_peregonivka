@@ -15,6 +15,8 @@ import * as utils from '../Utils'
 import Slider from '@material-ui/lab/Slider';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import AccessTime from '@material-ui/icons/AccessTime';
+import Iso from '@material-ui/icons/Iso';
 
 
 const styles = theme => ({
@@ -48,6 +50,7 @@ const styles = theme => ({
   },
   slider: {
     padding: '22px 0px',
+
   },
   minutes: {
     marginBottom: 5,
@@ -62,8 +65,12 @@ const styles = theme => ({
   expandMore_selected: {
     transform: 'rotate(360deg)',
     transition: '300ms transform',
-  }
-  
+  },
+  thumbIcon: {
+    width: '30px',
+    height: '50px',
+    marginTop: '-20px',
+  },
 });
 
 class ControlCard extends React.Component {
@@ -154,9 +161,11 @@ class ControlCard extends React.Component {
             </Typography>
             <ExpandMoreIcon className={collapsed == 1 ? classes.expandMore_selected : classes.expandMore}/>
             </div>
-            
+
             <Collapse in={collapsed}>
+            
             <div className={classes.slider_root}>
+            <AccessTime/>
               <Slider
                 classes={{ container: classes.slider }}
                 value={value_minutes}
@@ -165,8 +174,11 @@ class ControlCard extends React.Component {
                 step={5}
                 onChange={this.handleChangeMinutes}
                 onDragStart={this.setSelected}
+          //       thumb={
+          //   <AccessTime className={classes.thumbIcon}/>
+          // }
               />
-
+            <Iso/>
               <Slider
                 classes={{ container: classes.slider }}
                 value={value_qnt}
@@ -175,6 +187,9 @@ class ControlCard extends React.Component {
                 step={1}
                 onChange={this.handleChangeQnt}
                 onDragStart={this.setSelected}
+          //       thumb={
+          //   <Iso className={classes.thumbIcon}/>
+          // }
               />
             </div>
           </Collapse>
