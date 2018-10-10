@@ -10,7 +10,7 @@ export const test = handleActions({
                 ...state.lines, 
                 [action.payload.id]: 
                     {id:action.payload.id,
-                     state:action.payload.state}}
+                        state:action.payload.state}}
         };
     },
     ADD_CARD: (state, action) => {
@@ -20,7 +20,7 @@ export const test = handleActions({
                 ...state.lines, 
                 [action.payload.id]: 
                     {id:action.payload.id,
-                     state:action.payload.state}}
+                        state:action.payload.state}}
         };
     },
     DELETE_CARD: (state, action) => {

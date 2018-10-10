@@ -3,9 +3,9 @@ import IrrigationForm from './Irrigation';
 
 
 const IrrigationPage = () => (
-	<div>
+    <div>
         	<IrrigationForm/>
-     </div>
+    </div>
 );
 
 export default IrrigationPage;

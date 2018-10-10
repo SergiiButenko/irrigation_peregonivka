@@ -1,3 +1,3 @@
 export const get_lines = (store) => {
-	return store.getState().test;
-}
+    return store.getState().test;
+};
