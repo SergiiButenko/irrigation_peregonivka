@@ -82,9 +82,6 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'center',
     },
-    header_grid: {
-    display: '-webkit-inline-box;',
-  },
 });
 
 class ControlCard extends React.Component {
@@ -161,28 +158,27 @@ class ControlCard extends React.Component {
                       <CardContent className={classes.content}>        
                           
                             
-                              <Grid item xs container direction="row" spacing={24} className={classes.header_grid}>
+                              <Grid item xs 
+                              container 
+                              direction="row" 
+                              spacing={24} 
+                              className={classes.header_grid} 
+                              onClick={this.handleCollapse}>
                                   <Grid item>
-                                      <Typography xs gutterBottom variant="h4">
+                                       <Typography gutterBottom variant="h5" component="h2">
                 Томати
                                       </Typography>
                                   </Grid>
                                   
-                                  <Grid item xs container direction="row" spacing={24} justify="flex-end"
-  alignItems="center"
->
-                                  <Grid item md={8} onClick={this.handleCollapse}>
-                                      <Typography variant="subtitle1">{value_qnt} {value_qnt == 1 ? 'раз, ' : 'раза по'} {value_minutes} хв</Typography>
-                                  </Grid>
-                                  <Grid item xs onClick={this.handleCollapse}>
+ 
+                                  <Grid item xs >
                                       <ExpandMoreIcon className={collapsed == 1 ? classes.expandMore_selected : classes.expandMore}/>
-                                  </Grid>
                                   </Grid>
                               </Grid>
 
                               <Grid item xs container direction="column" spacing={16}>
                                   <Grid item xs>
-                                      <Typography gutterBottom >Наступний полив: Завтра, 22:00</Typography>
+                                      <Typography  component="p">Полити {value_qnt} {value_qnt == 1 ? 'раз, ' : 'раза по'} {value_minutes} хв</Typography>
                                   </Grid>
                                   <Grid item>
                                       <Collapse in={collapsed}>
