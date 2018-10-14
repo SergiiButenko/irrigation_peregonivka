@@ -13,8 +13,8 @@ export const theme = createMuiTheme({
     overrides: {
         MuiCardContent: { // Name of the component ⚛️ / style sheet
             root: { // Name of the rule
-                paddingLeft: 0, // Some CSS
-                paddingRight: 0, // Some CSS
+                paddingLeft: 16, // Some CSS
+                paddingRight: 16, // Some CSS
             },
         },
     },

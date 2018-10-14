@@ -123,6 +123,10 @@ class ControlCard extends React.Component {
       this.setState({
           selected: !this.state.selected,
       });
+
+      this.setState({
+          collapsed: false,
+      });
   }
 
   setSelected = () => {
