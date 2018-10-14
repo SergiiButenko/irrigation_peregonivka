@@ -64,7 +64,7 @@ class IrrigationForm extends React.Component {
                     <ToolbarAppWeb>     
              
                         <Grid container 
-                            spacing={24}>
+                            spacing={8}>
                             <ControlCard />
                             <ControlCard />
                             <ControlCard />
@@ -77,7 +77,6 @@ class IrrigationForm extends React.Component {
                         </Grid>
                         <Fab />
                     </ToolbarAppWeb>
-      
                 </div>
             </React.Fragment>
         );
