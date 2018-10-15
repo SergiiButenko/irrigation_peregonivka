@@ -6,7 +6,10 @@ import { hot } from 'react-hot-loader';
 
 
 import IrrigationPage from './IrrigationPage';
-import ToolbarAppWeb from './ToolbarApp';
+import CreateHubPage from './CreateHubPage';
+import SignInPage from './SignInPage';
+import DevicesPage from './DevicesPage';
+
 
 
 const App = () => {
@@ -15,8 +18,9 @@ const App = () => {
         <BrowserRouter>
             <div>
                 <Route exact path="/" component={ IrrigationPage }/>
-                <Route exact path="/toolbar" component={ ToolbarAppWeb }/>
-                <Route exact path="/devices" component={ IrrigationPage }/>
+                <Route exact path="/login" component={ SignInPage }/>
+                <Route exact path="/newhub" component={ CreateHubPage }/>
+                <Route exact path="/device" component={ DevicesPage }/>
             </div>
         </BrowserRouter>
     );
