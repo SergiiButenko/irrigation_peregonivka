@@ -25,7 +25,7 @@ module.exports = {
     ],
     "rules": {
         "indent": ["error", 4],
-        "linebreak-style": ["error", "unix"],
+        //"linebreak-style": ["error", "unix"],
         "quotes": ["error", "single"],
         "semi": ["error", "always", { "omitLastInOneLineBlock": true}],
         "react/jsx-uses-react": 1,
