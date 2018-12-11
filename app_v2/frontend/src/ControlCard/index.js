@@ -17,6 +17,10 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTime from '@material-ui/icons/AccessTime';
 import Iso from '@material-ui/icons/Iso';
+import Avatar from '@material-ui/core/Avatar';
+import deepPurple from '@material-ui/core/colors/deepPurple';
+
+
 
 
 const styles = theme => ({
@@ -46,11 +50,11 @@ const styles = theme => ({
         flex: 1,
     },
     slider_root: {
-        width: '100%',
+        width: '10%',
     },
     slider: {
-        padding: '22px 0px',
-
+        padding: '16px 0px',
+        marginRight: theme.spacing.unit * 2,
     },
     minutes: {
         marginBottom: 5,
@@ -65,6 +69,18 @@ const styles = theme => ({
     expandMore_selected: {
         transform: 'rotate(180deg)',
         transition: '300ms transform',
+    },
+    avatar: {
+        margin: 10,
+    },
+    purpleAvatar: {
+        margin: 10,
+        color: '#fff',
+        backgroundColor: deepPurple[500],
+    },
+    row: {
+        display: 'flex',
+        justifyContent: 'center',
     },
 });
 
@@ -107,6 +123,10 @@ class ControlCard extends React.Component {
       this.setState({
           selected: !this.state.selected,
       });
+
+      this.setState({
+          collapsed: false,
+      });
   }
 
   setSelected = () => {
@@ -140,46 +160,61 @@ class ControlCard extends React.Component {
               <Grid item>
                   <Card className={classes.card, this.state.selected ? classes.cardSelected : ''}>
                       <CardContent className={classes.content}>        
-                          <div 
-                              onClick={this.handleCollapse}
-                          >
-                              <Typography className={classes.title} variant="h5" align='left'>
-              Томати
-                              </Typography>
-                              <Typography className={classes.minutes} variant="button" align='right'>
-                                  {value_qnt} {value_qnt == 1 ? 'раз, ' : 'раза по'} {value_minutes} хв
-                              </Typography>
-                              <ExpandMoreIcon className={collapsed == 1 ? classes.expandMore_selected : classes.expandMore}/>
-                          </div>
-
+                          <Grid item 
+                              container 
+                              direction="row" 
+                              spacing={16} 
+                              className={classes.header_grid} 
+                              onClick={this.toggleSelected}>
+                              <Grid item>
+                                  <Typography gutterBottom variant="h5" component="h2">
+                Томати
+                                  </Typography>
+                              </Grid>
+                          </Grid>
+                          <Grid item container direction="row" spacing={16} onClick={this.handleCollapse}>
+                              <Grid item>
+                                  <Typography  component="p">Полити {value_qnt} {value_qnt == 1 ? 'раз, ' : 'раза по'} {value_minutes} хв</Typography>
+                              </Grid>
+                              <Grid item xs >
+                                  <ExpandMoreIcon className={collapsed == 1 ? classes.expandMore_selected : classes.expandMore}/>
+                              </Grid>
+                          </Grid>
                           <Collapse in={collapsed}>
-            
-                              <div className={classes.slider_root}>
-                                  {
-                                      // GRID
-                                  }
-                                  <AccessTime/>
-                                  <Slider
-                                      classes={{ container: classes.slider }}
-                                      value={value_minutes}
-                                      min={10}
-                                      max={20}
-                                      step={5}
-                                      onChange={this.handleChangeMinutes}
-                                      onDragStart={this.setSelected}
-            
-                                  />                
-                                  <Iso/>
-                                  <Slider
-                                      classes={{ container: classes.slider }}
-                                      value={value_qnt}
-                                      min={1}
-                                      max={3}
-                                      step={1}
-                                      onChange={this.handleChangeQnt}
-                                      onDragStart={this.setSelected}
-                                  />
-                              </div>
+                              <Grid item container direction="row" spacing={16} justify="center"
+                                  alignItems="center">
+                                  <Grid item xs>
+                                      <AccessTime/>
+                                  </Grid>
+                                  <Grid item xs={10}>
+                                      <Slider
+                                          classes={{ container: classes.slider }}
+                                          value={value_minutes}
+                                          min={10}
+                                          max={20}
+                                          step={5}
+                                          onChange={this.handleChangeMinutes}
+                                          onDragStart={this.setSelected}
+                                      />
+                                  </Grid>
+                              </Grid>
+                              <Grid item container direction="row" spacing={16} justify="center"
+                                  alignItems="center">
+                                  <Grid item xs>
+                                      <Iso/>
+                                  </Grid>
+                                  <Grid item xs={10}>
+                                      <Slider
+                                          classes={{ container: classes.slider }}
+                                          value={value_qnt}
+                                          min={1}
+                                          max={3}
+                                          step={1}
+                                          onChange={this.handleChangeQnt}
+                                          onDragStart={this.setSelected}
+                                      />
+                                  </Grid>
+                              </Grid>
                           </Collapse>
                       </CardContent>
                       <CardActions>

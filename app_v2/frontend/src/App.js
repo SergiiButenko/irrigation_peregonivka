@@ -1,18 +1,21 @@
 import React from 'react';
 import {Route, BrowserRouter} from 'react-router-dom';
 import { hot } from 'react-hot-loader';
+import 'typeface-roboto';
 
 import IrrigationPage from './IrrigationPage';
-import ToolbarAppWeb from './ToolbarApp';
-import 'typeface-roboto';
+import CreateHubPage from './CreateHubPage';
+import SignInPage from './SignInPage';
+import DevicesPage from './DevicesPage';
 
 const App = () => {
     return (
         <BrowserRouter>
             <div>
                 <Route exact path="/" component={ IrrigationPage }/>
-                <Route exact path="/toolbar" component={ ToolbarAppWeb }/>
-                <Route exact path="/devices" component={ IrrigationPage }/>
+                <Route exact path="/login" component={ SignInPage }/>
+                <Route exact path="/newhub" component={ CreateHubPage }/>
+                <Route exact path="/device" component={ DevicesPage }/>
             </div>
         </BrowserRouter>
     );

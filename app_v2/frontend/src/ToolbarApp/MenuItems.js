@@ -9,6 +9,11 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import DeviceHub from '@material-ui/icons/DeviceHub';
+import DevicesOther from '@material-ui/icons/DevicesOther';
+import Face from '@material-ui/icons/Face';
+
+
 import {Link} from 'react-router-dom';
 
 export const mainListItems = (
@@ -20,11 +25,11 @@ export const mainListItems = (
             <ListItemText primary="Полив" />
         </ListItem>
 
-        <ListItem component={Link} to="/devices"  button>
+        <ListItem component={Link} to="/login"  button>
             <ListItemIcon>
-                <LayersIcon />
+                <Face />
             </ListItemIcon>
-            <ListItemText primary="Пристрої" />
+            <ListItemText primary="Login" />
         </ListItem>
     </div>
 );
@@ -32,11 +37,18 @@ export const mainListItems = (
 export const secondaryListItems = (
     <div>
         <ListSubheader inset>Адміністрування</ListSubheader>
-        <ListItem component={Link} to="/toolbar"  button>
+        <ListItem component={Link} to="/newhub"  button>
             <ListItemIcon>
-                <AssignmentIcon />
+                <DeviceHub />
             </ListItemIcon>
-            <ListItemText primary="Налаштування" />
+            <ListItemText primary="Додати хаб" />
+        </ListItem>
+
+        <ListItem component={Link} to="/device"  button>
+            <ListItemIcon>
+                <DevicesOther />
+            </ListItemIcon>
+            <ListItemText primary="Пристрої" />
         </ListItem>
     </div>
 );

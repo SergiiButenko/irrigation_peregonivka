@@ -9,4 +9,12 @@ export const theme = createMuiTheme({
             main: '#009688',
         }
     },
+    overrides: {
+        MuiCardContent: { // Name of the component ⚛️ / style sheet
+            root: { // Name of the rule
+                paddingLeft: 16, // Some CSS
+                paddingRight: 16, // Some CSS
+            },
+        },
+    },
 });
