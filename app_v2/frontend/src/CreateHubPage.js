@@ -1,5 +1,5 @@
 import React from 'react';
-import CreateHub from './CreateHub';
+import CreateHub from './components/CreateHub';
 
 
 const CreateHubPage = () => (

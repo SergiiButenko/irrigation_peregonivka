@@ -7,9 +7,6 @@ import App from './App';
 import {theme} from './theme';
 import {MuiThemeProvider} from '@material-ui/core/styles';
 
-const title = 'My Minimal React Webpack Babel Setup';
-
-
 ReactDOM.render(
 	 <Provider store={store}>
         <MuiThemeProvider theme={theme}>

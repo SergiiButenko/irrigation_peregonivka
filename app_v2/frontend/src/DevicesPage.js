@@ -1,5 +1,5 @@
 import React from 'react';
-import Devices from './Devices';
+import Devices from './components/Devices';
 
 
 const DevicePage = () => (

@@ -20,7 +20,7 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Paper from '@material-ui/core/Paper';
 
 import Fab from '../Irrigation/Fab';
-import ControlCard from '../ControlCard';
+import ControlCard from '../ControlCard/index';
 
 const drawerWidth = 240;
 

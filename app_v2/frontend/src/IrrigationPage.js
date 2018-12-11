@@ -1,10 +1,10 @@
 import React from 'react';
-import IrrigationForm from './Irrigation';
+import Irrigation from './components/Irrigation';
 
 
 const IrrigationPage = () => (
     <div>
-        	<IrrigationForm/>
+        <Irrigation/>
     </div>
 );
 

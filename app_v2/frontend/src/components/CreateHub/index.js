@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import TurnOnHub from './TurnOnHub';
 import RegisterHub from './RegisterHub';
 import AddDevice from './AddDevice';
-import ToolbarAppWeb from '../ToolbarApp';
+import ToolbarAppWeb from '../ToolbarApp/index';
 
 const styles = theme => ({
     appBar: {

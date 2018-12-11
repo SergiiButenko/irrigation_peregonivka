@@ -1,29 +1,21 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import {applyMiddleware, compose, createStore} from 'redux';
 
-import * as reducers from '../reducers';
+import {createLogger} from 'redux-logger';
+import thunk from 'redux-thunk';
+import promise from 'redux-promise';
+import rootReducer from '../reducers';
 
-function logger({ getState }) {
-    return next => action => {
-        console.log('will dispatch', action);
-
-        // Call the next dispatch method in the middleware chain.
-        const returnValue = next(action);
-
-        console.log('state after dispatch', getState());
-
-        // This will likely be the action itself, unless
-        // a middleware further in chain changed it.
-        return returnValue;
-    };
-}
-
-const combinedReducer = combineReducers({
-    ...reducers
+const logger = createLogger({
+    collapsed: true,
+    // diff: true,
 });
 
-const store = createStore(
-    combinedReducer,
-    applyMiddleware(logger)
-);
+
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, promise, logger)));
 
 export default store;
+
+window.Store = store;
