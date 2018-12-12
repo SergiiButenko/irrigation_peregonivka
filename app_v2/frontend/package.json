@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --hot --progress",
-    "test": "echo \"No test specified\" && exit 0",
+    "test": "jest",
+    "test-ci": "jest --ci --reporters=default --reporters=jest-junit",
     "lint": "./node_modules/.bin/eslint src",
     "lint-fixup": "./node_modules/.bin/eslint src --ext .js,.jsx --fix",
     "build": "webpack --mode production"
@@ -13,20 +14,51 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "jest": {
+    "verbose": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "_setupFiles": [
+      "<rootDir>/polyfills.js"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "jest-transform-stub"
+    },
+    "setupTestFrameworkScriptFile": "jest-enzyme",
+    "testEnvironment": "enzyme",
+    "testEnvironmentOptions": {
+      "enzymeAdapter": "react16"
+    },
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
+  },
   "devDependencies": {
     "@babel/core": "^7.1.0",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-decorators": "^7.1.6",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "css-loader": "^2.0.0",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.7.0",
     "eslint-plugin-babel": "^5.2.1",
     "eslint-plugin-react": "^7.11.1",
+    "fetch-mock": "^7.2.5",
     "file-loader": "^2.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "jest": "^23.6.0",
+    "jest-environment-enzyme": "^7.0.1",
+    "jest-enzyme": "^7.0.1",
+    "jest-junit": "^5.2.0",
+    "jest-transform-stub": "^1.0.0",
     "node-sass": "^4.10.0",
     "raw-loader": "^1.0.0",
     "react-hot-loader": "^4.3.11",
@@ -47,6 +79,7 @@
     "@material-ui/lab": "^3.0.0-alpha.19",
     "classnames": "^2.2.6",
     "eslint": "^5.6.1",
+    "immutable": "^4.0.0-rc.12",
     "prop-types": "^15.6.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
@@ -55,7 +88,6 @@
     "redux": "^4.0.0-0",
     "redux-actions": "^2.6.1",
     "reselect": "^4.0.0",
-    "typeface-roboto": "^0.0.54",
-    "immutable": "^4.0.0-rc.12"
+    "typeface-roboto": "^0.0.54"
   }
 }

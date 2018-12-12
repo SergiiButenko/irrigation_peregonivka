@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 
-import {lines} from './entity/lines';
+import entity from './entity';
+import lines from './lines';
 
 const createFilteredReducer = (reducerFunction, reducerPredicate) =>
     (state, action) => {
@@ -12,5 +13,6 @@ const createFilteredReducer = (reducerFunction, reducerPredicate) =>
 const filter = (key) => action => action.type.startsWith(key);
 
 export default combineReducers({
-    line:           createFilteredReducer(lines,          filter('LINES')),
+    lines:           createFilteredReducer(lines,          filter('LINES')),
+    entity:         createFilteredReducer(entity,        filter('ENTITY')),
 });

@@ -4,12 +4,13 @@ import {withStyles} from '@material-ui/core/styles';
 import {connect} from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
-
-import ToolbarAppWeb from '../ToolbarApp/index';
 import Fab from './Fab';
 import ControlCard from '../ControlCard/index';
 import {getIrrigationLines} from '../../selectors';
 import {fetchLines} from '../../actions/card';
+import PageSpinner from '../shared/PageSpinner';
+import LoadingFailed from '../shared/LoadingFailed';
+import {LINE_TYPE} from '../../constants/lines';
 
 const styles = theme => ({
     card: {
@@ -59,39 +60,55 @@ const mapStateToProps = (state) => {
 export default class Irrigation extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        lines: PropTypes.object.isRequired,
+        lines: PropTypes.array.isRequired,
         loading: PropTypes.bool.isRequired,
-        fetchError: PropTypes.object,
+        lineFetchError: PropTypes.string,
     };
 
+    constructor(props) {
+        super(props)
+
+        this.lineType = LINE_TYPE.IRRIGATION;
+    }
+
     componentWillMount() {
-        this.props.fetchLines('irrigation');
+        this.props.fetchLines(this.lineType);
     }
 
     render() {
-        const {classes, loading, fetchError, lines} = this.props;
+        const {classes, loading, lineFetchError, lines} = this.props;
+
+        if (loading) {
+            return <PageSpinner/>;
+        }
+
+        if (lineFetchError) {
+            return <LoadingFailed errorText={lineFetchError}/>;
+        }
 
         return (
-            <React.Fragment>
-                <div className={styles.root}>
-                    <ToolbarAppWeb>
-
-                        <Grid container
-                              spacing={8}>
-                            <ControlCard/>
-                            <ControlCard/>
-                            <ControlCard/>
-                            <ControlCard/>
-                            <ControlCard/>
-                            <ControlCard/>
-                            <ControlCard/>
-                            <ControlCard/>
-                            <ControlCard/>
-                        </Grid>
-                        <Fab/>
-                    </ToolbarAppWeb>
-                </div>
-            </React.Fragment>
+            <>
+                <Grid container
+                    spacing={8}>
+                    <Grid item>
+                        <ControlCard/>
+                    </Grid>
+                    <Grid item>
+                        <ControlCard/>
+                    </Grid><Grid item>
+                        <ControlCard/>
+                    </Grid><Grid item>
+                        <ControlCard/>
+                    </Grid><Grid item>
+                        <ControlCard/>
+                    </Grid><Grid item>
+                        <ControlCard/>
+                    </Grid><Grid item>
+                        <ControlCard/>
+                    </Grid>
+                </Grid>
+                <Fab/>
+            </>
         );
     }
 }

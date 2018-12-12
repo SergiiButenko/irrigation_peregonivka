@@ -7,9 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import {bindActionCreators} from 'redux';
 import * as actionCreators from '../../actions/card';
-import * as utils from '../../utils/index';
 import Slider from '@material-ui/lab/Slider';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -90,8 +88,8 @@ class ControlCard extends React.Component {
 
     toggleSelected = () => {
         let {dispatch} = this.props;
-        let action = actionCreators.set_state(this.id, !this.state.selected);
-        dispatch(action);
+        // let action = actionCreators.set_state(this.id, !this.state.selected);
+        // dispatch(action);
 
         this.setState({
             selected: !this.state.selected,

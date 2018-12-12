@@ -1,11 +1,12 @@
 import React from 'react';
 import Irrigation from './components/Irrigation';
+import ToolbarAppWeb from './components/ToolbarApp';
 
 
 const IrrigationPage = () => (
-    <div>
+    <ToolbarAppWeb>
         <Irrigation/>
-    </div>
+    </ToolbarAppWeb>
 );
 
 export default IrrigationPage;

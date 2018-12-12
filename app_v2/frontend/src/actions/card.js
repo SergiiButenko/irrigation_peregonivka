@@ -1,14 +1,11 @@
 import {createAction, createActions} from 'redux-actions';
 import {smartSystemApi} from '../provider';
 
-const actionLinesAddBatch = createAction('LINES/SET');
+const actionLinesSet = createAction('LINES/SET');
 
 const actions = {
     LINES: {
         LOADING: v => v,
-        ADD_SINGLE: v => v,
-        ADD_BATCH: v => v,
-        DELETE: v => v,
         FAILURE: v => v,
     }
 };
@@ -21,7 +18,7 @@ export const fetchLines = (type) => {
 
         try {
             const linesForCard = await smartSystemApi.getLines(type);
-            dispatch(actionLinesAddBatch(linesForCard));
+            dispatch(actionLinesSet(linesForCard));
         } catch (e) {
             dispatch(lines.failure(e));
         }

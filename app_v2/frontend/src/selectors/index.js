@@ -1,11 +1,12 @@
 import {createSelector} from 'reselect';
 import {LINE_TYPE} from '../constants/lines';
 
-const getAllLines = (state) => state.lines;
+const getLinesState = (state) => state.lines;
+const gitAllLines = (state) => { state.entity.lines ? state.entity.lines.toJS() : null };
 
 export const getIrrigationLines = createSelector(
-    [getAllLines],
-    (lines) => {
+    [gitAllLines, getLinesState],
+    (lines, linesState) => {
         let arr = [];
         for (let id in lines) {
             if (lines[id].type === LINE_TYPE.IRRIGATION) {
@@ -14,8 +15,8 @@ export const getIrrigationLines = createSelector(
         }
 
         return {
+            ...linesState,
             lines: arr,
-            loading: lines.loading,
         };
     }
 );

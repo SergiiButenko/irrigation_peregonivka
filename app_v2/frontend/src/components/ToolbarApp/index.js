@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -14,13 +14,8 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from './MenuItems';
-import Grid from '@material-ui/core/Grid';
+import {mainListItems, secondaryListItems} from './MenuItems';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Paper from '@material-ui/core/Paper';
-
-import Fab from '../Irrigation/Fab';
-import ControlCard from '../ControlCard/index';
 
 const drawerWidth = 240;
 
@@ -105,112 +100,114 @@ const styles = theme => ({
 });
 
 class ToolbarAppWeb extends React.Component {
-state = {
-    open: false,
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-};
+    state = {
+        open: false,
+        top: false,
+        left: false,
+        bottom: false,
+        right: false,
+    };
 
 
-  toggleDrawer = (side, open) => () => {
-      this.setState({
-          [side]: open,
-      });
-  };
+    toggleDrawer = (side, open) => () => {
+        this.setState({
+            [side]: open,
+        });
+    };
 
 
-  handleDrawerOpen = () => {
-      this.setState({ open: true });
-  };
+    handleDrawerOpen = () => {
+        this.setState({open: true});
+    };
 
-  handleDrawerClose = () => {
-      this.setState({ open: false });
-  };
+    handleDrawerClose = () => {
+        this.setState({open: false});
+    };
 
-  render() {
-      const { classes } = this.props;
+    render() {
+        const {classes} = this.props;
 
-      return (
-          <React.Fragment>
-              <CssBaseline />
-              <div className={classes.root}>
-                  <AppBar
-                      position="absolute"
-                      className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
-                  >
-                      <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
-                          <IconButton
-                              color="inherit"
-                              aria-label="Open drawer"
-                              onClick={this.toggleDrawer('left', true)}
-                              className={classNames(
-                                  classes.menuButton,
-                                  this.state.open && classes.menuButtonHidden,
-                              )}
-                          >
-                              <MenuIcon />
-                          </IconButton>
-                          <Typography
-                              component="h1"
-                              variant="h6"
-                              color="inherit"
-                              noWrap
-                              className={classes.title}
-                          >
-                Dashboard
-                          </Typography>
-                          <IconButton color="inherit">
-                              <Badge badgeContent={4} color="secondary">
-                                  <NotificationsIcon />
-                              </Badge>
-                          </IconButton>
-                      </Toolbar>
-                  </AppBar>
-                  <Drawer
-                      variant="permanent"
-                      classes={{
-                          paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-                      }}
-                      open={this.state.open}
-                  >
-                      <div className={classes.toolbarIcon}>
-                          <IconButton onClick={this.handleDrawerClose}>
-                              <ChevronLeftIcon />
-                          </IconButton>
-                      </div>
-                      <Divider />
-                      <List>{mainListItems}</List>
-                      <Divider />
-                      <List>{secondaryListItems}</List>
-                  </Drawer>
-                  <SwipeableDrawer
-                      open={this.state.left}
-                      onClose={this.toggleDrawer('left', false)}
-                      onOpen={this.toggleDrawer('left', true)}
-                      //swipeAreaWidth="30"
-                  >
-                      <div
-                          tabIndex={0}
-                          role="button"
-                          onClick={this.toggleDrawer('left', false)}
-                          onKeyDown={this.toggleDrawer('left', false)}
-                      >
-                          <Divider />
-                          <List>{mainListItems}</List>
-                          <Divider />
-                          <List>{secondaryListItems}</List>
-                      </div>
-                  </SwipeableDrawer>
-                  <main className={classes.content}>    
-                      <div className={classes.appBarSpacer} />    
-                      {this.props.children}
-                  </main>
-              </div>
-          </React.Fragment>
-      );
-  }
+        return (
+            <React.Fragment>
+                <CssBaseline/>
+                <div className={classes.root}>
+                    <AppBar
+                        position="absolute"
+                        className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
+                    >
+                        <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
+                            <IconButton
+                                color="inherit"
+                                aria-label="Open drawer"
+                                onClick={this.toggleDrawer('left', true)}
+                                className={classNames(
+                                    classes.menuButton,
+                                    this.state.open && classes.menuButtonHidden,
+                                )}
+                            >
+                                <MenuIcon/>
+                            </IconButton>
+                            <Typography
+                                component="h1"
+                                variant="h6"
+                                color="inherit"
+                                noWrap
+                                className={classes.title}
+                            >
+                                Dashboard
+                            </Typography>
+                            <IconButton color="inherit">
+                                <Badge badgeContent={4} color="secondary">
+                                    <NotificationsIcon/>
+                                </Badge>
+                            </IconButton>
+                        </Toolbar>
+                    </AppBar>
+                    <Drawer
+                        variant="permanent"
+                        classes={{
+                            paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+                        }}
+                        open={this.state.open}
+                    >
+                        <div className={classes.toolbarIcon}>
+                            <IconButton onClick={this.handleDrawerClose}>
+                                <ChevronLeftIcon/>
+                            </IconButton>
+                        </div>
+                        <Divider/>
+                        <List>{mainListItems}</List>
+                        <Divider/>
+                        <List>{secondaryListItems}</List>
+                    </Drawer>
+                    <SwipeableDrawer
+                        open={this.state.left}
+                        onClose={this.toggleDrawer('left', false)}
+                        onOpen={this.toggleDrawer('left', true)}
+                        //swipeAreaWidth="30"
+                    >
+                        <div
+                            tabIndex={0}
+                            role="button"
+                            onClick={this.toggleDrawer('left', false)}
+                            onKeyDown={this.toggleDrawer('left', false)}
+                        >
+                            <Divider/>
+                            <List>{mainListItems}</List>
+                            <Divider/>
+                            <List>{secondaryListItems}</List>
+                        </div>
+                    </SwipeableDrawer>
+                    <main className={classes.content}>
+                        <div className={classes.appBarSpacer}/>
+                        <div className={styles.root}>
+                            {this.props.children}
+                        </div>
+                    </main>
+                </div>
+            </React.Fragment>
+        );
+    }
 }
 
 ToolbarAppWeb.propTypes = {
