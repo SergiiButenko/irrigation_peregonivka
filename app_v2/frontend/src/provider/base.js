@@ -8,7 +8,6 @@ const DEFAULT_READER = d => d;
 
 class _ProviderBase {
 
-
     middlewares = [];
     config = {};
 

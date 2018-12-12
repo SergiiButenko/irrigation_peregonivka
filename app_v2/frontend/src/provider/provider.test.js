@@ -1,6 +1,6 @@
 import fetchMock from 'fetch-mock';
 
-import providerBase from './providerBase';
+import providerBase from './base';
 import {apiKeyAuth, globalErrorHandler} from './middlewares';
 import {ANALYSIS_LIST, TAXONOMY_TREE} from './test_data';
 
@@ -165,7 +165,7 @@ describe('Test provider Base', () => {
 //     it('Works with provided api-key', async () => {
 //         const fileId = '81529f38-fa70-4611-927e-15d832255183';
 //
-//         fetchMock.get((url, { headers }) => generate_url(URLS.RUNS_BY_FILE(fileId)) === url
+//         fetchMock.get((url, { headers }) => generate_url(apiUrl.RUNS_BY_FILE(fileId)) === url
 //             && headers['X-Api-Key'] === DUMMY_API_KEY, {
 //             body: {
 //                 runs: []
@@ -179,7 +179,7 @@ describe('Test provider Base', () => {
 //     it('Gets files per ids (/v2/files/{fileIds})', async () => {
 //         const fileIds = ['81529f38-fa70-4611-927e-15d832255183', '1fbc2a5a-8574-43d6-896e-a9cffec2fdfc'];
 //
-//         fetchMock.get(generate_url(URLS.GET_FILES(fileIds)), {
+//         fetchMock.get(generate_url(apiUrl.GET_FILES(fileIds)), {
 //             body: {
 //                 // TODO: This test would be updated once /v2/files/{fileIDs} is implemented on backend
 //                 files: []
@@ -196,7 +196,7 @@ describe('Test provider Base', () => {
 //                 {'id': '3ef2377d-2196-4db6-abb1-499efd794485',
 //                     'status': 'Success', 'created': '2018-09-14T12:37:03.087595'}]};
 //
-//         fetchMock.get(generate_url(URLS.RUNS_BY_FILE(fileId)), {
+//         fetchMock.get(generate_url(apiUrl.RUNS_BY_FILE(fileId)), {
 //             body: runsList
 //         });
 //
@@ -211,7 +211,7 @@ describe('Test provider Base', () => {
 //             'file': {'id': '412a0c35-4917-4275-b86f-d51ef6cd86f9', 'name': 'LC100500_.fasta'}};
 //
 //
-//         fetchMock.get(generate_url(URLS.RUN_INFO(runId)), {
+//         fetchMock.get(generate_url(apiUrl.RUN_INFO(runId)), {
 //             body: runsList
 //         });
 //
@@ -222,7 +222,7 @@ describe('Test provider Base', () => {
 //     it('Gets analysis list for single sample_run', async () => {
 //         const runId = '3ef2377d-2196-4db6-abb1-499efd794485';
 //
-//         fetchMock.get(generate_url(URLS.ANALYSIS_BY_RUNS(runId)), {
+//         fetchMock.get(generate_url(apiUrl.ANALYSIS_BY_RUNS(runId)), {
 //             body: ANALYSIS_LIST
 //         });
 //
@@ -237,7 +237,7 @@ describe('Test provider Base', () => {
 //         const fileId = '412a0c35-4917-4275-b86f-d51ef6cd86f9';
 //         const analysisId = 'e6f0ea8c-05f6-4679-b541-c87ce24584c5';
 //
-//         fetchMock.get(generate_url(URLS.GET_ANALYSIS_RESULTS_BY_FILE(fileId, analysisId,
+//         fetchMock.get(generate_url(apiUrl.GET_ANALYSIS_RESULTS_BY_FILE(fileId, analysisId,
 //             ANALYSIS_ARTIFACTS.PHYLOGENY.toLowerCase())), { body: TAXONOMY_TREE });
 //
 //         const analysisInfo = await cosmosDXApi.getAnalysisResults(fileId, analysisId, ANALYSIS_ARTIFACTS.PHYLOGENY);
@@ -266,7 +266,7 @@ describe('Test provider Base', () => {
 //
 //         const runId = '3ef2377d-2196-4db6-abb1-499efd794485';
 //
-//         fetchMock.get(generate_url(URLS.SAMPLE_RUN_ARTIFACTS(runId)), { body: artifactsList });
+//         fetchMock.get(generate_url(apiUrl.SAMPLE_RUN_ARTIFACTS(runId)), { body: artifactsList });
 //
 //         const artifacts = await cosmosDXApi.getSampleRunArtifacts(runId);
 //
@@ -278,7 +278,7 @@ describe('Test provider Base', () => {
 //
 //         const runId = '3ef2377d-2196-4db6-abb1-499efd794485';
 //
-//         fetchMock.get(generate_url(URLS.SAMPLE_RUN_ARTIFACT_DATA(runId, SAMPLE_RUN_ARTIFACTS.FASTQC.toLowerCase())),
+//         fetchMock.get(generate_url(apiUrl.SAMPLE_RUN_ARTIFACT_DATA(runId, SAMPLE_RUN_ARTIFACTS.FASTQC.toLowerCase())),
 //             { body: {data: 'something'} });
 //
 //         const artifact = await cosmosDXApi.getSampleRunArtifactData(runId, SAMPLE_RUN_ARTIFACTS.FASTQC);
@@ -306,7 +306,7 @@ describe('Test provider Base', () => {
 //         const fileId = '412a0c35-4917-4275-b86f-d51ef6cd86f9';
 //
 //         fetchMock.post((url, {body}) => {
-//             return generate_url(URLS.CREATE_FILE()) && body['name'] === 'some.fasta';
+//             return generate_url(apiUrl.CREATE_FILE()) && body['name'] === 'some.fasta';
 //         }, {
 //             body: {created: [fileId]}
 //         });

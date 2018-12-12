@@ -3,17 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "sideEffects": [
+    "./src/initialize.js"
+  ],
   "scripts": {
-    "start": "webpack-dev-server --mode development --hot --progress",
+    "start": "webpack-dev-server --env.ENV=DEV --hot --progress",
+    "build": "webpack --env.ENV=PRODUCTION",
     "test": "jest",
     "test-ci": "jest --ci --reporters=default --reporters=jest-junit",
     "lint": "./node_modules/.bin/eslint src",
-    "lint-fixup": "./node_modules/.bin/eslint src --ext .js,.jsx --fix",
-    "build": "webpack --mode production"
+    "lint-fixup": "./node_modules/.bin/eslint src --ext .js,.jsx --fix"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Sergii Butenko",
+  "license": "MIT",
   "jest": {
     "verbose": true,
     "collectCoverageFrom": [
@@ -67,6 +70,7 @@
     "redux-thunk": "^2.3.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
+    "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.19.1",
     "webpack-cli": "^3.1.0",
@@ -88,6 +92,7 @@
     "redux": "^4.0.0-0",
     "redux-actions": "^2.6.1",
     "reselect": "^4.0.0",
+    "socket.io-client": "^2.2.0",
     "typeface-roboto": "^0.0.54"
   }
 }

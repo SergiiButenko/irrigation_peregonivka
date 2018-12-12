@@ -1,5 +1,5 @@
-import providerBase from './providerBase';
-import {URLS} from '../constants/URLS';
+import providerBase from './base';
+import {apiUrl} from '../constants/apiUrl';
 
 class SmartSystemApi {
     config = {};
@@ -16,7 +16,7 @@ class SmartSystemApi {
 
     async getLines(options = {}) {
         return this.provider.post(
-            URLS.GET_LINES(),
+            apiUrl.GET_LINES(),
             options,
         );
     }

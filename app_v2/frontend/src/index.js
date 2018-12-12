@@ -6,6 +6,7 @@ import store from './store';
 import App from './App';
 import {theme} from './theme';
 import {MuiThemeProvider} from '@material-ui/core/styles';
+import './initialize';
 
 ReactDOM.render(
 	 <Provider store={store}>
