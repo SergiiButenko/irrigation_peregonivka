@@ -25,7 +25,7 @@ const store = createStore(
         )
     ));
 
-websocketInit( store );
+// websocketInit( store );
 
 export default store;
 window.Store = store;

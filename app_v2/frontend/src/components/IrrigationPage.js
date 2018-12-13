@@ -1,6 +1,6 @@
 import React from 'react';
-import Irrigation from './components/Irrigation';
-import ToolbarAppWeb from './components/ToolbarApp';
+import Irrigation from './Irrigation/index';
+import ToolbarAppWeb from './ToolbarApp/index';
 
 
 const IrrigationPage = () => (
