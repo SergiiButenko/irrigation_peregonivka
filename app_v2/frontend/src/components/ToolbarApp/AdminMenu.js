@@ -5,7 +5,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import {Link} from 'react-router-dom';
 import List from '@material-ui/core/List/List';
-import {isAdmin} from '../../auth.helper';
+import {isAdmin} from '../../helpers/auth.helper';
 import ListSubheader from '@material-ui/core/ListSubheader/ListSubheader';
 import DeviceHub from '@material-ui/core/SvgIcon/SvgIcon';
 

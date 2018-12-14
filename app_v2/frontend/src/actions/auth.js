@@ -55,7 +55,7 @@ export function login(username, password) {
 
             const user = smartSystemApi.user;
 
-            const {name, token, roles} = user.attributes;
+            const {name, token, roles} = user;
             if (!name) {
                 throw Error('Invalid user; name attribute must be present');
             }

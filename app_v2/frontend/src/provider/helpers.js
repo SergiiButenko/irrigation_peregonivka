@@ -1,4 +1,4 @@
-import {isAdmin} from '../auth.helper';
+import {isAdmin} from '../helpers/auth.helper';
 
 export const adminOnly = (target, propertyKey, descriptor) => {
     if (isAdmin(target.user)) {

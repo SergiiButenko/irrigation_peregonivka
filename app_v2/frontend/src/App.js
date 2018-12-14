@@ -3,7 +3,7 @@ import {Route, BrowserRouter} from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 import 'typeface-roboto';
 
-import {userIsAdmin, userIsAuthenticated, userIsNotAuthenticated} from './auth.helper';
+import {userIsAdmin, userIsAuthenticated, userIsNotAuthenticated} from './helpers/auth.helper';
 
 
 import IrrigationPage from './components/IrrigationPage';
@@ -17,7 +17,7 @@ const App = () => {
         <BrowserRouter>
             <div>
                 <CssBaseline/>
-                <Route exact path="/" component={ userIsNotAuthenticated(IrrigationPage) }/>
+                <Route exact path="/" component={ userIsAuthenticated(IrrigationPage) }/>
                 <Route exact path="/login" component={ userIsNotAuthenticated(SignInPage) }/>
                 <Route exact path="/newhub" component={ userIsAdmin(CreateHubPage) }/>
                 <Route exact path="/device" component={ userIsAdmin(DevicesPage) }/>

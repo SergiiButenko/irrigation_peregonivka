@@ -8,10 +8,10 @@ import {theme} from './theme';
 import {MuiThemeProvider} from '@material-ui/core/styles';
 import './initialize';
 
-import {loginByAccessToken} from './actions/auth';
-
-//Dispatch login action
-store.dispatch(loginByAccessToken());
+// import {loginByAccessToken} from './actions/auth';
+//
+// //Dispatch login action
+// store.dispatch(loginByAccessToken());
 
 
 ReactDOM.render(

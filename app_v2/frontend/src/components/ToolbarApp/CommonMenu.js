@@ -7,7 +7,7 @@ import Face from '@material-ui/icons/Face';
 
 import {Link} from 'react-router-dom';
 import List from '@material-ui/core/List/List';
-import {isAdmin} from '../../auth.helper';
+import {isAdmin} from '../../helpers/auth.helper';
 
 export default class CommonMenu extends Component {
     render() {
