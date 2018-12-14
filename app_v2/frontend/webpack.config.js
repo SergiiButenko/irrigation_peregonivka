@@ -45,7 +45,7 @@ module.exports =  env => {
     return {
         mode: isDevMode(ENV) ? 'development' : 'production',
         devtool: isDevMode(ENV) ? 'source-maps' : false,
-        entry: './src/index.js',
+        entry: './src/lines.js',
         output: {
             path: __dirname + '/dist',
             publicPath: '/',

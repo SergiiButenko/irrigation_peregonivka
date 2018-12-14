@@ -14,6 +14,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTime from '@material-ui/icons/AccessTime';
 import Iso from '@material-ui/icons/Iso';
 import deepPurple from '@material-ui/core/colors/deepPurple';
+import classNames from 'classnames';
 
 
 const styles = theme => ({
@@ -133,7 +134,7 @@ class ControlCard extends React.Component {
 
         return (
             <>
-                <Card className={classes.card, this.state.selected ? classes.cardSelected : ''}>
+                <Card className={classNames(classes.card, this.state.selected && classes.cardSelected)}>
                     <CardContent className={classes.content}>
                         <Grid item
                             container

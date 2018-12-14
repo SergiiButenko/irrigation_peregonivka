@@ -2,7 +2,7 @@ import {combineReducers} from 'redux';
 
 import entity from './entity';
 import lines from './lines';
-import auth from './auth'
+import auth from './auth';
 
 const createFilteredReducer = (reducerFunction, reducerPredicate) =>
     (state, action) => {

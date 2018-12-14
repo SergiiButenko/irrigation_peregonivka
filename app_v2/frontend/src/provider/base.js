@@ -57,7 +57,7 @@ class _ProviderBase {
 
     async get(url, options = {}, reader = DEFAULT_READER) {
         options.method = 'GET';
-        options.cache = "no-cache";
+        options.cache = 'no-cache';
         return this.doRequest(url, options, reader);
     }
 

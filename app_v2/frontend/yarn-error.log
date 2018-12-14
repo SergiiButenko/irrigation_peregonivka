@@ -26,7 +26,7 @@ npm manifest:
     "name": "minimal-react-webpack-babel-setup",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "lines.js",
     "scripts": {
       "start": "webpack-dev-server --env.ENV=DEV --hot --progress",
       "build": "webpack --env.ENV=PRODUCTION",

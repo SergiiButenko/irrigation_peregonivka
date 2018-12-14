@@ -10,11 +10,13 @@ import IrrigationPage from './components/IrrigationPage';
 import CreateHubPage from './components/CreateHubPage';
 import SignInPage from './components/SignInPage';
 import DevicesPage from './components/DevicesPage';
+import CssBaseline from '@material-ui/core/CssBaseline/CssBaseline';
 
 const App = () => {
     return (
         <BrowserRouter>
             <div>
+                <CssBaseline/>
                 <Route exact path="/" component={ userIsNotAuthenticated(IrrigationPage) }/>
                 <Route exact path="/login" component={ userIsNotAuthenticated(SignInPage) }/>
                 <Route exact path="/newhub" component={ userIsAdmin(CreateHubPage) }/>

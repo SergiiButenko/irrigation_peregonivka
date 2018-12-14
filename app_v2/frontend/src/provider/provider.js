@@ -25,7 +25,7 @@ class SmartSystemApi {
 
     setUserData({name, token, roles}) {
         // TODO: need to think about more suitable middleware injection.
-        this.user = {name, token, roles}
+        this.user = {name, token, roles};
 
         this.provider.setMiddlewares([
             tokenAuth(token)

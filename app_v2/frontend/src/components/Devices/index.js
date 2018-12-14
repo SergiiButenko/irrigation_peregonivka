@@ -7,7 +7,6 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ToolbarAppWeb from '../ToolbarApp/index';
-import CssBaseline from '@material-ui/core/CssBaseline';
 
 const styles = theme => ({
     root: {
@@ -41,7 +40,6 @@ class Devices extends React.Component {
 
       return (
           <React.Fragment>
-              <CssBaseline />
               <div className={styles.root}>
                   <ToolbarAppWeb> 
       

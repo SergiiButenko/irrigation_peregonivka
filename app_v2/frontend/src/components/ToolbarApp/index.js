@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {withStyles} from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -14,8 +13,10 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import {mainListItems, secondaryListItems} from './MenuItems';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import connect from 'react-redux/es/connect/connect';
+import {getCurrentUser} from '../../selectors/auth';
+import AppBarMenuItems from './AppBarMenuItems';
 
 const drawerWidth = 240;
 
@@ -99,7 +100,18 @@ const styles = theme => ({
     },
 });
 
-class ToolbarAppWeb extends React.Component {
+
+const mapStateToProps = (state) => {
+    return getCurrentUser(state);
+};
+@withStyles(styles)
+@connect(mapStateToProps)
+export default class ToolbarAppWeb extends React.Component {
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        user: PropTypes.object.isRequired,
+    };
+
     state = {
         open: false,
         top: false,
@@ -108,16 +120,10 @@ class ToolbarAppWeb extends React.Component {
         right: false,
     };
 
-
     toggleDrawer = (side, open) => () => {
         this.setState({
             [side]: open,
         });
-    };
-
-
-    handleDrawerOpen = () => {
-        this.setState({open: true});
     };
 
     handleDrawerClose = () => {
@@ -129,7 +135,7 @@ class ToolbarAppWeb extends React.Component {
 
         return (
             <React.Fragment>
-                <CssBaseline/>
+
                 <div className={classes.root}>
                     <AppBar
                         position="absolute"
@@ -175,10 +181,7 @@ class ToolbarAppWeb extends React.Component {
                                 <ChevronLeftIcon/>
                             </IconButton>
                         </div>
-                        <Divider/>
-                        <List>{mainListItems}</List>
-                        <Divider/>
-                        <List>{secondaryListItems}</List>
+                        <AppBarMenuItems/>
                     </Drawer>
                     <SwipeableDrawer
                         open={this.state.left}
@@ -192,12 +195,11 @@ class ToolbarAppWeb extends React.Component {
                             onClick={this.toggleDrawer('left', false)}
                             onKeyDown={this.toggleDrawer('left', false)}
                         >
-                            <Divider/>
-                            <List>{mainListItems}</List>
-                            <Divider/>
-                            <List>{secondaryListItems}</List>
+                            <AppBarMenuItems/>
                         </div>
                     </SwipeableDrawer>
+
+
                     <main className={classes.content}>
                         <div className={classes.appBarSpacer}/>
                         <div className={classes.root}>
@@ -209,9 +211,3 @@ class ToolbarAppWeb extends React.Component {
         );
     }
 }
-
-ToolbarAppWeb.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ToolbarAppWeb);

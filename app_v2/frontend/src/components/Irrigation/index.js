@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Fab from './Fab';
 import ControlCard from '../ControlCard/index';
-import {getIrrigationLines} from '../../selectors';
+import {getIrrigationLines} from '../../selectors/lines';
 import {fetchLines} from '../../actions/card';
 import PageSpinner from '../shared/PageSpinner';
 import LoadingFailed from '../shared/LoadingFailed';
@@ -66,7 +66,7 @@ export default class Irrigation extends React.Component {
     };
 
     constructor(props) {
-        super(props)
+        super(props);
 
         this.lineType = LINE_TYPE.IRRIGATION;
     }
