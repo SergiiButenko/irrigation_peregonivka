@@ -1,7 +1,7 @@
 import fetchMock from 'fetch-mock';
 
 import providerBase from './base';
-import {apiKeyAuth, globalErrorHandler} from './middlewares';
+import {tokenAuth, globalErrorHandler} from './middlewares';
 import {ANALYSIS_LIST, TAXONOMY_TREE} from './test_data';
 
 
@@ -78,7 +78,7 @@ describe('Test provider Base', () => {
 
         providerBase.setMiddlewares([
             testMiddleware,
-            apiKeyAuth(testApiKey),
+            tokenAuth(testApiKey),
         ]);
 
         const response = await providerBase.get('/v1/data');

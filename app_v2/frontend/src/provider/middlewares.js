@@ -1,9 +1,9 @@
-export const apiKeyAuth = apiKey => (url, opts) => async next => {
+export const tokenAuth = token => (url, opts) => async next => {
     return next(url, {
         ...opts,
         headers: {
             ...opts.headers,
-            'X-Api-Key': apiKey,
+            'Authorization': `Bearer ${token}`,
         },
     });
 };

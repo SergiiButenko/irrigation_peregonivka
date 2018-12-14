@@ -16,24 +16,27 @@ const {auth} = createActions(actions);
 export function loginByAccessToken() {
 
     return async dispatch => {
-        const apiKey = localStorage.getItem('login');
-        if (!apiKey)
+        const token = localStorage.getItem('login');
+        if (!token)
             return;
 
         dispatch(auth.start());
         try {
 
-            await smartSystemApi.login(apiKey);
+            await smartSystemApi.login(token);
 
             const user = smartSystemApi.user;
 
-            const {name, apiKey} = user.attributes;
+            const {name, token, roles} = user.attributes;
             if (!name) {
                 throw Error('Invalid user; name attribute must be present');
             }
-            smartSystemApi.setUserData({apiKey: apiKey});
 
-            dispatch(auth.success({apiKey, user}));
+            smartSystemApi.setUserData({name, token, roles});
+
+            localStorage.setItem('login', token);
+
+            dispatch(auth.success({name, token, roles}));
 
         } catch (e) {
 
@@ -50,18 +53,18 @@ export function login(username, password) {
         try {
             await smartSystemApi.login(username, password);
 
-            const user = smartSystemApi.provider.user;
+            const user = smartSystemApi.user;
 
-            const {name, apiKey} = user.attributes;
+            const {name, token, roles} = user.attributes;
             if (!name) {
                 throw Error('Invalid user; name attribute must be present');
             }
 
-            smartSystemApi.setUserData({apiKey: apiKey});
+            smartSystemApi.setUserData({name, token, roles});
 
-            localStorage.setItem('login', apiKey);
+            localStorage.setItem('login', token);
 
-            dispatch(auth.success({apiKey, user}));
+            dispatch(auth.success({name, token, roles}));
 
         } catch (e) {
             dispatch(auth.failure(e));

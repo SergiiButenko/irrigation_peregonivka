@@ -200,7 +200,7 @@ class ToolbarAppWeb extends React.Component {
                     </SwipeableDrawer>
                     <main className={classes.content}>
                         <div className={classes.appBarSpacer}/>
-                        <div className={styles.root}>
+                        <div className={classes.root}>
                             {this.props.children}
                         </div>
                     </main>

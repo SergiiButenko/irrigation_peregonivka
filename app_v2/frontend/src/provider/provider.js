@@ -1,7 +1,8 @@
 import providerBase from './base';
-import {apiKeyAuth} from './middlewares';
+import {tokenAuth} from './middlewares';
 
 import {apiUrl} from '../constants/apiUrl';
+import {adminOnly} from './helpers';
 
 class SmartSystemApi {
     config = {};
@@ -18,19 +19,20 @@ class SmartSystemApi {
     }
 
     login(userName, password) {
-        const {name, apiKey} = this.provider.login(userName, password);
-        this.setUserData({name, apiKey});
+        const {name, token, roles} = this.provider.login(userName, password);
+        this.setUserData({name, token, roles});
     }
 
-    setUserData({name, apiKey}) {
+    setUserData({name, token, roles}) {
         // TODO: need to think about more suitable middleware injection.
-        this.user = {name, apiKey}
+        this.user = {name, token, roles}
 
         this.provider.setMiddlewares([
-            apiKeyAuth(apiKey)
+            tokenAuth(token)
         ]);
     }
 
+    @adminOnly
     async getLines(options = {}) {
         return this.provider.post(
             apiUrl.GET_LINES(),
