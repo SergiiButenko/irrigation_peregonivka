@@ -237,9 +237,9 @@ def check_tank_status(line_id):
 
         logging.info("response {0}".format(str(response.text)))
 
-        tmp_fix = response.text.replace("upper_tank", '"upper_tank"')
+        #tmp_fix = response.text.replace("upper_tank", '"upper_tank"')
 
-        response = json.loads(tmp_fix)
+        response = json.loads(response.text)
         if response["device_id"] == device_id:
             r_dict[line_id] = dict(id=line_id, device_state=1)
         else:
