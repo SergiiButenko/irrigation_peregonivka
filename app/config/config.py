@@ -1,5 +1,6 @@
 import os
 
+
 ########## TELEGRAM SETTINGS #############
 if "API_TOKEN_MOZART" not in os.environ or "GROUP_CHAT_ID_COTTAGE" not in os.environ:
     raise AssertionError(
@@ -12,14 +13,14 @@ NAME = "Peregonivka_bot"
 CHANNEL_NAME = "@Butenko_test"
 
 WEBHOOK_HOST = "mozz.asuscomm.com"
-WEBHOOK_PORT = 88  # 443, 80, 88 or 8443 (port need to be 'open')
+WEBHOOK_PORT = 88  # 443, 80, 88 or 8443 (port needs to be open)
 WEBHOOK_LISTEN = "0.0.0.0"  # In some VPS you may need to put here the IP addr
 
 WEBHOOK_SSL_CERT = (
-    "/var/www/app/ssl_sertificats/mozz/06-09/cert.pem"
+    "/var/www/app/ssl_sertificats/mozz/latest/cert.pem"
 )  # Path to the ssl certificate
 WEBHOOK_SSL_PRIV = (
-    "/var/www/app/ssl_sertificats/mozz/06-09/privkey.pem"
+    "/var/www/app/ssl_sertificats/mozz/latest/privkey.pem"
 )  # Path to the ssl private key
 
 WEBHOOK_URL_BASE = "https://%s:%s" % (WEBHOOK_HOST, WEBHOOK_PORT)

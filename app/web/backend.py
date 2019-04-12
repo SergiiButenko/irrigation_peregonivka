@@ -1297,7 +1297,7 @@ def stop_filling():
             logging.info("Messages send.")
         except Exception as e:
             logging.error(e)
-            logging.error("Can't send rule to telegram. Ecxeption occured")
+            logging.error("Can't send rule to telegram. Exception occured")
             return json.dumps(
                 {"status": "Can't send rule to telegram. Exception occured"}
             )

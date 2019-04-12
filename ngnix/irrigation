@@ -12,8 +12,8 @@ server {
 	server_name mozz.asuscomm.com;
 
 	ssl on;
-	ssl_certificate /var/www/app/ssl_sertificats/mozz/06-09/cert.pem;
-	ssl_certificate_key /var/www/app/ssl_sertificats/mozz/06-09/privkey.pem;
+	ssl_certificate /var/www/app/ssl_sertificats/mozz/latest/cert.pem;
+	ssl_certificate_key /var/www/app/ssl_sertificats/mozz/latest/privkey.pem;
 
 	error_page 497  https://$host:$server_port$request_uri;
 
@@ -82,8 +82,8 @@ server {
 	listen 88 ssl;
 	server_name mozz.asuscomm.com;
 
-	ssl_certificate /var/www/app/ssl_sertificats/mozz/06-09/cert.pem;
-	ssl_certificate_key /var/www/app/ssl_sertificats/mozz/06-09/privkey.pem;
+	ssl_certificate /var/www/app/ssl_sertificats/mozz/latest/cert.pem;
+	ssl_certificate_key /var/www/app/ssl_sertificats/mozz/latest/privkey.pem;
 
 	access_log /var/log/nginx/telebot-access.log;
 	error_log  /var/log/nginx/telebot-error.log error;
