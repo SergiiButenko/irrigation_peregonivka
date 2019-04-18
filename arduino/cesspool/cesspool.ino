@@ -12,6 +12,8 @@ int counter = 0;
 int counter_max = 300;
 int delay_for_counter_millis = 10;
 byte retry_limit = 5;
+unsigned long previousMillis = 0;        // will store last time LED was updated
+const long interval = 1000 * 60 * 15;           // interval at which to blink (milliseconds)
 
 byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
@@ -88,12 +90,11 @@ void setup() {
 void loop() {
   check_wifi_connection();
   server.handleClient();
-
-  if (counter >= counter_max) {
-    Serial.println(counter);
-    Serial.println(counter >= counter_max);
-
-    send_request(host + String("/cesspool?device_id=") + String(device_id));
+  
+  unsigned long currentMillis = millis();
+  if ((currentMillis - previousMillis >= interval) and (counter >= counter_max)) {
+    previousMillis = currentMillis;
+    send_request(host + String("/cesspool"));
     
     counter = 0;
     delay(delay_between_filled_requests);
