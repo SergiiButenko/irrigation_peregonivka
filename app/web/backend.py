@@ -1318,6 +1318,71 @@ def stop_filling():
         )
 
 
+@app.route("/cesspool")
+def stop_filling():
+    """Blablbal."""
+
+    logging.info("CESSPOOL SIGNAL RESEIVED")
+    
+    _no_key = False
+
+    last_time_sent = get_time_last_notification(key=REDIS_KEY_FOR_CESSTOOL)
+    if last_time_sent is None:
+        set_time_last_notification(date=datetime.datetime.now(), key=REDIS_KEY_FOR_CESSTOOL)
+        last_time_sent = get_time_last_notification()
+        _no_key = True
+
+    delta = datetime.datetime.now() - last_time_sent
+    if delta.seconds > 60 * CESSTOOL_NOTIFICATION_MINUTES or _no_key is True:
+        message = "Рівень води в септику вище норми."
+
+        try:
+
+            logging.info("Updating redis.")
+            set_time_last_notification(date=datetime.datetime.now(), key=REDIS_KEY_FOR_CESSTOOL)
+            logging.info("Redis updated")
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't update redis. Exception occured")
+
+        try:
+            logging.info(
+                "Sending warning message to users: '{0}'.".format(
+                    str(_users_list)
+                )
+            )
+            payload = {"users": _users_list, "message": message}
+            response = requests.post(
+                VIBER_BOT_IP + "/send_message",
+                json=payload,
+                timeout=(READ_TIMEOUT, RESP_TIMEOUT),
+                verify=False,
+            )
+            response.raise_for_status()
+            logging.info("Messages send.")
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't send rule to telegram. Ecxeption occured")
+            return json.dumps(
+                {"status": "Can't send rule to telegram. Exception occured"}
+            )
+
+        return json.dumps({"status": "Redis updated"})
+    else:
+        logging.info(
+            "{0} minutes not passed yet. Send message pending.".format(
+                CESSTOOL_NOTIFICATION_MINUTES
+            )
+        )
+        return json.dumps(
+            {
+                "status": "{0} minutes not passed yet. Send message pending.".format(
+                    CESSTOOL_NOTIFICATION_MINUTES
+                )
+            }
+        )
+
+
 @app.route("/im_alive")
 def im_alive():
     """In order to keep device status"""
