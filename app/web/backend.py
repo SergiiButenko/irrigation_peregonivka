@@ -1319,7 +1319,7 @@ def stop_filling():
 
 
 @app.route("/cesspool")
-def stop_filling():
+def cesspool():
     """Blablbal."""
 
     logging.info("CESSPOOL SIGNAL RESEIVED")
