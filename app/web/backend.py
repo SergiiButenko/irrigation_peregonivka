@@ -1329,7 +1329,7 @@ def cesspool():
     last_time_sent = get_time_last_notification(key=REDIS_KEY_FOR_CESSTOOL)
     if last_time_sent is None:
         set_time_last_notification(date=datetime.datetime.now(), key=REDIS_KEY_FOR_CESSTOOL)
-        last_time_sent = get_time_last_notification()
+        last_time_sent = get_time_last_notification(key=REDIS_KEY_FOR_CESSTOOL)
         _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent
