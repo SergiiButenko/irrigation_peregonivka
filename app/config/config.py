@@ -77,7 +77,11 @@ USERS = [{"name": "Cottage", "id": "-315337397"}]
 
 # Settings for upper tanks
 USERS_SV = [{"name": "SV", "id": "cHxBN+Zz1Ldd/60xd62U/w=="}]
-TELEGRAM_USERS = {"upper_tank": USERS, "upper_tank_sv": USERS_SV}
+TELEGRAM_USERS = {
+     "upper_tank": USERS,
+     "cesspool": USERS,
+     "upper_tank_sv": USERS_SV
+     }
 
 VIBER_USERS = [
     {"name": "Sergii", "id": "cHxBN+Zz1Ldd/60xd62U/w=="},

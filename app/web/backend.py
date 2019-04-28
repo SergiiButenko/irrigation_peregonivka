@@ -1323,7 +1323,8 @@ def cesspool():
     """Blablbal."""
 
     logging.info("CESSPOOL SIGNAL RESEIVED")
-    
+
+    device_id = "cesspool"
     _no_key = False
 
     last_time_sent = get_time_last_notification(key=REDIS_KEY_FOR_CESSTOOL)
@@ -1346,6 +1347,7 @@ def cesspool():
             logging.error("Can't update redis. Exception occured")
 
         try:
+            _users_list = TELEGRAM_USERS[device_id]
             logging.info(
                 "Sending warning message to users: '{0}'.".format(
                     str(_users_list)
