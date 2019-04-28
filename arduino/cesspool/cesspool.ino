@@ -18,15 +18,12 @@ const long interval = 1000 * 60 * 15;           // interval at which to blink (m
 byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
 
-//const char *host = "http://mozz.asuscomm.com:9000";
-const char *host = "http://192.168.1.199:5000";
+const char *host = "http://mozz.asuscomm.com:9000";
 
 String device_id = "cesspool";
 
-const char* ssid = "NotebookNet";
-const char* password = "0660101327";
-//const char* ssid = "faza_2";
-//const char* password = "Kobe_2016";
+const char* ssid = "faza_2";
+const char* password = "Kobe_2016";
 
 ESP8266WebServer server(80);
 
