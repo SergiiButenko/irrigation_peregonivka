@@ -35,7 +35,7 @@ unsigned long current_time = 0;
 
 int deep_sleep_microsec = 15 * 60 * 1000000;
 
-const char *host = "http://mozz.asuscomm.com:9000";
+const char *host = "http://192.168.1.22:9000";
 
 String device_id = "weather_station";
 

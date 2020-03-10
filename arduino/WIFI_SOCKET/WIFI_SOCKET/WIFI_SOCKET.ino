@@ -11,54 +11,34 @@ const char* password = "Kobe_2016";
 ESP8266WebServer server(80);
 
 const int l1 = D5;
-const int l2 = D6;
 const int r1 = D7;
-const int r2 = D8;
+const int r2 = D7;
+const int l2 = D7;
 
 void blink_connected() {
-  int l1_status = digitalRead(r1);
-  int l2_status = digitalRead(r2);
   digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
   delay(100);
   digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
   delay(100);
   digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
   delay(100);
   digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
   delay(100);
   digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
   delay(100);
   digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
   delay(100);
   digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
   delay(100);
   digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
   delay(100);
   digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-  digitalWrite(l1, l1_status);
-  digitalWrite(l2, l2_status);
 }
 
 void blink_led() {
-  int l1_status = digitalRead(r1);
-  int l2_status = digitalRead(r2);
   digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
   delay(200);
   digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
-  delay(200);
-  digitalWrite(l1, l1_status);
-  digitalWrite(l2, l2_status);
 }
 
 void handleRoot() {
@@ -172,4 +152,3 @@ void setup(void){
 void loop(void){
   server.handleClient();
 }
-

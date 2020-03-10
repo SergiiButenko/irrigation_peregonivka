@@ -39,7 +39,7 @@ void send_status(){
     msg += "\"5\":\"" + String(digitalRead(r5)) + "\",";
     msg += "\"6\":\"" + String(digitalRead(r6)) + "\",";
     msg += "\"7\":\"" + String(digitalRead(r7)) + "\",";
-    msg += "\"8\":\"" + String(digitalRead(r8)) + "\",";
+    msg += "\"8\":\"" + String(digitalRead(r8)) + "\"";
     msg += "}";
     
     Serial.println("Message to send:" + msg);
@@ -97,9 +97,11 @@ void setup(void) {
 
   // Wait for connection
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+    Serial.println("Connection Failed! Rebooting...");
+    delay(5000);
+    ESP.restart();
   }
+ 
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
@@ -107,12 +109,12 @@ void setup(void) {
   Serial.println(WiFi.localIP());
 
   /*use mdns for device_id name resolution*/
-  if (!MDNS.begin(device_id)) { //http://esp32.local
-    Serial.println("Error setting up MDNS responder!");
-    while (1) {
-      delay(1000);
-    }
-  }
+   if (!MDNS.begin(String(device_id))) { //http://esp32.local
+     Serial.println("Error setting up MDNS responder!");
+     while (1) {
+       delay(1000);
+     }
+   }
   Serial.println("mDNS responder started");
 
   server.on("/status", send_status);
@@ -149,7 +151,7 @@ void setup(void) {
 
   server.on("/version", [](){
     server.sendHeader("Connection", "close");
-    server.send(200, "text/plain", "mar07-17-53");
+    server.send(200, "text/plain", "mar10-09-06");
   });
   /*return index page which is stored in serverIndex */
   
