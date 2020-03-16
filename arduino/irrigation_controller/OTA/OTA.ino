@@ -5,11 +5,11 @@
 #include <ESP8266HTTPUpdateServer.h>
 
 #ifndef STASSID
-#define STASSID "NotebookNet"
-#define STAPSK  "0660101327"
+#define STASSID "faza_2"
+#define STAPSK "Kobe_2016"
 #endif
 
-const char* device_id = "irrigation1";
+const char* device_id = "irrigation2";
 const char* ssid = STASSID;
 const char* password = STAPSK;
 
@@ -109,7 +109,7 @@ void setup(void) {
   Serial.println(WiFi.localIP());
 
   /*use mdns for device_id name resolution*/
-   if (!MDNS.begin(String(device_id))) { //http://esp32.local
+   if (!MDNS.begin("irrigation2")) { //http://esp32.local
      Serial.println("Error setting up MDNS responder!");
      while (1) {
        delay(1000);
