@@ -46,6 +46,8 @@ def setup_lines_remote_control():
                 "base_url": row[7],
                 "device_id": row[8],
                 "device_url": row[9],
+                "pump_enabled": row[10],
+                "pump_pin": row[11],
                 "state": -1,
             }
 
