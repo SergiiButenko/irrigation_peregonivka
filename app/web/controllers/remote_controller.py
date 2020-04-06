@@ -164,6 +164,17 @@ def branch_on(line_id=None, line_alert=None):
     r_dict = {}
     r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
 
+    if LINES[line_id]["pump_enabled"] == 0:
+        logging.info("Pump won't be turned on with {0} branch id".format(line_id))
+    else:
+        time.sleep(5)
+        line_id = LINES[line_id]["pump_pin"]
+        status = on(line_id=line_id)
+
+        r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
+        
+        logging.info("Pump turned on with {0} branch id".format(line_id))
+
     return r_dict
 
 
@@ -177,6 +188,14 @@ def branch_off(line_id=None):
     status = off(LINES[line_id]["id"])
     r_dict = {}
     r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
+
+    if LINES[line_id]["pump_enabled"] == 1:
+        time.sleep(5)
+        line_id = LINES[line_id]["pump_pin"]
+        status = off(line_id=line_id)
+        r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
+        
+        logging.info("Pump turned off with {0} branch id".format(line_id))
 
     return r_dict
 
