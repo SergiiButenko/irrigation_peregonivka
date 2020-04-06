@@ -1,7 +1,8 @@
 cd /var/www/
 git reset --hard
-git checkout dev
-git pull origin dev
+git fetch --all
+git checkout github dev
+git pull
 msg=`git log -1 --pretty=%B | tr -s ' ' | tr ' ' '_'`
 
 cd /var/www/services
