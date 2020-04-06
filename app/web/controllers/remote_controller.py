@@ -3,6 +3,7 @@
 import json
 import logging
 import time
+import socket
 
 import requests
 
@@ -18,6 +19,11 @@ logging.basicConfig(
 
 LINES = {}
 
+def get_IP_by_local_domain(url):
+    if '.local' in url:
+        return socket.gethostbyname(url)
+    
+    return url
 
 def setup_lines_remote_control():
     """Fill up settings array to save settings for branches."""
@@ -60,7 +66,7 @@ def on(line_id):
     """Set pin to high state."""
     try:
         relay = LINES[line_id]["relay_num"]
-        base_url = LINES[line_id]["base_url"]
+        base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
         response_on = requests.get(
             url="http://" + base_url + "/on",
             params={"relay": relay},
@@ -83,7 +89,7 @@ def off(line_id):
     """Set pin to low state."""
     try:
         relay = LINES[line_id]["relay_num"]
-        base_url = LINES[line_id]["base_url"]
+        base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
         response_off = requests.get(
             url="http://" + base_url + "/off",
             params={"relay": relay},
@@ -104,7 +110,7 @@ def off(line_id):
 def air_s(line_id):
     for attempt in range(2):
         try:
-            base_url = LINES[line_id]["base_url"]
+            base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
             response_air = requests.get(
                 url="http://" + base_url + "/air_temperature",
                 timeout=(READ_TIMEOUT, RESP_TIMEOUT),
@@ -128,7 +134,7 @@ def air_s(line_id):
 def ground_s(line_id):
     for attempt in range(2):
         try:
-            base_url = LINES[line_id]["base_url"]
+            base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
             response_air = requests.get(
                 url="http://" + base_url + "/ground_temperature",
                 timeout=(READ_TIMEOUT, RESP_TIMEOUT),
@@ -221,7 +227,7 @@ def line_status(line_id):
     r_dict = {}
 
     try:
-        base_url = LINES[line_id]["base_url"]
+        base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
         relay = LINES[line_id]["relay_num"]
 
         response = requests.get(
@@ -247,7 +253,7 @@ def check_tank_status(line_id):
 
     try:
         device_id = LINES[line_id]["device_id"]
-        device_url = LINES[line_id]["device_url"]
+        device_url = get_IP_by_local_domain(LINES[line_id]["device_url"])
 
         response = requests.get(
             url="http://" + device_url, timeout=(READ_TIMEOUT, RESP_TIMEOUT)
