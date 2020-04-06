@@ -744,9 +744,20 @@ def get_moisture():
 def irrigation_status():
     """Return status of raspberry_pi relay."""
     try:
-        response_status = garden_controller.branch_status()
+        lines = {}
+        for line_id, line in BRANCHES_SETTINGS.items():
+            if line["line_type"] == "irrigation" and line["base_url"] is not None:
+                response_status = remote_controller.line_status(line_id=line_id)
+                lines[line_id] = dict(
+                    id=line_id, state=int(response_status[line_id]["state"])
+                )
+            elif line["line_type"] == "irrigation" and line["base_url"] is None:
+                response_status = garden_controller.branch_status()
+                lines[line_id] = dict(
+                    id=line_id, state=int(response_status[line_id]["state"])
+                )
 
-        arr = form_responce_for_branches(response_status)
+        arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
         return jsonify(branches=arr)
     except Exception as e:
