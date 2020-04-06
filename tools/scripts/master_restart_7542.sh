@@ -1,8 +1,7 @@
 cd /var/www/
 git reset --hard
-git fetch --all
-git checkout github master
-git pull
+git checkout master
+git pull github master
 msg=`git log -1 --pretty=%B | tr -s ' ' | tr ' ' '_'`
 
 cd /var/www/services

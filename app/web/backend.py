@@ -881,8 +881,7 @@ def retry_branch_on(branch_id, time_min):
                     )
                 else:
                     response_on = remote_controller.branch_on(
-                        line_id=branch_id, line_alert=time_min,
-                        pump_enabled=pump_enabled
+                        line_id=branch_id, line_alert=time_min
                     )
 
                 logging.info("Response {0}".format(response_on[branch_id]))
