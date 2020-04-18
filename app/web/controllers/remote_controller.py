@@ -195,11 +195,11 @@ def branch_off(line_id=None):
     r_dict = {}
     
     if LINES[line_id]["pump_enabled"] == 1:
-        line_id = LINES[line_id]["pump_pin"]
-        relay = LINES[line_id]["relay_num"]
+        pump_id = LINES[line_id]["pump_pin"]
+        relay = LINES[pump_id]["relay_num"]
         time.sleep(5)
-        status = off(line_id=line_id)
-        r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
+        status = off(line_id=pump_id)
+        r_dict[pump_id] = dict(id=pump_id, state=int(status[str(relay)]))
         
         logging.info("Pump turned off with {0} branch id".format(line_id))
     
