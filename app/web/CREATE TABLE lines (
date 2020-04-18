@@ -77,3 +77,15 @@ relay_num, pin, group_id, is_pump, is_except, pump_pin, device_id, device_url) v
 );
 
 14|14|Верхня бочка|480|1|1|2017-06-29 02:00:00|tank||0||20|5|0|1||upper_tank|192.168.1.55
+
+
+
+ update lines set name = Полуниця клумба Квіти
+ 
+update lines set name = 'Бочка' where name = 'Огірки';
+update lines set name = 'Малина' where name = 'Томати';
+update lines set name = 'Огірки' where name = 'Квіти';
+update lines set name = 'Полуниця Альтанка' where name = 'Малина';
+update lines set name = 'Газон' where name = 'Полуниця Альтанка';
+update lines set name = 'Полуниця Альтанка' where name = 'Газон';
+update lines set name = 'Томати' where name = 'Бочка';
