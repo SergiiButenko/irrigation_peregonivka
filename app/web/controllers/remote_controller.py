@@ -191,12 +191,8 @@ def branch_off(line_id=None):
     if line_id is None:
         logging.error("No branch id")
         return None
-
-    relay = LINES[line_id]["relay_num"]
-    status = off(LINES[line_id]["id"])
+    
     r_dict = {}
-    r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
-
     if LINES[line_id]["pump_enabled"] == 1:
         time.sleep(5)
         line_id = LINES[line_id]["pump_pin"]
@@ -204,6 +200,10 @@ def branch_off(line_id=None):
         r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
         
         logging.info("Pump turned off with {0} branch id".format(line_id))
+
+    relay = LINES[line_id]["relay_num"]
+    status = off(LINES[line_id]["id"])
+    r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
 
     return r_dict
 
