@@ -6,7 +6,7 @@ Requires=network.target
 [Service]
 EnvironmentFile=/etc/environment
 ExecStartPre=/bin/bash /var/www/tools/scripts/update_js.sh
-ExecStart=/usr/local/bin/gunicorn \
+ExecStart=/usr/bin/gunicorn \
 	--worker-class eventlet \
 	-w 1 \
 	-b 0.0.0.0:8001 \
