@@ -1,7 +1,7 @@
 cd /var/www/
 git reset --hard
 git checkout master
-git pull github master
+git pull origin master
 msg=`git log -1 --pretty=%B | tr -s ' ' | tr ' ' '_'`
 
 cd /var/www/services
