@@ -14,7 +14,7 @@ GROUP_CHAT_ID = int(os.getenv("GROUP_CHAT_ID_COTTAGE", -1))
 NAME = "Peregonivka_bot"
 CHANNEL_NAME = "@Butenko_test"
 
-WEBHOOK_HOST = "mozz.asuscomm.com"
+WEBHOOK_HOST = "mozz.breeze.ua"
 WEBHOOK_PORT = 88  # 443, 80, 88 or 8443 (port needs to be open)
 WEBHOOK_LISTEN = "0.0.0.0"  # In some VPS you may need to put here the IP addr
 
@@ -31,7 +31,7 @@ WEBHOOK_URL_PATH = "/%s/" % (API_TOKEN)
 MESSAGES = {"test": ""}
 
 ########## APP SETTINGS #############
-LINE_UPPER_TANK = 14
+LINE_UPPER_TANK = 26
 LINE_UPPER_TANK_AV = 17
 LINE_HEAT_SENSOR = 11
 LINE_HEAT_HUN_SENSOR = 10
@@ -51,7 +51,7 @@ ENABLED_RULE = 1
 
 
 BACKEND_PORT = 8000
-BACKEND_HOST = "192.168.71.229"
+BACKEND_HOST = "192.168.71.113"
 BACKEND_IP = "http://%s:%s" % (BACKEND_HOST, BACKEND_PORT)
 VIBER_BOT_IP = WEBHOOK_URL_BASE
 
