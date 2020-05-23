@@ -7,9 +7,9 @@ from collections import OrderedDict
 from itertools import groupby
 from operator import itemgetter
 
-from common.helpers import *
-from common.redis_provider import *
-from config.config import *
+from app.common.helpers import *
+from app.common.redis_provider import *
+from app.config.config import *
 
 QUERY = {}
 QUERY["get_next_active_rule"] = (
