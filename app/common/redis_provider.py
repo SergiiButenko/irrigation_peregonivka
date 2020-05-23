@@ -7,7 +7,6 @@ from config import *
 
 redis_db = redis.Redis(host="localhost", port=6379, db=0)
 
-
 def set_next_rule_to_redis(branch_id, data):
     """Set next rule in redis."""
     res = False
