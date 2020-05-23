@@ -12,7 +12,7 @@ ExecStart=/usr/bin/gunicorn \
 	-b 0.0.0.0:8000 \
 	--pythonpath /var/www/app/ \
 	--user root \
-	wen.backend:app
+	web.backend:app
 
 Restart=always
 RestartSec=35
