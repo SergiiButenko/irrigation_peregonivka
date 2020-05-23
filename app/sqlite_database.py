@@ -7,9 +7,9 @@ from collections import OrderedDict
 from itertools import groupby
 from operator import itemgetter
 
-from helpers import *
-from redis_provider import *
-from config import *
+from app.helpers import *
+from app.redis_provider import *
+from app.config import *
 
 QUERY = {}
 QUERY["get_next_active_rule"] = (

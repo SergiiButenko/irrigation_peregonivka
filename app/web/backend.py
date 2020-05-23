@@ -13,11 +13,11 @@ from flask import Flask, abort, jsonify, render_template, request
 from flask.ext.cache import Cache
 
 import eventlet
-from common import sqlite_database as database
-from common.helpers import *
-from common.redis_provider import *
-from config.config import *
-from controllers import remote_controller as remote_controller
+from app import sqlite_database as database
+from app.helpers import *
+from app.redis_provider import *
+from app.config import *
+from app import remote_controller as remote_controller
 from eventlet import wsgi
 from flask_socketio import SocketIO, emit
 

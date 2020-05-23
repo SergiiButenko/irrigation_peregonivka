@@ -11,9 +11,9 @@ from flask import Flask, render_template, request
 from flask.ext.cache import Cache
 
 import eventlet
-from common import sqlite_database as database
-from common.helpers import *
-from config.config import *
+from app import sqlite_database as database
+from app.helpers import *
+from app.config import *
 from eventlet import wsgi
 from flask_socketio import SocketIO
 

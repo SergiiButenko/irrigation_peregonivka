@@ -7,9 +7,10 @@ import time
 
 import requests
 
-from common import sqlite_database as database
-from common.helpers import *
-from common.redis_provider import *
+from app import sqlite_database as database
+from app.config import *
+from app.helpers import *
+from app.redis_provider import *
 
 
 logging.basicConfig(

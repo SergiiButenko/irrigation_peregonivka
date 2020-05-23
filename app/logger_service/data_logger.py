@@ -3,9 +3,9 @@ import logging
 import requests
 import datetime
 
-from common import sqlite_database as database
-from common.helpers import *
-from web.controllers import remote_controller as remote_controller
+from app import sqlite_database as database
+from app.helpers import *
+from app.web import remote_controller as remote_controller
 
 
 logging.basicConfig(

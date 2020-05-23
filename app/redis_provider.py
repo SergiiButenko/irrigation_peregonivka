@@ -2,8 +2,8 @@ import json
 import logging
 
 import redis
-from helpers import *
-from config import *
+from app.helpers import *
+from app.config import *
 
 redis_db = redis.Redis(host="localhost", port=6379, db=0)
 

@@ -7,9 +7,9 @@ import socket
 
 import requests
 
-from common import sqlite_database as database
-from common.helpers import *
-from config.config import *
+from app import sqlite_database as database
+from app.helpers import *
+from app.config import *
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",

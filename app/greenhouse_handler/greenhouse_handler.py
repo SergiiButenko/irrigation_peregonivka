@@ -6,10 +6,11 @@ import time
 
 import requests
 
-from common import sqlite_database as database
-from common.helpers import *
-from common.redis_provider import *
-from web.controllers import remote_controller as remote_controller
+from app import sqlite_database as database
+from app.helpers import *
+from app.config import *
+from app.redis_provider import *
+from app.web import remote_controller as remote_controller
 
 
 logging.basicConfig(
