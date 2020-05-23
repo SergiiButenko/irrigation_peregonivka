@@ -5,8 +5,8 @@ import time
 
 import RPi.GPIO as GPIO
 from common import sqlite_database as database
-from common.common import *
-from common.redis import *
+from common.helpers import *
+from common.redis_provider import *
 from config.config import *
 
 

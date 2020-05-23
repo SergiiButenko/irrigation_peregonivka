@@ -7,8 +7,8 @@ import time
 import requests
 
 from common import sqlite_database as database
-from common.common import *
-from common.redis import *
+from common.helpers import *
+from common.redis_provider import *
 from web.controllers import remote_controller as remote_controller
 
 

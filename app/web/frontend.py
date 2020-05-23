@@ -12,7 +12,7 @@ from flask.ext.cache import Cache
 
 import eventlet
 from common import sqlite_database as database
-from common.common import *
+from common.helpers import *
 from config.config import *
 from eventlet import wsgi
 from flask_socketio import SocketIO

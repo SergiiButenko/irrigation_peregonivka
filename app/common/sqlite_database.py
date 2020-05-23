@@ -7,8 +7,8 @@ from collections import OrderedDict
 from itertools import groupby
 from operator import itemgetter
 
-from common.common import *
-from common.redis import *
+from common.helpers import *
+from common.redis_provider import *
 from config.config import *
 
 QUERY = {}

@@ -6,7 +6,7 @@ import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 import RPi.GPIO as GPIO
 from common import sqlite_database as database
-from common.common import *
+from common.helpers import *
 from web.controllers import remote_controller as remote_controller
 
 

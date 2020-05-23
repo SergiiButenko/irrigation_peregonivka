@@ -14,8 +14,8 @@ from flask.ext.cache import Cache
 
 import eventlet
 from common import sqlite_database as database
-from common.common import *
-from common.redis import *
+from common.helpers import *
+from common.redis_provider import *
 from config.config import *
 from controllers import relay_controller as garden_controller
 from controllers import remote_controller as remote_controller
@@ -1340,7 +1340,9 @@ def cesspool():
 
     last_time_sent = get_time_last_notification(key=REDIS_KEY_FOR_CESSTOOL)
     if last_time_sent is None:
-        set_time_last_notification(date=datetime.datetime.now(), key=REDIS_KEY_FOR_CESSTOOL)
+        set_time_last_notification(
+            date=datetime.datetime.now(), key=REDIS_KEY_FOR_CESSTOOL
+        )
         last_time_sent = get_time_last_notification(key=REDIS_KEY_FOR_CESSTOOL)
         _no_key = True
 
@@ -1351,7 +1353,9 @@ def cesspool():
         try:
 
             logging.info("Updating redis.")
-            set_time_last_notification(date=datetime.datetime.now(), key=REDIS_KEY_FOR_CESSTOOL)
+            set_time_last_notification(
+                date=datetime.datetime.now(), key=REDIS_KEY_FOR_CESSTOOL
+            )
             logging.info("Redis updated")
         except Exception as e:
             logging.error(e)
@@ -1360,9 +1364,7 @@ def cesspool():
         try:
             _users_list = TELEGRAM_USERS[device_id]
             logging.info(
-                "Sending warning message to users: '{0}'.".format(
-                    str(_users_list)
-                )
+                "Sending warning message to users: '{0}'.".format(str(_users_list))
             )
             payload = {"users": _users_list, "message": message}
             response = requests.post(
@@ -1417,10 +1419,17 @@ def weather_station():
     press = str(request.args.get("press"))
     voltage = str(request.args.get("voltage"))
     logging.info(
-        "weather_station signal from '{}' device id received. temp={}; hum={}; press={}; voltage={}".format(device_id, temp, hum, press, voltage)
+        "weather_station signal from '{}' device id received. temp={}; hum={}; press={}; voltage={}".format(
+            device_id, temp, hum, press, voltage
+        )
     )
 
-    if database.insert_weather(sensor_shortname=device_id, temp=temp, hum=hum, press=press, voltage=voltage) is True:
+    if (
+        database.insert_weather(
+            sensor_shortname=device_id, temp=temp, hum=hum, press=press, voltage=voltage
+        )
+        is True
+    ):
         logging.info("Info registered in database.")
     else:
         logging.error("Error while insert occured. ")

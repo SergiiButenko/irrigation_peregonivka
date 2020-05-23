@@ -1,7 +1,4 @@
 import os
-from configparser import ConfigParser
- 
-
 
 ########## TELEGRAM SETTINGS #############
 if "API_TOKEN_MOZART" not in os.environ or "GROUP_CHAT_ID_COTTAGE" not in os.environ:

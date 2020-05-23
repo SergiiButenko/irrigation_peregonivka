@@ -10,9 +10,9 @@ ExecStart=/usr/bin/gunicorn \
 	--worker-class eventlet \
 	-w 1 \
 	-b 0.0.0.0:8000 \
-	--pythonpath /var/www/app/web/ \
+	--pythonpath /var/www/app/ \
 	--user root \
-	backend:app
+	wen.backend:app
 
 Restart=always
 RestartSec=35

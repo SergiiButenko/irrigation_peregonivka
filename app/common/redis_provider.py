@@ -2,7 +2,7 @@ import json
 import logging
 
 import redis
-from common.common import *
+from common.helpers import *
 from config.config import *
 
 redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
