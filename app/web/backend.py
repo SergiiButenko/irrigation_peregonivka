@@ -17,7 +17,6 @@ from common import sqlite_database as database
 from common.helpers import *
 from common.redis_provider import *
 from config.config import *
-from controllers import relay_controller as garden_controller
 from controllers import remote_controller as remote_controller
 from eventlet import wsgi
 from flask_socketio import SocketIO, emit
@@ -307,9 +306,14 @@ def cancel_rule():
     update_all_rules()
 
     try:
-        response_status = garden_controller.branch_status()
+        lines = {}
+        for line_id, line in BRANCHES_SETTINGS.items():
+            response_status = remote_controller.line_status(line_id=line_id)
+            lines[line_id] = dict(
+                id=line_id, state=int(response_status[line_id]["state"])
+            )
 
-        arr = form_responce_for_branches(response_status)
+        arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
     except Exception as e:
         logging.error(e)
@@ -469,10 +473,15 @@ def add_ongoing_rule(rules):
         )
 
     update_all_rules()
-    try:
-        response_status = garden_controller.branch_status()
+    try:        
+        lines = {}
+        for line_id, line in BRANCHES_SETTINGS.items():
+            response_status = remote_controller.line_status(line_id=line_id)
+            lines[line_id] = dict(
+                id=line_id, state=int(response_status[line_id]["state"])
+            )
 
-        arr = form_responce_for_branches(response_status)
+        arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
     except Exception as e:
         logging.error(e)
@@ -746,17 +755,12 @@ def irrigation_status():
     try:
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
-            if line["line_type"] == "irrigation" and line["base_url"] is not None:
+            if line["line_type"] == "irrigation":
                 response_status = remote_controller.line_status(line_id=line_id)
                 lines[line_id] = dict(
                     id=line_id, state=int(response_status[line_id]["state"])
                 )
-            elif line["line_type"] == "irrigation" and line["base_url"] is None:
-                response_status = garden_controller.branch_status()
-                lines[line_id] = dict(
-                    id=line_id, state=int(response_status[line_id]["state"])
-                )
-
+        
         arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
         return jsonify(branches=arr)
@@ -772,17 +776,12 @@ def lighting_status():
     try:
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
-            if line["line_type"] == "lighting" and line["base_url"] is not None:
+            if line["line_type"] == "lighting":
                 response_status = remote_controller.line_status(line_id=line_id)
                 lines[line_id] = dict(
                     id=line_id, state=int(response_status[line_id]["state"])
                 )
-            elif line["line_type"] == "lighting" and line["base_url"] is None:
-                response_status = garden_controller.branch_status()
-                lines[line_id] = dict(
-                    id=line_id, state=int(response_status[line_id]["state"])
-                )
-
+            
         arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
         return jsonify(branches=arr)
@@ -818,17 +817,12 @@ def tank_status():
     try:
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
-            if line["line_type"] == "tank" and line["base_url"] is not None:
+            if line["line_type"] == "tank":
                 response_status = remote_controller.line_status(line_id=line_id)
                 lines[line_id] = dict(
                     id=line_id, state=int(response_status[line_id]["state"])
                 )
-            elif line["line_type"] == "tank" and line["base_url"] is None:
-                response_status = garden_controller.branch_status()
-                lines[line_id] = dict(
-                    id=line_id, state=int(response_status[line_id]["state"])
-                )
-
+        
         arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
         return jsonify(branches=arr)
@@ -844,13 +838,8 @@ def greenhouse_status():
     try:
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
-            if line["line_type"] == "greenhouse" and line["base_url"] is not None:
+            if line["line_type"] == "greenhouse":
                 response_status = remote_controller.line_status(line_id=line_id)
-                lines[line_id] = dict(
-                    id=line_id, state=int(response_status[line_id]["state"])
-                )
-            elif line["line_type"] == "greenhouse" and line["base_url"] is None:
-                response_status = garden_controller.branch_status()
                 lines[line_id] = dict(
                     id=line_id, state=int(response_status[line_id]["state"])
                 )
@@ -865,13 +854,7 @@ def greenhouse_status():
 
 
 def get_line_status(line_id):
-    base_url = BRANCHES_SETTINGS[line_id]["base_url"]
-    if base_url is None:
-        response = garden_controller.branch_status()
-    else:
-        response = remote_controller.line_status(line_id=line_id)
-
-    return response
+    return remote_controller.line_status(line_id=line_id)
 
 
 def retry_branch_on(branch_id, time_min):
@@ -884,16 +867,9 @@ def retry_branch_on(branch_id, time_min):
     try:
         for attempt in range(2):
             try:
-                if base_url is None:
-                    response_on = garden_controller.branch_on(
-                        branch_id=branch_id,
-                        pump_enable=pump_enabled,
-                        branch_alert=time_min,
-                    )
-                else:
-                    response_on = remote_controller.branch_on(
-                        line_id=branch_id, line_alert=time_min
-                    )
+                response_on = remote_controller.branch_on(
+                    line_id=branch_id, line_alert=time_min
+                )
 
                 logging.info("Response {0}".format(response_on[branch_id]))
                 if response_on[branch_id]["state"] != 1:
@@ -1047,12 +1023,7 @@ def retry_branch_off(branch_id):
     try:
         for attempt in range(2):
             try:
-                if base_url is None:
-                    response_off = garden_controller.branch_off(
-                        branch_id=branch_id, pump_enable=pump_enabled
-                    )
-                else:
-                    response_off = remote_controller.branch_off(line_id=branch_id)
+                response_off = remote_controller.branch_off(line_id=branch_id)
 
                 logging.info("Response {0}".format(response_off[branch_id]))
                 if response_off[branch_id]["state"] != 0:
@@ -1439,9 +1410,6 @@ def weather_station():
 
 logging.info("Get app settings")
 BRANCHES_SETTINGS, APP_SETTINGS = database.get_settings()
-# Initialize lines attached to Raspbberry PI
-logging.info("Initialize lines attached to Raspbberry PI")
-garden_controller.init_lines()
 # Initialize lines marked with base_url in database
 logging.info("Initialize lines marked with base_url in database")
 remote_controller.init_remote_lines()
