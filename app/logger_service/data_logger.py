@@ -1,10 +1,8 @@
 import logging
 
 import requests
+import datetime
 
-import Adafruit_GPIO.SPI as SPI
-import Adafruit_MCP3008
-import RPi.GPIO as GPIO
 from common import sqlite_database as database
 from common.helpers import *
 from web.controllers import remote_controller as remote_controller
@@ -17,13 +15,6 @@ logging.basicConfig(
 )
 
 requests.packages.urllib3.disable_warnings()
-
-# Software SPI configuration:
-CLK = 18
-MISO = 23
-MOSI = 24
-CS = 25
-mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
 SENSORS = {}
 LINES = {}
