@@ -17,7 +17,7 @@ logging.basicConfig(
 # For get function name intro function. Usage mn(). Return string with current function name. Instead 'query' will be QUERY[mn()].format(....)
 mn = lambda: inspect.stack()[1][3]
 
-redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+redis_db = redis.Redis(host="localhost", port=6379, db=0)
 
 VIBER_BOT_IP = "https://mozart.hopto.org:7443"
 
