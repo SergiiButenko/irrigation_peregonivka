@@ -5,14 +5,15 @@ Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
+WorkingDirectory=/var/www/
 ExecStartPre=/bin/sleep 5
 ExecStart=/usr/bin/gunicorn \
 	--worker-class eventlet \
 	-w 1 \
 	-b 0.0.0.0:8000 \
-	--pythonpath /var/www/app/ \
+	--pythonpath /var/www/ \
 	--user root \
-	web.backend:app
+	app.web.backend:app
 
 Restart=always
 RestartSec=35

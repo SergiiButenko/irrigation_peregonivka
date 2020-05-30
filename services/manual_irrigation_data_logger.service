@@ -5,7 +5,8 @@ Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
-ExecStart=/usr/bin/python3 /var/www/app/logger_service/data_logger.py
+WorkingDirectory=/var/www/
+ExecStart=/usr/bin/python3 -m logger_service.data_logger
 
 User=root
 

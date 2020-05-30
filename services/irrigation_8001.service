@@ -5,14 +5,15 @@ Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
+WorkingDirectory=/var/www/
 ExecStartPre=/bin/bash /var/www/tools/scripts/update_js.sh
 ExecStart=/usr/bin/gunicorn \
 	--worker-class eventlet \
 	-w 1 \
 	-b 0.0.0.0:8001 \
-	--pythonpath /var/www/app/ \
+	--pythonpath /var/www/ \
 	--user root \
-	web.frontend:app
+	app.web.frontend:app
 
 Restart=always
 RestartSec=5

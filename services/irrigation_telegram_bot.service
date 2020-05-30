@@ -5,6 +5,7 @@ Requires=network.target
 
 [Service]
 EnvironmentFile=/etc/environment
+WorkingDirectory=/var/www/
 ExecStartPre=/bin/sleep 10
 ExecStart=/usr/bin/gunicorn \
 	-w 1 \

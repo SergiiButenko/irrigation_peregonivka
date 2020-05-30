@@ -6,7 +6,8 @@ Requires=network.target
 [Service]
 EnvironmentFile=/etc/environment
 ExecStartPre=/bin/sleep 10
-ExecStart=/usr/bin/python3 /var/www/app/greenhouse_handler/greenhouse_handler.py
+WorkingDirectory=/var/www/
+ExecStart=/usr/bin/python3 -m greenhouse_handler.greenhouse_handler
 
 User=root
 
