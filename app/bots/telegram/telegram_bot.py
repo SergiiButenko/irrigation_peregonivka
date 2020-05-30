@@ -5,7 +5,7 @@ import time
 
 from flask import Flask, request
 
-import telebot
+import telebot as telebot
 from app.helpers import *
 from app.config import *
 
