@@ -7,7 +7,7 @@ Requires=network.target
 EnvironmentFile=/etc/environment
 WorkingDirectory=/var/www/
 ExecStartPre=/bin/sleep 10
-ExecStart=/usr/bin/gunicorn \
+ExecStart=/usr/bin/gunicorn3 \
 	-w 1 \
 	-b 0.0.0.0:8010 \
 	--pythonpath /var/www/app/bots/telegram/ \

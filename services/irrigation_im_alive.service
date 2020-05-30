@@ -6,7 +6,7 @@ Requires=network.target
 [Service]
 EnvironmentFile=/etc/environment
 WorkingDirectory=/var/www/
-ExecStart=/usr/bin/gunicorn \
+ExecStart=/usr/bin/gunicorn3 \
 	-w 1 \
 	-b 0.0.0.0:8002 \
 	--pythonpath /var/www/app/im_alive_service \
