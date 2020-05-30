@@ -3,9 +3,9 @@ import json
 import logging
 import time
 
-from flask import Flask, request
+from flask import Flask, request, abort
 
-import telebot as telebot
+import telebot as telebot_alias
 from app.helpers import *
 from app.config import *
 
@@ -16,10 +16,8 @@ logging.basicConfig(
 )
 
 
-bot = telebot.TeleBot(API_TOKEN)
-
-logger = telebot.logger
-telebot.logger.setLevel(logging.DEBUG)  # Outputs debug messages to console.
+bot = telebot_alias.TeleBot(API_TOKEN)
+logging.getLogger('TeleBot').setLevel(logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -33,13 +31,13 @@ def index():
 # Process webhook calls
 @app.route(WEBHOOK_URL_PATH, methods=["POST"])
 def webhook():
-    if flask.request.headers.get("content-type") == "application/json":
-        json_string = flask.request.get_data().decode("utf-8")
-        update = telebot.types.Update.de_json(json_string)
+    if request.headers.get("content-type") == "application/json":
+        json_string = request.get_data().decode("utf-8")
+        update = telebot_alias.types.Update.de_json(json_string)
         bot.process_new_updates([update])
         return ""
     else:
-        flask.abort(403)
+        abort(403)
 
 
 @app.route("/notify_filled", methods=["POST"])
