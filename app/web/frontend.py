@@ -233,9 +233,9 @@ def history():
             rules.append(
                 dict(
                     line_name=row[1],
-                    date=row[2].strftime("%m/%d/%Y"),
-                    date_description=form_date_description(row[2]),
-                    timer=date_handler(row[3]),
+                    date=row[2].strftime("%m/%d/%Y").decode('utf-8'),
+                    date_description=form_date_description(row[2]).decode('utf-8'),
+                    timer=date_handler(row[3]).decode('utf-8'),
                     ative=row[4],
                     time=row[5],
                     intervals=intervals_quantity,
