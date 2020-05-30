@@ -1,4 +1,6 @@
 cd /var/www/
+find . -name '*.pyc' -delete
+
 git reset --hard
 git checkout master
 git pull origin master

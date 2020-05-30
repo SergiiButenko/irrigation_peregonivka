@@ -17,7 +17,7 @@ from app import sqlite_database as database
 from app.helpers import *
 from app.redis_provider import *
 from app.config import *
-from app import remote_controller as remote_controller
+from app.web import remote_controller as remote_controller
 from eventlet import wsgi
 from flask_socketio import SocketIO, emit
 
