@@ -1229,7 +1229,7 @@ def stop_filling():
         except Exception as e:
             logging.error(e)
             logging.error(
-                "Can't deactivate line '{0}'. Ecxeption occured".format(line_id)
+                "Can't deactivate line '{0}'. Exception occurred".format(line_id)
             )
             message = "Помилка. Водопостачання не вимкнено!"
 
@@ -1251,7 +1251,7 @@ def stop_filling():
             logging.info("Messages send.")
         except Exception as e:
             logging.error(e)
-            logging.error("Can't send rule to telegram. Ecxeption occured")
+            logging.error("Can't send rule to telegram. Exception occurred")
 
         try:
 
@@ -1348,9 +1348,9 @@ def cesspool():
             logging.info("Messages send.")
         except Exception as e:
             logging.error(e)
-            logging.error("Can't send rule to telegram. Ecxeption occured")
+            logging.error("Can't send rule to telegram. Exception occurred")
             return json.dumps(
-                {"status": "Can't send rule to telegram. Exception occured"}
+                {"status": "Can't send rule to telegram. Exception occurred"}
             )
 
         return json.dumps({"status": "Redis updated"})

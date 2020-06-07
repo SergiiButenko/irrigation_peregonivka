@@ -223,7 +223,7 @@ def send_to_viber_bot(rule):
         response.raise_for_status()
     except Exception as e:
         logging.error(e)
-        logging.error("Can't send rule to viber. Ecxeption occured")
+        logging.error("Can't send rule to viber. Exception occurred")
     else:
         logging.info("Send.")
     finally:
