@@ -6,8 +6,8 @@ import time
 from flask import Flask, request, abort
 
 import telebot as telebot_alias
-from app.helpers import *
-from app.config import *
+from helpers import *
+from config import API_TOKEN, WEBHOOK_URL_PATH, WEBHOOK_URL_BASE
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",

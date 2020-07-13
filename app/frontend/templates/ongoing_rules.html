@@ -1,0 +1,128 @@
+{% extends 'base.html' %} {% block nav_item_title %}Переодичний полив{% endblock %} {% block modals %}
+<!-- Modal -->
+<div id="irrigate_modal" class="modal fade top" tabindex="-1" role="dialog" aria-labelledby="irrigate_modal-label" aria-hidden="true" data-id='0'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title ">Запланувати переодичний полив</h4>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <tbody class="tbody">
+                        <tr>
+                            <th>Що поливати:</th>
+                            <td>
+                                <select class="form-control form-text-control" id="branch_select" title="Виберіть гілку полива"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Тривалість:</th>
+                            <td>
+                                <input type="number" pattern="\d*" class="form-control form-text-control" id="irrigation_minutes" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Повтори:</th>
+                            <td>
+                                <input type="number" pattern="\d*" class="form-control form-text-control" id="irrigation_intervals" required>
+                            </td>
+                        </tr>
+                        <tr id="irrigation_time_wait_group">
+                            <th>Час між поливами:</th>
+                            <td>
+                                <input type="number" pattern="\d*" class="form-control form-text-control" id="irrigation_time_wait" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Повторюється:</th>
+                            <td>
+                                <select class="form-control schedule_select form-text-control" id="schedule_select">
+                                    <option value=1 selected="selected" title="Кожен день">Кожен день</option>
+                                    <option value=2 title="Кожні 2 дня">Кожні 2 дня</option>
+                                    <option value=3 title="Кожні 3 дня">Кожні 3 дня</option>
+                                    <option value=4 title='Один раз'>Один раз</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr tabindex="0">
+                            <th>Дата початку:</th>
+                            <td>
+                                <input type="date" id='start_date' class="form-control irrigation_date form-text-control">
+                            </td>
+                        </tr>
+                        <tr tabindex="0">
+                            <th>Час:</th>
+                            <td>
+                                <input type="time" class="form-control irrigation_time form-text-control">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Дата завершення:</th>
+                            <td>
+                                <input type="date" id='end_date' class="form-control irrigation_end_date form-text-control">
+                            </td>
+                        </tr>
+                        <tr tabindex="0">
+                            <th></th>
+                            <td><span id='summary'></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary add-flow" data-dismiss="modal">Скасувати</button>
+                    <button type="button" class="btn btn-primary add-ongoing-rule add-flow">Додати</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+{% endblock %}
+<!-- Custom styles for this template -->
+{% block container %}
+<div id="card-holder">
+    <h5>Тільки сьoгодні</h5>
+    <div class="row today">
+        {% for n in my_list %}
+            {% if n['days'] == 0 %}
+                {% include "ongoing_rule_single.html" with context %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    <hr style="margin-top: 2rem; margin-bottom: 1rem" />
+    <h5>Тільки завтра</h5>
+    <div class="row tomorrow">
+        {% for n in my_list %}
+            {% if n['days'] == 1 %}
+                {% include "ongoing_rule_single.html" with context %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    <hr style="margin-top: 2rem; margin-bottom: 1rem" />
+    <h5>Усі інші</h5>
+    <div class="row others">
+        {% for n in my_list %}
+            {% if n['days'] == -1 %}
+                {% include "ongoing_rule_single.html" with context %}
+            {% endif %}
+        {% endfor %}
+    </div>
+        <div id='last_card'></div>
+        <h5 id='no_card' style="display: none">Всi правила виконанi або Ви нiчого не додали.</h6>
+</div></br>
+
+<button type="button" class="btn btn-raised btn-block btn-primary btn-open-modal">
+    Запланувати переодичний полив
+</button>
+
+{% include "additional_actions.html" with context %}
+{% endblock %} {% block custom_scripts %}
+<script type="text/javascript" src="static/js/ongoing_rules_min.js"></script>
+{% endblock %}

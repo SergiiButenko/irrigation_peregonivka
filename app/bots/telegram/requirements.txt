@@ -1,0 +1,5 @@
+Flask==1.1.2
+pytz==2020.1
+requests==2.23.0
+pyTelegramBotAPI==3.7.1
+gunicorn==20.0.4

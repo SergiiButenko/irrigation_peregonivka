@@ -7,9 +7,9 @@ from collections import OrderedDict
 from itertools import groupby
 from operator import itemgetter
 
-from app.helpers import *
-from app.redis_provider import *
-from app.config import *
+from helpers import convert_to_datetime, mn
+# from redis_provider import *
+from config import RAIN_HOURS, TEMP_HOURS
 
 QUERY = {}
 QUERY["get_next_active_rule"] = (

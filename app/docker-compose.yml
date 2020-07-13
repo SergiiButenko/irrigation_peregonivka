@@ -1,0 +1,163 @@
+version: "3.7"
+services:
+    frontend:
+        build:
+            context: ./
+            dockerfile: ./frontend/Dockerfile
+        container_name: frontend
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8000", "frontend.frontend:app"]
+        expose:
+            - 8000
+        environment:
+            API_TOKEN_MOZART: $API_TOKEN_MOZART
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
+        volumes:
+            - db-data:/var/sqlite_db/
+        depends_on:
+            - redis
+            - backend
+        restart: on-failure
+
+    backend:
+        build:
+            context: ./
+            dockerfile: ./backend/Dockerfile
+        container_name: backend
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8001", "--worker-class", "eventlet", "backend.backend:app"]
+        expose:
+            - 8001
+        environment:
+            API_TOKEN_MOZART: $API_TOKEN_MOZART
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
+        volumes:
+            - db-data:/var/sqlite_db/
+        depends_on:
+            - redis
+        restart: on-failure
+
+    greenhouse:
+        build:
+            context: ./
+            dockerfile: ./greenhouse/Dockerfile
+        container_name: greenhouse
+        command: [ "python", "-m", "greenhouse.greenhouse_handler"]
+        environment:
+            API_TOKEN_MOZART: $API_TOKEN_MOZART
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            BACKEND_IP: $BACKEND_IP
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+        volumes:
+            - db-data:/var/sqlite_db/
+        depends_on:
+            - redis
+            - backend
+
+    ping:
+        build:
+            context: ./
+            dockerfile: ./ping/Dockerfile
+        container_name: ping
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8020", "ping.im_alive:app"]
+        expose: 
+            - 8020
+        restart: on-failure
+
+    sensor_data_collector:
+        build:
+            context: ./
+            dockerfile: ./sensor_data_collector/Dockerfile
+        container_name: sensor_data_collector
+        command: [ "python", "-m", "sensor_data_collector.data_logger"]
+        environment:
+            API_TOKEN_MOZART: $API_TOKEN_MOZART
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
+        volumes:
+            - db-data:/var/sqlite_db/
+
+    state_machine:
+        build:
+            context: ./
+            dockerfile: ./state_machine/Dockerfile
+        container_name: state_machine
+        command: [ "python", "-m", "state_machine.state_machine"]
+        environment:
+            API_TOKEN_MOZART: $API_TOKEN_MOZART
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            BACKEND_IP: $BACKEND_IP
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+        volumes:
+            - db-data:/var/sqlite_db/
+        depends_on:
+            - redis
+            - backend
+        restart: on-failure
+
+    messenger_bot:
+        build:
+            context: ./
+            dockerfile: ./bots/telegram/Dockerfile
+        container_name: messenger_bot
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:88", "bots.telegram.telegram_bot:app"]
+        expose:
+            - 88
+        environment:
+            API_TOKEN_MOZART: $API_TOKEN_MOZART
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
+        restart: on-failure
+
+    redis:
+        image: "redis:alpine"
+        container_name: redis
+        command: ["redis-server", "--appendonly", "yes"]
+        expose: 
+            - 6379
+        volumes:
+            - redis-data:/data
+        environment:
+            - REDIS_REPLICATION_MODE=master
+        restart: on-failure
+
+    nginx:
+        image: nginx:alpine
+        container_name: nginx
+        ports:
+            - 7542:7542
+            - 9000:9000
+            - 88:88
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./ssl_sertificats/:/etc/nginx/certs
+        depends_on:
+            - backend
+            - frontend
+        restart: on-failure
+    
+    database:
+        build:
+            context: ./
+            dockerfile: ./database/Dockerfile
+        environment: 
+            - SQLITE_DATABASE=$SQLITE_DATABASE
+        ports: 
+            - 8080:8080
+        container_name: database
+        volumes:
+            - db-data:/var/sqlite_db/
+        restart: on-failure
+
+volumes:
+    redis-data:
+    db-data:
+        driver: local
+        driver_opts:
+            type: "none"
+            o: "bind"
+            device: "/var/sqlite_db/"

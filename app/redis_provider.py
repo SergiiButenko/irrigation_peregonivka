@@ -1,11 +1,12 @@
 import json
 import logging
+import datetime
 
 import redis
-from app.helpers import *
-from app.config import *
+from helpers import date_hook, date_handler, convert_to_datetime
+from config import REDIS_KEY_FOR_UPPER_TANK 
 
-redis_db = redis.Redis(host="localhost", port=6379, db=0)
+redis_db = redis.Redis(host="redis", port=6379, db=0)
 
 def set_next_rule_to_redis(branch_id, data):
     """Set next rule in redis."""

@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% block nav_item_title %}Майстер поливу{% endblock %} {% block custom_css %} {% endblock %} {% block modals %} {% endblock %}
+<!-- Custom styles for this template -->
+{% block container %}
+<div id="card-holder">
+    {% for name, group in my_list.items() %}
+    <hr style="margin-bottom: 2rem" />
+    <h5>{{group[0]['group_name']}}</h5>
+    <div class="row">
+        {% for n in group %}
+        <div class="col-xs-12 col-sm-5 col-md-6 col-lg-5">
+            <div class="card" data-line_id={{n[ 'line_id']}} data-more-water=0 id="card-{{n['line_id']}}">
+                <div class="card-block" style="padding-bottom: 0">
+                    <div class="card-title">
+                        <h4 style="margin-bottom: 1rem; display: inline-block; float: left;">{{n['line_name']}}</h4>
+                        <img class='more-water greyout' style='display: inline-block; float: right; width: 25px; height: 25px' src="static/icon/drop.png" alt="Збільшити час поливу на 5 хвилин">
+                    </div>
+                    <p class="card-text" style="clear:both;">
+                        <span id="last-{{n['line_id']}}"></span>
+                        <span id="next-{{n['line_id']}}"></span>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <div class="form-group" id="irrigation_minutes_group">
+                                    <label>Тривалість</label>
+                                    <input type="number" pattern="\d*" class="form-control irrigation_minutes" required value={{n[ 'default_time']}}>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="form-group" id="irrigation_intervals_group">
+                                    <label>Повтори</label>
+                                    <input type="number" pattern="\d*" class="form-control irrigation_intervals" value={{n[ 'default_interval']}}>
+                                </div>
+                            </div>
+                            <div class="col-xs-5">
+                                <div class="form-group" id="irrigation_time_wait_group">
+                                    <label>Час між поливами</label>
+                                    <input type="number" pattern="\d*" class="form-control irrigation_time_wait" required value={{n[ 'default_time_wait']}}>
+                                </div>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary btn-block select">Обрати</a>
+                    <a href="#" class="btn btn-primary btn-block deselect hidden">Скасувати</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+</br>
+<button type="button" class="btn btn-raised btn-block btn-primary" id="next">
+    Полити обрані лінії...
+</button>
+<button type="button" class="btn btn-raised btn-block btn-secondary irrigate_all">
+    Полити усі лінії...
+</button>
+{% include "additional_actions.html" with context %}{% endblock %} {% block custom_scripts %}
+<script type="text/javascript" src="static/js/planner.js"></script>
+{% endblock %}
