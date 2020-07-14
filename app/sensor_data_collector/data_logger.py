@@ -1,10 +1,12 @@
 import logging
+import os
 
 import requests
 import datetime
+import time
 
 import sqlite_database as database
-from helpers import *
+from helpers import mn
 from backend import remote_controller
 
 
@@ -13,8 +15,6 @@ logging.basicConfig(
     datefmt="%m/%d/%Y %I:%M:%S %p",
     level=logging.DEBUG,
 )
-
-requests.packages.urllib3.disable_warnings()
 
 SENSORS = {}
 LINES = {}
@@ -98,9 +98,11 @@ def migrate_data():
 
 
 if __name__ == "__main__":
-    logging.info("Start init")
-    setup_sensors_datalogger()
-    setup_lines_datalogger()
-    remote_controller.init_remote_lines()
-    temp_sensors()
-    logging.info("Done!")
+    while 1:
+        logging.info("Start")
+        setup_sensors_datalogger()
+        setup_lines_datalogger()
+        remote_controller.init_remote_lines()
+        temp_sensors()
+        logging.info("Done!")
+        time.sleep(int(os.environ["RESTART_INTERVAL_MIN"]) * 60)

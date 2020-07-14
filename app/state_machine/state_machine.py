@@ -8,9 +8,9 @@ import time
 import requests
 
 import sqlite_database as database
-from config import *
-from helpers import *
-from redis_provider import *
+from state_machine import config
+from helpers import mn
+from redis_provider import redis_db, set_next_rule_to_redis, get_next_rule_from_redis
 
 
 logging.basicConfig(
@@ -19,16 +19,13 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-requests.packages.urllib3.disable_warnings()
-
-
 def branch_on(line_id, alert_time):
     """Blablbal."""
     try:
         for attempt in range(2):
             try:
                 response = requests.get(
-                    url=BACKEND_IP + "/activate_branch",
+                    url=config.BACKEND_IP + "/activate_branch",
                     params={"id": line_id, "time_min": alert_time, "mode": "auto"},
                     verify=False,
                 )
@@ -73,7 +70,7 @@ def branch_off(line_id):
         for attempt in range(2):
             try:
                 response = requests.get(
-                    url=BACKEND_IP + "/deactivate_branch",
+                    url=config.BACKEND_IP + "/deactivate_branch",
                     params={"id": line_id, "mode": "auto"},
                     verify=False,
                 )
@@ -124,7 +121,7 @@ def branch_off(line_id):
 def update_all_rules():
     """Set next active rules for all branches."""
     try:
-        for i in range(1, len(RULES_FOR_BRANCHES)):
+        for i in range(1, len(config.RULES_FOR_BRANCHES)):
             set_next_rule_to_redis(i, database.get_next_active_rule(i))
         logging.info("Rules updated")
     except Exception as e:
@@ -134,8 +131,8 @@ def update_all_rules():
 def sync_rules_from_redis():
     """Synchronize all rules that are present in redis."""
     try:
-        for i in range(1, len(RULES_FOR_BRANCHES)):
-            RULES_FOR_BRANCHES[i] = get_next_rule_from_redis(i)
+        for i in range(1, len(config.RULES_FOR_BRANCHES)):
+            config.RULES_FOR_BRANCHES[i] = get_next_rule_from_redis(i)
     except Exception as e:
         logging.error(
             "Exeption occured while synchronizing rules from redis. {0}".format(e)
@@ -151,16 +148,16 @@ def inspect_conditions(rule):
         if rule["rule_id"] == 2:
             logging.debug("Stop rule executes always.")
             logging.debug(
-                "Rain volume for last {0} hours is {1}mm".format(RAIN_HOURS, rain)
+                "Rain volume for last {0} hours is {1}mm".format(config.RAIN_HOURS, rain)
             )
             return True
 
-        if rain < RAIN_MAX:
+        if rain < config.RAIN_MAX:
             return True
         else:
             logging.info(
                 "Rule won't be executed. Rain volume for last {0} hours is {1}mm exceed max allowed value: {2}.".format(
-                    RAIN_HOURS, rain, RAIN_MAX
+                    config.RAIN_HOURS, rain, config.RAIN_MAX
                 )
             )
             return False
@@ -171,7 +168,6 @@ def inspect_conditions(rule):
 
 def send_to_viber_bot(rule):
     """Send messages to viber."""
-    id = rule["id"]
     rule_id = rule["rule_id"]
     line_id = rule["line_id"]
     time = rule["time"]
@@ -183,7 +179,7 @@ def send_to_viber_bot(rule):
         logging.debug("Turn off rule won't be send to viber")
         return
 
-    arr = redis_db.lrange(REDIS_KEY_FOR_MESSENGER, 0, -1)
+    arr = redis_db.lrange(config.REDIS_KEY_FOR_MESSENGER, 0, -1)
     logging.debug("{0} send rule was get from redis".format(arr))
     if interval_id.encode() in arr:
         logging.debug("interval_id {0} is already send".format(interval_id))
@@ -198,21 +194,21 @@ def send_to_viber_bot(rule):
         )
     else:
         message = "Через {0} хвилин почнеться полив гілки '{1}'. Триватиме {2} хвилин.".format(
-            MESSENGER_SENT_TIMEOUT, user_friendly_name, time
+            config.MESSENGER_SENT_TIMEOUT, user_friendly_name, time
         )
 
         # need to be fixed. add line type to rules service
-    if line_id == LINES_UPPER_TANK["upper_tank"]:
+    if line_id == config.LINES_UPPER_TANK["upper_tank"]:
         message = "Через {0} хвилин почнеться наповненния верхньої бочки. Триватиме максимум {1} хвилин.".format(
-            MESSENGER_SENT_TIMEOUT, time
+            config.MESSENGER_SENT_TIMEOUT, time
         )
 
     try:
         logging.info("Sending message to messenger.")
 
-        payload = {"users": USERS, "message": message}
+        payload = {"users": config.USERS, "message": message}
         response = requests.post(
-            WEBHOOK_URL_BASE + "/send_message",
+            config.WEBHOOK_URL_BASE + "/send_message",
             json=payload,
             verify=False,
         )
@@ -224,17 +220,17 @@ def send_to_viber_bot(rule):
     else:
         logging.info("Send.")
     finally:
-        redis_db.rpush(REDIS_KEY_FOR_MESSENGER, interval_id)
+        redis_db.rpush(config.REDIS_KEY_FOR_MESSENGER, interval_id)
         logging.debug("interval_id: {0} is added to redis".format(interval_id))
         time = 60 * 60 * 60 * 12
-        redis_db.expire(REDIS_KEY_FOR_MESSENGER, time)
+        redis_db.expire(config.REDIS_KEY_FOR_MESSENGER, time)
         logging.debug(
-            "REDIS_KEY_FOR_MESSENGER: {0} expires in 12 hours".format(REDIS_KEY_FOR_MESSENGER)
+            "REDIS_KEY_FOR_MESSENGER: {0} expires in 12 hours".format(config.REDIS_KEY_FOR_MESSENGER)
         )
 
 
 def rules_to_log():
-    for rule in RULES_FOR_BRANCHES:
+    for rule in config.RULES_FOR_BRANCHES:
         if rule is None:
             continue
         logging.info("Rule '{0}' is planned to be executed".format(str(rule)))
@@ -259,7 +255,7 @@ def enable_rule():
             time.sleep(10)
             sync_rules_from_redis()
 
-            for rule in RULES_FOR_BRANCHES:
+            for rule in config.RULES_FOR_BRANCHES:
                 if rule is None:
                     continue
 
@@ -273,7 +269,7 @@ def enable_rule():
 
                 # send message to messenger X minutes  before rules execution started
                 if now_time >= (
-                    rule["timer"] - datetime.timedelta(minutes=MESSENGER_SENT_TIMEOUT)
+                    rule["timer"] - datetime.timedelta(minutes=config.MESSENGER_SENT_TIMEOUT)
                 ):
                     try:
                         send_to_viber_bot(rule)
@@ -306,14 +302,14 @@ def enable_rule():
                     # Troubleshoot case. In case timedelta more than 5 minutes - skip rule
                     logging.info(
                         "Rule '{0}' execution is about to start. Checking time delta not more than '{1}' minutes".format(
-                            str(rule), MAX_TIME_DELTA_FOR_RULES_SERVICE_MIN
+                            str(rule), config.MAX_TIME_DELTA_FOR_RULES_SERVICE_MIN
                         )
                     )
                     delta = now_time - rule["timer"]
-                    if delta.seconds >= 60 * MAX_TIME_DELTA_FOR_RULES_SERVICE_MIN:
+                    if delta.seconds >= 60 * config.MAX_TIME_DELTA_FOR_RULES_SERVICE_MIN:
                         logging.error(
                             "Rule execution won't be started since time delta more than'{0}' minutes".format(
-                                MAX_TIME_DELTA_FOR_RULES_SERVICE_MIN
+                                config.MAX_TIME_DELTA_FOR_RULES_SERVICE_MIN
                             )
                         )
                         database.update(

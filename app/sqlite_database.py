@@ -9,7 +9,8 @@ from operator import itemgetter
 
 from helpers import convert_to_datetime, mn
 # from redis_provider import *
-from config import RAIN_HOURS, TEMP_HOURS
+RAIN_HOURS = 12
+TEMP_HOURS = 1
 
 QUERY = {}
 QUERY["get_next_active_rule"] = (

@@ -29,10 +29,10 @@ services:
         expose:
             - 8001
         environment:
-            API_TOKEN_MOZART: $API_TOKEN_MOZART
             GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
             WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
-            BACKEND_IP: $BACKEND_IP
+            TANK_NOTIFICATION_MINUTES: $TANK_NOTIFICATION_MINUTES
+            CESSTOOL_NOTIFICATION_MINUTES: $CESSTOOL_NOTIFICATION_MINUTES
         volumes:
             - db-data:/var/sqlite_db/
         depends_on:
@@ -46,10 +46,10 @@ services:
         container_name: greenhouse
         command: [ "python", "-m", "greenhouse.greenhouse_handler"]
         environment:
-            API_TOKEN_MOZART: $API_TOKEN_MOZART
+            RESTART_INTERVAL_MIN: 15
             GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
-            BACKEND_IP: $BACKEND_IP
             WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
         volumes:
             - db-data:/var/sqlite_db/
         depends_on:
@@ -71,12 +71,9 @@ services:
             context: ./
             dockerfile: ./sensor_data_collector/Dockerfile
         container_name: sensor_data_collector
-        command: [ "python", "-m", "sensor_data_collector.data_logger"]
         environment:
-            API_TOKEN_MOZART: $API_TOKEN_MOZART
-            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
-            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
-            BACKEND_IP: $BACKEND_IP
+            RESTART_INTERVAL_MIN: 15
+        command: [ "python", "-m", "sensor_data_collector.data_logger"]
         volumes:
             - db-data:/var/sqlite_db/
 
@@ -87,10 +84,9 @@ services:
         container_name: state_machine
         command: [ "python", "-m", "state_machine.state_machine"]
         environment:
-            API_TOKEN_MOZART: $API_TOKEN_MOZART
             GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
-            BACKEND_IP: $BACKEND_IP
             WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
         volumes:
             - db-data:/var/sqlite_db/
         depends_on:
@@ -108,9 +104,7 @@ services:
             - 88
         environment:
             API_TOKEN_MOZART: $API_TOKEN_MOZART
-            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
             WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
-            BACKEND_IP: $BACKEND_IP
         restart: on-failure
 
     redis:

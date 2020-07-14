@@ -4,9 +4,9 @@ import datetime
 
 import redis
 from helpers import date_hook, date_handler, convert_to_datetime
-from config import REDIS_KEY_FOR_UPPER_TANK 
 
 redis_db = redis.Redis(host="redis", port=6379, db=0)
+
 
 def set_next_rule_to_redis(branch_id, data):
     """Set next rule in redis."""
@@ -35,7 +35,7 @@ def get_next_rule_from_redis(branch_id):
     return json_to_data
 
 
-def get_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK):
+def get_time_last_notification(key):
     """"""
     data = None
     try:
@@ -49,9 +49,7 @@ def get_time_last_notification(key=REDIS_KEY_FOR_UPPER_TANK):
         return None
 
 
-def set_time_last_notification(
-    key=REDIS_KEY_FOR_UPPER_TANK, date=datetime.datetime.now()
-):
+def set_time_last_notification(key, date=datetime.datetime.now()):
     """Set next rule in redis."""
     res = False
     try:

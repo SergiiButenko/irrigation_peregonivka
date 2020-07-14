@@ -11,7 +11,6 @@ from flask import Flask, render_template, request
 from flask_caching import Cache
 
 import sqlite_database as database
-# from config import `*`
 from helpers import convert_to_datetime, mn, form_date_description, date_handler
 
 logging.basicConfig(
@@ -24,8 +23,6 @@ app = Flask(__name__)
 cache = Cache(app, config={"CACHE_TYPE": "simple"})
 
 CACHE_TIMEOUT = 600
-
-requests.packages.urllib3.disable_warnings()
 
 BRANCHES_SETTINGS = {}
 

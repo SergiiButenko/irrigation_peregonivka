@@ -3,13 +3,14 @@
 import json
 import logging
 import time
+import os
 
 import requests
 
 import sqlite_database as database
-from helpers import *
-from config import *
-from redis_provider import *
+from helpers import mn
+from greenhouse import config
+from redis_provider import redis_db
 from backend import remote_controller
 
 
@@ -18,8 +19,6 @@ logging.basicConfig(
     datefmt="%m/%d/%Y %I:%M:%S %p",
     level=logging.INFO,
 )
-
-requests.packages.urllib3.disable_warnings()
 
 SENSORS = {}
 LINES = {}
@@ -90,7 +89,7 @@ def branch_on(line_id, alert_time=7 * 24 * 60):
         for attempt in range(ATTEMPTS):
             try:
                 response = requests.get(
-                    url=BACKEND_IP + "/activate_branch",
+                    url=config.BACKEND_IP + "/activate_branch",
                     params={"id": line_id, "time_min": alert_time, "mode": "auto"},
                     verify=False,
                 )
@@ -135,7 +134,7 @@ def branch_off(line_id):
         for attempt in range(2):
             try:
                 response = requests.get(
-                    url=BACKEND_IP + "/deactivate_branch",
+                    url=config.BACKEND_IP + "/deactivate_branch",
                     params={"id": line_id, "mode": "manually"},
                     verify=False,
                 )
@@ -197,7 +196,7 @@ def send_to_viber_bot(rule):
             logging.debug("Turn off rule won't be send to viber")
             return
 
-        arr = redis_db.lrange(REDIS_KEY_FOR_MESSENGER, 0, -1)
+        arr = redis_db.lrange(config.REDIS_KEY_FOR_MESSENGER, 0, -1)
         logging.debug("{0} send rule was get from redis".format(arr))
         if interval_id.encode() in arr:
             logging.debug("interval_id {0} is already send".format(interval_id))
@@ -209,12 +208,12 @@ def send_to_viber_bot(rule):
                 "line_id": line_id,
                 "time": time,
                 "interval_id": interval_id,
-                "users": USERS,
-                "timeout": MESSENGER_SENT_TIMEOUT,
+                "users": config.USERS,
+                "timeout": config.MESSENGER_SENT_TIMEOUT,
                 "user_friendly_name": user_friendly_name,
             }
             response = requests.post(
-                WEBHOOK_URL_BASE + "/notify_users_irrigation_started",
+                config.WEBHOOK_URL_BASE + "/notify_users_irrigation_started",
                 json=payload,
                 verify=False,
             )
@@ -223,13 +222,13 @@ def send_to_viber_bot(rule):
             logging.error(e)
             logging.error("Can't send rule to viber. Ecxeption occured")
         finally:
-            redis_db.rpush(REDIS_KEY_FOR_MESSENGER, interval_id)
+            redis_db.rpush(config.REDIS_KEY_FOR_MESSENGER, interval_id)
             logging.debug("interval_id: {0} is added to redis".format(interval_id))
             time = 60 * 60 * 60 * 12
-            redis_db.expire(REDIS_KEY_FOR_MESSENGER, time)
+            redis_db.expire(config.REDIS_KEY_FOR_MESSENGER, time)
             logging.debug(
                 "REDIS_KEY_FOR_MESSENGER: {0} expires in 12 hours".format(
-                    REDIS_KEY_FOR_MESSENGER
+                    config.REDIS_KEY_FOR_MESSENGER
                 )
             )
     except Exception as e:
@@ -259,9 +258,9 @@ def enable_rule():
                 current_temp, TEMP_MAX
             )
         )
-        state = get_line_status(line_id=HEAT_ID)
-        if state[HEAT_ID]["state"] != 0:
-            branch_off(HEAT_ID)
+        state = get_line_status(line_id=config.HEAT_ID)
+        if state[config.HEAT_ID]["state"] != 0:
+            branch_off(config.HEAT_ID)
         else:
             logging.info("Current state: {0}. No action performed".format(state))
 
@@ -271,16 +270,20 @@ def enable_rule():
                 current_temp, TEMP_MIN
             )
         )
-        state = get_line_status(line_id=HEAT_ID)
-        if state[HEAT_ID]["state"] != 1:
-            branch_on(HEAT_ID)
+        state = get_line_status(line_id=config.HEAT_ID)
+        if state[config.HEAT_ID]["state"] != 1:
+            branch_on(config.HEAT_ID)
         else:
             logging.info("Current state: {0}. No action performed".format(state))
 
 
 if __name__ == "__main__":
-    remote_controller.init_remote_lines()
-    setup_sensors_datalogger()
-    setup_lines_greenlines()
-    setup_app_settings()
-    enable_rule()
+    while 1:
+        logging.info("Start")
+        remote_controller.init_remote_lines()
+        setup_sensors_datalogger()
+        setup_lines_greenlines()
+        setup_app_settings()
+        enable_rule()
+        logging.info("Done!")
+        time.sleep(config.RESTART_INTERVAL_MIN)

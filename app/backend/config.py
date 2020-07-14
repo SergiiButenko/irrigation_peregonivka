@@ -1,0 +1,29 @@
+import os
+
+# Should be max+1 from max id from table
+BRANCHES_LENGTH = 40
+RULES_FOR_BRANCHES = [None] * BRANCHES_LENGTH
+
+START_RULE = 1
+STOP_RULE = 2
+ENABLED_RULE = 1
+
+RAIN_MAX = 1500  # mm per m^2
+
+REDIS_KEY_FOR_UPPER_TANK = "UPPER_TANK"
+REDIS_KEY_FOR_CESSTOOL = "CESSTOOL"
+TANK_NOTIFICATION_MINUTES = os.environ["TANK_NOTIFICATION_MINUTES"]
+CESSTOOL_NOTIFICATION_MINUTES = os.environ["CESSTOOL_NOTIFICATION_MINUTES"]
+
+LINE_UPPER_TANK = 26
+LINES_UPPER_TANK = {"upper_tank": LINE_UPPER_TANK}
+
+USERS = [{"name": "Cottage", "id": os.environ["GROUP_CHAT_ID_COTTAGE"]}]
+
+# Settings for upper tanks
+TELEGRAM_USERS = {
+     "upper_tank": USERS,
+     "cesspool": USERS,
+     }
+
+WEBHOOK_URL_BASE = os.environ["WEBHOOK_URL_BASE"]

@@ -12,11 +12,10 @@ import requests
 from flask import Flask, abort, jsonify, render_template, request
 from flask_caching import Cache
 
-import config
 import eventlet
 import redis_provider
 import sqlite_database as database
-from backend import remote_controller
+from backend import remote_controller, config
 from flask_socketio import SocketIO, emit
 from helpers import date_handler, mn, convert_to_datetime, convert_to_obj 
 
@@ -37,8 +36,6 @@ socketio = SocketIO(
 cache = Cache(app, config={"CACHE_TYPE": "simple"})
 
 CACHE_TIMEOUT = 600
-
-requests.packages.urllib3.disable_warnings()
 
 BRANCHES_SETTINGS = {}
 APP_SETTINGS = {}
@@ -1207,10 +1204,10 @@ def stop_filling():
             }
         )
 
-    last_time_sent = redis_provider.get_time_last_notification()
+    last_time_sent = redis_provider.get_time_last_notification(key=config.REDIS_KEY_FOR_UPPER_TANK)
     if last_time_sent is None:
         redis_provider.set_time_last_notification(date=datetime.datetime.now())
-        last_time_sent = redis_provider.get_time_last_notification()
+        last_time_sent = redis_provider.get_time_last_notification(key=config.REDIS_KEY_FOR_UPPER_TANK)
         _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent

@@ -1,0 +1,5 @@
+import os
+
+API_TOKEN = os.environ["API_TOKEN_MOZART"]
+WEBHOOK_URL_PATH = "/%s/" % (API_TOKEN)
+WEBHOOK_URL_BASE = os.environ["WEBHOOK_URL_BASE"]

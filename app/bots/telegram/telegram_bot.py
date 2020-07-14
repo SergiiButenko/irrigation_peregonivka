@@ -7,7 +7,7 @@ from flask import Flask, request, abort
 
 import telebot as telebot_alias
 from helpers import *
-from config import API_TOKEN, WEBHOOK_URL_PATH, WEBHOOK_URL_BASE
+from bots.telegram import config 
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
@@ -16,7 +16,7 @@ logging.basicConfig(
 )
 
 
-bot = telebot_alias.TeleBot(API_TOKEN)
+bot = telebot_alias.TeleBot(config.API_TOKEN)
 logging.getLogger('TeleBot').setLevel(logging.DEBUG)
 
 app = Flask(__name__)
@@ -29,7 +29,7 @@ def index():
 
 
 # Process webhook calls
-@app.route(WEBHOOK_URL_PATH, methods=["POST"])
+@app.route(config.WEBHOOK_URL_PATH, methods=["POST"])
 def webhook():
     if request.headers.get("content-type") == "application/json":
         json_string = request.get_data().decode("utf-8")
@@ -109,5 +109,5 @@ logging.info("start")
 bot.remove_webhook()
 time.sleep(0.1)
 # Set webhook
-bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
+bot.set_webhook(url=config.WEBHOOK_URL_BASE + config.WEBHOOK_URL_PATH)
 time.sleep(0.1)

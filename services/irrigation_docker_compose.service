@@ -1,0 +1,15 @@
+[Unit]
+Description=Irrigation docker compose files
+After=network.target
+Requires=network.target
+
+[Service]
+WorkingDirectory=/var/www/app
+ExecStart=/usr/bin/docker-compose up
+
+Restart=always
+RestartSec=35
+User=root
+
+[Install]
+WantedBy=multi-user.target
