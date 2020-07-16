@@ -26,12 +26,12 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-# logging.getLogger("socketio").setLevel(logging.ERROR)
-# logging.getLogger("engineio").setLevel(logging.ERROR)
+logging.getLogger("socketio").setLevel(logging.ERROR)
+logging.getLogger("engineio").setLevel(logging.ERROR)
 
 app = Flask(__name__)
 socketio = SocketIO(
-    app, async_mode="eventlet", engineio_logger=True, message_queue="redis://redis"
+    app, async_mode="eventlet", engineio_logger=False, message_queue="redis://redis"
 )
 cache = Cache(app, config={"CACHE_TYPE": "simple"})
 
@@ -39,7 +39,6 @@ CACHE_TIMEOUT = 600
 
 BRANCHES_SETTINGS = {}
 APP_SETTINGS = {}
-
 
 def update_all_rules():
     """Set next active rules for all branches."""
