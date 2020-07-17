@@ -634,11 +634,11 @@ def plan():
             start_point = last_ongoing_rule["end_timestamp"]
             delta_minutes = 2 * (
                 last_ongoing_rule["time"] * last_ongoing_rule["intervals"]
-                + last_ongoing_rule["time_wait"] * (last_ongoing_rule["intervals"] - 1)
+                + last_ongoing_rule["time_wait"] * (last_ongoing_rule["intervals"] - 1 or 1)
             )
     else:
         start_point = datetime.datetime.now()
-        delta_minutes = (timer - 1) * 60  # 1 hour has value 2 in dropdown.
+        delta_minutes = (income_timer - 1) * 60  # 1 hour has value 2 in dropdown.
 
     start_time = start_point + datetime.timedelta(minutes=delta_minutes)
 
@@ -662,7 +662,7 @@ def plan():
         rules.append(new_rule)
         new_delta = 2 * (
             new_rule["time"] * new_rule["intervals"]
-            + new_rule["time_wait"] * (new_rule["intervals"] - 1)
+            + new_rule["time_wait"] * (new_rule["intervals"] - 1 or 1)
         )
         start_time = start_time + datetime.timedelta(minutes=new_delta)
 
