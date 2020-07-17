@@ -6,4 +6,8 @@ RUN apk add --no-cache --virtual .build-reqs build-base gcc make \
 EXPOSE 8080
 VOLUME /data
 WORKDIR /data
+
+ENV TZ=Europe/Kiev
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 CMD sqlite_web -H 0.0.0.0 -x $SQLITE_DATABASE
