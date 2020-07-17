@@ -241,7 +241,7 @@ def line_status(line_id):
 
         r_dict[line_id] = dict(id=line_id, state=int(response[str(relay)]))
     except Exception as e:
-        logging.error(e)
+        logging.error("Error: {}".format(e))
         logging.error("Can't get line status status. Exception occured. Set status -1")
         r_dict[line_id] = dict(id=line_id, state=-1)
 
