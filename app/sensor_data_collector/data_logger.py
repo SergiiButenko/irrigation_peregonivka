@@ -105,4 +105,5 @@ if __name__ == "__main__":
         remote_controller.init_remote_lines()
         temp_sensors()
         logging.info("Done!")
+        logging.info("Sleeping for {} minutes".format(int(os.environ["RESTART_INTERVAL_MIN"])))
         time.sleep(int(os.environ["RESTART_INTERVAL_MIN"]) * 60)

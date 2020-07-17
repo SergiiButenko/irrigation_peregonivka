@@ -71,10 +71,6 @@ def setup_app_settings():
     logging.info("APP settings: {0}".format(APP_SETTINGS))
 
     SERVICE_ENABLED = int(APP_SETTINGS["greenhouse_auto"]["enabled"])
-    if SERVICE_ENABLED == 0:
-        logging.info("Service is disabled. Please enable it")
-        exit(0)
-
     TEMP_MAX = int(APP_SETTINGS["temp_min_max"]["max"])
     TEMP_MIN = int(APP_SETTINGS["temp_min_max"]["min"])
 
@@ -284,6 +280,11 @@ if __name__ == "__main__":
         setup_sensors_datalogger()
         setup_lines_greenlines()
         setup_app_settings()
-        enable_rule()
-        logging.info("Done!")
+        if SERVICE_ENABLED:
+            enable_rule()
+            logging.info("Done!")
+        else: 
+            logging.info("Service is disabled. Please enable it")
+        
+        logging.info("Sleeping for {} minutes".format(config.RESTART_INTERVAL_MIN))
         time.sleep(config.RESTART_INTERVAL_MIN)
