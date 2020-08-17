@@ -609,13 +609,14 @@ def plan():
     line_list = []
     for line_id, line in BRANCHES_SETTINGS.items():
         if line_id in income_lines_id:
+            _line = income_lines[str(line_id)]
             line_list.append(
                 {
                     "id": line_id,
                     "name": line["name"],
-                    "default_time": income_lines[str(line_id)]["time"],
-                    "default_interval": income_lines[str(line_id)]["intervals"],
-                    "default_time_wait": income_lines[str(line_id)]["time_wait"],
+                    "default_time": int(_line["time"]) if _line["time"] else 0,
+                    "default_interval": int(_line["intervals"]) if _line["intervals"] else 0,
+                    "default_time_wait": int(_line["time_wait"]) if _line["time_wait"] else 0
                 }
             )
 
