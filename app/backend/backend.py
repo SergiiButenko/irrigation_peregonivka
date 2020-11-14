@@ -8,16 +8,16 @@ import uuid
 from itertools import groupby
 from operator import itemgetter
 
-import requests
-from flask import Flask, abort, jsonify, render_template, request
-from flask_caching import Cache
-
 import eventlet
 import redis_provider
+import requests
 import sqlite_database as database
-from backend import remote_controller, config
+from flask import Flask, abort, jsonify, render_template, request
+from flask_caching import Cache
 from flask_socketio import SocketIO, emit
-from helpers import date_handler, mn, convert_to_datetime, convert_to_obj 
+from helpers import convert_to_datetime, convert_to_obj, date_handler, mn
+
+from backend import config, remote_controller
 
 eventlet.monkey_patch()
 logging.basicConfig(

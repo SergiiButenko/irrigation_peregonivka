@@ -56,6 +56,19 @@ services:
             - redis
             - backend
 
+    scheduler:
+        build:
+            context: ./
+            dockerfile: ./scheduler/Dockerfile
+        container_name: scheduler
+        command: [ "python", "-m", "scheduler.scheduler"]
+        environment:
+            TIME_TO_START: '01:00'
+            BACKEND_IP: $BACKEND_IP
+            LINES_TO_ENABLE: '11,22,33'
+        depends_on:
+            - backend
+
     ping:
         build:
             context: ./
