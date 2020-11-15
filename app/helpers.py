@@ -50,6 +50,11 @@ def convert_to_datetime(value):
     except:
         pass
 
+    try: #2020-11-15 17:09:51.628711+00:00
+        value = datetime.datetime.strptime(value, "%Y-%m-%d %H:%M:%S.%f+00:00")
+    except:
+        pass
+
     try:
         value = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f+00:00")
     except:

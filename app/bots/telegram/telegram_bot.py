@@ -55,8 +55,7 @@ def notify_filled():
     logging.info("Done")
     return json.dumps({"status": "OK"})
 
-
-@app.route("/send_message", methods=["POST"])
+@app.route("/message", methods=["POST"])
 def send_message():
     logging.info(
         "received request for send message. post data: {0}".format(request.get_data())

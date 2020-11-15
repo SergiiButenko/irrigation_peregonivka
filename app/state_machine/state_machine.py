@@ -208,7 +208,7 @@ def send_to_viber_bot(rule):
 
         payload = {"users": config.USERS, "message": message}
         response = requests.post(
-            config.WEBHOOK_URL_BASE + "/send_message",
+            config.WEBHOOK_URL_BASE + "/message",
             json=payload,
             verify=False,
         )

@@ -40,6 +40,7 @@ CACHE_TIMEOUT = 600
 BRANCHES_SETTINGS = {}
 APP_SETTINGS = {}
 
+
 def update_all_rules():
     """Set next active rules for all branches."""
     try:
@@ -1260,7 +1261,7 @@ def stop_filling():
             )
             payload = {"users": _users_list, "message": message}
             response = requests.post(
-                config.WEBHOOK_URL_BASE + "/send_message",
+                config.WEBHOOK_URL_BASE + "/message",
                 json=payload,
                 verify=False,
             )
@@ -1328,7 +1329,7 @@ def cesspool():
             )
             payload = {"users": _users_list, "message": message}
             response = requests.post(
-                config.WEBHOOK_URL_BASE + "/send_message",
+                config.WEBHOOK_URL_BASE + "/message",
                 json=payload,
                 verify=False,
             )
