@@ -82,8 +82,11 @@ def add_rule():
 
 
 if __name__ == '__main__':
-    schedule.every().day.at(config.TIME_TO_START).do(add_rule)
+    if len(config.LINES_TO_ENABLE) == 0:
+        LOGGER.warn("No lines to schedule set. Please check settings. Aborting")
+        return
 
+    schedule.every().day.at(config.TIME_TO_START).do(add_rule)
     while True:
         schedule.run_pending()
         time.sleep(1)
