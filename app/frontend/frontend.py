@@ -146,10 +146,17 @@ def lighting():
                     "id": item["branch_id"],
                     "name": item["name"],
                     "default_time": item["time"],
+                    "group_id": item["group_id"],
+                    "group_name": item["group_name"],
                 }
             )
 
-    return render_template("lighting.html", my_list=branch_list)
+    branch_list.sort(key=itemgetter("group_id"))
+    grouped = {}
+    for key, group in groupby(branch_list, itemgetter("group_id")):
+        grouped[key] = list([thing for thing in group])
+
+    return render_template("lighting.html", my_list=grouped)
 
 
 @app.route("/add_rule")

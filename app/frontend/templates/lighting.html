@@ -28,8 +28,10 @@
 <!-- Custom styles for this template -->
 {% block container %}
 <div id="card-holder">
+    {% for name, group in my_list.items() %}
+    <h5>{{group[0]['group_name']}}</h5>
     <div class="row">
-        {% for n in my_list %}
+        {% for n in group %}
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-5">
             <div class="card card-lighting" id="card-{{n['id']}}">
                 <div class="card-block">
@@ -48,6 +50,8 @@
         </div>
         {% endfor %}
     </div>
+    <hr style="margin-top: 2rem; margin-bottom: 2rem" />
+    {% endfor %}
 </div>
 {% endblock %} {% block custom_scripts %}
 <script type="text/javascript" src="static/js/lighting_min.js"></script>
