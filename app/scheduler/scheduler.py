@@ -125,7 +125,7 @@ if __name__ == '__main__':
         LOGGER.warn("No lines to schedule set. Please check settings. Aborting")
         exit(1)
     
-    schedule.every().day.at(config.TIME_TO_START).do(add_rule)
+    schedule.every().day.at(config.TIME_TO_RUN_SCHEDULER).do(add_rule)
     while True:
         schedule.run_pending()
         time.sleep(1)
