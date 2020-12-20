@@ -19,6 +19,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
+
 def branch_on(line_id, alert_time):
     """Blablbal."""
     try:
@@ -197,10 +198,16 @@ def send_to_viber_bot(rule):
             config.MESSENGER_SENT_TIMEOUT, user_friendly_name, time
         )
 
-        # need to be fixed. add line type to rules service
+    # need to be fixed. add line type to rules service
     if line_id == config.LINES_UPPER_TANK["upper_tank"]:
-        message = "Через {0} хвилин почнеться наповненния верхньої бочки. Триватиме максимум {1} хвилин.".format(
+        message = "Через {0} хвилин почнеться наповнення верхньої бочки. Триватиме максимум {1} хвилин.".format(
             config.MESSENGER_SENT_TIMEOUT, time
+        )
+
+    # need to be fixed. add line type to rules service
+    if line_id in config.LIGHTNING_LINES:
+        message = "Через {0} хвилин включиться {1}. Виключится через {2} хвилин.".format(
+            config.MESSENGER_SENT_TIMEOUT, user_friendly_name, time
         )
 
     try:
