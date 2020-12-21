@@ -206,7 +206,7 @@ def send_to_viber_bot(rule):
 
     # need to be fixed. add line type to rules service
     if line_id in config.LIGHTNING_LINES:
-        message = "Через {0} хвилин включиться {1}. Виключится через {2} хвилин.".format(
+        message = "Через {0} хвилин включиться '{1}'. Вимкнеться через {2} хвилин.".format(
             config.MESSENGER_SENT_TIMEOUT, user_friendly_name, time
         )
 
