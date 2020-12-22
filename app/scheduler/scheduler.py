@@ -127,6 +127,7 @@ if __name__ == '__main__':
         exit(1)
 
     if config.SCHEDULER_DEBUG_MODE is True:
+        LOGGER.warn("Running in DEBUG mode")
         add_rule()
         exit(0)
 
