@@ -6,5 +6,7 @@ LINES_TO_ENABLE = [int(line) for line in str(os.environ["LINES_TO_ENABLE"]).spli
 CITY = os.environ["CITY"]
 HOURS_AFTER_SUNSET = int(os.environ["HOURS_AFTER_SUNSET"])
 USERS = [{"name": "Cottage", "id": os.environ["GROUP_CHAT_ID_COTTAGE"]}]
-SCHEDULER_DEBUG_MODE = bool(os.environ.get("SCHEDULER_DEBUG_MODE", False))
+SCHEDULER_DEBUG_MODE = bool(
+    int(os.environ.get("SCHEDULER_DEBUG_MODE", 0))
+    )
 WEBHOOK_URL_BASE = os.environ["WEBHOOK_URL_BASE"]
