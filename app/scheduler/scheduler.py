@@ -80,6 +80,7 @@ def add_rule():
     start_time = str(
         get_sunset_time() + datetime.timedelta(hours=config.HOURS_AFTER_SUNSET)
     )
+
     for line in lines_to_fire:
         rules['rules'].append({
             "line_id": int(line["branch_id"]),
@@ -103,7 +104,7 @@ def add_rule():
         })
 
     LOGGER.info(f"Rules to be planned: {rules}")
-    r=requests.post(
+    r = requests.post(
         url=config.BACKEND_IP + "/add_ongoing_rule",
         json=rules,
         verify=False,
@@ -124,7 +125,11 @@ if __name__ == '__main__':
     if len(config.LINES_TO_ENABLE) == 0:
         LOGGER.warn("No lines to schedule set. Please check settings. Aborting")
         exit(1)
-    
+
+    if config.SCHEDULER_DEBUG_MODE is True:
+        add_rule()
+        exit(0)
+
     schedule.every().day.at(config.TIME_TO_RUN_SCHEDULER).do(add_rule)
     while True:
         schedule.run_pending()

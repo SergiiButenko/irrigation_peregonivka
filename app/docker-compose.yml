@@ -70,6 +70,7 @@ services:
             HOURS_AFTER_SUNSET: 0
             GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
             WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            SCHEDULER_DEBUG_MODE: 1
         depends_on:
             - backend
 
