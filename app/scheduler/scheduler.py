@@ -64,7 +64,7 @@ def add_rule():
 
     lines_to_fire = [
         line for line in list(lines.values()) if line['start_mode'] == 'auto'
-        ]
+    ]
 
     if len(lines_to_fire) == 0:
         LOGGER.warn("No lines to schedule. Aborting till next launch")
@@ -99,8 +99,8 @@ def add_rule():
             "line_name": line["name"],
         })
 
-        message['message'] += f"'{line['name']}' з групи '{line['group_name']}'" \
-            f" буде включено сьогодні о {start_time:%H:%M}. \n"
+        message['message'] += f"""'{line['name']}' з групи '{line['group_name']}' 
+        буде включено сьогодні о {start_time:%H:%M}. \n"""
 
     LOGGER.info(f"Rules to be planned: {rules}")
     r = requests.post(
