@@ -78,9 +78,7 @@ def add_rule():
         "message": ''
     }
 
-    start_time = str(
-        get_sunset_time() + datetime.timedelta(hours=config.HOURS_AFTER_SUNSET)
-    )
+    start_time = get_sunset_time() + datetime.timedelta(hours=config.HOURS_AFTER_SUNSET)
 
     for line in lines_to_fire:
         rules['rules'].append({
@@ -89,10 +87,10 @@ def add_rule():
             "intervals": int(line["intervals"]),
             "time_wait": int(line["time_wait"]),
             "repeat_value": 4,  # comes from ongoing rule. equal to ONE TIME
-            "date_start": start_time,
-            "time_start": start_time,
-            "date_time_start": start_time,
-            "end_date": start_time,
+            "date_start": str(start_time),
+            "time_start": str(start_time),
+            "date_time_start": str(start_time),
+            "end_date": str(start_time),
             "active": 1,
             "rule_id": str(uuid.uuid4()),
             "days": -1,
