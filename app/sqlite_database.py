@@ -155,7 +155,7 @@ QUERY[
 
 QUERY["get_settings"] = (
     "SELECT l.number, l.name, l.time, l.intervals, l.time_wait, l.start_time, "
-    "l.line_type, l.base_url, l.pump_enabled, l.is_pump, lg.id, lg.name, l.relay_num "
+    "l.line_type, l.base_url, l.pump_enabled, l.is_pump, lg.id, lg.name, l.relay_num, l.start_mode "
     "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number"
 )
 
@@ -455,6 +455,7 @@ def get_settings():
             group_id = row[10]
             group_name = row[11]
             relay_num = row[12]
+            start_mode = row[13]
 
             BRANCHES_SETTINGS[branch_id] = {
                 "branch_id": branch_id,
@@ -470,6 +471,7 @@ def get_settings():
                 "group_id": group_id,
                 "group_name": group_name,
                 "relay_num": relay_num,
+                "start_mode": start_mode
             }
 
             logging.debug(

@@ -65,7 +65,6 @@ services:
         environment:
             BACKEND_IP: $BACKEND_IP
             TIME_TO_RUN_SCHEDULER: '01:00'
-            LINES_TO_ENABLE: '31'
             CITY: 'Kiev'
             HOURS_AFTER_SUNSET: 0
             GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE

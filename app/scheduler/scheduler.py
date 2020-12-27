@@ -22,7 +22,7 @@ logging.basicConfig(
 LOGGER = logging.getLogger(__name__)
 
 
-def get_sunset_time():    
+def get_sunset_time():
     city = LocationInfo(config.CITY)
     LOGGER.info(
         f"Information for {city.name}/{city.region}\n"
@@ -59,24 +59,23 @@ def add_rule():
     )
     r.raise_for_status()
 
-    LINES = r.json()['line_settings']
-    LOGGER.info(str(LINES))
+    lines = r.json()['line_settings']
+    LOGGER.info(str(lines))
 
-    lines_to_fire = []
-    for line in LINES.keys():
-        if int(line) in config.LINES_TO_ENABLE:
-            lines_to_fire.append(
-                LINES[line]
-            )
+    lines_to_fire = [line for line in lines if line['start_mode'] == 'auto']
 
     if len(lines_to_fire) == 0:
-        LOGGER.warn("No lines to schedule. Aborting")
+        LOGGER.warn("No lines to schedule. Aborting till next launch")
         return
 
     LOGGER.info(f"Lines to be scheduled: {lines_to_fire}")
 
     rules = dict(rules=[])
-    messages = []
+    message = {
+        "users": config.USERS,
+        "message": ''
+    }
+
     start_time = str(
         get_sunset_time() + datetime.timedelta(hours=config.HOURS_AFTER_SUNSET)
     )
@@ -98,10 +97,8 @@ def add_rule():
             "line_name": line["name"],
         })
 
-        messages.append({
-            "users": config.USERS,
-            "message": f"'{line['name']}' буде включено о {start_time}. Захід сонця: {start_time}"
-        })
+        message['message'] += f"'{line['name']}' з групи '{line['group_name']}'" \
+            "буде включено о {start_time}. \n"
 
     LOGGER.info(f"Rules to be planned: {rules}")
     r = requests.post(
@@ -111,27 +108,23 @@ def add_rule():
     )
     r.raise_for_status()
 
-    LOGGER.info(f"Sending messages {messages} to messenger")
-    for message in messages:
-        r = requests.post(
-            config.WEBHOOK_URL_BASE + "/message",
-            json=message,
-            verify=False,
-        )
-        r.raise_for_status()
+    LOGGER.info(f"Sending '{message}' to messenger")
+    r = requests.post(
+        config.WEBHOOK_URL_BASE + "/message",
+        json=message,
+        verify=False,
+    )
+    r.raise_for_status()
 
 
 if __name__ == '__main__':
-    if len(config.LINES_TO_ENABLE) == 0:
-        LOGGER.warning("No lines to schedule set. Please check settings. Aborting")
-        exit(1)
-
     if config.SCHEDULER_DEBUG_MODE is True:
         LOGGER.warning("Running in DEBUG mode")
         add_rule()
         exit(0)
-    
-    LOGGER.info(f"Scheduler start time is set to {config.TIME_TO_RUN_SCHEDULER}")
+
+    LOGGER.info(
+        f"Scheduler start time is set to {config.TIME_TO_RUN_SCHEDULER}")
     schedule.every().day.at(config.TIME_TO_RUN_SCHEDULER).do(add_rule)
     while True:
         schedule.run_pending()
