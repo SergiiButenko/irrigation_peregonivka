@@ -100,7 +100,7 @@ def add_rule():
         })
 
         message['message'] += f"'{line['name']}' з групи '{line['group_name']}'" \
-            "буде включено о {start_time}. \n"
+            f" буде включено сьогодні о {start_time:%H:%M}. \n"
 
     LOGGER.info(f"Rules to be planned: {rules}")
     r = requests.post(
