@@ -62,7 +62,9 @@ def add_rule():
     lines = r.json()['line_settings']
     LOGGER.info(str(lines))
 
-    lines_to_fire = [line for line in lines if line['start_mode'] == 'auto']
+    lines_to_fire = [
+        line for line in list(lines.values()) if line['start_mode'] == 'auto'
+        ]
 
     if len(lines_to_fire) == 0:
         LOGGER.warn("No lines to schedule. Aborting till next launch")
