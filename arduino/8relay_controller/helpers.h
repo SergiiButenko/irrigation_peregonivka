@@ -107,11 +107,14 @@ void scan_wifi() {
 
 void wait_wifi_conn() {
   // Wait for connection
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    WiFi.mode(WIFI_AP_STA);
-    WiFi.begin(ssid, password);
+    delay(1000);
   }
 }
+
 
 void test_relay() {
   for (byte i = 1; i < num_of_relay; i = i + 1) {

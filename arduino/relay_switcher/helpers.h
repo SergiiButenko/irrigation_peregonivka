@@ -107,10 +107,11 @@ void scan_wifi() {
 
 void wait_wifi_conn() {
   // Wait for connection
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    Serial.println("Connection Failed! Rebooting...");
     delay(1000);
-    ESP.restart();
   }
 }
 
@@ -130,6 +131,7 @@ void test_system() {
   test_relay();
   scan_wifi();
 }
+
 // ===================================== SWITCHER ========================================
 void increase_counter(int *counter) {
   if (*counter >= 0 and * counter <= counter_max) {

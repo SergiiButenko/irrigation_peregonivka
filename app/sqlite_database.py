@@ -236,7 +236,7 @@ QUERY[
     "stop_filling"
 ] = "INSERT into stop_fill (datetime) values (datetime('now', 'localtime'));"
 
-QUERY['toogle_line'] = "SELECT branch_id FROM switchers WHERE device_id='{}' AND switch_num={}"
+QUERY['toogle_line'] = "SELECT line_id FROM switchers_to_lines WHERE device_id='{}' AND switch_num={}"
 
 QUERY['insert_weather_select_id'] = "SELECT sensor_id from sensors where short_name = '{}'"
 QUERY['insert_weather_insert_weather'] = "INSERT INTO weather_station (sensor_id, temp, hum, press, voltage) VALUES (?,?,?,?,?)"

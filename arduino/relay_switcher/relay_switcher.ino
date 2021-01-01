@@ -23,16 +23,14 @@ void setup(void) {
   Serial.begin(115200);
 
   WiFi.hostname(device_id);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-
+  wait_wifi_conn();
+  
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
   
-  wait_wifi_conn();
 
   server.on("/status", send_status);
   server.on("/restart", restart_device);

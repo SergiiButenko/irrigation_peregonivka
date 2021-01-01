@@ -1118,8 +1118,8 @@ def deactivate_branch_route():
 
 @app.route("/toogle_line", methods=["GET"])
 def toogle_branch():
-    """Route is used to change branch state to oposite."""
-    """Can be executed manaully - row will be added to database
+    """Route is used to change branch state to opposite."""
+    """Can be executed manually - row will be added to database
     or with rules service - no new row will be added to database"""
     device_id = str(request.args.get("device_id"))
     switch_num = int(request.args.get("switch_num"))

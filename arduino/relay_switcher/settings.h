@@ -1,13 +1,13 @@
 
 #ifndef STASSID
-//#define STASSID "faza_2"
-//#define STAPSK "Kobe_2016"
-#define STASSID "Notebooks"
-#define STAPSK "0660101327"
+#define STASSID "faza_2"
+#define STAPSK "Kobe_2016"
+// #define STASSID "Notebooks"
+// #define STAPSK "0660101327"
 #endif
 
-const char* flash_version = "23-00.apr-07-2020";
-const char* device_id = "yard_switcher_1";
+const char* flash_version = "00-00.jan-01-2021";
+const char* device_id = "sw1_light_shower";
 const char* ssid = STASSID;
 const char* password = STAPSK;
 
@@ -25,7 +25,7 @@ const byte num_of_relay = 2 + 1;
 //                             0  1  2
 int relay_pins[num_of_relay]={-1, 5, 4};
 
-const char *host = "http://mozz.asuscomm.com:9000";
+const char *host = "http://irrigation.faza:9000/api/v1";
 byte delay_between_requests = 500;
 byte delay_for_counter_millis = 10;
 byte retry_limit = 3;
