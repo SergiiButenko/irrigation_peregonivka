@@ -1125,7 +1125,8 @@ def toogle_line():
     switch_num = int(request.args.get("switch_num"))
 
     branch_id = database.select(
-        database.QUERY[mn()].format(device_id, switch_num)
+        database.QUERY[mn()].format(device_id, switch_num),
+        "fetchone"
     )
 
     response_arr = get_line_status(branch_id)
