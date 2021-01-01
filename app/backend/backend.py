@@ -1117,7 +1117,7 @@ def deactivate_branch_route():
 
 
 @app.route("/toogle_line", methods=["GET"])
-def toogle_branch():
+def toogle_line():
     """Route is used to change branch state to opposite."""
     """Can be executed manually - row will be added to database
     or with rules service - no new row will be added to database"""
