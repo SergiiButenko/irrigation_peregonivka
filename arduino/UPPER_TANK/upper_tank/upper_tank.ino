@@ -16,7 +16,7 @@ byte retry_limit = 5;
 byte TIME_LIMIT_MINUTES = 30;
 unsigned long current_time = 0;
 
-const char *host = "http://mozz.asuscomm.com:9000";
+const char *host = "http://irrigation.faza:9000/api/v1";
 
 String device_id = "upper_tank";
 
