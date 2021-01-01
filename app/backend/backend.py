@@ -1124,15 +1124,16 @@ def toogle_line():
     device_id = str(request.args.get("device_id"))
     switch_num = int(request.args.get("switch_num"))
 
-    branch_id = database.select(
+    res = database.select(
         database.QUERY[mn()].format(device_id, switch_num),
         "fetchone"
     )
 
+    branch_id = res[0]
     response_arr = get_line_status(branch_id)
     branch = response_arr[branch_id]
     branch_setting = BRANCHES_SETTINGS[branch_id]
-    
+
     res_arr = []
     if branch["state"] == 0:
         try:
