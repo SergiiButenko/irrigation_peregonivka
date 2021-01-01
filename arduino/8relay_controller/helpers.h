@@ -108,9 +108,8 @@ void scan_wifi() {
 void wait_wifi_conn() {
   // Wait for connection
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    Serial.println("Connection Failed! Rebooting...");
-    delay(1000);
-    ESP.restart();
+    WiFi.mode(WIFI_AP_STA);
+    WiFi.begin(ssid, password);
   }
 }
 

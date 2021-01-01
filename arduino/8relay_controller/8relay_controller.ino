@@ -14,9 +14,6 @@ void setup(void) {
   Serial.begin(115200);
 
   WiFi.hostname(device_id);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-
   wait_wifi_conn();
   
   Serial.println("");
