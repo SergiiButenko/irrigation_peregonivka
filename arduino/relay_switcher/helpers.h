@@ -34,10 +34,15 @@ void displayVersion() {
 
 void send_status() {
   String msg = "{";
-  for (byte i = 1; i < num_of_relay - 1; i = i + 1) {
+  for (byte i = 1; i < num_of_relay ; i = i + 1) {
     msg += "\"" + String(i) + "\":\"" + String(digitalRead(relay_pins[i])) + "\",";
   }
-  msg += "\"" + String(num_of_relay - 1) + "\":\"" + String(digitalRead(relay_pins[num_of_relay - 1])) + "\"";
+
+  for (byte i = 1; i < num_of_switcher - 1 ; i = i + 1) {
+    msg += "\"sw_" + String(i) + "\":\"" + String(digitalRead(switcher_pins[i])) + "\",";
+  }
+
+  msg += "\"sw_" + String(num_of_switcher - 1) + "\":\"" + String(digitalRead(switcher_pins[num_of_switcher - 1])) + "\"";
   msg += "}";
 
   Serial.println("Message to send:" + msg);
@@ -57,6 +62,23 @@ void turn_off() {
   digitalWrite(relay_pins[relay.toInt()], 0);
 
   send_status();
+}
+
+void debug_change() {
+  String _debug = server.arg("val");
+  if ((_debug == String("true"))) {
+    debug = true;
+  } else {
+    debug = false;
+  }
+
+  String msg = "{";
+  msg += "\"debug:" + String(debug) + "\"";  
+  msg += "}";
+
+  Serial.println("Message to send:" + msg);
+  server.sendHeader("Connection", "close");
+  server.send(200, "application/json", msg);
 }
 
 void handleNotFound() {
@@ -107,9 +129,11 @@ void scan_wifi() {
 
 void wait_wifi_conn() {
   // Wait for connection
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+  }
+  
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
     delay(1000);
   }
@@ -133,24 +157,6 @@ void test_system() {
 }
 
 // ===================================== SWITCHER ========================================
-void increase_counter(int *counter) {
-  if (*counter >= 0 and * counter <= counter_max) {
-    *counter++;
-    delay(delay_for_counter_millis);
-  } else {
-    *counter = counter_max;
-    delay(delay_for_counter_millis);
-  }
-}
-
-void decrease_counter(int *counter) {
-  if (*counter >= 1) {
-    *counter--;
-  } else {
-    *counter = 0;
-  }
-}
-
 bool send_request(String req) {
   for (int i = 1; i <= retry_limit; i++) {
     HTTPClient http;
@@ -188,19 +194,19 @@ bool send_request(String req) {
 void handleSwitchers(void) {
   for (byte i = 1; i < num_of_switcher; i = i + 1) {
     byte curr_state = digitalRead(switcher_pins[i]);
-    Serial.println("");
-    Serial.println("");
-    Serial.print("prev: ");
-    Serial.println(switcher_state[i]);
-
-    Serial.print("curr: ");
-    Serial.println(curr_state);
-
-    Serial.print("pin: ");
-    Serial.println(switcher_pins[i]);
-
-    Serial.print("counter: ");
-    Serial.println(switcher_counter[i]);
+//    Serial.println("");
+//    Serial.println("");
+//    Serial.print("prev: ");
+//    Serial.println(switcher_state[i]);
+//
+//    Serial.print("curr: ");
+//    Serial.println(curr_state);
+//
+//    Serial.print("pin: ");
+//    Serial.println(switcher_pins[i]);
+//
+//    Serial.print("counter: ");
+//    Serial.println(switcher_counter[i]);
 
     if (curr_state != switcher_state[i]) {
       if (switcher_counter[i] <= counter_max) {
@@ -210,7 +216,6 @@ void handleSwitchers(void) {
     } else {
       if (switcher_counter[i] >= 1) {
         switcher_counter[i]--;
-        delay(delay_for_counter_millis);
       }
     }
 

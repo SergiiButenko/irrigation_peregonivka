@@ -35,6 +35,7 @@ void setup(void) {
   server.on("/status", send_status);
   server.on("/restart", restart_device);
   server.on("/test", test_system);
+  server.on("/debug", debug_change);
   server.on("/device_id", displayDeviceId);
   server.on("/version", displayVersion);
   server.on("/on", turn_on);
@@ -93,6 +94,8 @@ void loop(void) {
   server.handleClient();
   MDNS.update();
 
-  handleSwitchers();
+  if (!debug) {
+    handleSwitchers();
+  }
   delay(1);
 }
