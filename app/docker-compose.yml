@@ -122,7 +122,7 @@ services:
             - 88
         environment:
             API_TOKEN_MOZART: $API_TOKEN_MOZART
-            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            WEBHOOK_URL_BASE_PUBLIC: $WEBHOOK_URL_BASE_PUBLIC
         restart: on-failure
 
     redis:
