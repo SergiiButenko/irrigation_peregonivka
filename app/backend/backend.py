@@ -1458,12 +1458,7 @@ def weather_station():
     else:
         logging.error("Error while insert occured. ")
 
-    return jsonify(message="confirmed")
-
-
-@app.route("/reinit_branches")
-def reinit_branches():
-    
+    return jsonify(message="confirmed")    
 
 logging.info("Get app settings")
 BRANCHES_SETTINGS, APP_SETTINGS = database.get_settings()

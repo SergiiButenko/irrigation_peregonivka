@@ -72,6 +72,7 @@ services:
             SCHEDULER_DEBUG_MODE: 1
         depends_on:
             - backend
+            - messenger_bot
 
     ping:
         build:
