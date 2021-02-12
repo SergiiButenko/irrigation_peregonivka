@@ -93,9 +93,6 @@ void loop(void) {
   wait_wifi_conn();
   server.handleClient();
   MDNS.update();
-
-  if (!debug) {
-    handleSwitchers();
-  }
+  handleSwitchers();
   delay(1);
 }

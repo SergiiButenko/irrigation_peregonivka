@@ -1461,6 +1461,10 @@ def weather_station():
     return jsonify(message="confirmed")
 
 
+@app.route("/reinit_branches")
+def reinit_branches():
+    
+
 logging.info("Get app settings")
 BRANCHES_SETTINGS, APP_SETTINGS = database.get_settings()
 # Initialize lines marked with base_url in database

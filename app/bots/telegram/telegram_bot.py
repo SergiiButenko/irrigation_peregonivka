@@ -108,5 +108,5 @@ logging.info("start")
 bot.remove_webhook()
 time.sleep(0.1)
 # Set webhook
-bot.set_webhook(url=config.WEBHOOK_URL_BASE + config.WEBHOOK_URL_PATH)
+bot.set_webhook(url=config.WEBHOOK_URL_BASE_PUBLIC + config.WEBHOOK_URL_PATH)
 time.sleep(0.1)

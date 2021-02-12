@@ -1,3 +1,4 @@
+#define SWITCHERS 
 
 #ifndef STASSID
 #define STASSID "faza_2"

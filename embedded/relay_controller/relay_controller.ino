@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266HTTPUpdateServer.h>
-#include "helpers.h"
+#include "common_lib.h"
+
 
 /* setup function */
 void setup(void) {
@@ -12,7 +12,8 @@ void setup(void) {
   }
 
   Serial.begin(115200);
-
+  
+  WiFi.mode(WIFI_STA);
   WiFi.hostname(device_id);
   wait_wifi_conn();
   

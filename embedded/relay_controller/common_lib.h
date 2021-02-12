@@ -1,5 +1,9 @@
 #include "settings.h"
+#include <ESP8266HTTPClient.h>
+#include <ESP8266WebServer.h>
 
+unsigned long previousMillis = 0;
+const long esp_restart_interval = 1000 * 60 * 5;
 
 ESP8266WebServer server(80);
 const char* serverIndex = "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>";
@@ -34,15 +38,10 @@ void displayVersion() {
 
 void send_status() {
   String msg = "{";
-  for (byte i = 1; i < num_of_relay ; i = i + 1) {
+  for (byte i = 1; i < num_of_relay - 1; i = i + 1) {
     msg += "\"" + String(i) + "\":\"" + String(digitalRead(relay_pins[i])) + "\",";
   }
-
-  for (byte i = 1; i < num_of_switcher - 1 ; i = i + 1) {
-    msg += "\"sw_" + String(i) + "\":\"" + String(digitalRead(switcher_pins[i])) + "\",";
-  }
-
-  msg += "\"sw_" + String(num_of_switcher - 1) + "\":\"" + String(digitalRead(switcher_pins[num_of_switcher - 1])) + "\"";
+  msg += "\"" + String(num_of_relay - 1) + "\":\"" + String(digitalRead(relay_pins[num_of_relay - 1])) + "\"";
   msg += "}";
 
   Serial.println("Message to send:" + msg);
@@ -62,23 +61,6 @@ void turn_off() {
   digitalWrite(relay_pins[relay.toInt()], 0);
 
   send_status();
-}
-
-void debug_change() {
-  String _debug = server.arg("val");
-  if ((_debug == String("true"))) {
-    debug = true;
-  } else {
-    debug = false;
-  }
-
-  String msg = "{";
-  msg += "\"debug:" + String(debug) + "\"";  
-  msg += "}";
-
-  Serial.println("Message to send:" + msg);
-  server.sendHeader("Connection", "close");
-  server.send(200, "application/json", msg);
 }
 
 void handleNotFound() {
@@ -127,17 +109,23 @@ void scan_wifi() {
 }
 
 
+
 void wait_wifi_conn() {
   // Wait for connection
-  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
-  }
-  
+  previousMillis = millis();
+
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    if (millis() - previousMillis >= esp_restart_interval) {
+      Serial.print("Restarting. No wifi connection");
+      ESP.restart();
+    }
+
+    WiFi.begin(ssid, password);
+
     delay(1000);
   }
 }
+
 
 void test_relay() {
   for (byte i = 1; i < num_of_relay; i = i + 1) {
@@ -147,6 +135,27 @@ void test_relay() {
     delay(1000);
     digitalWrite(relay_pins[i], 0);
   }
+  delay(5000);
+
+  for (byte i = 1; i < num_of_relay; i = i + 1) {
+    digitalWrite(relay_pins[i], 1);
+    delay(1000);
+  }
+  for (byte i = 1; i < num_of_relay; i = i + 1) {
+    digitalWrite(relay_pins[i], 0);
+    delay(1000);
+  }
+  delay(5000);
+
+
+  for (byte i = 1; i < num_of_relay; i = i + 1) {
+    digitalWrite(relay_pins[i], 1);
+  }
+  delay(10000);
+  for (byte i = 1; i < num_of_relay; i = i + 1) {
+    digitalWrite(relay_pins[i], 0);
+  }
+
 }
 
 void test_system() {
@@ -156,7 +165,7 @@ void test_system() {
   scan_wifi();
 }
 
-// ===================================== SWITCHER ========================================
+
 bool send_request(String req) {
   for (int i = 1; i <= retry_limit; i++) {
     HTTPClient http;
@@ -189,48 +198,4 @@ bool send_request(String req) {
   }
 
   return false;
-}
-
-void handleSwitchers(void) {
-  for (byte i = 1; i < num_of_switcher; i = i + 1) {
-    byte curr_state = digitalRead(switcher_pins[i]);
-//    Serial.println("");
-//    Serial.println("");
-//    Serial.print("prev: ");
-//    Serial.println(switcher_state[i]);
-//
-//    Serial.print("curr: ");
-//    Serial.println(curr_state);
-//
-//    Serial.print("pin: ");
-//    Serial.println(switcher_pins[i]);
-//
-//    Serial.print("counter: ");
-//    Serial.println(switcher_counter[i]);
-
-    if (curr_state != switcher_state[i]) {
-      if (switcher_counter[i] <= counter_max) {
-        switcher_counter[i]++;
-        delay(delay_for_counter_millis);
-      }
-    } else {
-      if (switcher_counter[i] >= 1) {
-        switcher_counter[i]--;
-      }
-    }
-
-    if (switcher_counter[i] >= counter_max) {
-      Serial.println(switcher_counter[i]);
-
-      String url = host;
-      url += String("/toogle_line?device_id=") + String(device_id) + String("&");
-      url += String("switch_num=") + String(i);
-      send_request(url);
-      
-      switcher_state[i] = curr_state;
-      switcher_counter[i] = 0;
-    }
-  }
-
-
 }
