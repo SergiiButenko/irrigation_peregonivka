@@ -231,7 +231,8 @@ def line_status(line_id):
         relay = LINES[line_id]["relay_num"]
 
         response = requests.get(
-            url="http://" + base_url + "/status"
+            url="http://" + base_url + "/status",
+            timeout=5
         )
         response.raise_for_status()
 

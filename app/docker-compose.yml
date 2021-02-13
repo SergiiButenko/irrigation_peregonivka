@@ -73,6 +73,7 @@ services:
         depends_on:
             - backend
             - messenger_bot
+        restart: on-failure
 
     ping:
         build:
@@ -150,6 +151,9 @@ services:
         depends_on:
             - backend
             - frontend
+            - database
+            - messenger_bot
+            - ping
         restart: on-failure
     
     database:

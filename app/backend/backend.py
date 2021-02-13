@@ -1124,63 +1124,75 @@ def toogle_line():
     device_id = str(request.args.get("device_id"))
     switch_num = int(request.args.get("switch_num"))
 
-    res = database.select(
+    sql_responce = database.select(
         database.QUERY[mn()].format(device_id, switch_num),
-        "fetchone"
+        "fetchall"
     )
 
-    branch_id = res[0]
-    response_arr = get_line_status(branch_id)
-    branch = response_arr[branch_id]
-    branch_setting = BRANCHES_SETTINGS[branch_id]
+    branch_state_avg = 0
+    branches = []
+    for res in sql_responce:
+        branch_id = res[0]
+        branch = get_line_status(branch_id)[branch_id]
+        branch_state_avg += branch['state']
+        branches[branch_id] = branch
 
-    res_arr = []
-    if branch["state"] == 0:
-        try:
-            res_arr = retry_branch_on(branch_id=branch_id, time_min=branch_setting['time'])
-        except Exception as e:
-            logging.error(e)
-            logging.error(
-                "Can't turn on branch id={0}. Exception occured".format(branch_id)
+    desired_state = round(branch_state_avg / len(branches))
+    desired_state ^= 1
+
+    for res in sql_responce:
+        branch_id = res[0]
+        branch_setting = BRANCHES_SETTINGS[branch_id]
+        res_arr = []
+        if branches[branch_id]['state'] == desired_state:
+            continue
+
+        if branches[branch_id]['state'] == 0:
+            try:
+                res_arr = retry_branch_on(branch_id=branch_id, time_min=branch_setting['time'])
+            except Exception as e:
+                logging.error(e)
+                logging.error(
+                    "Can't turn on branch id={0}. Exception occured".format(branch_id)
+                )
+                abort(500)
+
+            interval_id = str(uuid.uuid4())
+            now = datetime.datetime.now()
+            stop_time = now + datetime.timedelta(minutes=branch_setting['time'])
+
+            database.update(
+                database.QUERY["activate_branch_1"].format(
+                    branch_id, 1, 2, now.date(), now, interval_id, branch_setting['time']
+                )
             )
-            abort(500)
-
-        interval_id = str(uuid.uuid4())
-        now = datetime.datetime.now()
-        stop_time = now + datetime.timedelta(minutes=branch_setting['time'])
-
-        database.update(
-            database.QUERY["activate_branch_1"].format(
-                branch_id, 1, 2, now.date(), now, interval_id, branch_setting['time']
+            lastid = database.update(
+                database.QUERY["activate_branch_1"].format(
+                    branch_id, 2, 1, now.date(), stop_time, interval_id, 0
+                )
             )
-        )
-        lastid = database.update(
-            database.QUERY["activate_branch_1"].format(
-                branch_id, 2, 1, now.date(), stop_time, interval_id, 0
+
+            res = database.select(
+                database.QUERY["activate_branch_2"].format(lastid), "fetchone"
             )
-        )
 
-        res = database.select(
-            database.QUERY["activate_branch_2"].format(lastid), "fetchone"
-        )
-
-        redis_provider.set_next_rule_to_redis(
-            branch_id,
-            {
-                "id": res[0],
-                "line_id": res[1],
-                "rule_id": res[2],
-                "user_friendly_name": res[6],
-                "timer": res[3],
-                "interval_id": res[4],
-                "time": res[5],
-            },
-        )
-        logging.info(
-            "Rule '{0}' added".format(str(database.get_next_active_rule(branch_id)))
-        )
-    else:
-        res_arr = deactivate_branch(line_id=branch_id, mode='manually')
+            redis_provider.set_next_rule_to_redis(
+                branch_id,
+                {
+                    "id": res[0],
+                    "line_id": res[1],
+                    "rule_id": res[2],
+                    "user_friendly_name": res[6],
+                    "timer": res[3],
+                    "interval_id": res[4],
+                    "time": res[5],
+                },
+            )
+            logging.info(
+                "Rule '{0}' added".format(str(database.get_next_active_rule(branch_id)))
+            )
+        else:
+            res_arr = deactivate_branch(line_id=branch_id, mode='manually')
 
     send_branch_status_message(res_arr)
     send_history_change_message()
