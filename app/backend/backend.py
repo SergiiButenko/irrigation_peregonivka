@@ -1130,7 +1130,7 @@ def toogle_line():
     )
 
     branch_state_avg = 0
-    branches = []
+    branches = dict()
     for res in sql_responce:
         branch_id = res[0]
         branch = get_line_status(branch_id)[branch_id]
