@@ -1449,16 +1449,33 @@ def verify():
 
 @app.route("/weather_station")
 def weather_station():
+    api_key = str(request.args.get("api_key"))
+    device_shotname = str(request.args.get("device_shotname"))
     device_id = str(request.args.get("device_id"))
-    temp = str(request.args.get("temp"))
-    hum = str(request.args.get("hum"))
-    press = str(request.args.get("press"))
-    voltage = str(request.args.get("voltage"))
-    logging.info(
-        "weather_station signal from '{}' device id received. temp={}; hum={}; press={}; voltage={}".format(
-            device_id, temp, hum, press, voltage
-        )
-    )
+    rel_pressure_rounded = str(request.args.get("rel_pressure_rounded"))
+    measured_temp = str(request.args.get("measured_temp"))
+    measured_humi = str(request.args.get("measured_humi"))
+    volt = str(request.args.get("volt"))
+    measured_pres = str(request.args.get("measured_pres"))
+    DewpointTemperature = str(request.args.get("DewpointTemperature"))
+    HeatIndex = str(request.args.get("HeatIndex"))
+    status = str(request.args.get("status"))
+
+    logging.info(f"""
+    weather_station signal from '{device_id}' device id received;
+    api_key = {api_key}
+    device_shotname = {device_shotname}
+    device_id = {device_id}
+    rel_pressure_rounded = {rel_pressure_rounded}
+    measured_temp = {measured_temp}
+    measured_humi = {measured_humi}
+    volt = {volt}
+    measured_pres = {measured_pres}
+    DewpointTemperature = {DewpointTemperature}
+    HeatIndex = {HeatIndex}
+    status = {status}
+    """)
+    return jsonify(message="confirmed")    
 
     if (
         database.insert_weather(
@@ -1470,7 +1487,6 @@ def weather_station():
     else:
         logging.error("Error while insert occured. ")
 
-    return jsonify(message="confirmed")    
 
 logging.info("Get app settings")
 BRANCHES_SETTINGS, APP_SETTINGS = database.get_settings()

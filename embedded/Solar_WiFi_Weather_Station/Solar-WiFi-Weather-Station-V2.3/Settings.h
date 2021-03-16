@@ -1,6 +1,6 @@
-char ssid[] = "NotebookNet";            // WiFi Router ssid
+char ssid[] = "Notebooks";            // WiFi Router ssid
 char pass[] = "0660101327";             // WiFi Router password
-const char* host = "http://mozz.asuscomm.com:9000";
+const char* host = "http://mozz.breeze.ua:9000/api/v1/weather_station";
 const char* device_shotname = "weather_station_solar";
 const char* device_id = "a575212a-ee1c-4237-910f-9fb4c9a32190";
 const char* api_key = "123";         // API write key 
