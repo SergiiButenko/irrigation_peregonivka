@@ -310,7 +310,7 @@ void setup() {
 
 
   String postStr = host;
-  postStr += "/weather?api_key=";
+  postStr += "/weather_station?api_key=";
   postStr += api_key;
   postStr += "&device_shotname=";
   postStr += String(device_shotname);
@@ -331,11 +331,14 @@ void setup() {
   postStr += "&HeatIndex=";
   postStr += String(HeatIndex);
   postStr += "&status=";
-  postStr += String(forecast_in_words + ": " + ZambrettisWords + ". " + pressure_in_words + " " + trend_in_words + ". " + accuracy_in_words + " " + accuracy_in_percent + "%25."); // Percentage sign needs to be URL-encoded
+  String w_status = String(forecast_in_words + ": " + ZambrettisWords + ". " + pressure_in_words + " " + trend_in_words + ". " + accuracy_in_words + " " + accuracy_in_percent + "%25.");
+  w_status.replace(" ", "%20");
+  postStr += w_status; // Percentage sign needs to be URL-encoded
   send_request(postStr);
+http://mozz.breeze.ua:9000/api/v1/weather_station?api_key=123&device_shotname=weather_station_solar&device_id=a575212a-ee1c-4237-910f-9fb4c9a32190&rel_pressure_rounded=0&measured_temp=-1.00&measured_humi=4.00&volt=0.01&measured_pres=0.00&DewpointTemperature=-38.05&HeatIndex=-1.00&status=:%20Battery%20empty,%20please%20recharge!.%20%20.%20%2023%25.
 
   if (volt > 3.3) {          //check if batt still ok, if yes
-  goToSleep(sleepTimeMin); //go for a nap
+    goToSleep(sleepTimeMin); //go for a nap
   }
   else {                     //if not,
     goToSleep(0);            //hybernate because batt is empty

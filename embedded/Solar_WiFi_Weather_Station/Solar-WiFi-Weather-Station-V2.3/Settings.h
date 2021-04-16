@@ -1,8 +1,8 @@
-char ssid[] = "Notebooks";            // WiFi Router ssid
-char pass[] = "0660101327";             // WiFi Router password
-const char* host = "http://mozz.breeze.ua:9000/api/v1/weather_station";
-const char* device_shotname = "weather_station_solar";
-const char* device_id = "a575212a-ee1c-4237-910f-9fb4c9a32190";
+char ssid[] = "faza_2";            // WiFi Router ssid
+char pass[] = "Kobe_2016";             // WiFi Router password
+const char* host = "http://mozz.breeze.ua:9000/api/v1";
+const char* device_shotname = "weather_station_solar_white";
+const char* device_id = "b675212a-ee1c-4237-910f-9fb4c9a32190";
 const char* api_key = "123";         // API write key 
 
 

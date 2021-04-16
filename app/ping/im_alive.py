@@ -15,5 +15,8 @@ app = Flask(__name__)
 def im_alive():
     """In order to keep device status"""
     device_id = str(request.args.get("device_id"))
-    logging.info("Ping signal from '{0}' device id received".format(device_id))
+    logging.info(f"Ping signal from '{device_id}' device id received. IP: {request.remote_addr}")
+    logging.info(f"Headers: {request.headers}")
+    
     return jsonify(message="confirmed")
+
