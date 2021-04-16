@@ -113,16 +113,25 @@ void scan_wifi() {
 void wait_wifi_conn() {
   // Wait for connection
   previousMillis = millis();
-
+  WiFi.hostname(device_id);
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+  }
+  
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
     if (millis() - previousMillis >= esp_restart_interval) {
       Serial.print("Restarting. No wifi connection");
       ESP.restart();
     }
 
-    WiFi.begin(ssid, password);
-
     delay(1000);
+  }
+
+  String req = host + String("/im_alive?device_id=") + String(device_id);
+  while (send_request(req))
+  {
+    delay(registration_interval);
   }
 }
 
@@ -179,6 +188,7 @@ bool send_request(String req) {
     Serial.println(host);
 
     http.begin(req);
+    http.addHeader("X-Real-IP", WiFi.localIP());
 
     int httpCode = http.GET();            //Send the request
     String payload = http.getString();    //Get the response payload

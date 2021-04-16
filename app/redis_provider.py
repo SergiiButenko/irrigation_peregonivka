@@ -8,6 +8,28 @@ from helpers import date_hook, date_handler, convert_to_datetime
 redis_db = redis.Redis(host="redis", port=6379, db=0)
 
 
+def set_device_ip(device_id, device_ip):
+    res = False
+    try:
+        res = redis_db.set(device_id, device_ip)
+    except Exception as e:
+        logging.error("Can't save data to redis. Exception occured {0}".format(e))
+
+    return res
+
+
+def get_device_ip(device_id):
+    try:
+        data = redis_db.get(device_id)
+        if data is None:
+            return None
+    except Exception as e:
+        logging.error("Can't get data from redis. Exception occured {0}".format(e))
+        raise e
+
+    return data
+
+
 def set_next_rule_to_redis(branch_id, data):
     """Set next rule in redis."""
     res = False

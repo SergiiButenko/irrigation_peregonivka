@@ -39,3 +39,4 @@ byte switcher_state[num_of_switcher]={-1, -1, -1, -1};
 int switcher_counter[num_of_switcher]={0, 0, 0, 0};
 byte counter_max = 300;
 bool debug = false;
+const long registration_interval = 1000 * 30;

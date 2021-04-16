@@ -27,3 +27,4 @@ const char *host = "http://irrigation.faza:9000/api/v1";
 byte delay_between_requests = 500;
 byte delay_for_counter_millis = 10;
 byte retry_limit = 3;
+const long registration_interval = 1000 * 30;

@@ -2,7 +2,6 @@
 
 unsigned long currentMillis = 0;
 unsigned long previousMillis = 0;
-const long interval = 1000 * 60 * 5;
 
 ESP8266WebServer server(80);
 const char* serverIndex = "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>";
@@ -14,16 +13,19 @@ void displayDeviceId() {
   msg += "}";
 
   Serial.println("Message to send:" + msg);
+  server.sendHeader("X-Real-IP", WiFi.localIP());
   server.sendHeader("Connection", "close");
   server.send(200, "application/json", msg);
 }
 
 
 void restart_device() {
+  server.sendHeader("X-Real-IP", WiFi.localIP());
   server.sendHeader("Connection", "close");
   server.send(200, "application/json", "restarted");
   ESP.restart();
 }
+
 
 void displayVersion() {
   String msg = "{";
@@ -31,53 +33,9 @@ void displayVersion() {
   msg += "}";
 
   Serial.println("Message to send:" + msg);
+  server.sendHeader("X-Real-IP", WiFi.localIP());
   server.sendHeader("Connection", "close");
   server.send(200, "application/json", msg);
-}
-
-void retrigger() {
-  String msg = "{";
-  for (byte i = 1; i < num_of_relay - 1; i = i + 1) {
-    msg += "\"" + String(i) + "\":\"" + String(digitalRead(relay_pins[i])) + "\",";
-  }
-  msg += "\"" + String(num_of_relay - 1) + "\":\"" + String(digitalRead(relay_pins[num_of_relay - 1])) + "\"";
-  msg += "}";
-
-  Serial.println("Message to send:" + msg);
-  server.sendHeader("Connection", "close");
-  server.send(200, "application/json", msg);
-}
-
-void send_status() {
-  String msg = "{";
-  for (byte i = 1; i < num_of_relay ; i = i + 1) {
-    msg += "\"" + String(i) + "\":\"" + String(digitalRead(relay_pins[i])) + "\",";
-  }
-
-  for (byte i = 1; i < num_of_switcher - 1 ; i = i + 1) {
-    msg += "\"sw_" + String(i) + "\":\"" + String(digitalRead(switcher_pins[i])) + "\",";
-  }
-
-  msg += "\"sw_" + String(num_of_switcher - 1) + "\":\"" + String(digitalRead(switcher_pins[num_of_switcher - 1])) + "\"";
-  msg += "}";
-
-  Serial.println("Message to send:" + msg);
-  server.sendHeader("Connection", "close");
-  server.send(200, "application/json", msg);
-}
-
-void turn_on() {
-  String relay = server.arg("relay");
-  digitalWrite(relay_pins[relay.toInt()], 1);
-
-  send_status();
-}
-
-void turn_off() {
-  String relay = server.arg("relay");
-  digitalWrite(relay_pins[relay.toInt()], 0);
-
-  send_status();
 }
 
 void handleNotFound() {
@@ -94,6 +52,7 @@ void handleNotFound() {
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
 
+  server.sendHeader("X-Real-IP", WiFi.localIP());
   server.sendHeader("Connection", "close");
   server.send(404, "text/plain", message);
 }
@@ -125,7 +84,6 @@ void scan_wifi() {
   Serial.println("");
 }
 
-
 void wait_wifi_conn() {
   // Wait for connection
   WiFi.hostname(device_id);
@@ -137,7 +95,7 @@ void wait_wifi_conn() {
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
     delay(1000);
   }
-  
+
   String req = host + String("/im_alive?device_id=") + String(device_id);
   while (send_request(req))
   {
@@ -145,34 +103,11 @@ void wait_wifi_conn() {
   }
 }
 
-void test_relay() {
-  for (byte i = 1; i < num_of_relay; i = i + 1) {
-    digitalWrite(relay_pins[i], 0);
-    delay(1000);
-    digitalWrite(relay_pins[i], 1);
-    delay(1000);
-    digitalWrite(relay_pins[i], 0);
-  }
-
-  for (byte i = 1; i < num_of_relay; i = i + 1) {
-    digitalWrite(relay_pins[i], 1);
-  }
-  delay(5000);
-
-  for (byte i = 1; i < num_of_relay; i = i + 1) {
-    digitalWrite(relay_pins[i], 0);
-  }
-
-}
-
 void test_system() {
   send_status();
-
-  test_relay();
   scan_wifi();
 }
 
-// ===================================== SWITCHER ========================================
 bool send_request(String req) {
   for (int i = 1; i <= retry_limit; i++) {
     HTTPClient http;
@@ -208,46 +143,3 @@ bool send_request(String req) {
   return false;
 }
 
-void handleSwitchers(void) {
-  for (byte i = 1; i < num_of_switcher; i = i + 1) {
-    byte curr_state = digitalRead(switcher_pins[i]);
-//    Serial.println("");
-//    Serial.println("");
-//    Serial.print("prev: ");
-//    Serial.println(switcher_state[i]);
-//
-//    Serial.print("curr: ");
-//    Serial.println(curr_state);
-//
-//    Serial.print("pin: ");
-//    Serial.println(switcher_pins[i]);
-//
-//    Serial.print("counter: ");
-//    Serial.println(switcher_counter[i]);
-
-    if (curr_state != switcher_state[i]) {
-      if (switcher_counter[i] <= counter_max) {
-        switcher_counter[i]++;
-        delay(delay_for_counter_millis);
-      }
-    } else {
-      if (switcher_counter[i] >= 1) {
-        switcher_counter[i]--;
-      }
-    }
-
-    if (switcher_counter[i] >= counter_max) {
-      Serial.println(switcher_counter[i]);
-
-      String url = host;
-      url += String("/toogle_line?device_id=") + String(device_id) + String("&");
-      url += String("switch_num=") + String(i);
-      send_request(url);
-      
-      switcher_state[i] = curr_state;
-      switcher_counter[i] = 0;
-    }
-  }
-
-
-}

@@ -51,9 +51,6 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Setup");
 
-  pinMode(GPIO_Pin, INPUT_PULLUP);
-
-  Serial.begin(115200);
   WiFi.setAutoConnect(true);
   WiFi.mode(WIFI_STA);
 

@@ -8,7 +8,9 @@ import socket
 import requests
 
 import sqlite_database as database
+from redis_provider import get_device_ip
 from helpers import *
+
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
@@ -18,11 +20,16 @@ logging.basicConfig(
 
 LINES = {}
 
-def get_IP_by_local_domain(url):
-    if '.local' in url:
-        return socket.gethostbyname(url)
+
+def get_IP_by_local_domain(line_id):
+    device_id = database.get_device_id_by_line_id(line_id)
+    device_ip = get_device_ip(device_id)
+
+    if '.local' in device_ip:
+        return socket.gethostbyname(device_ip)
     
-    return url
+    return device_ip
+
 
 def setup_lines_remote_control():
     """Fill up settings array to save settings for branches."""
@@ -43,8 +50,8 @@ def setup_lines_remote_control():
                 "line_name": row[5],
                 "group_name": row[6],
                 "base_url": row[7],
-                "device_id": row[8],
-                "device_url": row[9],
+                "linked_device_id": row[8],
+                "linked_device_url": row[9],
                 "pump_enabled": row[10],
                 "pump_pin": row[11],
                 "state": -1,
@@ -254,10 +261,10 @@ def check_tank_status(line_id):
 
     try:
         device_id = LINES[line_id]["device_id"]
-        device_url = get_IP_by_local_domain(LINES[line_id]["device_url"])
+        linked_device_url = get_IP_by_local_domain(LINES[line_id]["linked_device_url"])
 
         response = requests.get(
-            url="http://" + device_url
+            url="http://" + linked_device_url
         )
         response.raise_for_status()
 

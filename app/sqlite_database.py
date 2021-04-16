@@ -168,7 +168,7 @@ QUERY["setup_lines_lines"] = (
 
 QUERY["setup_lines_remote_control"] = (
     "SELECT l.number, l.relay_num, l.is_pump, l.is_except, "
-    "l.group_id, l.name, lg.name, l.base_url, l.device_id, l.device_url, l.pump_enabled, "
+    "l.group_id, l.name, lg.name, l.base_url, l.linked_device_id, l.linked_device_url, l.pump_enabled, "
     "l.pump_pin "
     "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number"
 )
@@ -527,3 +527,13 @@ def insert_weather(sensor_shortname, temp=None, hum=None, press=None, voltage=No
     update(QUERY[mn() + '_insert_weather'], values=values)
 
     return True
+
+
+def get_device_id_by_line_id(line_id):
+    query = f"SELECT l.device_id FROM lines AS l WHERE l.id = {line_id}"
+    
+    res = select(query, "fetchone")
+    if res is None:
+        return None
+
+    return res[0]
