@@ -159,18 +159,11 @@ QUERY["get_settings"] = (
     "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number"
 )
 
-QUERY["setup_lines_lines"] = (
-    "SELECT l.number, lg.s0, lg.s1, lg.s2, lg.s3, "
-    "lg.en, l.pump_enabled, l.pin, lg.multiplex, l.relay_num, l.is_pump, l.is_except, "
-    "l.group_id, l.pump_pin, l.name, lg.name, l.base_url "
-    "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number"
-)
-
 QUERY["setup_lines_remote_control"] = (
-    "SELECT l.number, l.relay_num, l.is_pump, l.is_except, "
+    "SELECT l.number, l.relay_num, l.is_pump, "
     "l.group_id, l.name, lg.name, l.base_url, l.linked_device_id, l.linked_device_url, l.pump_enabled, "
     "l.pump_pin "
-    "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number"
+    "FROM lines AS l, line_groups as lg WHERE l.group_id = lg.id ORDER BY l.number"
 )
 
 QUERY["setup_sensors_datalogger"] = (
@@ -240,22 +233,23 @@ QUERY['toogle_line'] = "SELECT line_id FROM switchers_to_lines WHERE device_id='
 
 QUERY['insert_weather_select_id'] = "SELECT sensor_id from sensors where short_name = '{}'"
 QUERY['insert_weather_insert_weather'] = "INSERT INTO weather_station (sensor_id, temp, hum, press, voltage) VALUES (?,?,?,?,?)"
-# select strftime('%Y-%m-%dT%H:00:00.000', w.datetime), s.description, round(avg(w.temp),2) 
-# from weather_station as w 
-# join sensors as s on 
+# select strftime('%Y-%m-%dT%H:00:00.000', w.datetime), s.description, round(avg(w.temp),2)
+# from weather_station as w
+# join sensors as s on
 # w.sensor_id = s.sensor_id
 # group by strftime('%Y-%m-%dT%H:00:00.000', w.datetime);
 
 
 def get_connection_poll():
     conn = sqlite3.connect(
-            "/var/sqlite_db/smart_system.sql",
-            detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
-        )
-        # conn.cursor will return a cursor object, you can use this cursor to perform queries
+        "/var/sqlite_db/smart_system.sql",
+        detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
+    )
+    # conn.cursor will return a cursor object, you can use this cursor to perform queries
     conn.row_factory = sqlite3.Row
 
     return conn
+
 
 DB_CONNECTION = get_connection_poll()
 
@@ -331,7 +325,8 @@ def get_last_start_rule(line_id):
     if res is None:
         return None
 
-    logging.debug("Last completed rule retrieved for line id {0}".format(line_id))
+    logging.debug(
+        "Last completed rule retrieved for line id {0}".format(line_id))
     return {
         "id": res[0],
         "line_id": res[1],
@@ -359,10 +354,12 @@ def get_temperature2():
         grouped = OrderedDict()
         for key, group in groupby(list_arr, itemgetter(5)):
             _key = (
-                datetime.datetime.strptime(key, "%Y-%m-%d %H:%M").strftime("%H") + ":00"
+                datetime.datetime.strptime(
+                    key, "%Y-%m-%d %H:%M").strftime("%H") + ":00"
             )
             _key = "24:00" if _key == "00:00" else _key
-            grouped.setdefault(_key, []).append([list(thing) for thing in group])
+            grouped.setdefault(_key, []).append([list(thing)
+                                                 for thing in group])
 
         grouped_by_line_id = OrderedDict()
         for key, group in grouped.items():
@@ -475,7 +472,8 @@ def get_settings():
             }
 
             logging.debug(
-                "{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id]))
+                "{0} added to settings".format(
+                    str(BRANCHES_SETTINGS[branch_id]))
             )
 
         APP_SETTINGS = get_app_settings()
@@ -507,7 +505,8 @@ def get_last_ongoing_rule():
     date_time_start = convert_to_datetime(list_arr[0][1]).time()
     last_start_timestemp = datetime.datetime.combine(end_date, date_time_start)
     delta_minutes = time * intervals + time_wait * (intervals - 1)
-    end_timestemp = last_start_timestemp + datetime.timedelta(minutes=delta_minutes)
+    end_timestemp = last_start_timestemp + \
+        datetime.timedelta(minutes=delta_minutes)
 
     last_rule = {}
     last_rule["end_timestamp"] = end_timestemp
@@ -519,9 +518,11 @@ def get_last_ongoing_rule():
 
 
 def insert_weather(sensor_shortname, temp=None, hum=None, press=None, voltage=None):
-    sensor_id = select(QUERY[mn() + '_select_id'].format(sensor_shortname))[0][0] 
+    sensor_id = select(
+        QUERY[mn() + '_select_id'].format(sensor_shortname))[0][0]
     if sensor_id is None:
-        logging.error("{} sensor is absent in database".format(sensor_shortname))
+        logging.error(
+            "{} sensor is absent in database".format(sensor_shortname))
         return False
     values = (sensor_id, temp, hum, press, voltage)
     update(QUERY[mn() + '_insert_weather'], values=values)
@@ -531,9 +532,35 @@ def insert_weather(sensor_shortname, temp=None, hum=None, press=None, voltage=No
 
 def get_device_id_by_line_id(line_id):
     query = f"SELECT l.device_id FROM lines AS l WHERE l.id = {line_id}"
-    
+
     res = select(query, "fetchone")
     if res is None:
         return None
 
     return res[0]
+
+
+def set_device_ip(device_id, device_ip):
+    query = f"UPDATE devices SET last_known_ip = '{device_ip}', updated=datetime('now', 'localtime') WHERE device_id = {device_id}"
+    update(query)
+
+    return get_device_ip(device_id)
+
+
+def get_device_ip(device_id):
+    query = f"SELECT last_known_ip, updated FROM devices WHERE id = {device_id}"
+
+    res = select(query, "fetchone")
+    if res is None:
+        return None
+
+    return dict(
+        last_known_ip=res[0][0],
+        updated=res[0][1]
+    )
+
+    
+def get_device_lines(device_id):
+    query = f"SELECT * FROM lines WHERE device_id = {device_id}"
+
+    return select(query, "fetchall")

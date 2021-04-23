@@ -13,9 +13,8 @@ void setup(void) {
 
   Serial.begin(115200);
   
-  WiFi.mode(WIFI_STA);
-  WiFi.hostname(device_id);
-  wait_wifi_conn();
+  connect_to_wifi();
+  set_expected_line_state();
   
   Serial.println("");
   Serial.print("Connected to ");
@@ -28,7 +27,6 @@ void setup(void) {
   server.on("/restart", restart_device);
   server.on("/test", test_system);
   server.on("/device_id", displayDeviceId);
-  server.on("/version", displayVersion);
   server.on("/on", turn_on);
   server.on("/off", turn_off);
   server.onNotFound(handleNotFound);
@@ -81,7 +79,7 @@ void setup(void) {
 }
 
 void loop(void) {
-  wait_wifi_conn();
+  check_wifi_conn();
   server.handleClient();
   MDNS.update();
   delay(1);

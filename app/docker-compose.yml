@@ -33,6 +33,7 @@ services:
             WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
             TANK_NOTIFICATION_MINUTES: $TANK_NOTIFICATION_MINUTES
             CESSTOOL_NOTIFICATION_MINUTES: $CESSTOOL_NOTIFICATION_MINUTES
+            ACTIVE_IP_INTERVAL_MINUTES: 720
         volumes:
             - db-data:/var/sqlite_db/
         depends_on:
@@ -75,12 +76,12 @@ services:
             - messenger_bot
         restart: on-failure
 
-    ping:
+    device_discovery:
         build:
             context: ./
-            dockerfile: ./ping/Dockerfile
-        container_name: ping
-        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8020", "ping.im_alive:app"]
+            dockerfile: ./device_discovery/Dockerfile
+        container_name: device_discovery
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8020", "device_discovery.device_discovery:app"]
         expose: 
             - 8020
         restart: on-failure
@@ -153,7 +154,7 @@ services:
             - frontend
             - database
             - messenger_bot
-            - ping
+            - device_discovery
         restart: on-failure
     
     database:

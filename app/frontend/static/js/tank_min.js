@@ -256,7 +256,7 @@ function update_branches_request() {
 function update_devices_request() {
     //Check devices
     $.ajax({
-        url: API_ENDPOINT + '/device_status',
+        url: API_ENDPOINT + '/linked_device_status',
             success: function(data) {
                 devices = data['devices']
                 update_devices(data);

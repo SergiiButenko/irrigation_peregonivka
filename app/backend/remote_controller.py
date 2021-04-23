@@ -3,12 +3,13 @@
 import json
 import logging
 import time
-import socket
+from datetime import datetime
+from backend import config
+from helpers import convert_to_datetime
 
 import requests
 
 import sqlite_database as database
-from redis_provider import get_device_ip
 from helpers import *
 
 
@@ -21,14 +22,20 @@ logging.basicConfig(
 LINES = {}
 
 
-def get_IP_by_local_domain(line_id):
+def get_device_IP_by_line_id(line_id):
     device_id = database.get_device_id_by_line_id(line_id)
-    device_ip = get_device_ip(device_id)
-
-    if '.local' in device_ip:
-        return socket.gethostbyname(device_ip)
+    device = database.get_device_ip(device_id)
     
-    return device_ip
+    if device['last_known_ip'] is None:
+        raise ValueError(
+            f"No IP found for device id:line_id '{device_id}:{line_id}'")
+
+    _updated = convert_to_datetime(device['updated'])
+    if _updated + datetime.timedelta(minutes=config.ACTIVE_IP_INTERVAL_MINUTES) > datetime.now():
+        raise Exception(
+            f"IP '{device['last_known_ip']}' is outdated for device id:line_id '{device_id}:{line_id}'")
+
+    return device['ip']
 
 
 def setup_lines_remote_control():
@@ -45,15 +52,14 @@ def setup_lines_remote_control():
                 "id": row[0],
                 "relay_num": row[1],
                 "is_pump": row[2],
-                "is_except": row[3],
-                "group_id": row[4],
-                "line_name": row[5],
-                "group_name": row[6],
-                "base_url": row[7],
-                "linked_device_id": row[8],
-                "linked_device_url": row[9],
-                "pump_enabled": row[10],
-                "pump_pin": row[11],
+                "group_id": row[3],
+                "line_name": row[4],
+                "group_name": row[5],
+                "base_url": row[6],
+                "linked_device_id": row[7],
+                "linked_device_url": row[8],
+                "pump_enabled": row[9],
+                "pump_pin": row[10],
                 "state": -1,
             }
 
@@ -66,15 +72,11 @@ def setup_lines_remote_control():
         )
 
 
-def init_remote_lines():
-    setup_lines_remote_control()
-
-
 def on(line_id):
     """Set pin to high state."""
     try:
         relay = LINES[line_id]["relay_num"]
-        base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
+        base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
         response_on = requests.get(
             url="http://" + base_url + "/on",
             params={"relay": relay}
@@ -96,7 +98,7 @@ def off(line_id):
     """Set pin to low state."""
     try:
         relay = LINES[line_id]["relay_num"]
-        base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
+        base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
         response_off = requests.get(
             url="http://" + base_url + "/off",
             params={"relay": relay}
@@ -108,7 +110,8 @@ def off(line_id):
         return json.loads(response_off.text)
     except Exception as e:
         logging.error(
-            "Exception occured when turning off {0} relay. {1}".format(relay, e)
+            "Exception occured when turning off {0} relay. {1}".format(
+                relay, e)
         )
         raise e
 
@@ -116,10 +119,10 @@ def off(line_id):
 def air_s(line_id):
     for attempt in range(2):
         try:
-            base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
+            base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
             response_air = requests.get(
                 url="http://" + base_url + "/air_temperature",
-    
+
             )
             response_air.raise_for_status()
 
@@ -127,7 +130,8 @@ def air_s(line_id):
             res = json.loads(response_air.text)
 
             r_dict = {}
-            r_dict[line_id] = dict(id=line_id, air_temp=res["temp"], air_hum=res["hum"])
+            r_dict[line_id] = dict(
+                id=line_id, air_temp=res["temp"], air_hum=res["hum"])
 
             return r_dict
         except Exception as e:
@@ -140,10 +144,10 @@ def air_s(line_id):
 def ground_s(line_id):
     for attempt in range(2):
         try:
-            base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
+            base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
             response_air = requests.get(
                 url="http://" + base_url + "/ground_temperature",
-    
+
             )
             response_air.raise_for_status()
 
@@ -177,14 +181,15 @@ def branch_on(line_id=None, line_alert=None):
     r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
 
     if LINES[line_id]["pump_enabled"] == 0:
-        logging.info("Pump won't be turned on with {0} branch id".format(line_id))
+        logging.info(
+            "Pump won't be turned on with {0} branch id".format(line_id))
     else:
         time.sleep(5)
         line_id = LINES[line_id]["pump_pin"]
         status = on(line_id=line_id)
 
         r_dict[line_id] = dict(id=line_id, state=int(status[str(relay)]))
-        
+
         logging.info("Pump turned on with {0} branch id".format(line_id))
 
     return r_dict
@@ -195,9 +200,9 @@ def branch_off(line_id=None):
     if line_id is None:
         logging.error("No branch id")
         return None
-    
+
     r_dict = {}
-    
+
     if LINES[line_id]["pump_enabled"] == 1:
         pump_id = LINES[line_id]["pump_pin"]
         relay = LINES[pump_id]["relay_num"]
@@ -234,7 +239,7 @@ def line_status(line_id):
     r_dict = {}
 
     try:
-        base_url = get_IP_by_local_domain(LINES[line_id]["base_url"])
+        base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
         relay = LINES[line_id]["relay_num"]
 
         response = requests.get(
@@ -250,7 +255,8 @@ def line_status(line_id):
         r_dict[line_id] = dict(id=line_id, state=int(response[str(relay)]))
     except Exception as e:
         logging.error("Error: {}".format(e))
-        logging.error("Can't get line status status. Exception occured. Set status -1")
+        logging.error(
+            "Can't get line status status. Exception occured. Set status -1")
         r_dict[line_id] = dict(id=line_id, state=-1)
 
     return r_dict
@@ -261,7 +267,8 @@ def check_tank_status(line_id):
 
     try:
         device_id = LINES[line_id]["device_id"]
-        linked_device_url = get_IP_by_local_domain(LINES[line_id]["linked_device_url"])
+        linked_device_url = get_device_IP_by_line_id(
+            LINES[line_id]["linked_device_url"])
 
         response = requests.get(
             url="http://" + linked_device_url
@@ -280,7 +287,8 @@ def check_tank_status(line_id):
 
     except Exception as e:
         logging.exception(e)
-        logging.error("Can't check tank status. Exception occured. Set status -1")
+        logging.error(
+            "Can't check tank status. Exception occured. Set status -1")
         r_dict[line_id] = dict(id=line_id, device_state=-1)
 
     return r_dict

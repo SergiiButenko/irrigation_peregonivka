@@ -75,10 +75,6 @@ def setup_app_settings():
     TEMP_MIN = int(APP_SETTINGS["temp_min_max"]["min"])
 
 
-def get_line_status(line_id):
-    return remote_controller.line_status(line_id=line_id)
-
-
 def branch_on(line_id, alert_time=7 * 24 * 60):
     """Blablbal."""
     try:
@@ -254,7 +250,7 @@ def enable_rule():
                 current_temp, TEMP_MAX
             )
         )
-        state = get_line_status(line_id=config.HEAT_ID)
+        state = remote_controller.line_status(line_id=config.HEAT_ID)
         if state[config.HEAT_ID]["state"] != 0:
             branch_off(config.HEAT_ID)
         else:
@@ -266,7 +262,7 @@ def enable_rule():
                 current_temp, TEMP_MIN
             )
         )
-        state = get_line_status(line_id=config.HEAT_ID)
+        state = remote_controller.line_status(line_id=config.HEAT_ID)
         if state[config.HEAT_ID]["state"] != 1:
             branch_on(config.HEAT_ID)
         else:
@@ -276,7 +272,7 @@ def enable_rule():
 if __name__ == "__main__":
     while 1:
         logging.info("Start")
-        remote_controller.init_remote_lines()
+        remote_controller.setup_lines_remote_control()
         setup_sensors_datalogger()
         setup_lines_greenlines()
         setup_app_settings()

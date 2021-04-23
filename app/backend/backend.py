@@ -45,10 +45,12 @@ def update_all_rules():
     """Set next active rules for all branches."""
     try:
         for i in range(1, len(config.RULES_FOR_BRANCHES)):
-            redis_provider.set_next_rule_to_redis(i, database.get_next_active_rule(i))
+            redis_provider.set_next_rule_to_redis(
+                i, database.get_next_active_rule(i))
         logging.info("Rules updated")
     except Exception as e:
-        logging.error("Exeption occured while updating all rules. {0}".format(e))
+        logging.error(
+            "Exeption occured while updating all rules. {0}".format(e))
 
 
 def get_settings():
@@ -87,7 +89,8 @@ def get_settings():
             }
 
             logging.debug(
-                "{0} added to settings".format(str(BRANCHES_SETTINGS[branch_id]))
+                "{0} added to settings".format(
+                    str(BRANCHES_SETTINGS[branch_id]))
             )
 
         global APP_SETTINGS
@@ -105,7 +108,8 @@ def get_settings():
 @socketio.on_error_default
 def error_handler(e):
     """Handle error for websockets."""
-    logging.error("error_handler for socketio. An error has occurred: " + str(e))
+    logging.error(
+        "error_handler for socketio. An error has occurred: " + str(e))
 
 
 def send_message(channel, data):
@@ -122,13 +126,15 @@ def send_message(channel, data):
 def send_branch_status_message(data):
     """Convert data in order to send data object."""
     send_message(
-        "branch_status", {"data": json.dumps({"branches": data}, default=date_handler)}
+        "branch_status", {"data": json.dumps(
+            {"branches": data}, default=date_handler)}
     )
 
 
 def send_ongoing_rule_message(data, channel="edit_ongoing_rule"):
     """Convert data in order to send data object."""
-    send_message(channel, {"data": json.dumps({"rule": data}, default=date_handler)})
+    send_message(channel, {"data": json.dumps(
+        {"rule": data}, default=date_handler)})
 
 
 def send_history_change_message():
@@ -274,9 +280,11 @@ def cancel_rule():
 
     for rule_id in content:
         # select l.interval_id, li.name from life as l, lines as li where id = {0} and l.line_id = li.number
-        res = database.select(database.QUERY[mn() + "_1"].format(rule_id), "fetchone")
+        res = database.select(
+            database.QUERY[mn() + "_1"].format(rule_id), "fetchone")
         if res is None:
-            logging.error("No {0} rule/interval id in database".format(rule_id))
+            logging.error(
+                "No {0} rule/interval id in database".format(rule_id))
             abort(500)
 
         interval_id = res[0]
@@ -286,15 +294,18 @@ def cancel_rule():
         database.update(database.QUERY[mn() + "_2"].format(interval_id))
 
         res = database.select(
-            database.QUERY[mn() + "_select_ongoing_rule"].format(ongoing_rule_id),
+            database.QUERY[mn() +
+                           "_select_ongoing_rule"].format(ongoing_rule_id),
             "fetchone",
         )
         if res is None:
             logging.info(
-                "No intervals for {0} ongoing rule. Remove it".format(ongoing_rule_id)
+                "No intervals for {0} ongoing rule. Remove it".format(
+                    ongoing_rule_id)
             )
             database.update(
-                database.QUERY[mn() + "_delete_ongoing_rule"].format(ongoing_rule_id)
+                database.QUERY[mn() +
+                               "_delete_ongoing_rule"].format(ongoing_rule_id)
             )
 
         logging.info("Rule '{0}' canceled".format(rule_id))
@@ -322,7 +333,8 @@ def cancel_rule():
 
 def update_rules_from_ongoing_rules(rule):
     """Form rules from ongoing rule."""
-    database.update(database.QUERY[mn() + "_remove_from_life"].format(rule["rule_id"]))
+    database.update(
+        database.QUERY[mn() + "_remove_from_life"].format(rule["rule_id"]))
 
     _delta = rule["end_date"] - rule["date_time_start"]
     _days = _delta.days + 1
@@ -331,7 +343,8 @@ def update_rules_from_ongoing_rules(rule):
     ongoing_rule_id = rule["rule_id"]
 
     for days_to_add in range(0, _days + 1, rule["repeat_value"]):
-        date_datetime = rule["date_time_start"] + datetime.timedelta(days=days_to_add)
+        date_datetime = rule["date_time_start"] + \
+            datetime.timedelta(days=days_to_add)
 
         # start_time = rule['date_time_start']
         branch_id = int(rule["line_id"])
@@ -375,8 +388,10 @@ def update_rules_from_ongoing_rules(rule):
 
         # first interval is executed
         for x in range(2, num_of_intervals + 1):
-            date_datetime = stop_datetime + datetime.timedelta(minutes=time_wait)
-            stop_datetime = date_datetime + datetime.timedelta(minutes=time_min)
+            date_datetime = stop_datetime + \
+                datetime.timedelta(minutes=time_wait)
+            stop_datetime = date_datetime + \
+                datetime.timedelta(minutes=time_min)
 
             database.update(
                 database.QUERY[mn() + "_add_rule_to_life"].format(
@@ -469,7 +484,7 @@ def add_ongoing_rule(rules):
         )
 
     update_all_rules()
-    try:        
+    try:
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
             response_status = remote_controller.line_status(line_id=line_id)
@@ -499,10 +514,12 @@ def remove_ongoing_rule():
     """User can remove ongoing rule from ui."""
     rule_id = request.args.get("id")
     database.update(database.QUERY[mn() + "_remove_from_life"].format(rule_id))
-    database.update(database.QUERY[mn() + "_delete_ongoing_rule"].format(rule_id))
+    database.update(
+        database.QUERY[mn() + "_delete_ongoing_rule"].format(rule_id))
     update_all_rules()
 
-    send_ongoing_rule_message(channel="remove_ongoing_rule", data={"rule_id": rule_id})
+    send_ongoing_rule_message(
+        channel="remove_ongoing_rule", data={"rule_id": rule_id})
     send_history_change_message()
 
     return json.dumps({"status": "OK"})
@@ -636,11 +653,13 @@ def plan():
             start_point = last_ongoing_rule["end_timestamp"]
             delta_minutes = 2 * (
                 last_ongoing_rule["time"] * last_ongoing_rule["intervals"]
-                + last_ongoing_rule["time_wait"] * (last_ongoing_rule["intervals"] - 1 or 1)
+                + last_ongoing_rule["time_wait"] *
+                (last_ongoing_rule["intervals"] - 1 or 1)
             )
     else:
         start_point = datetime.datetime.now()
-        delta_minutes = (income_timer - 1) * 60  # 1 hour has value 2 in dropdown.
+        # 1 hour has value 2 in dropdown.
+        delta_minutes = (income_timer - 1) * 60
 
     start_time = start_point + datetime.timedelta(minutes=delta_minutes)
 
@@ -685,9 +704,11 @@ def form_responce_for_branches(payload):
             line_group = BRANCHES_SETTINGS[line_id]["group_id"]
             line_name = BRANCHES_SETTINGS[line_id]["name"]
             group_name = BRANCHES_SETTINGS[line_id]["group_name"]
+            relay_num = BRANCHES_SETTINGS[line_id]["relay_num"]
 
             last_rule = database.get_last_start_rule(line_id)
             next_rule = database.get_next_active_rule(line_id)
+            expected_state = 0
 
             res[line_id] = {
                 "id": line_id,
@@ -697,6 +718,8 @@ def form_responce_for_branches(payload):
                 "status": status,
                 "next_rule": next_rule,
                 "last_rule": last_rule,
+                "expected_state": expected_state,
+                "relay_num": relay_num
             }
         return res
     except Exception as e:
@@ -734,7 +757,8 @@ def get_moisture():
                     for thing in _group:
                         _sum += thing[0]
                         _len += 1
-                    new_list.append(dict(hours=_key, val=round(_sum / _len, 2)))
+                    new_list.append(
+                        dict(hours=_key, val=round(_sum / _len, 2)))
                 grouped[key]["new"] = new_list
                 grouped[key]["base"] = 60
 
@@ -753,11 +777,12 @@ def irrigation_status():
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
             if line["line_type"] == "irrigation":
-                response_status = remote_controller.line_status(line_id=line_id)
+                response_status = remote_controller.line_status(
+                    line_id=line_id)
                 lines[line_id] = dict(
                     id=line_id, state=int(response_status[line_id]["state"])
                 )
-        
+
         arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
         return jsonify(branches=arr)
@@ -774,11 +799,12 @@ def lighting_status():
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
             if line["line_type"] == "lighting":
-                response_status = remote_controller.line_status(line_id=line_id)
+                response_status = remote_controller.line_status(
+                    line_id=line_id)
                 lines[line_id] = dict(
                     id=line_id, state=int(response_status[line_id]["state"])
                 )
-            
+
         arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
         return jsonify(branches=arr)
@@ -788,14 +814,15 @@ def lighting_status():
         abort(500)
 
 
-@app.route("/device_status", methods=["GET"])
-def device_status():
+@app.route("/linked_device_status", methods=["GET"])
+def linked_device_status():
     """Return status of lightingn relay."""
     try:
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
             if line["line_type"] == "tank":
-                response_status = remote_controller.check_tank_status(line_id=line_id)
+                response_status = remote_controller.check_tank_status(
+                    line_id=line_id)
                 lines[line_id] = dict(
                     id=line_id,
                     device_state=int(response_status[line_id]["device_state"]),
@@ -815,11 +842,12 @@ def tank_status():
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
             if line["line_type"] == "tank":
-                response_status = remote_controller.line_status(line_id=line_id)
+                response_status = remote_controller.line_status(
+                    line_id=line_id)
                 lines[line_id] = dict(
                     id=line_id, state=int(response_status[line_id]["state"])
                 )
-        
+
         arr = form_responce_for_branches(lines)
         send_branch_status_message(arr)
         return jsonify(branches=arr)
@@ -836,7 +864,8 @@ def greenhouse_status():
         lines = {}
         for line_id, line in BRANCHES_SETTINGS.items():
             if line["line_type"] == "greenhouse":
-                response_status = remote_controller.line_status(line_id=line_id)
+                response_status = remote_controller.line_status(
+                    line_id=line_id)
                 lines[line_id] = dict(
                     id=line_id, state=int(response_status[line_id]["state"])
                 )
@@ -850,8 +879,40 @@ def greenhouse_status():
         abort(500)
 
 
-def get_line_status(line_id):
-    return remote_controller.line_status(line_id=line_id)
+@app.route("/devices/<str:device_id>/", methods=["GET"])
+def device_status(device_id):
+    """Returns device expected state."""
+    RULE_TO_STOP = 2
+    RULE_TO_START = 1
+    LINE_ON = 1
+    LINE_OFF = 0
+
+    lines = database.get_device_lines(device_id)
+
+    expected_states = []
+    for line_id in lines:
+        next_rule = database.get_next_active_rule(line_id)
+        # in case no rule - turn off
+        if next_rule is None:
+            expected_state = LINE_OFF
+        # if there is a rule to stop - device shall be turned on
+        elif next_rule['rule_id'] == RULE_TO_STOP:
+            expected_state = LINE_ON
+        # if there is a rule to start - device shall be turned off
+        elif next_rule['rule_id'] == RULE_TO_START:
+            expected_state = LINE_OFF
+        else:
+            # in any other situation - turn off
+            logging.error("Can't predict state")
+            expected_state = LINE_OFF
+
+        expected_states.append(dict(
+            line_id=BRANCHES_SETTINGS[line_id]['id'],
+            relay_num=BRANCHES_SETTINGS[line_id]['relay_num'],
+            expected_state=expected_state
+        ))
+
+    return jsonify(lines=lines)
 
 
 def retry_branch_on(branch_id, time_min):
@@ -923,14 +984,16 @@ def activate_branch():
         abort(500)
     # ============ check input params =======================
 
-    response_arr = get_line_status(branch_id)
+    response_arr = remote_controller.line_status(line_id=branch_id)
     if response_arr[branch_id]["state"] != 1:
         try:
-            response_arr = retry_branch_on(branch_id=branch_id, time_min=time_min)
+            response_arr = retry_branch_on(
+                branch_id=branch_id, time_min=time_min)
         except Exception as e:
             logging.error(e)
             logging.error(
-                "Can't turn on branch id={0}. Exception occured".format(branch_id)
+                "Can't turn on branch id={0}. Exception occured".format(
+                    branch_id)
             )
             abort(500)
 
@@ -970,7 +1033,8 @@ def activate_branch():
                 },
             )
             logging.info(
-                "Rule '{0}' added".format(str(database.get_next_active_rule(branch_id)))
+                "Rule '{0}' added".format(
+                    str(database.get_next_active_rule(branch_id)))
             )
 
         if mode == "interval":
@@ -995,12 +1059,14 @@ def activate_branch():
                 )
 
         if mode == "auto":
-            logging.info("Branch '{0}' activated from rules service".format(branch_id))
+            logging.info(
+                "Branch '{0}' activated from rules service".format(branch_id))
         else:
             logging.info("Branch '{0}' activated manually".format(branch_id))
     else:
         logging.info(
-            "Branch '{0}' already activated no action performed".format(branch_id)
+            "Branch '{0}' already activated no action performed".format(
+                branch_id)
         )
 
     arr = form_responce_for_branches(response_arr)
@@ -1040,7 +1106,8 @@ def retry_branch_off(branch_id):
                 continue
 
         raise Exception(
-            "Can't turn off {0} branch. Retries limit reached".format(branch_id)
+            "Can't turn off {0} branch. Retries limit reached".format(
+                branch_id)
         )
     except Exception as e:
         logging.error(e)
@@ -1051,14 +1118,15 @@ def retry_branch_off(branch_id):
 
 
 def deactivate_branch(line_id, mode):
-    response_off = get_line_status(line_id)
+    response_off = remote_controller.line_status(line_id=line_id)
     if response_off[line_id]["state"] != 0:
         try:
             response_off = retry_branch_off(branch_id=line_id)
         except Exception as e:
             logging.error(e)
             logging.error(
-                "Can't turn off branch id={0}. Exception occured".format(line_id)
+                "Can't turn off branch id={0}. Exception occured".format(
+                    line_id)
             )
             raise
 
@@ -1067,7 +1135,8 @@ def deactivate_branch(line_id, mode):
             if redis_provider.get_next_rule_from_redis(line_id) is not None:
                 database.update(
                     database.QUERY[mn() + "_1"].format(
-                        redis_provider.get_next_rule_from_redis(line_id)["interval_id"]
+                        redis_provider.get_next_rule_from_redis(line_id)[
+                            "interval_id"]
                     )
                 )
             else:
@@ -1077,9 +1146,11 @@ def deactivate_branch(line_id, mode):
                     )
                 )
 
-            redis_provider.set_next_rule_to_redis(line_id, database.get_next_active_rule(line_id))
+            redis_provider.set_next_rule_to_redis(
+                line_id, database.get_next_active_rule(line_id))
             logging.info(
-                "Rule '{0}' added".format(str(redis_provider.get_next_rule_from_redis(line_id)))
+                "Rule '{0}' added".format(
+                    str(redis_provider.get_next_rule_from_redis(line_id)))
             )
 
             logging.info("Line '{0}' deactivated manually".format(line_id))
@@ -1087,7 +1158,8 @@ def deactivate_branch(line_id, mode):
             logging.info("No new entries is added to database.")
     else:
         logging.info(
-            "Line '{0}' already deactivated. No action performed".format(line_id)
+            "Line '{0}' already deactivated. No action performed".format(
+                line_id)
         )
 
     return form_responce_for_branches(response_off)
@@ -1133,7 +1205,7 @@ def toogle_line():
     branches = dict()
     for res in sql_responce:
         branch_id = res[0]
-        branch = get_line_status(branch_id)[branch_id]
+        branch = remote_controller.line_status(line_id=branch_id)[branch_id]
         branch_state_avg += branch['state']
         branches[branch_id] = branch
 
@@ -1149,21 +1221,25 @@ def toogle_line():
 
         if branches[branch_id]['state'] == 0:
             try:
-                res_arr = retry_branch_on(branch_id=branch_id, time_min=branch_setting['time'])
+                res_arr = retry_branch_on(
+                    branch_id=branch_id, time_min=branch_setting['time'])
             except Exception as e:
                 logging.error(e)
                 logging.error(
-                    "Can't turn on branch id={0}. Exception occured".format(branch_id)
+                    "Can't turn on branch id={0}. Exception occured".format(
+                        branch_id)
                 )
                 abort(500)
 
             interval_id = str(uuid.uuid4())
             now = datetime.datetime.now()
-            stop_time = now + datetime.timedelta(minutes=branch_setting['time'])
+            stop_time = now + \
+                datetime.timedelta(minutes=branch_setting['time'])
 
             database.update(
                 database.QUERY["activate_branch_1"].format(
-                    branch_id, 1, 2, now.date(), now, interval_id, branch_setting['time']
+                    branch_id, 1, 2, now.date(
+                    ), now, interval_id, branch_setting['time']
                 )
             )
             lastid = database.update(
@@ -1189,7 +1265,8 @@ def toogle_line():
                 },
             )
             logging.info(
-                "Rule '{0}' added".format(str(database.get_next_active_rule(branch_id)))
+                "Rule '{0}' added".format(
+                    str(database.get_next_active_rule(branch_id)))
             )
         else:
             res_arr = deactivate_branch(line_id=branch_id, mode='manually')
@@ -1198,7 +1275,7 @@ def toogle_line():
     send_history_change_message()
 
     return jsonify(branches=res_arr)
-    
+
 
 @app.route("/weather")
 @cache.cached(timeout=CACHE_TIMEOUT)
@@ -1270,7 +1347,8 @@ def stop_filling():
     device_id = "upper_tank"
     line_id = config.LINES_UPPER_TANK.get(device_id, None)
 
-    logging.info("INERUPT SIGNAL RESEIVED FROM '{0}' device!".format(device_id))
+    logging.info(
+        "INERUPT SIGNAL RESEIVED FROM '{0}' device!".format(device_id))
     database.update(database.QUERY[mn()])
 
     if line_id is None:
@@ -1278,9 +1356,10 @@ def stop_filling():
         return json.dumps({"status": "Unsupported '{0}' device id!".format(device_id)})
 
     _no_key = False
-    response_arr = get_line_status(line_id)
+    response_arr = remote_controller.line_status(line_id=line_id)
     if response_arr[line_id]["state"] == 0:
-        logging.info("Line '{0}' is not active. Message won't be send.".format(line_id))
+        logging.info(
+            "Line '{0}' is not active. Message won't be send.".format(line_id))
         return json.dumps(
             {
                 "status": "Line '{0}' is not active. Message won't be send.".format(
@@ -1289,10 +1368,12 @@ def stop_filling():
             }
         )
 
-    last_time_sent = redis_provider.get_time_last_notification(key=config.REDIS_KEY_FOR_UPPER_TANK)
+    last_time_sent = redis_provider.get_time_last_notification(
+        key=config.REDIS_KEY_FOR_UPPER_TANK)
     if last_time_sent is None:
         redis_provider.set_time_last_notification(date=datetime.datetime.now())
-        last_time_sent = redis_provider.get_time_last_notification(key=config.REDIS_KEY_FOR_UPPER_TANK)
+        last_time_sent = redis_provider.get_time_last_notification(
+            key=config.REDIS_KEY_FOR_UPPER_TANK)
         _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent
@@ -1305,7 +1386,8 @@ def stop_filling():
         except Exception as e:
             logging.error(e)
             logging.error(
-                "Can't deactivate line '{0}'. Ecxeption occured".format(line_id)
+                "Can't deactivate line '{0}'. Ecxeption occured".format(
+                    line_id)
             )
             message = "Помилка. Водопостачання не вимкнено!"
 
@@ -1331,7 +1413,8 @@ def stop_filling():
         try:
 
             logging.info("Updating redis.")
-            redis_provider.set_time_last_notification(date=datetime.datetime.now())
+            redis_provider.set_time_last_notification(
+                date=datetime.datetime.now())
             logging.info("Redis updated")
         except Exception as e:
             logging.error(e)
@@ -1383,12 +1466,14 @@ def cesspool():
     device_id = "cesspool"
     _no_key = False
 
-    last_time_sent = redis_provider.get_time_last_notification(key=config.REDIS_KEY_FOR_CESSTOOL)
+    last_time_sent = redis_provider.get_time_last_notification(
+        key=config.REDIS_KEY_FOR_CESSTOOL)
     if last_time_sent is None:
         redis_provider.set_time_last_notification(
             date=datetime.datetime.now(), key=config.REDIS_KEY_FOR_CESSTOOL
         )
-        last_time_sent = redis_provider.get_time_last_notification(key=config.REDIS_KEY_FOR_CESSTOOL)
+        last_time_sent = redis_provider.get_time_last_notification(
+            key=config.REDIS_KEY_FOR_CESSTOOL)
         _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent
@@ -1409,7 +1494,8 @@ def cesspool():
         try:
             _users_list = config.TELEGRAM_USERS[device_id]
             logging.info(
-                "Sending warning message to users: '{0}'.".format(str(_users_list))
+                "Sending warning message to users: '{0}'.".format(
+                    str(_users_list))
             )
             payload = {"users": _users_list, "message": message}
             response = requests.post(
@@ -1475,7 +1561,7 @@ def weather_station():
     HeatIndex = {HeatIndex}
     status = {status}
     """)
-    return jsonify(message="confirmed")    
+    return jsonify(message="confirmed")
 
     if (
         database.insert_weather(
@@ -1492,7 +1578,7 @@ logging.info("Get app settings")
 BRANCHES_SETTINGS, APP_SETTINGS = database.get_settings()
 # Initialize lines marked with base_url in database
 logging.info("Initialize lines marked with base_url in database")
-remote_controller.init_remote_lines()
+remote_controller.setup_lines_remote_control()
 # Flush keys in redis in order to keep it updated on start in case power failure
 logging.info(
     "Flush keys in redis in order to keep it updated on start in case power failure"
