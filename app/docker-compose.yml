@@ -94,6 +94,7 @@ services:
         container_name: sensor_data_collector
         environment:
             RESTART_INTERVAL_MIN: 15
+            TANK_NOTIFICATION_MINUTES: $TANK_NOTIFICATION_MINUTES
         command: [ "python", "-m", "sensor_data_collector.data_logger"]
         volumes:
             - db-data:/var/sqlite_db/
