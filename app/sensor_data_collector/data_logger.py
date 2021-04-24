@@ -103,7 +103,12 @@ if __name__ == "__main__":
         setup_sensors_datalogger()
         setup_lines_datalogger()
         remote_controller.setup_lines_remote_control()
-        temp_sensors()
-        logging.info("Done!")
+        try:
+            temp_sensors()
+        except Exception:
+            logging.error("Can't get temparature")
+        else:
+            logging.info("Done!")
+        
         logging.info("Sleeping for {} minutes".format(int(os.environ["RESTART_INTERVAL_MIN"])))
         time.sleep(int(os.environ["RESTART_INTERVAL_MIN"]) * 60)

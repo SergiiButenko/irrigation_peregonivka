@@ -56,6 +56,7 @@ services:
         depends_on:
             - redis
             - backend
+        restart: on-failure
 
     scheduler:
         build:
@@ -96,6 +97,7 @@ services:
         command: [ "python", "-m", "sensor_data_collector.data_logger"]
         volumes:
             - db-data:/var/sqlite_db/
+        restart: on-failure
 
     state_machine:
         build:
