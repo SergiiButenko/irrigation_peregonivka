@@ -521,7 +521,7 @@ def insert_weather(sensor_shortname, temp=None, hum=None, press=None, voltage=No
 
 
 def get_device_id_by_line_id(line_id):
-    query = f"SELECT l.device_id FROM lines AS l WHERE l.id = {line_id}"
+    query = f"SELECT l.device_id FROM lines AS l WHERE l.id = '{line_id}'"
 
     res = select(query, "fetchone")
     if res is None:
@@ -531,14 +531,14 @@ def get_device_id_by_line_id(line_id):
 
 
 def set_device_ip(device_id, device_ip):
-    query = f"UPDATE devices SET last_known_ip = '{device_ip}', updated=datetime('now', 'localtime') WHERE device_id = {device_id}"
+    query = f"UPDATE devices SET last_known_ip = '{device_ip}', updated=datetime('now', 'localtime') WHERE device_id = '{device_id}'"
     update(query)
 
     return get_device_ip(device_id)
 
 
 def get_device_ip(device_id):
-    query = f"SELECT last_known_ip, updated FROM devices WHERE id = {device_id}"
+    query = f"SELECT last_known_ip, updated FROM devices WHERE id = '{device_id}'"
 
     res = select(query, "fetchone")
     if res is None:
@@ -551,6 +551,6 @@ def get_device_ip(device_id):
 
     
 def get_device_lines(device_id):
-    query = f"SELECT * FROM lines WHERE device_id = {device_id}"
+    query = f"SELECT * FROM lines WHERE device_id = '{device_id}'"
 
     return select(query, "fetchall")
