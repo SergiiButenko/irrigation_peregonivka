@@ -36,7 +36,7 @@ def get_device_IP_by_line_id(line_id):
         raise Exception(
             f"IP '{device['last_known_ip']}' is outdated for device id:line_id '{device_id}:{line_id}'")
 
-    return device['ip']
+    return device['last_known_ip']
 
 
 def setup_lines_remote_control():
