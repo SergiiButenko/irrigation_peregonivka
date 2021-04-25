@@ -14,7 +14,6 @@ void setup(void) {
   Serial.begin(115200);
   
   connect_to_wifi();
-  set_expected_line_state();
   
   Serial.println("");
   Serial.print("Connected to ");
@@ -66,16 +65,6 @@ void setup(void) {
   });
 
   server.begin();
-  
-  /*use mdns for device_id name resolution*/
-  if (!MDNS.begin(device_id, WiFi.localIP())) {
-    Serial.println("Error setting up MDNS responder!");
-    return;
-  }
-
-  Serial.println("mDNS responder started");
-  MDNS.addService("http", "tcp", 80);
-  Serial.printf("Ready! Open http://%s.local in your browser\n", device_id);
 }
 
 void loop(void) {

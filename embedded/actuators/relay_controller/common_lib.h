@@ -64,6 +64,9 @@ void connect_to_wifi()
   {
     delay(1000 * 30);
   }
+
+  startMDNS();
+  set_expected_line_state();
 }
 
 void check_wifi_conn()
@@ -254,4 +257,17 @@ bool set_expected_line_state()
 
     delay(delay_between_requests);
   }
+}
+
+void startMDNS()
+{
+  /*use mdns for device_id name resolution*/
+  if (!MDNS.begin(device_id, WiFi.localIP())) {
+    Serial.println("Error setting up MDNS responder!");
+    return;
+  }
+
+  Serial.println("mDNS responder started");
+  MDNS.addService("http", "tcp", 80);
+  Serial.printf("Ready! Open http://%s.local in your browser\n", device_id);
 }

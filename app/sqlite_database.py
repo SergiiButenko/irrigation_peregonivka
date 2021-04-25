@@ -173,13 +173,6 @@ QUERY["setup_sensors_datalogger"] = (
     "ORDER BY l.number"
 )
 
-QUERY["setup_lines_datalogger"] = (
-    "SELECT l.number, l.moisture_id "
-    "FROM lines AS l "
-    "WHERE l.moisture_id is not NULL "
-    "ORDER BY l.number"
-)
-
 QUERY["setup_lines_greenlines"] = (
     "SELECT l.number, l.base_url " "FROM lines AS l " "ORDER BY l.number"
 )
@@ -221,9 +214,6 @@ QUERY["get_app_settings"] = "SELECT short_name, json_value from settings"
 QUERY[
     "set_app_settings"
 ] = 'update settings set json_value="{0}" where short_name = {1}'
-
-QUERY["migrate_data"] = "select * from temperature"
-QUERY["migrate_data_insert"] = "select * from temperature"
 
 QUERY[
     "stop_filling"

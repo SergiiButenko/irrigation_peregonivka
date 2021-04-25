@@ -17,7 +17,6 @@ logging.basicConfig(
 )
 
 SENSORS = {}
-LINES = {}
 
 
 def setup_sensors_datalogger():
@@ -33,23 +32,6 @@ def setup_sensors_datalogger():
     except Exception as e:
         logging.error(
             "Exceprion occured when trying to get settings for all sensors. {0}".format(
-                e
-            )
-        )
-
-
-def setup_lines_datalogger():
-    try:
-        lines = database.select(database.QUERY[mn()])
-        for row in lines:
-            key = row[0]
-
-            LINES[key] = {"id": row[0], "moisture_id": row[1]}
-
-        logging.info(LINES)
-    except Exception as e:
-        logging.error(
-            "Exceprion occured when trying to get settings for all branches. {0}".format(
                 e
             )
         )
@@ -91,17 +73,10 @@ def temp_sensors():
             )
 
 
-def migrate_data():
-    database.select(database.QUERY[mn()])
-
-    database.update(database.QUERY[mn() + "_insert"])
-
-
 if __name__ == "__main__":
     while 1:
         logging.info("Start")
         setup_sensors_datalogger()
-        setup_lines_datalogger()
         remote_controller.setup_lines_remote_control()
         try:
             temp_sensors()
