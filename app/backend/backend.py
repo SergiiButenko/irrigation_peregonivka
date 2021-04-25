@@ -879,11 +879,9 @@ def greenhouse_status():
         abort(500)
 
 
-@app.route("/devices/<str:device_id>/", methods=["GET"])
+@app.route("/devices/<string:device_id>/", methods=["GET"])
 def device_status(device_id):
     """Returns device expected state."""
-    RULE_TO_STOP = 2
-    RULE_TO_START = 1
     LINE_ON = 1
     LINE_OFF = 0
 
@@ -896,10 +894,10 @@ def device_status(device_id):
         if next_rule is None:
             expected_state = LINE_OFF
         # if there is a rule to stop - device shall be turned on
-        elif next_rule['rule_id'] == RULE_TO_STOP:
+        elif next_rule['rule_id'] == config.STOP_RULE:
             expected_state = LINE_ON
         # if there is a rule to start - device shall be turned off
-        elif next_rule['rule_id'] == RULE_TO_START:
+        elif next_rule['rule_id'] == config.START_RULE:
             expected_state = LINE_OFF
         else:
             # in any other situation - turn off
