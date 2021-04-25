@@ -16,7 +16,7 @@ from helpers import *
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
     datefmt="%m/%d/%Y %I:%M:%S %p",
-    level=logging.INFO
+    level=logging.DEBUG
 )
 
 LINES = {}
@@ -62,6 +62,7 @@ def setup_lines_remote_control():
                 "linked_device_url": row[8],
                 "pump_enabled": row[9],
                 "pump_pin": row[10],
+                "device_id": row[11],
                 "state": -1,
             }
 

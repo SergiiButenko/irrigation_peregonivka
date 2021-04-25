@@ -162,7 +162,7 @@ QUERY["get_settings"] = (
 QUERY["setup_lines_remote_control"] = (
     "SELECT l.number, l.relay_num, l.is_pump, "
     "l.group_id, l.name, lg.name, l.base_url, l.linked_device_id, l.linked_device_url, l.pump_enabled, "
-    "l.pump_pin "
+    "l.pump_pin, l.device_id"
     "FROM lines AS l, line_groups as lg WHERE l.group_id = lg.id ORDER BY l.number"
 )
 
