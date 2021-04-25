@@ -83,6 +83,8 @@ services:
             dockerfile: ./device_discovery/Dockerfile
         container_name: device_discovery
         command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8020", "device_discovery.device_discovery:app"]
+        volumes:
+            - db-data:/var/sqlite_db/
         expose: 
             - 8020
         restart: on-failure

@@ -24,7 +24,9 @@ LINES = {}
 
 def get_device_IP_by_line_id(line_id):
     device_id = database.get_device_id_by_line_id(line_id)
+    logging.info(f"device_id: {device_id}")
     device = database.get_device_ip(device_id)
+    logging.info(f"device: {device}")
     
     if device['last_known_ip'] is None:
         raise ValueError(
