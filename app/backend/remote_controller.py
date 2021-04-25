@@ -10,7 +10,6 @@ from helpers import convert_to_datetime
 import requests
 
 import sqlite_database as database
-from helpers import *
 
 
 logging.basicConfig(
