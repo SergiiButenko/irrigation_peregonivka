@@ -19,7 +19,7 @@ from irrigation_helpers import convert_to_datetime, convert_to_obj, date_handler
 
 from backend import config, remote_controller
 
-eventlet.monkey_patch()
+# eventlet.monkey_patch()
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
     datefmt="%m/%d/%Y %I:%M:%S %p",
