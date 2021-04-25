@@ -79,7 +79,7 @@ def on(line_id):
     """Set pin to high state."""
     try:
         relay = LINES[line_id]["relay_num"]
-        base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
+        base_url = get_device_IP_by_line_id(line_id)
         response_on = requests.get(
             url="http://" + base_url + "/on",
             params={"relay": relay}
@@ -101,7 +101,7 @@ def off(line_id):
     """Set pin to low state."""
     try:
         relay = LINES[line_id]["relay_num"]
-        base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
+        base_url = get_device_IP_by_line_id(line_id)
         response_off = requests.get(
             url="http://" + base_url + "/off",
             params={"relay": relay}
@@ -122,7 +122,7 @@ def off(line_id):
 def air_s(line_id):
     for attempt in range(2):
         try:
-            base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
+            base_url = get_device_IP_by_line_id(line_id)
             response_air = requests.get(
                 url="http://" + base_url + "/air_temperature",
 
@@ -147,7 +147,7 @@ def air_s(line_id):
 def ground_s(line_id):
     for attempt in range(2):
         try:
-            base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
+            base_url = get_device_IP_by_line_id(line_id)
             response_air = requests.get(
                 url="http://" + base_url + "/ground_temperature",
 
@@ -242,7 +242,7 @@ def line_status(line_id):
     r_dict = {}
 
     try:
-        base_url = get_device_IP_by_line_id(LINES[line_id]["base_url"])
+        base_url = get_device_IP_by_line_id(line_id)
         relay = LINES[line_id]["relay_num"]
 
         response = requests.get(
@@ -270,8 +270,7 @@ def check_tank_status(line_id):
 
     try:
         device_id = LINES[line_id]["device_id"]
-        linked_device_url = get_device_IP_by_line_id(
-            LINES[line_id]["linked_device_url"])
+        linked_device_url = LINES[line_id]["linked_device_url"]
 
         response = requests.get(
             url="http://" + linked_device_url
