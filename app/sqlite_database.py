@@ -7,7 +7,7 @@ from collections import OrderedDict
 from itertools import groupby
 from operator import itemgetter
 
-from helpers import convert_to_datetime, mn
+from irrigation_helpers import convert_to_datetime, mn
 # from redis_provider import *
 RAIN_HOURS = 12
 TEMP_HOURS = 12

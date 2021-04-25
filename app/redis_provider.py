@@ -3,7 +3,7 @@ import logging
 import datetime
 
 import redis
-from helpers import date_hook, date_handler, convert_to_datetime
+from irrigation_helpers import date_hook, date_handler, convert_to_datetime
 
 redis_db = redis.Redis(host="redis", port=6379, db=0)
 

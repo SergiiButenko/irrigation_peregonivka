@@ -6,7 +6,7 @@ import time
 from flask import Flask, request, abort
 
 import telebot as telebot_alias
-from helpers import *
+from irrigation_helpers import *
 from bots.telegram import config 
 
 logging.basicConfig(
