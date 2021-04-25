@@ -124,7 +124,6 @@ def air_s(line_id):
             base_url = get_device_IP_by_line_id(line_id)
             response_air = requests.get(
                 url="http://" + base_url + "/air_temperature",
-
             )
             response_air.raise_for_status()
 
@@ -149,7 +148,6 @@ def ground_s(line_id):
             base_url = get_device_IP_by_line_id(line_id)
             response_air = requests.get(
                 url="http://" + base_url + "/ground_temperature",
-
             )
             response_air.raise_for_status()
 
@@ -245,8 +243,7 @@ def line_status(line_id):
         relay = LINES[line_id]["relay_num"]
 
         response = requests.get(
-            url="http://" + base_url + "/status",
-            timeout=5
+            url="http://" + base_url + "/status"
         )
         response.raise_for_status()
 
