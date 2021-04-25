@@ -94,11 +94,6 @@ services:
         container_name: sensor_data_collector
         environment:
             RESTART_INTERVAL_MIN: 15
-            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
-            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
-            TANK_NOTIFICATION_MINUTES: $TANK_NOTIFICATION_MINUTES
-            CESSTOOL_NOTIFICATION_MINUTES: $CESSTOOL_NOTIFICATION_MINUTES
-            ACTIVE_IP_INTERVAL_MINUTES: 720
         command: [ "python", "-m", "sensor_data_collector.data_logger"]
         volumes:
             - db-data:/var/sqlite_db/

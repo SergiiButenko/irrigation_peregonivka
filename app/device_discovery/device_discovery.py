@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from flask import Flask, jsonify, request
-from database import set_device_ip
+import sqlite_database as database
 
 
 logging.basicConfig(
@@ -30,6 +30,6 @@ def device_discovery():
         return jsonify(message="No IP in headers. rejected"), 400
 
     logging.info(f"Registering IP in database. {device_id}:{device_ip}")
-    set_device_ip(device_id, device_ip)
+    database.set_device_ip(device_id, device_ip)
     return jsonify(message="confirmed")
 

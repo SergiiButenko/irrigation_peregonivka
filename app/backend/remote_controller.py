@@ -4,7 +4,7 @@ import json
 import logging
 import time
 from datetime import datetime
-from backend import config
+from backend.config import ACTIVE_IP_INTERVAL_MINUTES
 from helpers import convert_to_datetime
 
 import requests
@@ -31,7 +31,7 @@ def get_device_IP_by_line_id(line_id):
             f"No IP found for device id:line_id '{device_id}:{line_id}'")
 
     _updated = convert_to_datetime(device['updated'])
-    if _updated + datetime.timedelta(minutes=config.ACTIVE_IP_INTERVAL_MINUTES) > datetime.now():
+    if _updated + datetime.timedelta(minutes=ACTIVE_IP_INTERVAL_MINUTES) > datetime.now():
         raise Exception(
             f"IP '{device['last_known_ip']}' is outdated for device id:line_id '{device_id}:{line_id}'")
 
