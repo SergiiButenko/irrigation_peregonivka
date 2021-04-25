@@ -538,15 +538,15 @@ def set_device_ip(device_id, device_ip):
 
 
 def get_device_ip(device_id):
-    query = f"SELECT last_known_ip, updated FROM devices WHERE id = '{device_id}'"
+    query = f"SELECT last_known_ip, updated FROM devices WHERE device_id = '{device_id}'"
 
     res = select(query, "fetchone")
     if res is None:
         return None
 
     return dict(
-        last_known_ip=res[0][0],
-        updated=res[0][1]
+        last_known_ip=res[0],
+        updated=res[1]
     )
 
     
