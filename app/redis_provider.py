@@ -62,4 +62,5 @@ def set_time_last_notification(key, date=datetime.datetime.now()):
 
 
 def flush_on_start():
+    redis_db.echo()
     redis_db.flushdb()
