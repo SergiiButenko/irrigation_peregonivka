@@ -21,7 +21,6 @@ logging.basicConfig(
 )
 
 SENSORS = {}
-LINES = {}
 APP_SETTINGS = {}
 TEMP_MIN = None
 TEMP_MAX = None
@@ -36,29 +35,12 @@ def setup_sensors_datalogger():
         for row in lines:
             key = row[0]
 
-            SENSORS[key] = {"id": row[0], "type": row[1], "base_url": row[2]}
+            SENSORS[key] = {"id": row[0], "type": row[1]}
 
         logging.info(SENSORS)
     except Exception as e:
         logging.error(
             "Exceprion occured when trying to get settings for all sensors. {0}".format(
-                e
-            )
-        )
-
-
-def setup_lines_greenlines():
-    try:
-        lines = database.select(database.QUERY[mn()])
-        for row in lines:
-            key = row[0]
-
-            LINES[key] = {"id": row[0], "base_url": row[1]}
-
-        logging.info(LINES)
-    except Exception as e:
-        logging.error(
-            "Exceprion occured when trying to get settings for all branches. {0}".format(
                 e
             )
         )
@@ -274,7 +256,6 @@ if __name__ == "__main__":
         logging.info("Start")
         remote_controller.setup_lines_remote_control()
         setup_sensors_datalogger()
-        setup_lines_greenlines()
         setup_app_settings()
         if SERVICE_ENABLED:
             enable_rule()
