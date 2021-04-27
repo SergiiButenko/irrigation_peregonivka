@@ -6,7 +6,7 @@ import time
 
 import requests
 
-from scheduler import config
+from notificator import config
 from backend import remote_controller
 
 logging.basicConfig(
