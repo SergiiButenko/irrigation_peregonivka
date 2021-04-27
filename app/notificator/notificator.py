@@ -5,7 +5,6 @@ import logging
 import time
 
 import requests
-import schedule
 
 from scheduler import config
 from backend import remote_controller
