@@ -10,7 +10,11 @@ var settings = {};
 $(document).ready(function() {
     var socket = io.connect(server, {
         'sync disconnect on unload': true,
-        'secure': true
+        'secure': true,
+        cors: {
+            origin: server,
+            methods: ["GET", "POST"]
+          }
     });
 
     socket.on('disconnect', function(data) {

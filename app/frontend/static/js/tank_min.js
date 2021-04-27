@@ -10,8 +10,13 @@ var devices = {};
 $(document).ready(function() {
     var socket = io.connect(server, {
         'sync disconnect on unload': true,
-        'secure': true
+        'secure': true,
+        cors: {
+            origin: server,
+            methods: ["GET", "POST"]
+          }
     });
+    
     socket.on('connect', function() {
         console.log("connected to websocket");
     });
