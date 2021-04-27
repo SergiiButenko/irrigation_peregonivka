@@ -83,7 +83,7 @@ def check_conditions():
     APP_SETTINGS = r.json()['data']
     LOGGER.info(str(APP_SETTINGS))
 
-    air_sensor = [line for line in LINES.items() if line['line_type'] == "air_sensor"]
+    air_sensor = [line for line in LINES.values() if line['line_type'] == "air_sensor"]
     if len(air_sensor) == 0:
         raise ValueError("No air_sensor found")
     elif len(air_sensor) >= 2:
