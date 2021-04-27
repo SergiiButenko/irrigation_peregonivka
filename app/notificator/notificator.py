@@ -83,11 +83,16 @@ def check_conditions():
     APP_SETTINGS = r.json()['data']
     LOGGER.info(str(APP_SETTINGS))
 
-    for line_id, line in LINES.items():
-        if line["type"] == "air_sensor":
-            response = remote_controller.air_sensor(line_id)
-            current_temp = response[line_id]["air_temp"]
-            logging.info("Air temp: {0}".format(current_temp))
+    air_sensor = [line for line in LINES.items() if line['line_type'] == "air_sensor"]
+    if len(air_sensor) == 0:
+        raise ValueError("No air_sensor found")
+    elif len(air_sensor) >= 2:
+        raise ValueError("More than 2 air sensors")
+
+    line_id = air_sensor[0]['branch_id']
+    response = remote_controller.air_sensor(line_id)
+    current_temp = response[line_id]["air_temp"]
+    logging.info("Air temp: {0}".format(current_temp))
 
     TEMP_MAX = APP_SETTINGS["temp_min_max"]["max_alert"]
     TEMP_MIN = APP_SETTINGS["temp_min_max"]["min_alert"]
