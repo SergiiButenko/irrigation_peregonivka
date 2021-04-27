@@ -162,6 +162,10 @@ services:
         volumes:
             - db-data:/var/sqlite_db/
         restart: on-failure
+        depends_on:
+            - redis
+            - backend
+            - messenger_bot
         networks:
             - irrigation 
         
