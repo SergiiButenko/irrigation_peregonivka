@@ -91,11 +91,11 @@ def check_conditions():
 
     line_id = air_sensor[0]['branch_id']
     response = remote_controller.air_sensor(line_id)
-    current_temp = response[line_id]["air_temp"]
+    current_temp = float(response[line_id]["air_temp"])
     logging.info("Air temp: {0}".format(current_temp))
 
-    TEMP_MAX = APP_SETTINGS["temp_min_max"]["max_alert"]
-    TEMP_MIN = APP_SETTINGS["temp_min_max"]["min_alert"]
+    TEMP_MAX = float(APP_SETTINGS["temp_min_max"]["max_alert"])
+    TEMP_MIN = float(APP_SETTINGS["temp_min_max"]["min_alert"])
     if current_temp >= TEMP_MAX:
         logging.warn(
             f"Current temperature: {current_temp}. above MAX point: {TEMP_MAX}. Sending message"
