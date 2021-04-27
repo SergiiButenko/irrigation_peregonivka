@@ -9,7 +9,7 @@ import requests
 
 from notificator import config
 from backend import remote_controller
-import redis_provider
+from redis_provider import get_time_last_notification, set_time_last_notification
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
@@ -51,10 +51,10 @@ def try_notify(message, key, timeout):
 
 
 def should_be_notified(key, timeout):
-    last_time_sent = redis_provider.get_time_last_notification(key=key)
+    last_time_sent = get_time_last_notification(key=key)
     
     if last_time_sent is None:
-        redis_provider.set_time_last_notification(key=key, date=datetime.now())
+        set_time_last_notification(key=key, date=datetime.now())
         return True
         
     delta = datetime.now() - last_time_sent
