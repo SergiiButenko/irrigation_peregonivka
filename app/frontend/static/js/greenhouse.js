@@ -200,11 +200,17 @@ $(document).ready(function() {
 
     $(".save-greenhouse_settings").click(function() {
         var min = $('#greenhouse_min_temp').val();
-        var max = $('#greenhouse_max_temp').val();
+        var max = $('#greenhouse_min_temp').val();
+        var min_alert = $('#greenhouse_min_temp').val();
+        var max_alert = $('#greenhouse_max_temp').val();
 
-        console.log("MIN:" + min + "; MAX:" + max);
         var json = {
-            'list': { 'temp_min_max': { 'min': min, 'max': max } }
+            'list': { 'temp_min_max': {
+                'min': min,
+                'max': max,
+                'min_alert': min_alert,
+                'max_alert': max_alert
+            } }
         }
         $.ajax({
             url: API_ENDPOINT + '/set_settings',

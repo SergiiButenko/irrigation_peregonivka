@@ -263,5 +263,5 @@ if __name__ == "__main__":
         else: 
             logging.info("Service is disabled. Please enable it")
         
-        logging.info("Sleeping for {} minutes".format(config.RESTART_INTERVAL_MIN / 60))
+        logging.info("Sleeping for {} minutes".format(config.RESTART_INTERVAL_MIN))
         time.sleep(config.RESTART_INTERVAL_MIN)
