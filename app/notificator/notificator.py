@@ -3,11 +3,13 @@
 import functools
 import logging
 import time
+from datetime import datetime
 
 import requests
 
 from notificator import config
 from backend import remote_controller
+import redis_provider
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
@@ -29,8 +31,11 @@ def with_logging(func):
     return wrapper
 
 
-@with_logging
-def notify(message):
+def try_notify(message, key, timeout):
+    if should_be_notified(key, timeout) is False:
+        logging.info("Timeout is not reached")
+        return
+
     message = {
         "users": config.USERS,
         "message": message
@@ -43,6 +48,20 @@ def notify(message):
         verify=False,
     )
     r.raise_for_status()
+
+
+def should_be_notified(key, timeout):
+    last_time_sent = redis_provider.get_time_last_notification(key=key)
+    
+    if last_time_sent is None:
+        redis_provider.set_time_last_notification(key=key, date=datetime.now())
+        return True
+        
+    delta = datetime.now() - last_time_sent
+    if delta.seconds > 60 * timeout:
+        return True
+
+    return False
 
 @with_logging
 def check_conditions():
@@ -75,21 +94,23 @@ def check_conditions():
     TEMP_MIN = APP_SETTINGS["temp_min_max"]["min_alert"]
     if current_temp >= TEMP_MAX:
         logging.warn(
-            "Current temperature: {0}. above MAX point: {2}. Sending message".format(
-                current_temp, TEMP_MAX
+            f"Current temperature: {current_temp}. above MAX point: {TEMP_MAX}. Sending message"
             )
-        )
+        key = "max_alert"
+        message = f"Зверніть увагу. Температура в теплиці {current_temp} градусів"
+        timeout = config.TIMEOUT_GRENHOUSE_TEMP_MAX
+        try_notify(message, key, timeout)
     elif current_temp <= TEMP_MIN:
         logging.warn(
-            "Current temperature: {0}. below MIN point: {2}. Sending message".format(
-                current_temp, TEMP_MIN
-            )
+            f"Current temperature: {current_temp}. below MIN point: {TEMP_MIN}. Sending message"
         )
+        key = "max_alert"
+        message = f"Зверніть увагу. Температура в теплиці {current_temp} градусів"
+        timeout = config.TIMEOUT_GRENHOUSE_TEMP_MIN
+        try_notify(message, key, timeout)
     else:
         logging.info(
-            "Current temperature: {0}. Between MIN point: {1} and MAX point: {2}. No action required".format(
-                current_temp, TEMP_MIN, TEMP_MAX
-            )
+            f"Current temperature: {current_temp}. Between MIN point: {TEMP_MIN} and MAX point: {TEMP_MAX}. No action required"
         )
 
 
