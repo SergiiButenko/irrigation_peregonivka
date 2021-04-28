@@ -1579,10 +1579,10 @@ BRANCHES_SETTINGS, APP_SETTINGS = database.get_settings()
 logging.info("Initialize lines marked with base_url in database")
 remote_controller.setup_lines_remote_control()
 # Flush keys in redis in order to keep it updated on start in case power failure
-logging.info(
-    "Flush keys in redis in order to keep it updated on start in case power failure"
-)
-redis_provider.flush_on_start()
+# logging.info(
+#     "Flush keys in redis in order to keep it updated on start in case power failure"
+# )
+# redis_provider.flush_on_start()
 logging.info("Fill redis database with rules")
 update_all_rules()
 logging.info("Staring app")

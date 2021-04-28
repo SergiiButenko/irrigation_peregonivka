@@ -12,7 +12,7 @@ from bots.telegram import config
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
     datefmt="%m/%d/%Y %I:%M:%S %p",
-    level=logging.DEBUG,
+    level=logging.INFO,
 )
 
 
