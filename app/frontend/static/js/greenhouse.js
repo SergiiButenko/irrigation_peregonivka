@@ -203,7 +203,7 @@ $(document).ready(function() {
 
     $(".save-greenhouse_settings").click(function() {
         var min = $('#greenhouse_min_temp').val();
-        var max = $('#greenhouse_min_temp').val();
+        var max = $('#greenhouse_max_temp').val();
         var min_alert = $('#greenhouse_min_temp_alert').val();
         var max_alert = $('#greenhouse_max_temp_alert').val();
 

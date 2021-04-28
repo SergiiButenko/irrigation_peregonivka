@@ -19,8 +19,6 @@ services:
             - redis
             - backend
         restart: on-failure
-        networks:
-            - irrigation 
 
     backend:
         build:
@@ -40,8 +38,6 @@ services:
         depends_on:
             - redis
         restart: on-failure
-        networks:
-            - irrigation 
 
     greenhouse:
         build:
@@ -60,8 +56,6 @@ services:
             - redis
             - backend
         restart: on-failure
-        networks:
-            - irrigation 
 
     scheduler:
         build:
@@ -81,8 +75,6 @@ services:
             - backend
             - messenger_bot
         restart: on-failure
-        networks:
-            - irrigation 
 
     device_discovery:
         build:
@@ -95,8 +87,6 @@ services:
         expose: 
             - 8020
         restart: on-failure
-        networks:
-            - irrigation 
 
     sensor_data_collector:
         build:
@@ -109,8 +99,6 @@ services:
         volumes:
             - db-data:/var/sqlite_db/
         restart: on-failure
-        networks:
-            - irrigation 
 
     state_machine:
         build:
@@ -128,8 +116,6 @@ services:
             - redis
             - backend
         restart: on-failure
-        networks:
-            - irrigation 
 
     messenger_bot:
         build:
@@ -143,8 +129,6 @@ services:
             API_TOKEN_MOZART: $API_TOKEN_MOZART
             WEBHOOK_URL_BASE_PUBLIC: $WEBHOOK_URL_BASE_PUBLIC
         restart: on-failure
-        networks:
-            - irrigation 
 
     notificator:
         build:
@@ -166,22 +150,18 @@ services:
             - redis
             - backend
             - messenger_bot
-        networks:
-            - irrigation 
         
     redis:
         image: "redis:alpine"
         container_name: redis
         command: ["redis-server", "--appendonly", "yes", "--bind", "redis", "--port", "6379"]
-        ports:
-            - 6379:6379
+        expose:
+            - 6379
         volumes:
             - redis-data:/data
         environment:
             - REDIS_REPLICATION_MODE=master
         restart: on-failure
-        networks:
-            - irrigation 
 
     nginx:
         image: nginx:alpine
@@ -205,8 +185,6 @@ services:
             - messenger_bot
             - device_discovery
         restart: on-failure
-        networks:
-            - irrigation 
     
     database:
         build:
@@ -220,8 +198,6 @@ services:
         volumes:
             - db-data:/var/sqlite_db/
         restart: on-failure
-        networks:
-            - irrigation 
 
 volumes:
     redis-data:
@@ -231,7 +207,3 @@ volumes:
             type: "none"
             o: "bind"
             device: "/var/sqlite_db/"
-
-networks:
-  irrigation:
-    driver: bridge

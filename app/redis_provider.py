@@ -5,7 +5,8 @@ import datetime
 import redis
 from irrigation_helpers import date_hook, date_handler, convert_to_datetime
 
-redis_db = redis.Redis(host="192.168.71.113", port=6379, db=0)
+# redis_db = redis.Redis(host="192.168.71.113", port=6379, db=0)
+redis_db = redis.Redis(host="redis", port=6379, db=0)
 
 
 def set_next_rule_to_redis(branch_id, data):
