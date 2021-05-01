@@ -112,6 +112,9 @@ def check_conditions():
     outer_current_temp = float(response[line_id]["ground_temp"])
     logging.info("Outer Air temp: {0}".format(outer_current_temp))
 
+    _line_status = remote_controller.line_status(line_id=config.HEAT_ID)
+    heat_on = int(_line_status[config.HEAT_ID]["state"]) == 1
+
     if inner_current_temp >= TEMP_MAX:
         logging.warn(
             f"Current temperature: {inner_current_temp}. above MAX point: {TEMP_MAX}. Sending message"
@@ -122,12 +125,12 @@ def check_conditions():
         try_notify(message, key, timeout)
     
     _temp_delta = round(inner_current_temp - outer_current_temp) 
-    if _temp_delta > TEMP_DELTA:
+    if heat_on is True and _temp_delta > TEMP_DELTA:
         logging.warn(
             f"Current delta: {_temp_delta}. below TEMP_DELTA point: {TEMP_DELTA}. Sending message"
         )
         key = "delta_alert"
-        message = f"Зверніть увагу. Різниця між температурою повітря та в теплиці {_temp_delta} градусів"
+        message = f"Зверніть увагу. Підігрів увімкнено, проте різниця температур повітря та теплиці {_temp_delta} градусів"
         timeout = config.TIMEOUT_GRENHOUSE
         try_notify(message, key, timeout)
     
