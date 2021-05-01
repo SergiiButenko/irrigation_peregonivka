@@ -68,7 +68,7 @@ def should_be_notified(key, timeout):
 
 def get_sensor(lines, sensor_type):
     sensor = [line for line in lines.values() if line['line_type']
-                                            == sensor_type]
+              == sensor_type]
     if len(sensor) == 0:
         raise ValueError(f"No {sensor_type} found")
     elif len(sensor) >= 2:
@@ -105,43 +105,43 @@ def check_conditions():
     line_id = inner_air_sensor[0]['branch_id']
     response = air_sensor(line_id)
     inner_current_temp = float(response[line_id]["air_temp"])
-    logging.info(f"Inner Air temp: {inner_current_temp}"
+    logging.info(f"Inner Air temp: {inner_current_temp}")
 
-    line_id=outer_air_sensor[0]['branch_id']
-    response=ground_sensor(line_id)
-    outer_current_temp=float(response[line_id]["ground_temp"])
+    line_id = outer_air_sensor[0]['branch_id']
+    response = ground_sensor(line_id)
+    outer_current_temp = float(response[line_id]["ground_temp"])
     logging.info(f"Outer Air temp: {outer_current_temp}")
 
-    _line_status=line_status(line_id=config.HEAT_ID)
-    heat_on=int(_line_status[config.HEAT_ID]["state"]) == 1
+    _line_status = line_status(line_id=config.HEAT_ID)
+    heat_on = int(_line_status[config.HEAT_ID]["state"]) == 1
     logging.info(f"Is heat on: {heat_on}")
 
     if inner_current_temp >= TEMP_MAX:
         logging.warn(
             f"Current temperature: {inner_current_temp}. above MAX point: {TEMP_MAX}. Sending message"
-            )
-        key="max_alert"
-        message=f"Зверніть увагу. Температура в теплиці {inner_current_temp} градусів"
-        timeout=config.TIMEOUT_GRENHOUSE
+        )
+        key = "max_alert"
+        message = f"Зверніть увагу. Температура в теплиці {inner_current_temp} градусів"
+        timeout = config.TIMEOUT_GRENHOUSE
         try_notify(message, key, timeout)
 
-    _temp_delta=round(inner_current_temp - outer_current_temp)
+    _temp_delta = round(inner_current_temp - outer_current_temp)
     if heat_on is True and _temp_delta > TEMP_DELTA:
         logging.warn(
             f"Current delta: {_temp_delta}. below TEMP_DELTA point: {TEMP_DELTA}. Sending message"
         )
-        key="delta_alert"
-        message=f"Зверніть увагу. Підігрів увімкнено, проте різниця температур повітря та теплиці {_temp_delta} градусів"
-        timeout=config.TIMEOUT_GRENHOUSE
+        key = "delta_alert"
+        message = f"Зверніть увагу. Підігрів увімкнено, проте різниця температур повітря та теплиці {_temp_delta} градусів"
+        timeout = config.TIMEOUT_GRENHOUSE
         try_notify(message, key, timeout)
 
     if inner_current_temp <= outer_current_temp:
         logging.warn(
             f"inner_current_temp:{inner_current_temp} < outer_current_temp:{outer_current_temp}. Sending message"
         )
-        key="below_outer_alert"
-        message=f"Зверніть увагу. Температура повітря в теплиці({inner_current_temp}) нижча температури повітря({outer_current_temp}). "
-        timeout=config.TIMEOUT_GRENHOUSE
+        key = "below_outer_alert"
+        message = f"Зверніть увагу. Температура повітря в теплиці({inner_current_temp}) нижча температури повітря({outer_current_temp}). "
+        timeout = config.TIMEOUT_GRENHOUSE
         try_notify(message, key, timeout)
 
 
