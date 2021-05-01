@@ -101,7 +101,7 @@ def check_conditions():
     outer_air_sensor = get_sensor(LINES, "ground_sensor")
 
     line_id = inner_air_sensor[0]['branch_id']
-    response = remote_controller.inner_air_sensor(line_id)
+    response = remote_controller.air_sensor(line_id)
     inner_current_temp = float(response[line_id]["air_temp"])
     logging.info("Inner Air temp: {0}".format(inner_current_temp))
 
