@@ -887,9 +887,10 @@ def device_status(device_id):
     LINE_OFF = 0
 
     lines = database.get_device_lines(device_id)
-
+    logging.info(lines)
     expected_states = []
     for line in lines:
+        logging.info(line[0])
         line_id = line[0]
         next_rule = database.get_next_active_rule(line_id)
         # in case no rule - turn off
