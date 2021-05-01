@@ -551,6 +551,6 @@ def get_device_ip(device_id):
 
     
 def get_device_lines(device_id):
-    query = f"SELECT * FROM lines WHERE device_id = '{device_id}'"
+    query = f"SELECT id FROM lines WHERE device_id = '{device_id}'"
 
     return select(query, "fetchall")

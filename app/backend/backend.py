@@ -889,7 +889,8 @@ def device_status(device_id):
     lines = database.get_device_lines(device_id)
 
     expected_states = []
-    for line_id in lines:
+    for line in lines:
+        line_id = line[0]
         next_rule = database.get_next_active_rule(line_id)
         # in case no rule - turn off
         if next_rule is None:
