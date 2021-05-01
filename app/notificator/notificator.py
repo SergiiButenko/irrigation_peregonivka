@@ -65,6 +65,17 @@ def should_be_notified(key, timeout):
     logging.info(f"Seconds not passed {delta.seconds}. Rejected")
     return False
 
+
+def get_sensor(lines, sensor_type):
+    sensor = [line for line in lines.values() if line['line_type'] == sensor_type]
+    if len(sensor) == 0:
+        raise ValueError(f"No {sensor_type} found")
+    elif len(sensor) >= 2:
+        raise ValueError(f"More than 2 {sensor_type} sensors")
+
+    return sensor
+
+
 @with_logging
 def check_conditions():
     r = requests.get(
@@ -86,38 +97,40 @@ def check_conditions():
     APP_SETTINGS = r.json()['data']
     LOGGER.info(str(APP_SETTINGS))
 
-    air_sensor = [line for line in LINES.values() if line['line_type'] == "air_sensor"]
-    if len(air_sensor) == 0:
-        raise ValueError("No air_sensor found")
-    elif len(air_sensor) >= 2:
-        raise ValueError("More than 2 air sensors")
+    inner_air_sensor = get_sensor(LINES, "air_sensor")
+    outer_air_sensor = get_sensor(LINES, "ground_sensor")
 
-    line_id = air_sensor[0]['branch_id']
-    response = remote_controller.air_sensor(line_id)
-    current_temp = float(response[line_id]["air_temp"])
-    logging.info("Air temp: {0}".format(current_temp))
+    line_id = inner_air_sensor[0]['branch_id']
+    response = remote_controller.inner_air_sensor(line_id)
+    inner_current_temp = float(response[line_id]["air_temp"])
+    logging.info("Inner Air temp: {0}".format(inner_current_temp))
+
+    line_id = outer_air_sensor[0]['branch_id']
+    response = remote_controller.ground_sensor(line_id)
+    outer_current_temp = float(response[line_id]["ground_temp"])
+    logging.info("Outer Air temp: {0}".format(outer_current_temp))
 
     TEMP_MAX = float(APP_SETTINGS["temp_min_max"]["max_alert"])
     TEMP_MIN = float(APP_SETTINGS["temp_min_max"]["min_alert"])
-    if current_temp >= TEMP_MAX:
+    if inner_current_temp >= TEMP_MAX:
         logging.warn(
-            f"Current temperature: {current_temp}. above MAX point: {TEMP_MAX}. Sending message"
+            f"Current temperature: {inner_current_temp}. above MAX point: {TEMP_MAX}. Sending message"
             )
         key = "max_alert"
-        message = f"Зверніть увагу. Температура в теплиці {current_temp} градусів"
+        message = f"Зверніть увагу. Температура в теплиці {inner_current_temp} градусів"
         timeout = config.TIMEOUT_GRENHOUSE_TEMP_MAX
         try_notify(message, key, timeout)
-    elif current_temp <= TEMP_MIN:
+    elif inner_current_temp <= TEMP_MIN:
         logging.warn(
-            f"Current temperature: {current_temp}. below MIN point: {TEMP_MIN}. Sending message"
+            f"Current temperature: {inner_current_temp}. below MIN point: {TEMP_MIN}. Sending message"
         )
         key = "max_alert"
-        message = f"Зверніть увагу. Температура в теплиці {current_temp} градусів"
+        message = f"Зверніть увагу. Температура в теплиці {inner_current_temp} градусів"
         timeout = config.TIMEOUT_GRENHOUSE_TEMP_MIN
         try_notify(message, key, timeout)
     else:
         logging.info(
-            f"Current temperature: {current_temp}. Between MIN point: {TEMP_MIN} and MAX point: {TEMP_MAX}. No action required"
+            f"Current temperature: {inner_current_temp}. Between MIN point: {TEMP_MIN} and MAX point: {TEMP_MAX}. No action required"
         )
 
 
