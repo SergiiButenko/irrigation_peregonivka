@@ -195,7 +195,7 @@ $(document).ready(function() {
         $('#greenhouse_min_temp').val(settings['temp_min_max']['min']);
         $('#greenhouse_max_temp').val(settings['temp_min_max']['max']);
 
-        $('#greenhouse_min_temp_alert').val(settings['temp_min_max']['min_alert']);
+        $('#greenhouse_delta_alert_alert').val(settings['temp_min_max']['delta_alert']);
         $('#greenhouse_max_temp_alert').val(settings['temp_min_max']['max_alert']);
 
         $('#greenhouse_settings_modal').modal('show');
@@ -204,14 +204,14 @@ $(document).ready(function() {
     $(".save-greenhouse_settings").click(function() {
         var min = $('#greenhouse_min_temp').val();
         var max = $('#greenhouse_max_temp').val();
-        var min_alert = $('#greenhouse_min_temp_alert').val();
+        var delta_alert = $('#greenhouse_delta_alert_alert').val();
         var max_alert = $('#greenhouse_max_temp_alert').val();
 
         var json = {
             'list': { 'temp_min_max': {
                 'min': min,
                 'max': max,
-                'min_alert': min_alert,
+                'delta_alert': delta_alert,
                 'max_alert': max_alert
             } }
         }
