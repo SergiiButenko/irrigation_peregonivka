@@ -126,7 +126,7 @@ def check_conditions():
         try_notify(message, key, timeout)
 
     _temp_delta = round(inner_current_temp - outer_current_temp)
-    if heat_on is True and _temp_delta > TEMP_DELTA:
+    if heat_on is True and _temp_delta <= TEMP_DELTA:
         logging.warn(
             f"Current delta: {_temp_delta}. below TEMP_DELTA point: {TEMP_DELTA}. Sending message"
         )
