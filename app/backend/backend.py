@@ -887,12 +887,10 @@ def device_status(device_id):
     LINE_OFF = 0
 
     lines = database.get_device_lines(device_id)
-    logging.info(lines)
     expected_states = []
     for line in lines:
-        logging.info(line[0])
-        line_id = line[0]
-        next_rule = database.get_next_active_rule(line_id)
+        _line_id = line[0]
+        next_rule = database.get_next_active_rule(_line_id)
         # in case no rule - turn off
         if next_rule is None:
             expected_state = LINE_OFF
@@ -908,12 +906,12 @@ def device_status(device_id):
             expected_state = LINE_OFF
 
         expected_states.append(dict(
-            line_id=BRANCHES_SETTINGS[line_id]['branch_id'],
-            relay_num=BRANCHES_SETTINGS[line_id]['relay_num'],
+            line_id=BRANCHES_SETTINGS[_line_id]['branch_id'],
+            relay_num=BRANCHES_SETTINGS[_line_id]['relay_num'],
             expected_state=expected_state
         ))
 
-    return jsonify(lines=lines)
+    return jsonify(lines=expected_states)
 
 
 def retry_branch_on(branch_id, time_min):
