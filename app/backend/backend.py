@@ -907,7 +907,7 @@ def device_status(device_id):
             expected_state = LINE_OFF
 
         expected_states.append(dict(
-            line_id=BRANCHES_SETTINGS[line_id]['id'],
+            line_id=BRANCHES_SETTINGS[line_id]['branch_id'],
             relay_num=BRANCHES_SETTINGS[line_id]['relay_num'],
             expected_state=expected_state
         ))

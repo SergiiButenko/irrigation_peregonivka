@@ -104,7 +104,7 @@ bool send_ping()
 
 bool set_expected_line_state()
 {
-  String req = host + String("/api/v1/devices/" + String(device_id));
+  String req = host + String("/api/v1/devices/" + String(device_id) + String("/"));
 
   int retry_limit = 5;
   int delay_between_requests = 1000;
