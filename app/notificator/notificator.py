@@ -105,15 +105,16 @@ def check_conditions():
     line_id = inner_air_sensor[0]['branch_id']
     response = remote_controller.air_sensor(line_id)
     inner_current_temp = float(response[line_id]["air_temp"])
-    logging.info("Inner Air temp: {0}".format(inner_current_temp))
+    logging.info(f"Inner Air temp: {inner_current_temp}"
 
     line_id = outer_air_sensor[0]['branch_id']
     response = remote_controller.ground_sensor(line_id)
     outer_current_temp = float(response[line_id]["ground_temp"])
-    logging.info("Outer Air temp: {0}".format(outer_current_temp))
+    logging.info(f"Outer Air temp: {outer_current_temp}")
 
     _line_status = remote_controller.line_status(line_id=config.HEAT_ID)
     heat_on = int(_line_status[config.HEAT_ID]["state"]) == 1
+    logging.info(f"Is heat on: {heat_on}")
 
     if inner_current_temp >= TEMP_MAX:
         logging.warn(
