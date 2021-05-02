@@ -22,10 +22,10 @@ DallasTemperature DS18B20(&oneWire);
 float getTemperature() {
   float tempC = 0;
   int i = 2;
-  for (int i=0; i<=30; i++){
-    DS18B20.requestTemperatures(); 
+  for (int i = 0; i <= 30; i++) {
+    DS18B20.requestTemperatures();
     tempC = DS18B20.getTempCByIndex(0);
-    if (tempC > (-127.0)){
+    if (tempC > (-127.0)) {
       return tempC;
     }
     delay(100);
@@ -40,14 +40,14 @@ void setup(void) {
     pinMode(relay_pins[i], OUTPUT);
     digitalWrite(relay_pins[i], 0);
   }
-  
+
   pinMode(DHTPIN, INPUT);
   dht.begin();
 
   Serial.begin(115200);
-  
+
   connect_to_wifi();
-  
+
   server.on("/status", send_status);
   server.on("/restart", restart_device);
   server.on("/test", test_system);
@@ -111,6 +111,7 @@ void setup(void) {
 
 void loop(void) {
   check_wifi_conn();
+  check_if_ping();
   server.handleClient();
   MDNS.update();
   delay(1);

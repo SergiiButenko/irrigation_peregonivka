@@ -12,9 +12,9 @@ void setup(void) {
   }
 
   Serial.begin(115200);
-  
+
   connect_to_wifi();
-  
+
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
@@ -69,6 +69,7 @@ void setup(void) {
 
 void loop(void) {
   check_wifi_conn();
+  check_if_ping();
   server.handleClient();
   MDNS.update();
   delay(1);

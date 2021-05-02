@@ -1,7 +1,6 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266mDNS.h>
-#include <ArduinoJson.h>
 
 byte GPIO_Pin = D6;
 int counter = 0;
@@ -11,7 +10,7 @@ int delay_for_counter_millis = 10;
 const char *host = "http://mozz.breeze.ua:9000";
 const char *serverIndex = "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>";
 
-String device_id = "upper_tank";
+const char *device_id = "upper_tank";
 const char *flash_version = "00-00.apr-20-2021";
 const char *ssid = "faza_2";
 const char *password = "Kobe_2016";
