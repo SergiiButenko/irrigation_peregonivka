@@ -5,9 +5,11 @@
 #include "DHT.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include "common_lib.h"
+
 
 #define DHTPIN D4     // what digital pin the DHT22 is conected to
-#define ONE_WIRE_BUS D1
+#define ONE_WIRE_BUS 5
 #define DHTTYPE DHT22   // there are multiple kinds of DHT sensors
 
 DHT dht(DHTPIN, DHTTYPE);
@@ -16,192 +18,6 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature DS18B20(&oneWire);
 
-//const char* ssid = "NotebookNet";
-//const char* password = "0660101327";
-const char* ssid = "faza_2";
-const char* password = "Kobe_2016";
-
-ESP8266WebServer server(80);
-
-const int l1 = D5;
-const int l2 = D6;
-const int r1 = D7;
-const int r2 = D8;
-
-void blink_connected() {
-  int l1_status = digitalRead(r1);
-  int l2_status = digitalRead(r2);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-  delay(100);
-  digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
-  delay(100);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-  delay(100);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-  delay(100);
-  digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
-  delay(100);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-  delay(100);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-  delay(100);
-  digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
-  delay(100);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-  digitalWrite(l1, l1_status);
-  digitalWrite(l2, l2_status);
-}
-
-
-void blink_led() {
-  int l1_status = digitalRead(r1);
-  int l2_status = digitalRead(r2);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-  delay(200);
-  digitalWrite(l1, 1);
-  digitalWrite(l2, 1);
-  delay(200);
-  digitalWrite(l1, l1_status);
-  digitalWrite(l2, l2_status);
-}
-
-
-void handleRoot() {
-  server.send(200, "text/plain", "hello from esp8266!");
-  blink_led();
-}
-
-void handleNotFound() {
-  String message = "File Not Found\n\n";
-  message += "URI: ";
-  message += server.uri();
-  message += "\nMethod: ";
-  message += (server.method() == HTTP_GET) ? "GET" : "POST";
-  message += "\nArguments: ";
-  message += server.args();
-  message += "\n";
-  for (uint8_t i = 0; i < server.args(); i++) {
-    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
-  }
-  server.send(404, "text/plain", message);
-  blink_led();
-}
-
-void setup(void) {
-  Serial.println("setup");
-  pinMode(r1, OUTPUT);
-  pinMode(r2, OUTPUT);
-  pinMode(l1, OUTPUT);
-  pinMode(l2, OUTPUT);
-
-  digitalWrite(r1, 0);
-  digitalWrite(r2, 0);
-  digitalWrite(l1, 0);
-  digitalWrite(l2, 0);
-
-  Serial.begin(115200);
-  WiFi.setAutoConnect (true);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  Serial.println("");
-  Serial.println("done");
-  blink_led();
-
-  // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    blink_led();
-  }
-
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-
-  if (MDNS.begin("esp8266")) {
-    Serial.println("MDNS responder started");
-  }
-
-  blink_connected();
-
-  server.on("/", handleRoot);
-
-  server.on("/test", []() {
-    server.send(200, "text/plain", "this works as well");
-    blink_led();
-  });
-
-  server.on("/on", []() {
-    String relay = server.arg("relay");
-    if (relay == "1")  digitalWrite(r1, 1);
-    if (relay == "2")  digitalWrite(r2, 1);
-    int r1_status = digitalRead(r1);
-    int r2_status = digitalRead(r2);
-    digitalWrite(l1, r1_status);
-    digitalWrite(l2, r2_status);
-    send_status();
-    blink_led();
-  });
-
-  server.on("/off", []() {
-    String relay = server.arg("relay");
-    if (relay == "1")  digitalWrite(r1, 0);
-    if (relay == "2")  digitalWrite(r2, 0);
-    int r1_status = digitalRead(r1);
-    int r2_status = digitalRead(r2);
-    send_status();
-    digitalWrite(l1, r1_status);
-    digitalWrite(l2, r2_status);
-    blink_led();
-  });
-
-  server.on("/status", []() {
-    send_status();
-    blink_led();
-  });
-
-  server.on("/air_temperature", []() {
-    delay(2000);
-    float h = dht.readHumidity();
-    // Read temperature as Celsius (the default)
-    float t = dht.readTemperature();
-    server.send(200, "application/json", "{\"temp\":" + String(t) + ", \"hum\":" + String(h) + "}");
-    blink_led();
-  });
-
-  server.on("/ground_temperature", []() {
-    delay(1000);
-    float tempC = getTemperature();
-    server.send(200, "application/json", "{\"temp\":" + String(tempC) + "}");
-    blink_led();
-  });
-
-  server.onNotFound(handleNotFound);
-
-  server.begin();
-  Serial.println("HTTP server started");
-}
-
-void loop(void) {
-  server.handleClient();
-}
-
-void send_status() {
-  int r1_status = digitalRead(r1);
-  int r2_status = digitalRead(r2);
-  server.send(200, "application/json", "{\"1\":" + String(r1_status) + ", \"2\":" + String(r2_status) + "}");
-}
 
 float getTemperature() {
   float tempC = 0;
@@ -216,4 +32,86 @@ float getTemperature() {
   }
 
   return tempC;
+}
+
+/* setup function */
+void setup(void) {
+  for (byte i = 1; i < num_of_relay; i = i + 1) {
+    pinMode(relay_pins[i], OUTPUT);
+    digitalWrite(relay_pins[i], 0);
+  }
+  
+  pinMode(DHTPIN, INPUT);
+  dht.begin();
+
+  Serial.begin(115200);
+  
+  connect_to_wifi();
+  
+  server.on("/status", send_status);
+  server.on("/restart", restart_device);
+  server.on("/test", test_system);
+  server.on("/device_id", displayDeviceId);
+  server.on("/on", turn_on);
+  server.on("/off", turn_off);
+  server.onNotFound(handleNotFound);
+
+  server.on("/", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", serverIndex);
+  });
+
+  server.on("/air_temperature", []() {
+    delay(2000);
+    float h = dht.readHumidity();
+    // Read temperature as Celsius (the default)
+    float t = dht.readTemperature();
+    server.sendHeader("Connection", "close");
+    server.send(200, "application/json", "{\"temp\":" + String(t) + ", \"hum\":" + String(h) + "}");
+  });
+
+  server.on("/ground_temperature", []() {
+    delay(1000);
+    float tempC = getTemperature();
+    server.sendHeader("Connection", "close");
+    server.send(200, "application/json", "{\"temp\":" + String(tempC) + "}");
+  });
+
+  server.on("/update", HTTP_POST, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/plain", (Update.hasError()) ? "FAIL" : "OK");
+    ESP.restart();
+  }, []() {
+    HTTPUpload& upload = server.upload();
+    if (upload.status == UPLOAD_FILE_START) {
+      Serial.setDebugOutput(true);
+      WiFiUDP::stopAll();
+      Serial.printf("Update: %s\n", upload.filename.c_str());
+      uint32_t maxSketchSpace = (ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000;
+      if (!Update.begin(maxSketchSpace)) { //start with max available size
+        Update.printError(Serial);
+      }
+    } else if (upload.status == UPLOAD_FILE_WRITE) {
+      if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
+        Update.printError(Serial);
+      }
+    } else if (upload.status == UPLOAD_FILE_END) {
+      if (Update.end(true)) { //true to set the size to the current progress
+        Serial.printf("Update Success: %u\nRebooting...\n", upload.totalSize);
+      } else {
+        Update.printError(Serial);
+      }
+      Serial.setDebugOutput(false);
+    }
+    yield();
+  });
+
+  server.begin();
+}
+
+void loop(void) {
+  check_wifi_conn();
+  server.handleClient();
+  MDNS.update();
+  delay(1);
 }
