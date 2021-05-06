@@ -30,6 +30,6 @@ def device_discovery():
         return jsonify(message="No IP in headers. rejected"), 400
 
     logging.info(f"Registering IP in database. {device_id}:{device_ip}")
-    database.set_device_ip(device_id, device_ip)
+    # database.set_device_ip(device_id, device_ip)
     return jsonify(message="confirmed")
 
