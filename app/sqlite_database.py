@@ -178,14 +178,6 @@ QUERY["setup_lines_greenlines"] = (
 )
 
 QUERY[
-    "temp_sensors_air"
-] = "INSERT into temperature (line_id, temp, hum, datetime) values ({0}, '{1}', '{2}', '{3}')"
-
-QUERY[
-    "temp_sensors_ground"
-] = "INSERT into temperature (line_id, temp, datetime) values ({0}, '{1}', '{2}')"
-
-QUERY[
     "enable_rule_cancel_interval"
 ] = "UPDATE life SET state={1} WHERE state=1 AND interval_id='{0}'"
 

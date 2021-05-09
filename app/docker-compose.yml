@@ -88,12 +88,12 @@ services:
             - 8020
         restart: on-failure
 
-    sensor_data:
+    sensors_data:
         build:
             context: ./
-            dockerfile: ./sensor_data/Dockerfile
-        container_name: sensor_data
-        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8021", "sensor_data.sensor_data:app"]
+            dockerfile: ./sensors_data/Dockerfile
+        container_name: sensors_data
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8021", "sensors_data.sensors_data:app"]
         expose: 
             - 8021
         restart: on-failure
@@ -109,6 +109,11 @@ services:
         volumes:
             - db-data:/var/sqlite_db/
         restart: on-failure
+        depends_on:    
+            - redis 
+            - backend
+            - messenger_bot
+
 
     state_machine:
         build:
@@ -139,26 +144,6 @@ services:
             API_TOKEN_MOZART: $API_TOKEN_MOZART
             WEBHOOK_URL_BASE_PUBLIC: $WEBHOOK_URL_BASE_PUBLIC
         restart: on-failure
-
-    notificator:
-        build:
-            context: ./
-            dockerfile: ./notificator/Dockerfile
-        container_name: notificator
-        environment:
-            RESTART_INTERVAL_MIN: 15
-            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
-            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
-            BACKEND_IP: $BACKEND_IP
-            TIMEOUT_GRENHOUSE: 60
-        command: [ "python", "-m", "notificator.notificator"]
-        volumes:
-            - db-data:/var/sqlite_db/
-        restart: on-failure
-        depends_on:
-            - redis
-            - backend
-            - messenger_bot
         
     redis:
         image: "redis:alpine"
