@@ -219,11 +219,12 @@ services:
 
     mongo_db:
         image: mongo:latest
+        container_name: mongo_db
         environment:
             MONGO_INITDB_ROOT_USERNAME: $DB_USERNAME
             MONGO_INITDB_ROOT_PASSWORD: $DB_PASSWORD
         ports:
-            - 27017:27017
+            - 27018:27017
         volumes:
             - mongodb-data:/data/db
 
