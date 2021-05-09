@@ -4,8 +4,8 @@ from pymongo import MongoClient
 class Mongo:
     def __init__(self, uri):
         self.client = MongoClient(uri)
-        self.db = self.client['SensorsDB']
-        self.sensors_collection = self.db['sensors']
+        self.db = self.client.irrigation_db
+        self.sensors_collection = self.db.sensors
 
     def register_sensor_data(self, sensor_id, data):
         self.insert_document(self.sensors_collection, dict(
@@ -22,7 +22,7 @@ class Mongo:
         """
         return collection.insert_one(data).inserted_id
 
-    def find_document(collection, elements, multiple=False):
+    def find_document(self, collection, elements, multiple=False):
         """ Function to retrieve single or multiple documents from a provided
         Collection using a dictionary containing a document's elements.
         """
