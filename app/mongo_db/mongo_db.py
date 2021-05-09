@@ -3,7 +3,7 @@ import pymongo
 
 class Mongo:
     def __init__(self):
-        self.client = MongoClient('mongo_db', 27017)
+        self.client = pymongo.MongoClient('mongo_db', 27017)
         self.db = self.client['SensorsDB']
         self.sensors_collection = self.db['sensors']
 
