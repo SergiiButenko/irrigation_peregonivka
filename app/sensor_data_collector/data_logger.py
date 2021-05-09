@@ -8,7 +8,7 @@ import requests
 import sqlite_database as database
 from backend.remote_controller import (air_sensor, ground_sensor, line_status,
                                        setup_lines_remote_control)
-from data_logger import config
+from sensor_data_collector import config
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
@@ -17,7 +17,6 @@ logging.basicConfig(
 )
 
 LOGGER = logging.getLogger(__name__)
-SENSORS = {}
 
 
 def with_logging(func):
