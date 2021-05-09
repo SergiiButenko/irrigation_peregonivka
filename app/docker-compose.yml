@@ -88,6 +88,16 @@ services:
             - 8020
         restart: on-failure
 
+    sensor_data:
+        build:
+            context: ./
+            dockerfile: ./sensor_data/Dockerfile
+        container_name: sensor_data
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8021", "sensor_data.sensor_data:app"]
+        expose: 
+            - 8021
+        restart: on-failure
+
     sensor_data_collector:
         build:
             context: ./
@@ -161,6 +171,11 @@ services:
         environment:
             - REDIS_REPLICATION_MODE=master
         restart: on-failure
+        healthcheck:
+            test: ["CMD", "redis-cli","ping"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
 
     nginx:
         image: nginx:alpine
@@ -198,6 +213,35 @@ services:
             - db-data:/var/sqlite_db/
         restart: on-failure
 
+    # postgres:
+    #     image: "postgres:13-alpine"
+    #     container_name: postgres
+    #     environment:
+    #         POSTGRES_USER: $DB_USERNAME
+    #         POSTGRES_PASSWORD: $DB_PASSWORD
+    #         PGDATA: /data/postgres
+    #     volumes:
+    #         - ./services/database/:/docker-entrypoint-initdb.d
+    #         - postgres-data:/data/postgres
+    #     ports:
+    #         - 5432:5432
+    #     restart: unless-stopped
+    #     healthcheck:
+    #         test: ["CMD-SHELL", "pg_isready --username=${DB_USERNAME} --dbname=${DB_DATABASE}"]
+    #         interval: 10s
+    #         timeout: 5s
+    #         retries: 5
+
+    mongo_db:
+        image: mongo:latest
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: $DB_USERNAME
+            MONGO_INITDB_ROOT_PASSWORD: $DB_PASSWORD
+        ports:
+            - 27017:27017
+        volumes:
+            - mongodb-data:/data/db
+
 volumes:
     redis-data:
     db-data:
@@ -206,3 +250,5 @@ volumes:
             type: "none"
             o: "bind"
             device: "/var/sqlite_db/"
+    postgres-data:
+    mongodb-data:

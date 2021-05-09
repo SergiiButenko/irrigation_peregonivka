@@ -8,7 +8,7 @@
 #endif
 
 const char* flash_version = "00-00.jan-01-2021";
-const char* device_id = "sw1_light_shower";
+const char* device_id = "cesspool_switcher1";
 const char* ssid = STASSID;
 const char* password = STAPSK;
 

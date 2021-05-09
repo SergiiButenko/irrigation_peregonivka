@@ -4,6 +4,7 @@
 #include <ArduinoJson.h>
 
 unsigned long previousMillis = 0;
+unsigned long current_time = 0;
 const long esp_restart_interval = 1000 * 60 * 5;
 
 ESP8266WebServer server(80);
@@ -168,7 +169,7 @@ void connect_to_wifi()
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
-  unsigned long previousMillis = millis();
+  previousMillis = millis();
   while (WiFi.waitForConnectResult() != WL_CONNECTED)
   {
     if (millis() - previousMillis >= 1000 * 60 * 5)
@@ -246,7 +247,6 @@ void handleNotFound()
 
 void check_if_ping()
 {
-  unsigned long current_time = 0;
   if (int((millis() - current_time) / 60000) >= 30)
   {
     send_ping();

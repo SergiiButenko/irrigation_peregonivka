@@ -48,13 +48,14 @@ def try_notify(message, key, timeout):
     )
     r.raise_for_status()
 
+    redis_provider.set_time_last_notification(key=key, date=datetime.now())
+
 
 def should_be_notified(key, timeout):
     last_time_sent = redis_provider.get_time_last_notification(key=key)
 
     if last_time_sent is None:
         logging.warn(f"No {key} exists in redis. Allowed")
-        redis_provider.set_time_last_notification(key=key, date=datetime.now())
         return True
 
     delta = datetime.now() - last_time_sent

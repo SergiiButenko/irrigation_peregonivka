@@ -1526,12 +1526,6 @@ def cesspool():
             }
         )
 
-
-@app.route("/.well-known/acme-challenge/Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8")
-def verify():
-    return app.send_static_file("Ei2hEHks-OwKNX6pXx8Z_KfUHxNfUt_nVwJwhZfmcA8")
-
-
 @app.route("/weather_station")
 def weather_station():
     api_key = str(request.args.get("api_key"))

@@ -33,3 +33,10 @@ def device_discovery():
     # database.set_device_ip(device_id, device_ip)
     return jsonify(message="confirmed")
 
+
+@app.route("/devices/<string:device_id>/sensors/<string:sensor_id>", methods=["POST"])
+def register_sensor_value(device_id, sensor_id):
+    logging.info(f"Registering data in database. {device_id}:{sensor_id}")
+    _data = request.json
+    
+    

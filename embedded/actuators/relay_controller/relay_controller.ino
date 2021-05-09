@@ -3,7 +3,6 @@
 #include <ESP8266HTTPUpdateServer.h>
 #include "common_lib.h"
 
-
 /* setup function */
 void setup(void) {
   for (byte i = 1; i < num_of_relay; i = i + 1) {
