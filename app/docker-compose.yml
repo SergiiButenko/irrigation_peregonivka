@@ -96,6 +96,8 @@ services:
         command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8021", "sensors_data.sensors_data:app"]
         expose: 
             - 8021
+        depends_on:    
+            - mongo_db 
         restart: on-failure
 
     sensor_data_collector:
@@ -183,6 +185,7 @@ services:
             - database
             - messenger_bot
             - device_discovery
+            - sensors_data
         restart: on-failure
     
     database:
