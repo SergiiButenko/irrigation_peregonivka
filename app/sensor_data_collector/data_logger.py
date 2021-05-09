@@ -98,7 +98,7 @@ def check_conditions():
     LOGGER.info(str(APP_SETTINGS))
     TEMP_MAX = float(APP_SETTINGS["temp_min_max"]["max_alert"])
     TEMP_DELTA = float(APP_SETTINGS["temp_min_max"]["delta_alert"])
-    _now = datetime.now
+    _now = datetime.now()
 
     inner_air_sensor = get_sensor(LINES, "air_sensor")
     outer_air_sensor = get_sensor(LINES, "ground_sensor")
