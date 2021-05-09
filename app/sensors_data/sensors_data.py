@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import logging
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from mongo_db.mongo_db import Mongo
+from sensors_data import config
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
@@ -11,7 +12,7 @@ logging.basicConfig(
 )
 
 app = Flask(__name__)
-MongoDatabase = Mongo()
+MongoDatabase = Mongo(config.MONGO_URI)
 
 
 @app.route("/devices/<string:device_id>/sensors/<string:sensor_id>", methods=["POST"])

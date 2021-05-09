@@ -88,11 +88,14 @@ services:
             - 8020
         restart: on-failure
 
+
     sensors_data:
         build:
             context: ./
             dockerfile: ./sensors_data/Dockerfile
         container_name: sensors_data
+        environment: 
+            MONGO_URI: mongodb://$DB_USERNAME:$DB_PASSWORD@mongo_db:27018
         command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8021", "sensors_data.sensors_data:app"]
         expose: 
             - 8021

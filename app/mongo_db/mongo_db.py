@@ -1,9 +1,9 @@
-import pymongo
+from pymongo import MongoClient
 
 
 class Mongo:
-    def __init__(self):
-        self.client = pymongo.MongoClient('mongo_db', 27017)
+    def __init__(self, uri):
+        self.client = MongoClient(uri)
         self.db = self.client['SensorsDB']
         self.sensors_collection = self.db['sensors']
 
