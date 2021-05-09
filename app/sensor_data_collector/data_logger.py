@@ -1,6 +1,5 @@
 import functools
 import logging
-import os
 import time
 from datetime import datetime
 
@@ -9,8 +8,7 @@ import requests
 import sqlite_database as database
 from backend.remote_controller import (air_sensor, ground_sensor, line_status,
                                        setup_lines_remote_control)
-from irrigation_helpers import mn
-from notificator import config
+from data_logger import config
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",

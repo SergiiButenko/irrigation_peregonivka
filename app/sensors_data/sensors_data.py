@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from flask import Flask, jsonify, request
-from app.mongo_db.mongo_db import Mongo
+from mongo_db.mongo_db import Mongo
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
