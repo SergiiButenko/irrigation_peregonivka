@@ -98,7 +98,7 @@ def check_conditions():
     LOGGER.info(str(APP_SETTINGS))
     TEMP_MAX = float(APP_SETTINGS["temp_min_max"]["max_alert"])
     TEMP_DELTA = float(APP_SETTINGS["temp_min_max"]["delta_alert"])
-    now = datetime.now
+    _now = datetime.now
 
     inner_air_sensor = get_sensor(LINES, "air_sensor")
     outer_air_sensor = get_sensor(LINES, "ground_sensor")
@@ -111,7 +111,7 @@ def check_conditions():
             response[line_id]["id"],
             response[line_id]["air_temp"],
             response[line_id]["air_hum"],
-            now.strftime("%Y-%m-%d %H:%M"),
+            _now.strftime("%Y-%m-%d %H:%M"),
         )
     )
 
@@ -125,7 +125,7 @@ def check_conditions():
         _q.format(
             response[line_id]["id"],
             response[line_id]["ground_temp"],
-            now.strftime("%Y-%m-%d %H:%M"),
+            _now.strftime("%Y-%m-%d %H:%M"),
         )
     )
     outer_current_temp = float(response[line_id]["ground_temp"])
