@@ -231,11 +231,12 @@ services:
     mongo_db:
         image: mongo:latest
         container_name: mongo_db
+        command: mongod --port 27018
         environment:
             MONGO_INITDB_ROOT_USERNAME: $DB_USERNAME
             MONGO_INITDB_ROOT_PASSWORD: $DB_PASSWORD
         ports:
-            - 27018:27017
+            - 27018:27018
         volumes:
             - mongodb-data:/data/db
 
