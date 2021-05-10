@@ -1,4 +1,13 @@
 from pymongo import MongoClient
+import json
+from bson import ObjectId
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
 
 
 class Mongo:
@@ -28,6 +37,6 @@ class Mongo:
         """
         if multiple:
             results = collection.find(elements)
-            return [r for r in results]
+            return [JSONEncoder().encode(r) for r in results]
         else:
-            return collection.find_one(elements)
+            return JSONEncoder().encode(collection.find_one(elements))
