@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import logging
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from mongo_db.mongo_db import Mongo
 from sensors_data import config
 
@@ -27,4 +27,4 @@ def register_sensor_value(device_id, sensor_id):
 @app.route("/devices/<string:device_id>/sensors/<string:sensor_id>", methods=["GET"])
 def get_sensor_value(device_id, sensor_id):
     data = MongoDatabase.get_latest_sensor_data(sensor_id)
-    return dict(data=data)
+    return jsonify(data=data)
