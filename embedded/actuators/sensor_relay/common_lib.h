@@ -93,8 +93,8 @@ bool ac1_CheckIfSend() {
   int ac1_state = int(ac1_avg < send_limit);
   int retry_limit = 5;
   int delay_between_requests = 1000;
-  String req = String(host) + "/api/v1/devices/" + String(device_id) + "/sensors/" + String(ac1_id);
-
+//  String req = String(host) + "/api/v1/devices/" + String(device_id) + "/sensors/" + String(ac1_id);
+  String req = String(host) + "/api/v1/devices/cesspool";
   for (int i = 1; i <= retry_limit; i++)
   {
     HTTPClient http;
@@ -111,7 +111,9 @@ bool ac1_CheckIfSend() {
     http.addHeader("X-Real-IP", WiFi.localIP().toString());
     http.addHeader("Content-Type", "application/json");
   
-    int httpCode = http.POST("{\"state\":\"" + String(ac1_state) + "\"");         //Send the request
+//    int httpCode = http.POST("{\"state\":\"" + String(ac1_state) + "\"");         //Send the request
+    int httpCode = http.GET();         //Send the request
+    
     String payload = http.getString(); //Get the response payload
 
     Serial.print("httpCode: ");
