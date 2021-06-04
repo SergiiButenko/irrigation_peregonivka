@@ -44,7 +44,7 @@ void turn_off()
 //=================== SENSORS ====================================
 int seconds_delay = 60 * 15;
 const int numReadings = 1000;
-double send_limit = 400.0;
+double send_limit = 0.4;
 
 byte ac1_pin = 12;
 const char *ac1_id = "cesspol_indicator";
@@ -89,7 +89,7 @@ bool ac1_CheckIfSend() {
     ac1_sum = ac1_sum + ac1_readings[thisReading];
   }
 
-  double ac1_avg = ac1_sum / numReadings;
+  double ac1_avg = double(ac1_sum) / double(numReadings);
   int ac1_state = int(ac1_avg < send_limit);
   int retry_limit = 5;
   int delay_between_requests = 1000;
@@ -154,7 +154,7 @@ bool ac2_CheckIfSend() {
     ac2_sum = ac2_sum + ac2_readings[thisReading];
   }
 
-  double ac2_avg = ac2_sum / numReadings;
+  double ac2_avg = double(ac2_sum) / double(numReadings);
   int ac2_state = int(ac2_avg < send_limit);
   int retry_limit = 5;
   int delay_between_requests = 1000;

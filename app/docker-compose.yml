@@ -209,25 +209,40 @@ services:
             - db-data:/var/sqlite_db/
         restart: on-failure
 
-    # postgres:
-    #     image: "postgres:13-alpine"
-    #     container_name: postgres
-    #     environment:
-    #         POSTGRES_USER: $DB_USERNAME
-    #         POSTGRES_PASSWORD: $DB_PASSWORD
-    #         PGDATA: /data/postgres
-    #     volumes:
-    #         - ./services/database/:/docker-entrypoint-initdb.d
-    #         - postgres-data:/data/postgres
-    #     ports:
-    #         - 5432:5432
-    #     restart: unless-stopped
-    #     healthcheck:
-    #         test: ["CMD-SHELL", "pg_isready --username=${DB_USERNAME} --dbname=${DB_DATABASE}"]
-    #         interval: 10s
-    #         timeout: 5s
-    #         retries: 5
+    postgres:
+        image: "postgres:13-alpine"
+        container_name: postgres
+        environment:
+            POSTGRES_USER: $DB_USERNAME
+            POSTGRES_PASSWORD: $DB_PASSWORD
+            PGDATA: /data/postgres
+        volumes:
+            - ./database/psql:/docker-entrypoint-initdb.d
+            # - postgres-data:/data/postgres
+        ports:
+            - 5432:5432
+        expose: 
+            - 5432
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready --username=${DB_USERNAME} --dbname=${DB_DATABASE}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
+    postgres-admin:
+        image: dpage/pgadmin4
+        container_name: postgres-admin
+        environment:
+            PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL
+            PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD
+        volumes:
+            - ./database/psql:/docker-entrypoint-initdb.d
+            # - postgres-data:/data/postgres
+        ports:
+            - 5433:80
+        restart: unless-stopped
+        
     mongo_db:
         image: mongo:latest
         container_name: mongo_db

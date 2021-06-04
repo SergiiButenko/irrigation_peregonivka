@@ -12,19 +12,18 @@ const char* device_id = "cesspool_switcher1";
 const char* ssid = STASSID;
 const char* password = STAPSK;
 
+
 // relay num starts from 1. so add 1 to skip 0;
 //const byte num_of_relay = 8 + 1;
+// const byte num_of_relay = 4 + 1;
+const byte num_of_relay = 2 + 1;
+
 // relay id is index, pin number is value 
 //                             0  1  2  3  4   5   6   7   8
 //int relay_pins[num_of_relay]={-1, 5, 4, 0, 2, 14, 12, 13, 15};
-
-
-
-// relay num starts from 1. so add 1 to skip 0;
-const byte num_of_relay = 2 + 1;
-// relay id is index, pin number is value 
-//                             0  1  2
-int relay_pins[num_of_relay]={-1, 5, 4};
+//int relay_pins[num_of_relay]={-1, 5, 4};
+//int relay_pins[num_of_relay] ={-1, 4, 5, 12, 13};
+int relay_pins[num_of_relay] ={-1, 4, 5, 12, 13};
 
 const char *host = "http://irrigation.faza:9000/api/v1";
 byte delay_between_requests = 500;

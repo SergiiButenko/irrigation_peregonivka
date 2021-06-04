@@ -27,35 +27,6 @@ CACHE_TIMEOUT = 600
 BRANCHES_SETTINGS = {}
 
 
-@app.route("/detailed")
-@cache.cached(timeout=CACHE_TIMEOUT)
-def index():
-    """Index page."""
-    branch_list = []
-    for item_id, item in BRANCHES_SETTINGS.items():
-        if item["line_type"] == "irrigation" and item["is_pump"] == 0:
-            branch_list.append(
-                {
-                    "id": item["branch_id"],
-                    "group_id": item["group_id"],
-                    "group_name": item["group_name"],
-                    "is_pump": item["is_pump"],
-                    "name": item["name"],
-                    "default_time": item["time"],
-                    "default_interval": item["intervals"],
-                    "default_time_wait": item["time_wait"],
-                    "start_time": item["start_time"],
-                }
-            )
-
-    branch_list.sort(key=itemgetter("group_id"))
-    grouped = {}
-    for key, group in groupby(branch_list, itemgetter("group_id")):
-        grouped[key] = list([thing for thing in group])
-
-    return render_template("index.html", my_list=grouped)
-
-
 @app.route("/pumps")
 @cache.cached(timeout=CACHE_TIMEOUT)
 def pumps():
@@ -245,58 +216,6 @@ def history():
             value.sort(key=itemgetter("timer"))
 
     return render_template("history.html", my_list=grouped_rules)
-
-
-@app.route("/ongoing_rules")
-def ongoing_rules():
-    """Return ongoing_rules.html."""
-    list_arr = database.select(database.QUERY[mn()], "fetchall")
-    if list_arr is None:
-        list_arr = []
-
-    rows = []
-    now = datetime.datetime.now()
-    # SELECT id, line_id, time, intervals, time_wait, repeat_value, dow, date_start, time_start, end_value, end_date, end_repeat_quantity
-    for row in list_arr:
-        rule_id = row[10]
-        line_id = row[1]
-        time = row[2]
-        intervals = row[3]
-        time_wait = row[4]
-        repeat_value = row[5]
-        date_time_start = row[6]
-        end_date = row[7]
-        active = row[8]
-        name = row[9]
-        days = -1
-
-        start_dt = convert_to_datetime(date_time_start)
-        end_dt = convert_to_datetime(end_date)
-
-        if start_dt.date() == end_dt.date():
-            date_delta = end_dt.date() - now.date()
-            if date_delta.days == 0:
-                days = 0
-            if date_delta.days == 1:
-                days = 1
-
-        rows.append(
-            {
-                "rule_id": rule_id,
-                "line_id": line_id,
-                "time": time,
-                "intervals": intervals,
-                "time_wait": time_wait,
-                "repeat_value": repeat_value,
-                "date_time_start": str(date_time_start),
-                "end_date": str(end_date),
-                "active": active,
-                "line_name": name,
-                "days": days,
-            }
-        )
-
-    return render_template("ongoing_rules.html", my_list=rows)
 
 
 @app.route("/")

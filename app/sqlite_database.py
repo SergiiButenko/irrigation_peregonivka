@@ -155,26 +155,26 @@ QUERY[
 
 QUERY["get_settings"] = (
     "SELECT l.number, l.name, l.time, l.intervals, l.time_wait, l.start_time, "
-    "l.line_type, l.base_url, l.pump_enabled, l.is_pump, lg.id, lg.name, l.relay_num, l.start_mode "
+    "l.line_type, l.pump_enabled, l.is_pump, lg.id, lg.name, l.relay_num, l.start_mode "
     "FROM lines AS l, line_groups as lg where l.group_id = lg.id ORDER BY l.number"
 )
 
 QUERY["setup_lines_remote_control"] = (
     "SELECT l.number, l.relay_num, l.is_pump, "
-    "l.group_id, l.name, lg.name, l.base_url, l.linked_device_id, l.linked_device_url, l.pump_enabled, "
+    "l.group_id, l.name, lg.name, l.linked_device_id, l.linked_device_url, l.pump_enabled, "
     "l.pump_pin, l.device_id "
     "FROM lines AS l, line_groups as lg WHERE l.group_id = lg.id ORDER BY l.number"
 )
 
 QUERY["setup_sensors_datalogger"] = (
-    "SELECT l.number, l.line_type, l.base_url "
+    "SELECT l.number, l.line_type, "
     "FROM lines AS l "
     "WHERE l.line_type like '%sensor' "
     "ORDER BY l.number"
 )
 
 QUERY["setup_lines_greenlines"] = (
-    "SELECT l.number, l.base_url " "FROM lines AS l " "ORDER BY l.number"
+    "SELECT l.number FROM lines AS l ORDER BY l.number"
 )
 
 QUERY[
@@ -187,19 +187,6 @@ QUERY[
     "get_rain_volume"
 ] = "SELECT sum(volume) from rain where datetime >= datetime('now', 'localtime', '-{0} hours');"
 QUERY["moisture_sensors"] = "INSERT INTO moisture(line_id, value) " "VALUES ({0}, {1})"
-
-QUERY[
-    "get_moisture"
-] = "SELECT line_id, value, datetime FROM moisture WHERE datetime >= datetime('now', 'localtime', '-23 hours');"
-
-QUERY[
-    "get_temperature"
-] = "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} hours');"
-
-QUERY["get_temperature2"] = (
-    "SELECT t.line_id, t.temp, t.hum, l.name, l.line_type, t.datetime from temperature as t, lines as l where t.line_id = l.number and datetime >= datetime('now', 'localtime', '-{0} hours') "
-    "order by t.datetime DESC;"
-)
 
 QUERY["get_app_settings"] = "SELECT short_name, json_value from settings"
 
@@ -215,11 +202,6 @@ QUERY['toogle_line'] = "SELECT line_id FROM switchers_to_lines WHERE device_id='
 
 QUERY['insert_weather_select_id'] = "SELECT sensor_id from sensors where short_name = '{}'"
 QUERY['insert_weather_insert_weather'] = "INSERT INTO weather_station (sensor_id, temp, hum, press, voltage) VALUES (?,?,?,?,?)"
-# select strftime('%Y-%m-%dT%H:00:00.000', w.datetime), s.description, round(avg(w.temp),2)
-# from weather_station as w
-# join sensors as s on
-# w.sensor_id = s.sensor_id
-# group by strftime('%Y-%m-%dT%H:00:00.000', w.datetime);
 
 
 def get_connection_poll():
@@ -428,7 +410,6 @@ def get_settings():
             time_wait = row[4]
             start_time = row[5]
             line_type = row[6]
-            base_url = row[7]
             pump_enabled = row[8]
             is_pump = row[9]
             group_id = row[10]
@@ -444,7 +425,6 @@ def get_settings():
                 "time_wait": time_wait,
                 "start_time": start_time,
                 "line_type": line_type,
-                "base_url": base_url,
                 "pump_enabled": True if pump_enabled == 1 else False,
                 "is_pump": is_pump,
                 "group_id": group_id,
@@ -546,3 +526,9 @@ def get_device_lines(device_id):
     query = f"SELECT id FROM lines WHERE device_id = '{device_id}'"
 
     return select(query, "fetchall")
+
+
+def get_line_by_id(line_id):
+    query = f"SELECT * FROM lines WHERE id = '{line_id}'"
+
+    return select(query, "fetchone")
