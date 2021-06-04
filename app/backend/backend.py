@@ -1476,7 +1476,7 @@ def cesspool():
         _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent
-    if delta.seconds > 60 * config.CESSTOOL_NOTIFICATION_MINUTES or _no_key is True:
+    if delta.seconds > 60 * int(config.CESSTOOL_NOTIFICATION_MINUTES) or _no_key is True:
         message = "Рівень води в септику вище норми."
 
         try:
