@@ -1553,7 +1553,7 @@ def cesspool_auto_start():
 
             logging.info("Updating redis.")
             redis_provider.set_time_last_notification(
-                date=datetime.datetime.now(), key=config.REDIS_KEY_FOR_CESSTOOL
+                date=datetime.datetime.now(), key=device_id
             )
             logging.info("Redis updated")
         except Exception as e:
