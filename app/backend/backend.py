@@ -1563,7 +1563,7 @@ def cesspool_auto_start():
         _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent
-    if delta.seconds > 60 * int(config.CESSTOOL_NOTIFICATION_MINUTES) or _no_key is True:
+    if delta.seconds > 60 * int(config.CESSTOOL_PUMP_NOTIFICATION_MINUTES) or _no_key is True:
         message = "Насос у септику увімкнений."
 
         try:
@@ -1602,13 +1602,13 @@ def cesspool_auto_start():
     else:
         logging.info(
             "{0} minutes not passed yet. Send message pending.".format(
-                config.CESSTOOL_NOTIFICATION_MINUTES
+                config.CESSTOOL_PUMP_NOTIFICATION_MINUTES
             )
         )
         return json.dumps(
             {
                 "status": "{0} minutes not passed yet. Send message pending.".format(
-                    config.CESSTOOL_NOTIFICATION_MINUTES
+                    config.CESSTOOL_PUMP_NOTIFICATION_MINUTES
                 )
             }
         )
