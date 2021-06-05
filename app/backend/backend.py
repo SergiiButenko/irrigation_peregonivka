@@ -1539,8 +1539,8 @@ def cesspool_auto_start():
     """Blablbal."""
 
     logging.info("cesspool_auto_start SIGNAL RESEIVED")
-    logging.info(request.__dict__)
-    logging.info(request.json)
+    logging.info(request.text)
+    logging.info(request.get_data())
     input_state = int(request.json['state'])
     logging.info("input_state: " + str(input_state))
 
