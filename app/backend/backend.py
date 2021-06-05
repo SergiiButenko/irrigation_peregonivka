@@ -1526,6 +1526,76 @@ def cesspool():
             }
         )
 
+@app.route("/cesspool_auto_start")
+def cesspool_auto_start():
+    """Blablbal."""
+
+    logging.info("cesspool_auto_start SIGNAL RESEIVED")
+
+    device_id = "cesspool_auto_start"
+    _no_key = False
+
+    last_time_sent = redis_provider.get_time_last_notification(
+        key=device_id)
+    if last_time_sent is None:
+        redis_provider.set_time_last_notification(
+            date=datetime.datetime.now(), key=device_id
+        )
+        last_time_sent = redis_provider.get_time_last_notification(
+            key=device_id)
+        _no_key = True
+
+    delta = datetime.datetime.now() - last_time_sent
+    if delta.seconds > 60 * int(config.CESSTOOL_NOTIFICATION_MINUTES) or _no_key is True:
+        message = "Насос у септику увімкнений."
+
+        try:
+
+            logging.info("Updating redis.")
+            redis_provider.set_time_last_notification(
+                date=datetime.datetime.now(), key=config.REDIS_KEY_FOR_CESSTOOL
+            )
+            logging.info("Redis updated")
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't update redis. Exception occured")
+
+        try:
+            _users_list = config.TELEGRAM_USERS[device_id]
+            logging.info(
+                "Sending warning message to users: '{0}'.".format(
+                    str(_users_list))
+            )
+            payload = {"users": _users_list, "message": message}
+            response = requests.post(
+                config.WEBHOOK_URL_BASE + "/message",
+                json=payload,
+                verify=False,
+            )
+            response.raise_for_status()
+            logging.info("Messages send.")
+        except Exception as e:
+            logging.error(e)
+            logging.error("Can't send rule to telegram. Ecxeption occured")
+            return json.dumps(
+                {"status": "Can't send rule to telegram. Exception occured"}
+            )
+
+        return json.dumps({"status": "Redis updated"})
+    else:
+        logging.info(
+            "{0} minutes not passed yet. Send message pending.".format(
+                config.CESSTOOL_NOTIFICATION_MINUTES
+            )
+        )
+        return json.dumps(
+            {
+                "status": "{0} minutes not passed yet. Send message pending.".format(
+                    config.CESSTOOL_NOTIFICATION_MINUTES
+                )
+            }
+        )
+
 @app.route("/weather_station")
 def weather_station():
     api_key = str(request.args.get("api_key"))

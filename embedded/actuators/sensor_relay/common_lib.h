@@ -44,7 +44,7 @@ void turn_off()
 //=================== SENSORS ====================================
 int seconds_delay = 60 * 15;
 const int numReadings = 1000;
-double send_limit = 400.0;
+double send_limit = 0.4;
 
 byte ac1_pin = 12;
 const char *ac1_id = "cesspol_indicator";
@@ -89,12 +89,13 @@ bool ac1_CheckIfSend() {
     ac1_sum = ac1_sum + ac1_readings[thisReading];
   }
 
-  double ac1_avg = ac1_sum / numReadings;
+  double ac1_avg = double(ac1_sum) / double(numReadings);
   int ac1_state = int(ac1_avg < send_limit);
   int retry_limit = 5;
   int delay_between_requests = 1000;
 //  String req = String(host) + "/api/v1/devices/" + String(device_id) + "/sensors/" + String(ac1_id);
-  String req = String(host) + "/api/v1/devices/cesspool";
+  String req = String(host) + "/api/v1/cesspool";
+
   for (int i = 1; i <= retry_limit; i++)
   {
     HTTPClient http;
@@ -113,7 +114,6 @@ bool ac1_CheckIfSend() {
   
 //    int httpCode = http.POST("{\"state\":\"" + String(ac1_state) + "\"");         //Send the request
     int httpCode = http.GET();         //Send the request
-    
     String payload = http.getString(); //Get the response payload
 
     Serial.print("httpCode: ");
@@ -156,11 +156,12 @@ bool ac2_CheckIfSend() {
     ac2_sum = ac2_sum + ac2_readings[thisReading];
   }
 
-  double ac2_avg = ac2_sum / numReadings;
+  double ac2_avg = double(ac2_sum) / double(numReadings);
   int ac2_state = int(ac2_avg < send_limit);
   int retry_limit = 5;
   int delay_between_requests = 1000;
-  String req = String(host) + "/data/v1/" + String(device_id) + "/sensors/" + String(ac2_id);
+//  String req = String(host) + "/data/v1/" + String(device_id) + "/sensors/" + String(ac2_id);
+  String req = String(host) + "/api/v1/cesspool_auto_start";
 
   for (int i = 1; i <= retry_limit; i++)
   {
@@ -178,7 +179,9 @@ bool ac2_CheckIfSend() {
     http.addHeader("X-Real-IP", WiFi.localIP().toString());
     http.addHeader("Content-Type", "application/json");
   
-    int httpCode = http.POST("{\"state\":\"" + String(ac2_state) + "\"");         //Send the request
+//    int httpCode = http.POST("{\"state\":\"" + String(ac2_state) + "\"");         //Send the request
+    int httpCode = http.GET();         //Send the request
+
     String payload = http.getString(); //Get the response payload
 
     Serial.print("httpCode: ");
