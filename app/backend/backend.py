@@ -1466,6 +1466,8 @@ def cesspool():
 
     if input_state == 0:
         logging.info("cesspool is not full. waiting...")
+    else:
+        logging.info("cesspool is full.")
 
     device_id = "cesspool"
     _no_key = False
@@ -1537,11 +1539,14 @@ def cesspool_auto_start():
     """Blablbal."""
 
     logging.info("cesspool_auto_start SIGNAL RESEIVED")
+    logging.info(request.json())
     input_state = int(request.json['state'])
     logging.info("input_state: " + str(input_state))
 
     if input_state == 0:
         logging.info("cesspool pump is not started. waiting...")
+    else:
+        logging.info("cesspool pump should be started.")
 
     device_id = "cesspool_auto_start"
     _no_key = False
