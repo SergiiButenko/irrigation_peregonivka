@@ -1466,6 +1466,7 @@ def cesspool():
 
     if input_state == 0:
         logging.info("cesspool is not full. waiting...")
+        return jsonify(message="cesspool is not full. waiting...")
     else:
         logging.info("cesspool is full.")
 
@@ -1539,12 +1540,12 @@ def cesspool_auto_start():
     """Blablbal."""
 
     logging.info("cesspool_auto_start SIGNAL RESEIVED")
-    logging.info(request.get_data())
     input_state = int(request.json['state'])
     logging.info("input_state: " + str(input_state))
 
     if input_state == 0:
         logging.info("cesspool pump is not started. waiting...")
+        return jsonify(message="cesspool pump is not started. waiting...")
     else:
         logging.info("cesspool pump should be started.")
 

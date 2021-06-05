@@ -112,7 +112,7 @@ bool ac1_CheckIfSend() {
     http.addHeader("X-Real-IP", WiFi.localIP().toString());
     http.addHeader("Content-Type", "application/json");
   
-    int httpCode = http.POST("{\"state\":\"" + String(ac1_state) + "\"");         //Send the request
+    int httpCode = http.POST("{\"state\":\"" + String(ac1_state) + "\"}");         //Send the request
     String payload = http.getString(); //Get the response payload
 
     Serial.print("httpCode: ");
@@ -178,7 +178,7 @@ bool ac2_CheckIfSend() {
     http.addHeader("X-Real-IP", WiFi.localIP().toString());
     http.addHeader("Content-Type", "application/json");
   
-    int httpCode = http.POST("{\"state\":\"" + String(ac2_state) + "\"");         //Send the request
+    int httpCode = http.POST("{\"state\":\"" + String(ac2_state) + "\"}");         //Send the request
     String payload = http.getString(); //Get the response payload
 
     Serial.print("httpCode: ");
