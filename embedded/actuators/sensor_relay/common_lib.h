@@ -42,7 +42,7 @@ void turn_off()
 }
 
 //=================== SENSORS ====================================
-int seconds_delay = 60 * 1;
+int seconds_delay = 60 * 5;
 const int numReadings = 1000;
 double send_limit = 400;
 
@@ -50,21 +50,15 @@ byte ac1_pin = 12;
 const char *ac1_id = "cesspol_indicator";
 unsigned long ac1_timer;
 int ac1_status;
-
 byte ac1_readings[numReadings];      // the readings from the analog input
 int ac1_readIndex = 0;              // the index of the current reading
-int ac1_total = 0;                  // the running total
-int ac1_average = 0;                // the average
 
 byte ac2_pin = 13;
 const char *ac2_id = "auto_magnetic_switcher_indicator";
 unsigned long ac2_timer;
 int ac2_status;
-
 byte ac2_readings[numReadings];      // the readings from the analog input
 int ac2_readIndex = 0;              // the index of the current reading
-int ac2_total = 0;                  // the running total
-int ac2_average = 0;                // the average
 
 
 void ac1_Measure() {
