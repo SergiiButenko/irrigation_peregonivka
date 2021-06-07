@@ -3,7 +3,7 @@ import requests
 
 from fastapi import FastAPI
 from actuator.resources.helpers import get_device_IP_by_line_id
-from actuator.models.state import State
+from actuator.models.input_models import State
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
@@ -21,7 +21,7 @@ async def set_state(device_id: str, line_id: str, state: State):
 
     relay = line["relay_num"]
     base_url = get_device_IP_by_line_id(line_id)
-    status = requests.get(
+    status = requests.post(
         url="http://" + base_url + "/state",
         params={"relay": relay, 'state': state.expected_state}
     )
@@ -47,10 +47,21 @@ async def get_state(device_id: str, line_id: str):
     relay = line["relay_num"]
     base_url = get_device_IP_by_line_id(line_id)
     response = requests.get(
-        url="http://" + base_url + "/status"
+        url="http://" + base_url + "/state"
     )
     response.raise_for_status()
     response = response.json()
 
     return response[relay]
 
+
+@app.post("/devices/{device_id}")
+async def send_message_to_device(device_id: str):
+    base_url = get_device_IP_by_line_id(line_id)
+    response = requests.get(
+        url="http://" + base_url + "/state"
+    )
+    response.raise_for_status()
+    response = response.json()
+
+    return response[relay]

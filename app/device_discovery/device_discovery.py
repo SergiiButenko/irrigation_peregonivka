@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import logging
-from flask import Flask, jsonify, request
-import sqlite_database as database
+
+from fastapi import FastAPI
 
 
 logging.basicConfig(
@@ -11,7 +11,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-app = Flask(__name__)
+app = FastAPI()
 
 
 @app.route("/")
