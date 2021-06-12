@@ -1484,6 +1484,10 @@ def cesspool():
         _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent
+    logging.info("Delta: " + str(delta.seconds))
+    logging.info("Key does not exist: " + str(_no_key))
+    logging.info("condition:" + str(delta.seconds > 60 * int(config.CESSTOOL_NOTIFICATION_MINUTES)) )
+
     if delta.seconds > 60 * int(config.CESSTOOL_NOTIFICATION_MINUTES) or _no_key is True:
         message = "Рівень води в септику вище норми."
 
@@ -1563,6 +1567,10 @@ def cesspool_auto_start():
         _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent
+    logging.info("Delta: " + str(delta.seconds))
+    logging.info("Key does not exist: " + str(_no_key))
+    logging.info("condition:" + str(delta.seconds > 60 * int(config.CESSTOOL_PUMP_NOTIFICATION_MINUTES)) )
+
     if delta.seconds > 60 * int(config.CESSTOOL_PUMP_NOTIFICATION_MINUTES) or _no_key is True:
         message = "Насос у септику увімкнений."
 
