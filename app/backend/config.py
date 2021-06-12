@@ -24,6 +24,7 @@ USERS = [{"name": "Cottage", "id": os.environ.get("GROUP_CHAT_ID_COTTAGE")}]
 TELEGRAM_USERS = {
      "upper_tank": USERS,
      "cesspool": USERS,
+     "cesspool_auto_start": USERS,
      }
 
 WEBHOOK_URL_BASE = os.environ.get("WEBHOOK_URL_BASE")
