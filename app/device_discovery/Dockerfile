@@ -1,10 +1,7 @@
-FROM python:3.6.9-slim
+FROM python:3.9.5-alpine
 
 WORKDIR /app
 COPY ./device_discovery/requirements.txt . 
 RUN pip install -r requirements.txt
 
-ENV TZ=Europe/Kiev
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-COPY . .
+COPY ./app .
