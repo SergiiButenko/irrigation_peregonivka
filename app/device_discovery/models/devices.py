@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 
 class DeviceSql(BaseModel):
-    id: uuid
+    id: uuid.UUID
     name: str
     description: str
     last_known_ip: str

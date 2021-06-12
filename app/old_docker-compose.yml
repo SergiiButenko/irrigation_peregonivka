@@ -1,0 +1,267 @@
+version: "3.7"
+services:
+    frontend:
+        build:
+            context: ./
+            dockerfile: ./frontend/Dockerfile
+        container_name: frontend
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8000", "frontend.frontend:app"]
+        expose:
+            - 8000
+        environment:
+            API_TOKEN_MOZART: $API_TOKEN_MOZART
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
+        volumes:
+            - db-data:/var/sqlite_db/
+        depends_on:
+            - redis
+            - backend
+        restart: on-failure
+
+    backend:
+        build:
+            context: ./
+            dockerfile: ./backend/Dockerfile
+        container_name: backend
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8001", "--worker-class", "eventlet", "backend.backend:app"]
+        expose:
+            - 8001
+        environment:
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            TANK_NOTIFICATION_MINUTES: $TANK_NOTIFICATION_MINUTES
+            CESSTOOL_NOTIFICATION_MINUTES: $CESSTOOL_NOTIFICATION_MINUTES
+        volumes:
+            - db-data:/var/sqlite_db/
+        depends_on:
+            - redis
+        restart: on-failure
+
+    greenhouse:
+        build:
+            context: ./
+            dockerfile: ./greenhouse/Dockerfile
+        container_name: greenhouse
+        command: [ "python", "-m", "greenhouse.greenhouse_handler"]
+        environment:
+            RESTART_INTERVAL_MIN: 15
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
+        volumes:
+            - db-data:/var/sqlite_db/
+        depends_on:
+            - redis
+            - backend
+        restart: on-failure
+
+    scheduler:
+        build:
+            context: ./
+            dockerfile: ./scheduler/Dockerfile
+        container_name: scheduler
+        command: [ "python", "-m", "scheduler.scheduler"]
+        environment:
+            BACKEND_IP: $BACKEND_IP
+            TIME_TO_RUN_SCHEDULER: '01:00'
+            CITY: 'Kiev'
+            HOURS_AFTER_SUNSET: 0
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            SCHEDULER_DEBUG_MODE: 0
+        depends_on:
+            - backend
+            - messenger_bot
+        restart: on-failure
+
+    device_discovery:
+        build:
+            context: ./
+            dockerfile: ./device_discovery/Dockerfile
+        container_name: device_discovery
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8020", "device_discovery.device_discovery:app"]
+        volumes:
+            - db-data:/var/sqlite_db/
+        expose: 
+            - 8020
+        restart: on-failure
+
+
+    sensors_data:
+        build:
+            context: ./
+            dockerfile: ./sensors_data/Dockerfile
+        container_name: sensors_data
+        environment: 
+            MONGO_URI: mongodb://$DB_USERNAME:$DB_PASSWORD@mongo_db:27018
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:8021", "sensors_data.sensors_data:app"]
+        expose: 
+            - 8021
+        depends_on:    
+            - mongo_db 
+        restart: on-failure
+
+
+    sensor_data_collector:
+        build:
+            context: ./
+            dockerfile: ./sensor_data_collector/Dockerfile
+        container_name: sensor_data_collector
+        environment:
+            RESTART_INTERVAL_MIN: 15
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
+            TIMEOUT_GRENHOUSE: 60
+        command: [ "python", "-m", "sensor_data_collector.data_logger"]
+        volumes:
+            - db-data:/var/sqlite_db/
+        restart: on-failure
+        depends_on:    
+            - redis 
+            - backend
+            - messenger_bot
+
+
+    state_machine:
+        build:
+            context: ./
+            dockerfile: ./state_machine/Dockerfile
+        container_name: state_machine
+        command: [ "python", "-m", "state_machine.state_machine"]
+        environment:
+            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE
+            WEBHOOK_URL_BASE: $WEBHOOK_URL_BASE
+            BACKEND_IP: $BACKEND_IP
+        volumes:
+            - db-data:/var/sqlite_db/
+        depends_on:
+            - redis
+            - backend
+        restart: on-failure
+
+    messenger_bot:
+        build:
+            context: ./
+            dockerfile: ./bots/telegram/Dockerfile
+        container_name: messenger_bot
+        command: [ "gunicorn", "-w", "1", "-b", "0.0.0.0:88", "bots.telegram.telegram_bot:app"]
+        expose:
+            - 88
+        environment:
+            API_TOKEN_MOZART: $API_TOKEN_MOZART
+            WEBHOOK_URL_BASE_PUBLIC: $WEBHOOK_URL_BASE_PUBLIC
+        restart: on-failure
+        
+    redis:
+        image: "redis:alpine"
+        container_name: redis
+        command: ["redis-server", "--appendonly", "yes", "--bind", "redis", "--port", "6379"]
+        expose:
+            - 6379
+        volumes:
+            - redis-data:/data
+        environment:
+            - REDIS_REPLICATION_MODE=master
+        restart: on-failure
+        healthcheck:
+            test: ["CMD", "redis-cli","ping"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+
+    nginx:
+        image: nginx:alpine
+        container_name: nginx
+        ports:
+            - 80:80
+            - 443:443
+            - 7542:7542
+            - 9000:9000
+            - 88:88
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./ssl_sertificats/:/etc/nginx/certs
+            - ./nginx/cache:/var/cache/nginx
+            # - ./nginx/data/certbot/conf:/etc/letsencrypt
+            # - ./nginx/data/certbot/www:/var/www/certbot
+        depends_on:
+            - backend
+            - frontend
+            - database
+            - messenger_bot
+            - device_discovery
+            - sensors_data
+        restart: on-failure
+    
+    database:
+        build:
+            context: ./
+            dockerfile: ./database/Dockerfile
+        environment: 
+            - SQLITE_DATABASE=$SQLITE_DATABASE
+        ports: 
+            - 8080:8080
+        container_name: database
+        volumes:
+            - db-data:/var/sqlite_db/
+        restart: on-failure
+
+    postgres:
+        image: "postgres:13-alpine"
+        container_name: postgres
+        environment:
+            POSTGRES_USER: $DB_USERNAME
+            POSTGRES_PASSWORD: $DB_PASSWORD
+            PGDATA: /data/postgres
+        volumes:
+            - ./database/psql:/docker-entrypoint-initdb.d
+            # - postgres-data:/data/postgres
+        ports:
+            - 5432:5432
+        expose: 
+            - 5432
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready --username=${DB_USERNAME} --dbname=${DB_DATABASE}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    postgres-admin:
+        image: dpage/pgadmin4
+        container_name: postgres-admin
+        environment:
+            PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL
+            PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD
+        volumes:
+            - ./database/psql:/docker-entrypoint-initdb.d
+            # - postgres-data:/data/postgres
+        ports:
+            - 5433:80
+        restart: unless-stopped
+        
+    mongo_db:
+        image: mongo:latest
+        container_name: mongo_db
+        command: mongod --port 27018
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: $DB_USERNAME
+            MONGO_INITDB_ROOT_PASSWORD: $DB_PASSWORD
+        ports:
+            - 27018:27018
+        volumes:
+            - mongodb-data:/data/db
+
+volumes:
+    redis-data:
+    db-data:
+        driver: local
+        driver_opts:
+            type: "none"
+            o: "bind"
+            device: "/var/sqlite_db/"
+    postgres-data:
+    mongodb-data:
