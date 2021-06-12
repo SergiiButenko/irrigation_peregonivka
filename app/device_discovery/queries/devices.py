@@ -2,8 +2,8 @@ from device_discovery.models.devices import DeviceSql
 from device_discovery.dependencies import database
 
 
-class DeviceDAO:
-    @staticmethod()
+class DeviceSQL:
+    @staticmethod
     async def set_device_ip(device_name: str, device_ip: str) -> None:
         sql = """
         UPDATE devices SET ip=:device_ip WHERE name=:device_name;
@@ -12,7 +12,7 @@ class DeviceDAO:
             sql, values={"device_name": device_name, "ip": device_ip}
         )
 
-    @staticmethod()
+    @staticmethod
     async def get_all_devices() -> DeviceSql:
         sql = """
         SELECT * FROM devices;
@@ -20,7 +20,7 @@ class DeviceDAO:
         result = await database.fetch_all(sql)
         return DeviceSql.parse_obj(result)
 
-    @staticmethod()
+    @staticmethod
     async def get_device(device_name: str) -> DeviceSql:
         sql = """
         SELECT * FROM devices WHERE name=:device_name;
