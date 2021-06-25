@@ -6,8 +6,10 @@ services:
             dockerfile: ./device_discovery/Dockerfile
         container_name: device_discovery
         environment: 
-            DATABASE_URI: postgresql://$DB_USERNAME:$DB_PASSWORD@postgres:5324/smart_house
+            DATABASE_URI: postgresql://$DB_USERNAME:$DB_PASSWORD@postgres:5432/smart_house
         command: ["uvicorn", "device_discovery.main:app", "--host", "0.0.0.0", "--port", "8020"]
+        ports:
+            - 8020:8020
         expose: 
             - 8020
         depends_on:    

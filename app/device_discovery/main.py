@@ -1,13 +1,8 @@
 from fastapi import FastAPI, Header, Depends, status
-from device_discovery.dependencies import database, service_logger
-from device_discovery.commands.ping_to_register_device_all import (
-    PingToRegisterDeviceAllCmd,
-)
-from device_discovery.commands.ping_to_register_device import (
-    PingToRegisterDeviceCmd
-)
-from device_discovery.commands.register_device import RegisterDeviceCmd
+from pydantic import Required
 
+from device_discovery.dependencies import database, service_logger
+from device_discovery.commands.devices import DeviceCMD
 
 app = FastAPI(
     title="Irrigation Device Discovery API",
@@ -29,8 +24,8 @@ async def shutdown():
 @app.post("/devices/{device_id}", status_code=status.HTTP_204_NO_CONTENT)
 def register(
     device_id: str,
-    X_Real_IP: str = Header(),
-    cmd: RegisterDeviceCmd = Depends(),
+    X_Real_IP: str = Header(Required),
+    cmd: DeviceCMD.register_device_by_id = Depends(),
     logger=Depends(service_logger),
 ):
     """In order to keep device ip"""
@@ -42,7 +37,7 @@ def register(
 
 @app.get("/devices/", status_code=status.HTTP_204_NO_CONTENT)
 async def pingalltoregister(
-    cmd: PingToRegisterDeviceAllCmd = Depends(),
+    cmd: DeviceCMD.ping_to_register_devices = Depends(),
     logger=Depends(service_logger),
 ):
     """In order to keep device status"""
@@ -53,7 +48,7 @@ async def pingalltoregister(
 @app.get("/devices/{device_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def pingsometoregister(
     device_id: str,
-    cmd: PingToRegisterDeviceCmd = Depends(),
+    cmd: DeviceCMD.ping_to_register_device_by_id = Depends(),
     logger=Depends(service_logger),
 ):
     """In order to keep device status"""

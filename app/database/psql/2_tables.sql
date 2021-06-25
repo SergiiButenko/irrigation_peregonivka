@@ -75,5 +75,5 @@ CREATE TABLE public.life (
     --  state INTEGER DEFAULT 0 NOT NULL,
     --   active INTEGER DEFAULT 1 NOT NULL,
     --    time INTEGER default 0 NOT NULL,
-    FOREIGN KEY(line_id) REFERENCES lines(id),
+    FOREIGN KEY(line_id) REFERENCES lines(id)
 );

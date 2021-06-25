@@ -26,4 +26,4 @@ def get_config() -> Config:
 
 
 def service_logger():
-    return logging.get_logger("device-discovery")
+    return logging.getLogger("device-discovery")
