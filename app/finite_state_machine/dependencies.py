@@ -26,7 +26,7 @@ def get_config() -> Config:
 
 
 def service_logger():
-    return logging.getLogger("device-discovery")
+    return logging.getLogger("state-machine")
 
 
 def ahttp_client() -> HttpxClient:

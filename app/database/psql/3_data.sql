@@ -1,6 +1,6 @@
-
+\connect smart_house
 INSERT INTO
-    public.devices(name, description, type, category)
+    public.devices(name, description)
 VALUES
     (
         'irrigation_relay1',
@@ -8,7 +8,7 @@ VALUES
     );
 
 INSERT INTO
-    public.devices(name, description, type, category)
+    public.devices(name, description)
 VALUES
     (
         'irrigation_relay2',
@@ -16,7 +16,7 @@ VALUES
     );
 
 INSERT INTO
-    public.devices(name, description, type, category)
+    public.devices(name, description)
 VALUES
     (
         'greenhouse_relay1',
@@ -24,7 +24,7 @@ VALUES
     );
 
 INSERT INTO
-    public.devices(name, description, type, category)
+    public.devices(name, description)
 VALUES
     (
         'greenhouse_relay2',
@@ -32,7 +32,7 @@ VALUES
     );
 
 INSERT INTO
-    public.devices(name, description, type, category)
+    public.devices(name, description)
 VALUES
     (
         'basement_relay1',
@@ -40,7 +40,7 @@ VALUES
     );
 
 INSERT INTO
-    public.devices(name, description, type, category)
+    public.devices(name, description)
 VALUES
     (
         'kids_house_relay1',

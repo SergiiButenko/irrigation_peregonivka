@@ -1,3 +1,4 @@
+\connect smart_house
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 
 -- device SECTION 
@@ -37,9 +38,10 @@ CREATE TABLE public.elements (
     --  //intervals integer NOT NULL DEFAULT 2,
     --  //time_wait integer NOT NULL DEFAULT 15,
     --  //relay_num integer,
+    FOREIGN KEY(group_id) REFERENCES elements_groups(id)
+    FOREIGN KEY(device_id) REFERENCES devices(name),
     FOREIGN KEY(type) REFERENCES elements_types(name),
     FOREIGN KEY(category) REFERENCES elements_categories(name),
-    FOREIGN KEY(group_id) REFERENCES elements_groups(id)
 );
 
 
@@ -53,27 +55,16 @@ CREATE TABLE public.actuators_autostart (
     FOREIGN KEY(actuator_id) REFERENCES elements(id)
 );
 
-
-CREATE TABLE public.actions (
-    id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-    description text NOT NULL,
-    triggered_element uuid,
-    action TEXT NOT NULL,
-    actuator_to_fire uuid,
-    FOREIGN KEY(triggered_element) REFERENCES elements(id),
-    FOREIGN KEY(actuator_to_fire) REFERENCES elements(id)
-);
-
 -- Queue section
 CREATE TABLE public.life (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     interval_id TEXT,
-    line_id UUID NOT NULL,
+    actuator_id UUID NOT NULL,
     expected_state jsonb NOT NULL,
     execution_time timestamp without time zone NOT NULL,
     --  rule_id INTEGER NOT NULL,
     --  state INTEGER DEFAULT 0 NOT NULL,
     --   active INTEGER DEFAULT 1 NOT NULL,
     --    time INTEGER default 0 NOT NULL,
-    FOREIGN KEY(line_id) REFERENCES lines(id)
+    FOREIGN KEY(actuator_id) REFERENCES elements(id)
 );

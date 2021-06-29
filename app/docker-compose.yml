@@ -6,7 +6,7 @@ services:
             dockerfile: ./device_discovery/Dockerfile
         container_name: device_discovery
         environment: 
-            DATABASE_URI: postgresql://$DB_USERNAME:$DB_PASSWORD@postgres:5432/smart_house
+            DATABASE_URI: postgresql://$DB_USERNAME:$DB_PASSWORD@172.19.0.2:11000==(postgres):5432/smart_house
         command: ["uvicorn", "device_discovery.main:app", "--host", "0.0.0.0", "--port", "8020"]
         ports:
             - 8020:8020
@@ -25,7 +25,7 @@ services:
             PGDATA: /data/postgres
         volumes:
             - ./database/psql:/docker-entrypoint-initdb.d
-            - postgres-data:/data/postgres
+            # - postgres-data:/data/postgres
         ports:
             - 5432:5432
         expose: 
