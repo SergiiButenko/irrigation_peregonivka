@@ -1,13 +1,13 @@
 version: "3.7"
 services:
-    device_discovery:
+    devices:
         build:
             context: ./
-            dockerfile: ./device_discovery/Dockerfile
-        container_name: device_discovery
+            dockerfile: ./devices/Dockerfile
+        container_name: devices
         environment: 
-            DATABASE_URI: postgresql://$DB_USERNAME:$DB_PASSWORD@172.19.0.2:11000==(postgres):5432/smart_house
-        command: ["uvicorn", "device_discovery.main:app", "--host", "0.0.0.0", "--port", "8020"]
+            PSQL_DATABASE_URI: postgresql://$DB_USERNAME:$DB_PASSWORD@postgres:5432/smart_house
+        command: ["uvicorn", "devices.main:app", "--host", "0.0.0.0", "--port", "8020"]
         ports:
             - 8020:8020
         expose: 
