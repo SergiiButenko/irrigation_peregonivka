@@ -15,7 +15,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-database = Database(Config.DATABASE_URI)
+database = Database(Config.PSQL_DATABASE_URI)
 
 
 def get_db() -> Database:
@@ -27,7 +27,7 @@ def get_config() -> Config:
 
 
 def service_logger():
-    return logging.getLogger("device-discovery")
+    return logging.getLogger("devices")
 
 
 def ahttp_client() -> HttpxClient:
@@ -36,4 +36,3 @@ def ahttp_client() -> HttpxClient:
 
 def mongo_db() -> Mongo:
     return Mongo(Config.MONGO_DATABASE_URI)
-

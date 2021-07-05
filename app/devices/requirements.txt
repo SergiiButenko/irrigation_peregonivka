@@ -3,3 +3,4 @@ uvicorn==0.14.0
 databases==0.4.3
 asyncpg==0.23.0
 httpx==0.18.2
+pymongo==3.11.4

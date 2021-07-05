@@ -7,6 +7,7 @@ services:
         container_name: devices
         environment: 
             PSQL_DATABASE_URI: postgresql://$DB_USERNAME:$DB_PASSWORD@postgres:5432/smart_house
+            MONGO_DATABASE_URI: mongodb://$DB_USERNAME:$DB_PASSWORD@mongo_db:27018
         command: ["uvicorn", "devices.main:app", "--host", "0.0.0.0", "--port", "8020"]
         ports:
             - 8020:8020
@@ -14,6 +15,7 @@ services:
             - 8020
         depends_on:    
             - postgres
+            - mongo_db
         # restart: on-failure
     
     postgres:
@@ -36,6 +38,18 @@ services:
             interval: 10s
             timeout: 5s
             retries: 5
+    
+    mongo_db:
+        image: mongo:latest
+        container_name: mongo_db
+        command: mongod --port 27018
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: $DB_USERNAME
+            MONGO_INITDB_ROOT_PASSWORD: $DB_PASSWORD
+        ports:
+            - 27018:27018
+        volumes:
+            - mongodb-data:/data/db
 
     postgres-admin:
         image: dpage/pgadmin4
@@ -49,3 +63,4 @@ services:
         
 volumes:
     postgres-data:
+    mongodb-data:

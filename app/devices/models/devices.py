@@ -12,8 +12,10 @@ class DeviceSql(BaseModel):
     updated: datetime
 
 
-class State(BaseModel):
-    expected_state: str
+class ComponentSql(BaseModel):
+    id: uuid.UUID
+    name: str
+    device_id: str
 
 
 class Message(BaseModel):

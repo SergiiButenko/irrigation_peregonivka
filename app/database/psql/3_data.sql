@@ -48,43 +48,43 @@ VALUES
     );
 
 INSERT INTO
-    public.elements_groups(name)
+    public.components_groups(name)
 VALUES
     ('Насоси');
 
 INSERT INTO
-    public.elements_groups(name)
+    public.components_groups(name)
 VALUES
     ('Полив з бочки');
 
 INSERT INTO
-    public.elements_groups(name)
+    public.components_groups(name)
 VALUES
     ('Полив з системи');
 
 INSERT INTO
-    public.elements_groups(name)
+    public.components_groups(name)
 VALUES
     ('Теплиця');
 
 INSERT INTO
-    public.elements_groups(name)
+    public.components_groups(name)
 VALUES
     ('Теплиця Датчики');
 
 INSERT INTO
-    public.elements_groups(name)
+    public.components_groups(name)
 VALUES
     ('Двір');
 
 INSERT INTO
-    public.elements_groups(name)
+    public.components_groups(name)
 VALUES
     ('Сад');
 
 
 INSERT INTO
-    public.elements_types(name, description)
+    public.components_types(name, description)
 VALUES
     (
         'actuator',
@@ -92,7 +92,7 @@ VALUES
     );
 
 INSERT INTO
-    public.elements_types(name, description)
+    public.components_types(name, description)
 VALUES
     (
         'sensor',
@@ -100,7 +100,7 @@ VALUES
     );
 
 INSERT INTO
-    public.elements_categories(name, description)
+    public.components_categories(name, description)
 VALUES
     (
         'relay',
@@ -108,7 +108,7 @@ VALUES
     );
 
 INSERT INTO
-    public.elements_categories(name, description)
+    public.components_categories(name, description)
 VALUES
     (
         'temperature_sensor',

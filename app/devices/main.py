@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
 from devices.dependencies import database
-from devices.controllers import (
-    device_registration,
+from devices.routers import (
+    devices,
     actuators,
     sensors
 )
@@ -23,6 +23,6 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
-app.include_router(device_registration.router)
+app.include_router(devices.router)
 app.include_router(actuators.router)
 app.include_router(sensors.router)

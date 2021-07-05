@@ -3,7 +3,6 @@ import json
 from bson import ObjectId
 
 from fastapi import Depends
-from devices.dependencies import service_logger
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -14,11 +13,10 @@ class JSONEncoder(json.JSONEncoder):
 
 
 class Mongo:
-    def __init__(self, uri, service_logger=Depends(service_logger)):
+    def __init__(self, uri):
         self.client = MongoClient(uri)
         self.db = self.client.irrigation_db
         self.sensors_collection = self.db.sensors
-        self.service_logger = service_logger
 
     async def register_sensor_data(self, device_id, sensor_id, data):
         await self._insert_document(self.sensors_collection, dict(

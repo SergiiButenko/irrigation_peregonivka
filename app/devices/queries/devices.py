@@ -1,5 +1,5 @@
-from device_discovery.dependencies import database, service_logger
-from device_discovery.models.devices import DeviceSql
+from devices.dependencies import database, service_logger
+from devices.models.devices import DeviceSql    
 from fastapi import Depends
 
 

@@ -16,15 +16,3 @@ class SensorsCMD:
         self, device_id: str, sensor_id: str, value: dict
     ) -> None:
         SensorsNOSQL.register_sensor_value_by_id(device_id, sensor_id, value)
-
-    async def get_values_by_id(
-        self,
-        device_id: str,
-        sensor_id: str,
-        minutes_from_now: int,
-        function: str,
-        sorting: str,
-    ):
-        SensorsNOSQL.get_values_by_id(
-            device_id, sensor_id, minutes_from_now, function, sorting
-        )
