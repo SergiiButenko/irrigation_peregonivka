@@ -11,6 +11,7 @@ router = APIRouter(
 
 @router.get(
     "/devices/register",
+    name="Reregister all devices IP",
     status_code=status.HTTP_204_NO_CONTENT,
     response_class=Response
 )
@@ -25,6 +26,7 @@ async def pingalltoregister(
 
 @router.get(
     "/devices/{device_id}/register",
+    name="Reregister specific device IP",
     status_code=status.HTTP_204_NO_CONTENT,
     response_class=Response,
 )

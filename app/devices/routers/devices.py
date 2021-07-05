@@ -6,14 +6,12 @@ from pydantic import Required
 from devices.dependencies import service_logger
 from devices.commands.devices import DeviceCMD
 
-router = APIRouter(
-    prefix='/devices/{device_id}',
-    tags=["registration"]
-    )
+router = APIRouter(prefix="/devices/{device_id}", tags=["registration"])
 
 
 @router.post(
     "/register",
+    name="Device IP registration",
     status_code=status.HTTP_204_NO_CONTENT,
     response_class=Response,
 )
@@ -31,7 +29,12 @@ async def register(
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.post("/message", status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
+@router.post(
+    "/message",
+    name="Send message to device",
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_class=Response
+)
 async def send_message_to_device(
     device_id: str,
     message: Message,
@@ -39,4 +42,4 @@ async def send_message_to_device(
     logger=Depends(service_logger),
 ):
     logger.info(f"Senging message '{message['message']}' to '{device_id}'")
-    await cmds.send_message_to_device(message=message['message'])
+    await cmds.send_message_to_device(message=message["message"])

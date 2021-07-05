@@ -12,7 +12,10 @@ router = APIRouter(
 )
 
 
-@router.get("/actuators/{actuator_id}")
+@router.get(
+    "/actuators/{actuator_id}",
+    name="Get specific actuator of device"
+)
 async def get_actuators(
     device_id: str,
     actuator_id: int,
@@ -23,7 +26,10 @@ async def get_actuators(
     return actuators_sql.get_by_id(device_id, actuator_id)
 
 
-@router.get("/actuators/{actuator_id}/state")
+@router.get(
+    "/actuators/{actuator_id}/state",
+    name="Get state of specific actuator"
+)
 async def get_actuator_state(
     device_id: str,
     actuator_id: str,
@@ -35,7 +41,10 @@ async def get_actuator_state(
     return actuators_cmds.get_actuator_state(device_id, actuator_id, state)
 
 
-@router.put("/actuators/{actuator_id}/state")
+@router.put(
+    "/actuators/{actuator_id}/state",
+    name="Set state of specific actuator"
+)
 async def set_actuator_state(
     device_id: str,
     actuator_id: str,

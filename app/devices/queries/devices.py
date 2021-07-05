@@ -1,5 +1,5 @@
 from devices.dependencies import database, service_logger
-from devices.models.devices import DeviceSql    
+from devices.models.devices import DeviceSql
 from fastapi import Depends
 
 
@@ -27,5 +27,8 @@ class DeviceSQL:
         sql = """
         SELECT * FROM devices WHERE name=:device_name;
         """
-        result = await database.fetch_all(sql, values={"device_name": device_name})
+        result = await database.fetch_all(
+            sql,
+            values={"device_name": device_name}
+        )
         return DeviceSql.parse_obj(result)

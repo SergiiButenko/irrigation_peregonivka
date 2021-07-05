@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 
-@router.get("")
+@router.get("", name="Get sensor model")
 async def get_sensor(
     device_id: str,
     sensor_id: str,
@@ -27,6 +27,7 @@ async def get_sensor(
 
 @router.post(
     "/data",
+    name="Register sensor data",
     status_code=status.HTTP_204_NO_CONTENT,
     response_class=Response,
 )
@@ -39,14 +40,21 @@ async def register(
 ):
     """To register sensor values"""
     logger.info(
-        f"Register signal from '{device_id}':'{sensor_id}' device_id:sensor_id received.")
+        f"Register signal from '{device_id}':'{sensor_id}' \
+        device_id:sensor_id received."
+    )
     logger.info(f"value: '{sensor_value}'")
 
-    await sensor_cmds.register_sensor_value_by_id(device_id, sensor_id, sensor_value)
+    await sensor_cmds.register_sensor_value_by_id(
+        device_id,
+        sensor_id,
+        sensor_value
+    )
 
 
 @router.get(
     "/data",
+    name="Get sensor data",
     status_code=status.HTTP_204_NO_CONTENT,
     response_class=Response
 )

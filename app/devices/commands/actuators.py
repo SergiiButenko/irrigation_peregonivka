@@ -15,7 +15,11 @@ class ActuatorCMD:
         self.service_logger = service_logger
         self.ahttp_client = ahttp_client
 
-    async def set_actuator_state(self, device_id: str, actuator_id: str, state) -> None:
+    async def set_actuator_state(
+        self, device_id: str,
+        actuator_id: str,
+        state
+    ) -> None:
         base_url = self.DeviceCMD.get_device_IP_by_id(device_id)
 
         await self.ahttp_client.post(
@@ -23,7 +27,11 @@ class ActuatorCMD:
             params={"id": actuator_id, 'state': state.expected_state}
         )
 
-    async def get_actuator_state(self, device_id: str, actuator_id: str) -> str:
+    async def get_actuator_state(
+        self,
+        device_id: str,
+        actuator_id: str
+    ) -> str:
         base_url = self.DeviceCMD.get_device_IP_by_id(device_id)
 
         _state = await self.ahttp_client.get(
