@@ -9,3 +9,5 @@ class SensorSQL(BaseModel):
     id: str
     name: str
     device_id: str
+    type: str
+    version: str

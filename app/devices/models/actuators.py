@@ -10,4 +10,5 @@ class ActuatorSQL(BaseModel):
     name: str
     device_id: str
     settings: dict
-
+    type: str
+    version: str

@@ -23,12 +23,12 @@ class DeviceSQL:
         result = await database.fetch_all(sql)
         return DeviceSql.parse_obj(result)
 
-    async def get_device(self, device_name: str) -> DeviceSql:
+    async def get_device(self, device_id: str) -> DeviceSql:
         sql = """
-        SELECT * FROM devices WHERE name=:device_name;
+        SELECT * FROM devices WHERE name=:device_id;
         """
         result = await database.fetch_all(
             sql,
-            values={"device_name": device_name}
+            values={"device_id": device_id}
         )
         return DeviceSql.parse_obj(result)

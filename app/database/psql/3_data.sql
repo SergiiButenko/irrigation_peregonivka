@@ -1,50 +1,63 @@
 \connect smart_house
 INSERT INTO
-    public.devices(name, description)
+    public.devices(name, description, type, version)
 VALUES
     (
         'irrigation_relay1',
-        'Контроллер поливу огорода'
+        'Контроллер поливу огорода',
+        'Relay8ch',
+        'v1'
     );
 
 INSERT INTO
-    public.devices(name, description)
+    public.devices(name, description, type, version)
 VALUES
     (
         'irrigation_relay2',
         'Контроллер насосу поливу огорода'
+        'Relay8ch',
+        'v1'
     );
 
 INSERT INTO
-    public.devices(name, description)
+    public.devices(name, description, type, version)
 VALUES
     (
         'greenhouse_relay1',
         'Контроллер підігріва теплиці'
+        'Relay2ch',
+        'v1'
     );
 
 INSERT INTO
-    public.devices(name, description)
+    public.devices(name, description, type, version)
 VALUES
     (
         'greenhouse_relay2',
         'Освітлення в теплиці'
+        'Relay2ch',
+        'v1'
+
     );
 
 INSERT INTO
-    public.devices(name, description)
+    public.devices(name, description, type, version)
 VALUES
     (
         'basement_relay1',
         'Освітлення на дворі'
+        'Relay4ch',
+        'v1'
     );
 
 INSERT INTO
-    public.devices(name, description)
+    public.devices(name, description, type, version)
 VALUES
     (
         'kids_house_relay1',
         'Освітлення на дитячому будинку'
+        'Relay8ch',
+        'v1'
     );
 
 INSERT INTO
@@ -84,7 +97,7 @@ VALUES
 
 
 INSERT INTO
-    public.components_types(name, description)
+    public.components_categories(name, description)
 VALUES
     (
         'actuator',
@@ -92,7 +105,7 @@ VALUES
     );
 
 INSERT INTO
-    public.components_types(name, description)
+    public.components_categories(name, description)
 VALUES
     (
         'sensor',
@@ -100,7 +113,7 @@ VALUES
     );
 
 INSERT INTO
-    public.components_categories(name, description)
+    public.components_types(name, description)
 VALUES
     (
         'relay',

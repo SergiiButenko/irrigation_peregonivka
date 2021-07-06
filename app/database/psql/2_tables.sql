@@ -6,6 +6,8 @@ CREATE TABLE public.devices(
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
+    type TEXT NOT NULL,
+    version TEXT NOT NULL,
     last_known_ip TEXT,
     updated time without time zone
 );
@@ -31,8 +33,9 @@ CREATE TABLE public.components (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
     name text NOT NULL,
     group_id uuid not null,
-    type TEXT NOT NULL,
     category TEXT NOT NULL,
+    type TEXT NOT NULL,
+    version TEXT NOT NULL,
     settings jsonb,
     --  //time integer NOT NULL DEFAULT 10,
     --  //intervals integer NOT NULL DEFAULT 2,

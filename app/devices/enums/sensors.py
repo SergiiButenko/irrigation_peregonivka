@@ -1,0 +1,2 @@
+class SensorEnum:
+    type = 'sensor'

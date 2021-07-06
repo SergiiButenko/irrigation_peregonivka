@@ -1,0 +1,2 @@
+class ActuatorsEnum:
+    type = 'actuator'
