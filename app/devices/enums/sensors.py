@@ -1,2 +1,2 @@
 class SensorEnum:
-    type = 'sensor'
+    category = 'sensor'

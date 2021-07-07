@@ -1,3 +1,5 @@
+from typing import Optional
+import uuid
 from pydantic import BaseModel
 
 
@@ -6,8 +8,11 @@ class SensorValue(BaseModel):
 
 
 class SensorSQL(BaseModel):
-    id: str
-    name: str
+    id: int
     device_id: str
+    name: str
+    group_id: uuid.UUID
+    category: str
     type: str
     version: str
+    settings: Optional[dict] = None

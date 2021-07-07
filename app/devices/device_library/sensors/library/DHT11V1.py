@@ -1,8 +1,8 @@
-from devices.device_library.actuators.base_class_actuator import Actuator
+from devices.device_library.sensors.base_class_sensor import Sensor
 
 
-class RelayV1(Actuator):
-    __type__ = 'relay'
+class DHT11V1(Sensor):
+    __type__ = 'DHT11'
     __version__ = 'v1'
 
     def __init__(self, device, actuator_id) -> None:

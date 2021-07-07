@@ -6,4 +6,4 @@ class Device8chV1(Device):
     __version__ = 'v1'
 
     def __init__(self, device_id) -> None:
-        super.__init__(device_id)
+        super().__init__(device_id)

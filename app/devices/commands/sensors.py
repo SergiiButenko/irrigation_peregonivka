@@ -1,18 +1,28 @@
 from fastapi import Depends
 from devices.queries.sensors import SensorsNOSQL
 from devices.dependencies import service_logger
+from devices.queries.devices import DeviceSQL
+from devices.commands.devices import DeviceCMD
 
 
-class SensorsCMD:
+class SensorsNOSQL:
     def __init__(
         self,
-        SensorsNOSQL: SensorsNOSQL = Depends(),
+        DeviceSQL: DeviceSQL = Depends(),
+        DeviceCMD: DeviceCMD = Depends(),
         service_logger=Depends(service_logger),
+        sensors_db: SensorsNOSQL = Depends(SensorsNOSQL),
     ):
-        self.SensorsNOSQL = SensorsNOSQL
+        self.DeviceSQL = DeviceSQL
+        self.DeviceCMD = DeviceCMD
         self.service_logger = service_logger
+        self.sensors_db = sensors_db
+
+    async def get_sensor_state(self, device_id: str, sensor_id: int) -> str:
+        device = await self.DeviceCMD.get_device_by_id(device_id)
+        return await device.sensors[sensor_id].get_state()
 
     async def register_sensor_value_by_id(
         self, device_id: str, sensor_id: str, value: dict
     ) -> None:
-        SensorsNOSQL.register_sensor_value_by_id(device_id, sensor_id, value)
+        self.sensors_db.register_sensor_value_by_id(device_id, sensor_id, value)

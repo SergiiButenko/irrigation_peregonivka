@@ -23,7 +23,7 @@ async def get_actuators(
     logger=Depends(service_logger),
 ):
     """Change state of actuator."""
-    return actuators_sql.get_by_id(device_id, actuator_id)
+    return await actuators_sql.get_by_id(device_id, actuator_id)
 
 
 @router.get(
@@ -32,13 +32,12 @@ async def get_actuators(
 )
 async def get_actuator_state(
     device_id: str,
-    actuator_id: str,
-    state: State,
+    actuator_id: int,
     actuators_cmds: ActuatorCMD = Depends(ActuatorCMD),
     logger=Depends(service_logger),
 ):
     """Change state of actuator."""
-    return actuators_cmds.get_actuator_state(device_id, actuator_id, state)
+    return await actuators_cmds.get_actuator_state(device_id, actuator_id)
 
 
 @router.put(
@@ -47,10 +46,10 @@ async def get_actuator_state(
 )
 async def set_actuator_state(
     device_id: str,
-    actuator_id: str,
+    actuator_id: int,
     state: State,
     actuators_cmds: ActuatorCMD = Depends(ActuatorCMD),
     logger=Depends(service_logger),
 ):
     """Set state of actuator."""
-    actuators_cmds.set_actuator_state(device_id, actuator_id, state)
+    return await actuators_cmds.set_actuator_state(device_id, actuator_id, state)

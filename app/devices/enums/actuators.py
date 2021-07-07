@@ -1,2 +1,2 @@
 class ActuatorsEnum:
-    type = 'actuator'
+    category = 'actuator'

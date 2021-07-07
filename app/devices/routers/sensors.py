@@ -16,7 +16,7 @@ router = APIRouter(
 @router.get("", name="Get sensor model")
 async def get_sensor(
     device_id: str,
-    sensor_id: str,
+    sensor_id: int,
     sensor_sql: SensorsNOSQL = Depends(SensorsNOSQL),
     logger=Depends(service_logger),
 ):
@@ -33,7 +33,7 @@ async def get_sensor(
 )
 async def register(
     device_id: str,
-    sensor_id: str,
+    sensor_id: int,
     sensor_value: SensorValue,
     sensor_cmds: SensorsCMD = Depends(SensorsCMD),
     logger=Depends(service_logger),

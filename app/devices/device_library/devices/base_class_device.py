@@ -1,36 +1,55 @@
-from devices.device_library.actuators.ActuatorFactory import ActuatorFactory
+from devices.device_library.sensors.sensor_factory import SensorFactory
+from devices.models.actuators import State
+from devices.device_library.actuators.actuator_factory import ActuatorFactory
 from devices.enums.sensors import SensorEnum
 from devices.enums.actuators import ActuatorsEnum
-from devices.models.devices import ComponentSql
+from devices.models.devices import ComponentListSQL, ComponentSql
+from devices.dependencies import database, service_logger
+from fastapi import Depends
 
 
 class Device:
 
-    def __init__(self, device_id) -> None:
+    def __init__(
+        self,
+        device_id,
+        # service_logger=Depends(service_logger),
+        # database=Depends(get_db)
+    ) -> None:
         self.device_id = device_id
-        self.actuators = []
-        self.sensors = []
+        self.actuators = {}
+        self.sensors = {}
+        self.database = database
+        self.logger = service_logger()
 
-    def _set_actuator_state(self, actuator_id: int) -> dict:
-        return "NEW STATE"
+    async def _set_actuator_state(self, actuator_id: int, state: State) -> dict:
+        return f"NEW STATE for {actuator_id}: {state.expected_state}"
 
-    def _get_actuator_state(self, actuator_id: int) -> dict:
-        return "OLD STATE"
+    async def _get_actuator_state(self, actuator_id: int) -> dict:
+        return f"OLD STATE for {actuator_id}"
 
-    # def _get_sensor_data(self, sensor_id: int) -> dict:
-    #     #send request to sensor
-    #     pass
+    async def _get_sensor_data(self, sensor_id: int) -> dict:
+        return "{data: {temp: 27}"
 
-    def init_components(self) -> None:
+    async def init_components(self) -> None:
         sql = """
-        SELECT * FROM components WHERE device_id:=device_id;
+        SELECT * FROM components WHERE device_id=:device_id;
         """
-        _results = database.execute(sql)
+        _results = await self.database.fetch_all(
+            sql,
+            values={"device_id": self.device_id}
+        )
 
-        components = ComponentSql.parse_obj(_results)
+        components = list()
+        for _result in _results:
+            components.append(ComponentSql.parse_obj(_result))
 
         for c in components:
-            if c.type == ActuatorsEnum.type:
-                _actuator = ActuatorFactory.get(c.version)
-                self.actuators.append(_actuator(self, c.id))
+            if c.category == ActuatorsEnum.category:
+                _actuator = ActuatorFactory.get(c.type, c.version)
+                self.actuators[c.id] = _actuator(self, c.id)
+            elif c.category == SensorEnum.category:
+                _sensor = SensorFactory.get(c.type, c.version)
+                self.sensors[c.id] = _sensor(self, c.id)
 
+        return self

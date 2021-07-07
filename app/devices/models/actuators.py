@@ -1,3 +1,5 @@
+from typing import List, Optional
+import uuid
 from pydantic import BaseModel
 
 
@@ -6,9 +8,15 @@ class State(BaseModel):
 
 
 class ActuatorSQL(BaseModel):
-    id: str
-    name: str
+    id: int
     device_id: str
-    settings: dict
+    name: str
+    group_id: uuid.UUID
+    category: str
     type: str
     version: str
+    settings: Optional[dict] = None
+
+
+class ActuatorListSQL(BaseModel):
+    __root__: List[ActuatorSQL]

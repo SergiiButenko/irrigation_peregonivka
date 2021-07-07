@@ -25,9 +25,9 @@ class DeviceSQL:
 
     async def get_device(self, device_id: str) -> DeviceSql:
         sql = """
-        SELECT * FROM devices WHERE name=:device_id;
+        SELECT * FROM devices WHERE id=:device_id;
         """
-        result = await database.fetch_all(
+        result = await database.fetch_one(
             sql,
             values={"device_id": device_id}
         )

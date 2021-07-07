@@ -1,3 +1,4 @@
+from typing import List, Optional
 import uuid
 from datetime import datetime
 
@@ -5,22 +6,27 @@ from pydantic import BaseModel
 
 
 class DeviceSql(BaseModel):
-    id: uuid.UUID
-    name: str
+    id: str
     description: str
     type: str
     version: str
-    last_known_ip: str
-    updated: datetime
+    last_known_ip: Optional[str] = None
+    updated: Optional[datetime] = None
 
 
 class ComponentSql(BaseModel):
-    id: uuid.UUID
-    name: str
+    id: int
     device_id: str
+    name: str
+    group_id: uuid.UUID
+    category: str
     type: str
     version: str
-    component_type: str
+    settings: Optional[dict] = None
+
+
+class ComponentListSQL(BaseModel):
+    __root__: List[ComponentSql]
 
 
 class Message(BaseModel):

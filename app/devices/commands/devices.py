@@ -1,3 +1,5 @@
+from devices.device_library.devices.device_factory import DeviceFactory
+from devices.device_library.devices.base_class_device import Device
 from devices.models.devices import DeviceSql, ComponentSql
 from fastapi import Depends
 from starlette.routing import NoMatchFound
@@ -62,3 +64,8 @@ class DeviceCMD:
         ahttp_client.post(url="http://" + base_url + "/messages", json=message)
 
         return True
+
+    async def get_device_by_id(self, device_id: str) -> Device:
+        _deviceSQL = await self.DeviceSQL.get_device(device_id)
+        _device = DeviceFactory.get(_deviceSQL.type, _deviceSQL.version)
+        return await _device(device_id).init_components()

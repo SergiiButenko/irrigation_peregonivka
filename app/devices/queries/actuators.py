@@ -1,4 +1,4 @@
-from devices.models.actuators import ActuatorSQL
+from devices.models.actuators import ActuatorListSQL, ActuatorSQL
 from devices.dependencies import database, service_logger
 from fastapi import Depends
 
@@ -9,11 +9,11 @@ class ActuatorsSQL:
 
     async def get_by_id(self, device_id: str, actuator_id: int) -> ActuatorSQL:
         sql = """
-        SELECT * FROM components 
+        SELECT id, name, device_id, settings, category, type, version FROM components 
         WHERE id=:actuator_id AND device_id=:device_id;
         """
-        result = await database.fetch_all(
+        result = await database.fetch_one(
             sql,
-            values={"id": actuator_id, "device_id": device_id})
+            values={"actuator_id": actuator_id, "device_id": device_id})
         return ActuatorSQL.parse_obj(result)
 

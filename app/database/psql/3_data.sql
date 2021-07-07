@@ -1,6 +1,6 @@
 \connect smart_house
 INSERT INTO
-    public.devices(name, description, type, version)
+    public.devices(id, description, type, version)
 VALUES
     (
         'irrigation_relay1',
@@ -10,52 +10,52 @@ VALUES
     );
 
 INSERT INTO
-    public.devices(name, description, type, version)
+    public.devices(id, description, type, version)
 VALUES
     (
         'irrigation_relay2',
-        'Контроллер насосу поливу огорода'
+        'Контроллер насосу поливу огорода',
         'Relay8ch',
         'v1'
     );
 
 INSERT INTO
-    public.devices(name, description, type, version)
+    public.devices(id, description, type, version)
 VALUES
     (
         'greenhouse_relay1',
-        'Контроллер підігріва теплиці'
+        'Контроллер підігріва теплиці',
         'Relay2ch',
         'v1'
     );
 
 INSERT INTO
-    public.devices(name, description, type, version)
+    public.devices(id, description, type, version)
 VALUES
     (
         'greenhouse_relay2',
-        'Освітлення в теплиці'
+        'Освітлення в теплиці',
         'Relay2ch',
         'v1'
 
     );
 
 INSERT INTO
-    public.devices(name, description, type, version)
+    public.devices(id, description, type, version)
 VALUES
     (
         'basement_relay1',
-        'Освітлення на дворі'
+        'Освітлення на дворі',
         'Relay4ch',
         'v1'
     );
 
 INSERT INTO
-    public.devices(name, description, type, version)
+    public.devices(id, description, type, version)
 VALUES
     (
         'kids_house_relay1',
-        'Освітлення на дитячому будинку'
+        'Освітлення на дитячому будинку',
         'Relay8ch',
         'v1'
     );
