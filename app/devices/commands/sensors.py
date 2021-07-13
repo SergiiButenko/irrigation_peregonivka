@@ -5,7 +5,7 @@ from devices.queries.devices import DeviceSQL
 from devices.commands.devices import DeviceCMD
 
 
-class SensorsNOSQL:
+class SensorsCMD:
     def __init__(
         self,
         DeviceSQL: DeviceSQL = Depends(),

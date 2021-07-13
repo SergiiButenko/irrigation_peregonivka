@@ -1,3 +1,4 @@
+from devices.commands.scenarios import ScenariosCMD
 from devices.models.sensors import SensorValue
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import Response
@@ -25,42 +26,13 @@ async def get_sensor(
     return await sensor_sql.get_by_id(device_id, sensor_id)
 
 
-@router.post(
-    "/data",
-    name="Register sensor data",
-    status_code=status.HTTP_204_NO_CONTENT,
-    response_class=Response,
-)
-async def register(
-    device_id: str,
-    sensor_id: int,
-    sensor_value: SensorValue,
-    sensor_cmds: SensorsCMD = Depends(SensorsCMD),
-    logger=Depends(service_logger),
-):
-    """To register sensor values"""
-    logger.info(
-        f"Register signal from '{device_id}':'{sensor_id}' \
-        device_id:sensor_id received."
-    )
-    logger.info(f"value: '{sensor_value}'")
-
-    await sensor_cmds.register_sensor_value_by_id(
-        device_id,
-        sensor_id,
-        sensor_value
-    )
-
-
 @router.get(
     "/data",
-    name="Get sensor data",
-    status_code=status.HTTP_204_NO_CONTENT,
-    response_class=Response
+    name="Get sensor data"
 )
 async def get_value(
     device_id: str,
-    sensor_id: str,
+    sensor_id: int,
     minutes_from_now: int,
     function: Optional[str] = None,
     sorting: Optional[str] = 'ASC',
@@ -76,3 +48,30 @@ async def get_value(
         function,
         sorting
         )
+
+
+@router.post(
+    "/data",
+    name="Register sensor data"
+)
+async def register(
+    device_id: str,
+    sensor_id: int,
+    sensor_value: SensorValue,
+    sensor_cmds: SensorsCMD = Depends(SensorsCMD),
+    scenarios_cmds: ScenariosCMD = Depends(ScenariosCMD),
+    logger=Depends(service_logger),
+):
+    """To register sensor values"""
+    logger.info(
+        f"Register signal from '{device_id}':'{sensor_id}' \
+        device_id:sensor_id received."
+    )
+    logger.info(f"value: '{sensor_value}'")
+
+    # await sensor_cmds.register_sensor_value_by_id(
+    #     device_id,
+    #     sensor_id,
+    #     sensor_value
+    # )
+    return await scenarios_cmds.analyse_sensor_data(device_id, sensor_id)
