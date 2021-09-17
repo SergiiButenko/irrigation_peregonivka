@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, status, Response
 from fastapi.params import Header
 from pydantic import Required
 
-from devices.dependencies import service_logger
+from devices.dependencies import get_logger
 from devices.commands.devices import DeviceCMD
 
 router = APIRouter(prefix="/devices/{device_id}", tags=["registration"])
@@ -19,7 +19,7 @@ async def register(
     device_id: str,
     X_Real_IP: str = Header(Required),
     cmds: DeviceCMD = Depends(DeviceCMD),
-    logger=Depends(service_logger),
+    logger=Depends(get_logger),
 ):
     """In order to keep device ip"""
     logger.info(f"Register signal from '{device_id}' device id received.")
@@ -39,7 +39,7 @@ async def send_message_to_device(
     device_id: str,
     message: Message,
     cmds: DeviceCMD = Depends(DeviceCMD),
-    logger=Depends(service_logger),
+    logger=Depends(get_logger),
 ):
     logger.info(f"Senging message '{message['message']}' to '{device_id}'")
     await cmds.send_message_to_device(message=message["message"])

@@ -4,6 +4,7 @@ The idea is to support callable params for the Depends injections.
 """
 import logging
 from databases import Database
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from devices.config.config import Config
 from devices.service_providers.httpx_client import HttpxClient
@@ -15,18 +16,19 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-database = Database(Config.PSQL_DATABASE_URI)
+_psql_db = Database(Config.PSQL_DATABASE_URI)
+_mongo_db = AsyncIOMotorClient(Config.MONGO_DATABASE_URI)
 
 
-def get_db() -> Database:
-    return database
+def psql_db() -> Database:
+    return _psql_db
 
 
 def get_config() -> Config:
     return Config
 
 
-def service_logger():
+def get_logger():
     return logging.getLogger("devices")
 
 
@@ -35,4 +37,4 @@ def ahttp_client() -> HttpxClient:
 
 
 def mongo_db() -> Mongo:
-    return Mongo(Config.MONGO_DATABASE_URI)
+    return Mongo(_mongo_db)

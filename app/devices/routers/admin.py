@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, Response
 
-from devices.dependencies import service_logger
+from devices.dependencies import get_logger
 from devices.commands.devices import DeviceCMD
 
 router = APIRouter(
@@ -17,7 +17,7 @@ router = APIRouter(
 )
 async def pingalltoregister(
     cmds: DeviceCMD = Depends(DeviceCMD),
-    logger=Depends(service_logger),
+    logger=Depends(get_logger),
 ):
     """In order to keep device status"""
     logger.info("Asking all devices to register.")
@@ -33,7 +33,7 @@ async def pingalltoregister(
 async def pingsometoregister(
     device_id: str,
     cmds: DeviceCMD = Depends(DeviceCMD),
-    logger=Depends(service_logger),
+    logger=Depends(get_logger),
 ):
     """In order to keep device status"""
     logger.info(f"Asking '{device_id}' device id to register.")

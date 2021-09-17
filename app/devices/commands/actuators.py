@@ -2,7 +2,7 @@ from devices.queries.devices import DeviceSQL
 from devices.device_library.devices.device_factory import DeviceFactory
 from fastapi import Depends
 from devices.commands.devices import DeviceCMD
-from devices.dependencies import service_logger
+from devices.dependencies import get_logger
 
 
 class ActuatorCMD:
@@ -10,7 +10,7 @@ class ActuatorCMD:
         self,
         DeviceSQL: DeviceSQL = Depends(),
         DeviceCMD: DeviceCMD = Depends(),
-        service_logger=Depends(service_logger),
+        service_logger=Depends(get_logger),
     ):
         self.DeviceSQL = DeviceSQL
         self.DeviceCMD = DeviceCMD

@@ -1,10 +1,10 @@
-from devices.dependencies import database, service_logger
+from devices.dependencies import _psql_db, get_logger
 from devices.models.devices import DeviceSql
 from fastapi import Depends
 
 
 class DeviceSQL:
-    def __init__(self, service_logger=Depends(service_logger)):
+    def __init__(self, service_logger=Depends(get_logger)):
         self.service_logger = service_logger
 
     async def set_device_ip(self, device_id: str, device_ip: str) -> None:

@@ -4,7 +4,7 @@ from devices.device_library.actuators.actuator_factory import ActuatorFactory
 from devices.enums.sensors import SensorEnum
 from devices.enums.actuators import ActuatorsEnum
 from devices.models.devices import ComponentListSQL, ComponentSql
-from devices.dependencies import database, service_logger
+from devices.dependencies import _psql_db, get_logger
 from fastapi import Depends
 
 
@@ -20,7 +20,7 @@ class Device:
         self.actuators = {}
         self.sensors = {}
         self.database = database
-        self.logger = service_logger()
+        self.logger = get_logger()
 
     async def _set_actuator_state(self, actuator_id: int, state: State) -> dict:
         return f"NEW STATE for {actuator_id}: {state.expected_state}"

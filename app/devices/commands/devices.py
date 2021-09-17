@@ -4,14 +4,14 @@ from devices.models.devices import DeviceSql, ComponentSql
 from fastapi import Depends
 from starlette.routing import NoMatchFound
 from devices.queries.devices import DeviceSQL
-from devices.dependencies import service_logger, ahttp_client
+from devices.dependencies import get_logger, ahttp_client
 
 
 class DeviceCMD:
     def __init__(
         self,
         DeviceSQL: DeviceSQL = Depends(),
-        service_logger=Depends(service_logger),
+        service_logger=Depends(get_logger),
         ahttp_client=Depends(ahttp_client),
     ):
         self.DeviceSQL = DeviceSQL

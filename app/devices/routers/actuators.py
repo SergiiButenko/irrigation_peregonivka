@@ -1,8 +1,9 @@
+from devices.commands.events import EventsCMD
 from devices.queries.actuators import ActuatorsSQL
 from devices.models.actuators import State
 from fastapi import APIRouter, Depends
 
-from devices.dependencies import service_logger
+from devices.dependencies import get_logger
 from devices.commands.actuators import ActuatorCMD
 
 
@@ -20,7 +21,7 @@ async def get_actuators(
     device_id: str,
     actuator_id: int,
     actuators_sql: ActuatorsSQL = Depends(ActuatorsSQL),
-    logger=Depends(service_logger),
+    logger=Depends(get_logger),
 ):
     """Change state of actuator."""
     return await actuators_sql.get_by_id(device_id, actuator_id)
@@ -34,7 +35,7 @@ async def get_actuator_state(
     device_id: str,
     actuator_id: int,
     actuators_cmds: ActuatorCMD = Depends(ActuatorCMD),
-    logger=Depends(service_logger),
+    logger=Depends(get_logger),
 ):
     """Change state of actuator."""
     return await actuators_cmds.get_actuator_state(device_id, actuator_id)
@@ -48,8 +49,9 @@ async def set_actuator_state(
     device_id: str,
     actuator_id: int,
     state: State,
+    events_cmds: EventsCMD = Depends(EventsCMD),
     actuators_cmds: ActuatorCMD = Depends(ActuatorCMD),
-    logger=Depends(service_logger),
+    logger=Depends(get_logger),
 ):
     """Set state of actuator."""
     return await actuators_cmds.set_actuator_state(device_id, actuator_id, state)

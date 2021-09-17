@@ -30,7 +30,6 @@ CREATE TABLE public.components_categories(
 CREATE TABLE public.components (
     id INTEGER NOT NULL,
     device_id TEXT DEFAULT NULL,
-    -- relay_num INTEGER NOT NULL,
     name text NOT NULL,
     group_id uuid not null,
     category TEXT NOT NULL,

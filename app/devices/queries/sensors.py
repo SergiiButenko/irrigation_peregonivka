@@ -1,5 +1,5 @@
 from devices.models.sensors import SensorSQL
-from devices.dependencies import service_logger, mongo_db, database
+from devices.dependencies import get_logger, mongo_db, _psql_db
 from devices.models.devices import DeviceSql
 from fastapi import Depends
 
@@ -7,7 +7,7 @@ from fastapi import Depends
 class SensorsNOSQL:
     def __init__(
         self,
-        service_logger=Depends(service_logger),
+        service_logger=Depends(get_logger),
         mongo=Depends(mongo_db)
     ):
         self.service_logger = service_logger

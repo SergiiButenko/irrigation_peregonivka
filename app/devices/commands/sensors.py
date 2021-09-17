@@ -1,6 +1,6 @@
 from fastapi import Depends
 from devices.queries.sensors import SensorsNOSQL
-from devices.dependencies import service_logger
+from devices.dependencies import get_logger
 from devices.queries.devices import DeviceSQL
 from devices.commands.devices import DeviceCMD
 
@@ -10,7 +10,7 @@ class SensorsCMD:
         self,
         DeviceSQL: DeviceSQL = Depends(),
         DeviceCMD: DeviceCMD = Depends(),
-        service_logger=Depends(service_logger),
+        service_logger=Depends(get_logger),
         sensors_db: SensorsNOSQL = Depends(SensorsNOSQL),
     ):
         self.DeviceSQL = DeviceSQL
@@ -25,4 +25,4 @@ class SensorsCMD:
     async def register_sensor_value_by_id(
         self, device_id: str, sensor_id: str, value: dict
     ) -> None:
-        self.sensors_db.register_sensor_value_by_id(device_id, sensor_id, value)
+        await self.sensors_db.register_sensor_value_by_id(device_id, sensor_id, value)
