@@ -1,4 +1,4 @@
-from devices.device_library.actuators.base_class_actuator import Actuator
+from devices.libraries.device_library.actuators.base_class_actuator import Actuator
 
 
 class RelayV1(Actuator):

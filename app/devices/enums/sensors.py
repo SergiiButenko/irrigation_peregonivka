@@ -1,2 +1,0 @@
-class SensorEnum:
-    category = 'sensor'

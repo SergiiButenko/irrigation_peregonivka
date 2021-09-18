@@ -1,4 +1,4 @@
-from devices.device_library.sensors.base_class_sensor import Sensor
+from devices.libraries.device_library.sensors.base_class_sensor import Sensor
 
 
 class DHT11V1(Sensor):

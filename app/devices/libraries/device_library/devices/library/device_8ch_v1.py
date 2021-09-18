@@ -1,4 +1,4 @@
-from devices.device_library.devices.base_class_device import Device
+from devices.libraries.device_library.devices.base_class_device import Device
 
 
 class Device8chV1(Device):

@@ -1,4 +1,5 @@
 from devices.dependencies import get_logger
+from fastapi import Depends
 
 
 class CesspollRelaySensor1:
@@ -7,7 +8,7 @@ class CesspollRelaySensor1:
     class WaterLevel:
         def analyse():
             data = [0, 1]
-
+            
             if data[0] > data[1]:
                 # send message level higher
                 pass
@@ -16,9 +17,9 @@ class CesspollRelaySensor1:
                 pass
 
     class PumpStarter:
-        def analyse():
+        def analyse(service_logger=Depends(get_logger),):
             data = [0, 1]
-
+            service_logger().info("test")
             if data[0] > data[1]:
                 # send message pump on
                 pass

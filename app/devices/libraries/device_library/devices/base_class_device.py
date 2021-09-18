@@ -1,9 +1,8 @@
-from devices.device_library.sensors.sensor_factory import SensorFactory
-from devices.models.actuators import State
-from devices.device_library.actuators.actuator_factory import ActuatorFactory
-from devices.enums.sensors import SensorEnum
-from devices.enums.actuators import ActuatorsEnum
-from devices.models.devices import ComponentListSQL, ComponentSql
+from starlette.routing import NoMatchFound
+from devices.libraries.device_library.sensors.sensor_factory import SensorFactory
+from devices.models.devices import ComponentSql, DeviceExpectedState
+from devices.libraries.device_library.actuators.actuator_factory import ActuatorFactory
+from devices.enums.devices import SensorEnum, ActuatorsEnum
 from devices.dependencies import _psql_db, get_logger
 from fastapi import Depends
 
@@ -17,12 +16,11 @@ class Device:
         # database=Depends(get_db)
     ) -> None:
         self.device_id = device_id
-        self.actuators = {}
-        self.sensors = {}
-        self.database = database
+        self.components = {}
+        self.database = _psql_db
         self.logger = get_logger()
 
-    async def _set_actuator_state(self, actuator_id: int, state: State) -> dict:
+    async def _set_actuator_state(self, actuator_id: int, state: DeviceExpectedState) -> dict:
         return f"NEW STATE for {actuator_id}: {state.expected_state}"
 
     async def _get_actuator_state(self, actuator_id: int) -> dict:
@@ -47,9 +45,11 @@ class Device:
         for c in components:
             if c.category == ActuatorsEnum.category:
                 _actuator = ActuatorFactory.get(c.type, c.version)
-                self.actuators[c.id] = _actuator(self, c.id)
+                self.components[c.id] = _actuator(self, c.id)
             elif c.category == SensorEnum.category:
                 _sensor = SensorFactory.get(c.type, c.version)
-                self.sensors[c.id] = _sensor(self, c.id)
+                self.components[c.id] = _sensor(self, c.id)
+            else:
+                raise NoMatchFound("No component type registered")
 
         return self

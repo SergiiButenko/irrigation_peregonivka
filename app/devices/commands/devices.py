@@ -1,5 +1,5 @@
-from devices.device_library.devices.device_factory import DeviceFactory
-from devices.device_library.devices.base_class_device import Device
+from devices.libraries.device_library.devices.device_factory import DeviceFactory
+from devices.libraries.device_library.devices.base_class_device import Device
 from devices.models.devices import DeviceSql, ComponentSql
 from fastapi import Depends
 from starlette.routing import NoMatchFound
@@ -69,3 +69,11 @@ class DeviceCMD:
         _deviceSQL = await self.DeviceSQL.get_device(device_id)
         _device = DeviceFactory.get(_deviceSQL.type, _deviceSQL.version)
         return await _device(device_id).init_components()
+
+    async def get_component_state(self, device_id: str, component_id: int) -> str:
+        device = await self.get_device_by_id(device_id)
+        return await device.components[component_id].get_state()
+
+    async def set_component_state(self, device_id: str, component_id: int, state) -> str:
+        device = await self.get_device_by_id(device_id)
+        return await device.components[component_id].set_state()

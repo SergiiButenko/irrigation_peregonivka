@@ -1,5 +1,5 @@
-from devices.device_library.actuators.base_class_actuator import Actuator
-from devices.device_library.actuators.library.relayV1 import RelayV1
+from devices.libraries.device_library.actuators.base_class_actuator import Actuator
+from devices.libraries.device_library.actuators.library.relayV1 import RelayV1
 
 
 class ActuatorFactory:

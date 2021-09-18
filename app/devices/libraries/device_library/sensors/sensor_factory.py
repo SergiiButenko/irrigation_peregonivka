@@ -1,5 +1,5 @@
-from devices.device_library.sensors.base_class_sensor import Sensor
-from devices.device_library.sensors.library.DHT11V1 import DHT11V1
+from devices.libraries.device_library.sensors.base_class_sensor import Sensor
+from devices.libraries.device_library.sensors.library.DHT11V1 import DHT11V1
 
 
 class SensorFactory:

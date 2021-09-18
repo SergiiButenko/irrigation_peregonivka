@@ -1,4 +1,4 @@
-from devices.models.sensors import SensorValueNSQL
+from devices.models.devices import SensorValueNSQL
 
 
 class Mongo:

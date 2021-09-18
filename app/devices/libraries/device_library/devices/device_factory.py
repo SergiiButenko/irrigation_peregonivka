@@ -1,7 +1,7 @@
-from devices.device_library.devices.base_class_device import Device
-from devices.device_library.devices.library.device_2ch_v1 import Device2chV1
-from devices.device_library.devices.library.device_4ch_v1 import Device4chV1
-from devices.device_library.devices.library.device_8ch_v1 import Device8chV1
+from devices.libraries.device_library.devices.base_class_device import Device
+from devices.libraries.device_library.devices.library.device_2ch_v1 import Device2chV1
+from devices.libraries.device_library.devices.library.device_4ch_v1 import Device4chV1
+from devices.libraries.device_library.devices.library.device_8ch_v1 import Device8chV1
 
 
 class DeviceFactory:
