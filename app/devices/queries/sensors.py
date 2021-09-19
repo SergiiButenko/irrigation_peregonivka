@@ -26,13 +26,12 @@ class SensorQRS:
         self,
         device_id: str,
         sensor_id: str,
-        minutes_from_now: int,
-        function: str,
-        sorting: str,
+        filter: dict = None,
+        sorting: list = [("date", "DESC")],
     ):
         self.service_logger.info(
             f"Getting data for device_id:sensor_id '{device_id}:{sensor_id}'"
         )
         return await self.mongo_db.get_latest_sensor_data(
-            device_id, sensor_id, minutes_from_now, function, sorting
+            device_id, sensor_id, filter, sorting
         )

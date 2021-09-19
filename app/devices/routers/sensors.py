@@ -33,8 +33,6 @@ async def get_value(
     device_id: str,
     sensor_id: int,
     minutes_from_now: int,
-    function: Optional[str] = None,
-    sorting: Optional[str] = 'ASC',
     sensor_qrs: SensorQRS = Depends(SensorQRS),
     logger=Depends(get_logger),
 ):
@@ -43,8 +41,6 @@ async def get_value(
         device_id,
         sensor_id,
         minutes_from_now,
-        function,
-        sorting
         )
 
 
@@ -65,7 +61,6 @@ async def register(
         f"Register signal from '{device_id}':'{sensor_id}' \
         device_id:sensor_id received."
     )
-    logger.info(f"value: '{sensor_value}'")
 
     await sensor_qrs.register_sensor_value_by_id(
         device_id,

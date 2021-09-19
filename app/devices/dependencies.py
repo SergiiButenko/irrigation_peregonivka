@@ -37,4 +37,4 @@ def ahttp_client() -> HttpxClient:
 
 
 def mongo_db() -> Mongo:
-    return Mongo(_mongo_db)
+    return Mongo(_mongo_db, get_logger())

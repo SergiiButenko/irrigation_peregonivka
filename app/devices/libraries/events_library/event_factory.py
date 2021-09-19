@@ -1,8 +1,6 @@
 from devices.libraries.device_library.devices.base_class_device import Device
 from devices.libraries.events_library.cesspoll_relay_sensor1 import CesspollRelaySensor1
 from devices.libraries.events_library.irrigation_relay1 import IrrigationRelay1
-from fastapi import Depends
-from devices.dependencies import get_logger
 
 
 class EventFactory:
@@ -22,15 +20,10 @@ class EventFactory:
             8: IrrigationRelay1.WaterLine
         }
     }
-
-    def __init__(
-        self,
-        service_logger=Depends(get_logger),
-    ):
-        self.service_logger = service_logger
-
-    async def get(self, device: Device, component_id: int, event: str):
-        if self.EVENTS[device.device_id][component_id] is not None:
-            return getattr(self.EVENTS[device.device_id][component_id], event)
+    
+    @classmethod
+    def get(cls, device: Device, component_id: int, event: str):
+        if cls.EVENTS[device.device_id][component_id] is not None:
+            return getattr(cls.EVENTS[device.device_id][component_id], event)
 
         return getattr(device[component_id], event)
