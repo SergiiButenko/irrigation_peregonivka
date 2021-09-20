@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 import uuid
 from datetime import datetime
 from pydantic import BaseModel, Field
@@ -66,3 +66,17 @@ class SensorValueNSQL(BaseModel):
         json_encoders = {
             ObjectId: str
         }
+
+
+class TelegramUser(BaseModel):
+    id: str = Field(alias='telegram_user')
+
+
+class RulesActuators(BaseModel):
+    device_id: str
+    actuator_id: int
+    settings: dict
+
+
+class RulesActuatorsList(BaseModel):
+    __root__: List[RulesActuators]

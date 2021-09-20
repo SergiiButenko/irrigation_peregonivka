@@ -1,5 +1,13 @@
 \connect smart_house
 INSERT INTO
+    public.components_groups (id, name)
+VALUES
+    (
+        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf32',
+        'Полив'
+    );
+
+INSERT INTO
     public.devices(id, description, type, version)
 VALUES
     (
@@ -37,7 +45,6 @@ VALUES
         'Освітлення в теплиці',
         'Relay2ch',
         'v1'
-
     );
 
 INSERT INTO
@@ -57,6 +64,16 @@ VALUES
         'kids_house_relay1',
         'Освітлення на дитячому будинку',
         'Relay8ch',
+        'v1'
+    );
+
+INSERT INTO
+    public.devices(id, description, type, version)
+VALUES
+    (
+        'cesspoll_relay_sensor1',
+        'Реле септика',
+        'Relay2ch',
         'v1'
     );
 
@@ -95,7 +112,6 @@ INSERT INTO
 VALUES
     ('Сад');
 
-
 INSERT INTO
     public.components_categories(name, description)
 VALUES
@@ -121,9 +137,78 @@ VALUES
     );
 
 INSERT INTO
-    public.components_categories(name, description)
+    public.components_types(name, description)
 VALUES
     (
-        'temperature_sensor',
-        'Датчик темеператури'
+        'POWER_CURRENT',
+        'Вимірювач наявності напруги'
+    );
+
+INSERT INTO
+    public.components(
+        id,
+        device_id,
+        name,
+        group_id,
+        category,
+        type,
+        version,
+        settings
+    )
+VALUES
+    (
+        1,
+        'irrigation_relay1',
+        'Томати',
+        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf32',
+        'actuator',
+        'relay',
+        'v1',
+        NULL
+    );
+
+INSERT INTO
+    public.components(
+        id,
+        device_id,
+        name,
+        group_id,
+        category,
+        type,
+        version,
+        settings
+    )
+VALUES
+    (
+        1,
+        'cesspoll_relay_sensor1',
+        'Датчик рівня води в септику',
+        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf32',
+        'sensor',
+        'POWER_CURRENT',
+        'v1',
+        NULL
+    );
+
+INSERT INTO
+    public.components(
+        id,
+        device_id,
+        name,
+        group_id,
+        category,
+        type,
+        version,
+        settings
+    )
+VALUES
+    (
+        2,
+        'cesspoll_relay_sensor1',
+        'Датчик увімкнення насосу в септику',
+        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf32',
+        'sensor',
+        'POWER_CURRENT',
+        'v1',
+        NULL
     );

@@ -11,4 +11,4 @@ class ActuatorFactory:
             if ac.__type__ == type and ac.__version__ == version:
                 return ac
 
-        raise LookupError("No matching actutator found in codebase")
+        raise LookupError(f"No matching actutator '{type}':'{version}' found in codebase")

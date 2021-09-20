@@ -29,13 +29,14 @@ CREATE TABLE public.components_categories(
 
 CREATE TABLE public.components (
     id INTEGER NOT NULL,
-    device_id TEXT DEFAULT NULL,
+    device_id TEXT,
     name text NOT NULL,
-    group_id uuid not null,
+    group_id uuid NOT NULL,
     category TEXT NOT NULL,
     type TEXT NOT NULL,
     version TEXT NOT NULL,
     settings jsonb,
+    telegram_user TEXT DEFAULT '-315337397',
     --  //time integer NOT NULL DEFAULT 10,
     --  //intervals integer NOT NULL DEFAULT 2,
     --  //time_wait integer NOT NULL DEFAULT 15,

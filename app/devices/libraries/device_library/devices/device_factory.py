@@ -13,4 +13,4 @@ class DeviceFactory:
             if ac.__type__.lower() == type.lower() and ac.__version__.lower() == version.lower():
                 return ac
 
-        raise LookupError("No matching device found in codebase")
+        raise LookupError(f"No matching device '{type}':'{version}' found in codebase")

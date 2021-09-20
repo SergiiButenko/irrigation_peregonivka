@@ -1,5 +1,5 @@
 from devices.dependencies import psql_db, get_logger, mongo_db
-from devices.models.devices import ComponentSql, DeviceSql, DeviceExpectedState
+from devices.models.devices import ComponentSql, DeviceSql, DeviceExpectedState, TelegramUser
 from fastapi import Depends
 
 
@@ -56,3 +56,12 @@ class DeviceSQL:
             sql, values={"actuator_id": actuator_id, "device_id": device_id}
         )
         return DeviceExpectedState.parse_obj(result)
+
+    async def get_linked_telegram_user(self, device_id: str, component_id: int) -> TelegramUser:
+        sql = """SELECT telegram_user FROM components
+        WHERE id=:component_id AND device_id=:device_id;
+        """
+        result = await self.psql_db.fetch_one(
+            sql, values={"component_id": component_id, "device_id": device_id}
+        )
+        return TelegramUser.parse_obj(result)

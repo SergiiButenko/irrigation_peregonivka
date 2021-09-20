@@ -4,7 +4,9 @@ from devices.dependencies import _psql_db
 from devices.routers import (
     devices,
     actuators,
-    sensors
+    sensors,
+    telegram,
+    rules
 )
 
 app = FastAPI(
@@ -26,3 +28,5 @@ async def shutdown():
 app.include_router(devices.router)
 app.include_router(actuators.router)
 app.include_router(sensors.router)
+app.include_router(telegram.router)
+app.include_router(rules.router)
