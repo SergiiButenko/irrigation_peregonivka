@@ -50,16 +50,14 @@ CREATE TABLE public.components (
 
 
 -- Queue section
-CREATE TABLE public.life (
+CREATE TABLE public.rules (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-    interval_id TEXT,
+    type TEXT NOT NULL,
+    next_rule UUID,
     device_id TEXT NOT NULL,
     actuator_id INTEGER NOT NULL,
     expected_state jsonb NOT NULL,
     execution_time timestamp without time zone NOT NULL,
-    --  rule_id INTEGER NOT NULL,
-    --  state INTEGER DEFAULT 0 NOT NULL,
-    --   active INTEGER DEFAULT 1 NOT NULL,
-    --    time INTEGER default 0 NOT NULL,
+    state TEXT NOT NULL,
     FOREIGN KEY(actuator_id, device_id) REFERENCES components(id, device_id)
 );

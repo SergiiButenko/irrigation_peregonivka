@@ -1,4 +1,4 @@
-from devices.dependencies import psql_db, get_logger, mongo_db
+from devices.dependencies import get_sql_db, get_logger, get_mongo_db
 from devices.models.devices import ComponentSql, DeviceSql, DeviceExpectedState, TelegramUser
 from fastapi import Depends
 
@@ -7,8 +7,8 @@ class DeviceSQL:
     def __init__(
         self,
         service_logger=Depends(get_logger),
-        mongo_db=Depends(mongo_db),
-        psql_db=Depends(psql_db),
+        mongo_db=Depends(get_mongo_db),
+        psql_db=Depends(get_sql_db),
     ):
         self.service_logger = service_logger
         self.mongo_db = mongo_db

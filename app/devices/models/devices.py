@@ -79,4 +79,5 @@ class RulesActuators(BaseModel):
 
 
 class RulesActuatorsList(BaseModel):
-    __root__: List[RulesActuators]
+    actuators: List[RulesActuators]
+    hours_delay: int

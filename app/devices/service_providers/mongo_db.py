@@ -1,12 +1,14 @@
 from devices.models.devices import SensorValueNSQL
+from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import DESCENDING, ASCENDING
+from devices.config.config import Config
 
 
 class Mongo:
-    def __init__(self, client, logger):
-        self.db = client.irrigation_db
+    def __init__(self):
+        self.client = AsyncIOMotorClient(Config.MONGO_DATABASE_URI)
+        self.db = self.client.irrigation_db
         self.sensors_collection = self.db.sensors
-        self.logger = logger
 
     async def _insert_document(self, collection, data):
         """Function to insert a document into a collection and
@@ -57,3 +59,6 @@ class Mongo:
             query,
             sorting,
         )
+
+
+mongo_db = Mongo()

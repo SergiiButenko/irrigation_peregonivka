@@ -10,6 +10,7 @@ services:
             MONGO_DATABASE_URI: mongodb://$DB_USERNAME:$DB_PASSWORD@mongo_db:27018
             TELEGRAM_API_TOKEN: $TELEGRAM_API_TOKEN 
             GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE 
+            AMQP_URI: $AMQP_URI
         command: ["uvicorn", "devices.main:app", "--host", "0.0.0.0", "--port", "8020"]
         ports:
             - 8020:8020
@@ -18,6 +19,7 @@ services:
         depends_on:    
             - postgres
             - mongo_db
+            - queue
         # restart: on-failure
     
     postgres:
@@ -62,7 +64,24 @@ services:
         ports:
             - 5433:80
         restart: unless-stopped
-        
+
+    queue:
+        image: rabbitmq:3-management
+        container_name: queue
+    
+    # flower:
+    #     image: mher/flower
+    #     container_name: flower
+    #     env_file:
+    #     - .env
+    #     command:
+    #     - "--broker=amqp://guest@queue:5672//"
+    #     - "--broker_api=http://guest:guest@queue:15672/api//"
+    #     depends_on:    
+    #         - queue
+
+    
+      
 volumes:
     postgres-data:
     mongodb-data:

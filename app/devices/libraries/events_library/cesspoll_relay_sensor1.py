@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from devices.dependencies import _telegram_bot
+from devices.service_providers.telegram_bot import telegram_bot
 from devices.messages.TelegramMessages import TelegramMessages
 
 
@@ -24,28 +24,35 @@ class CesspollRelaySensor1:
                 logger.warn(
                     "No data to work with. Possibly sensors is out of duty. Please check"
                 )
-                _telegram_bot.send_message(
+                telegram_bot.send_message(
                     telegram_user.id,
                     TelegramMessages.SENSOR_OUT_OF_SERVICE.format(device.device_id),
                 )
+                return
+
+            if len(data) == 1:
+                logger.warn(
+                    "Too few data to analyze"
+                )
+                return
 
             curr_level = data[0].data["level"]
             prev_level = data[1].data["level"]
             if curr_level > prev_level:
                 logger.info("Cesspoll has became full. sending notifications")
-                _telegram_bot.send_message(
+                telegram_bot.send_message(
                     telegram_user.id,
                     TelegramMessages.WATER_LEVEL_BECAME_FULL,
                 )
             elif curr_level < prev_level:
                 logger.info("Cesspoll has became empty. sending notifications")
-                _telegram_bot.send_message(
+                telegram_bot.send_message(
                     telegram_user.id,
                     TelegramMessages.WATER_LEVEL_BECAME_EMPTY,
                 )
             elif curr_level == 1 and curr_level == prev_level:
                 logger.info("Cesspoll is still full. sending notifications")
-                _telegram_bot.send_message(
+                telegram_bot.send_message(
                     telegram_user.id,
                     TelegramMessages.WATER_LEVEL_FULL,
                 )
@@ -76,28 +83,35 @@ class CesspollRelaySensor1:
                 logger.warn(
                     "No data to work with. Possibly sensors is out of duty. Please check"
                 )
-                _telegram_bot.send_message(
+                telegram_bot.send_message(
                     telegram_user.id,
                     TelegramMessages.SENSOR_OUT_OF_SERVICE.format(device.device_id),
                 )
+                return
+
+            if len(data) == 1:
+                logger.warn(
+                    "Too few data to analyze"
+                )
+                return
 
             curr_level = data[0].data["level"]
             prev_level = data[1].data["level"]
             if curr_level > prev_level:
                 logger.info("Cesspoll pump has beed turned on. sending notifications")
-                _telegram_bot.send_message(
+                telegram_bot.send_message(
                     telegram_user.id,
                     TelegramMessages.CESSPOLL_PUMP_TURNED_ON,
                 )
             elif curr_level < prev_level:
                 logger.info("Cesspoll pump has beed turned off. sending notifications")
-                _telegram_bot.send_message(
+                telegram_bot.send_message(
                     telegram_user.id,
                     TelegramMessages.CESSPOLL_PUMP_TURNED_OFF,
                 )
             elif curr_level == 1 and curr_level == prev_level:
                 logger.info("Cesspoll pump is still on. sending notifications")
-                _telegram_bot.send_message(
+                telegram_bot.send_message(
                     telegram_user.id,
                     TelegramMessages.CESSPOLL_PUMP_ON,
                 )

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from devices.dependencies import _psql_db
+from devices.service_providers.sql_db import psql_db
 from devices.routers import (
     devices,
     actuators,
@@ -18,12 +18,13 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup():
-    await _psql_db.connect()
+    await psql_db.connect()
 
 
 @app.on_event("shutdown")
 async def shutdown():
-    await _psql_db.disconnect()
+    await psql_db.disconnect()
+
 
 app.include_router(devices.router)
 app.include_router(actuators.router)
