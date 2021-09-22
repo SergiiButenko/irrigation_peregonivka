@@ -37,6 +37,7 @@ CREATE TABLE public.components (
     version TEXT NOT NULL,
     settings jsonb,
     telegram_user TEXT DEFAULT '-315337397',
+    usage_type TEXT,
     --  //time integer NOT NULL DEFAULT 10,
     --  //intervals integer NOT NULL DEFAULT 2,
     --  //time_wait integer NOT NULL DEFAULT 15,
@@ -52,12 +53,11 @@ CREATE TABLE public.components (
 -- Queue section
 CREATE TABLE public.rules (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-    type TEXT NOT NULL,
-    next_rule UUID,
+    interval_uuid uuid,
     device_id TEXT NOT NULL,
     actuator_id INTEGER NOT NULL,
-    expected_state jsonb NOT NULL,
+    expected_state TEXT NOT NULL,
     execution_time timestamp without time zone NOT NULL,
-    state TEXT NOT NULL,
+    state TEXT NOT NULL DEFAULT 'new',
     FOREIGN KEY(actuator_id, device_id) REFERENCES components(id, device_id)
 );

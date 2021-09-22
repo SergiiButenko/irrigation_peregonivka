@@ -3,14 +3,10 @@ services:
     devices:
         build:
             context: ./
-            dockerfile: ./devices/Dockerfile
+            dockerfile: ./devices/dockerfiles/devices.dockerfile
         container_name: devices
-        environment: 
-            PSQL_DATABASE_URI: postgresql://$DB_USERNAME:$DB_PASSWORD@postgres:5432/smart_house
-            MONGO_DATABASE_URI: mongodb://$DB_USERNAME:$DB_PASSWORD@mongo_db:27018
-            TELEGRAM_API_TOKEN: $TELEGRAM_API_TOKEN 
-            GROUP_CHAT_ID_COTTAGE: $GROUP_CHAT_ID_COTTAGE 
-            AMQP_URI: $AMQP_URI
+        env_file:
+        - .env
         command: ["uvicorn", "devices.main:app", "--host", "0.0.0.0", "--port", "8020"]
         ports:
             - 8020:8020
@@ -58,9 +54,8 @@ services:
     postgres-admin:
         image: dpage/pgadmin4
         container_name: postgres-admin
-        environment:
-            PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL
-            PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD
+        env_file:
+        - .env
         ports:
             - 5433:80
         restart: unless-stopped
@@ -69,19 +64,31 @@ services:
         image: rabbitmq:3-management
         container_name: queue
     
-    # flower:
-    #     image: mher/flower
-    #     container_name: flower
-    #     env_file:
-    #     - .env
-    #     command:
-    #     - "--broker=amqp://guest@queue:5672//"
-    #     - "--broker_api=http://guest:guest@queue:15672/api//"
-    #     depends_on:    
-    #         - queue
+    flower:
+        image: mher/flower
+        container_name: flower
+        env_file:
+        - .env
+        environment:
+        - CELERY_BROKER_URL=amqp://guest@queue:5672//
+        - CELERY_BROKER_API_URL=http://guest:guest@queue:15672/api//
+        - FLOWER_PORT=8888
+        ports:  
+        - 8888:8888  
+        depends_on:    
+            - queue
 
-    
-      
+    celery_worker:
+        container_name: celery_worker
+        depends_on:
+        - queue
+        env_file:
+        - .env
+        build:
+            context: ./
+            dockerfile: ./devices/dockerfiles/celery_worker.dockerfile
+        command: celery -A devices.celery_tasks.tasks worker --loglevel=INFO -Q rule_executor -c 1 -E
+        
 volumes:
     postgres-data:
     mongodb-data:

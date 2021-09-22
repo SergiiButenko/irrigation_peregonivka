@@ -1,5 +1,6 @@
 from devices.dependencies import get_sql_db, get_logger, get_mongo_db
-from devices.models.devices import ComponentSql, DeviceSql, DeviceExpectedState, TelegramUser
+from devices.models.devices import ComponentSql, DeviceSql, TelegramUser
+from devices.schemas.schema import DeviceExpectedState
 from fastapi import Depends
 
 
@@ -41,11 +42,11 @@ class DeviceSQL:
         self, device_id: str, component_id: int
     ) -> ComponentSql:
         sql = """
-        SELECT id, device_id, name, group_id, category, type, version, settings FROM components 
-        WHERE id=:actuator_id AND device_id=:device_id;
+        SELECT id, device_id, name, group_id, category, type, version, settings, usage_type FROM components 
+        WHERE id=:component_id AND device_id=:device_id;
         """
         result = await self.psql_db.fetch_one(
-            sql, values={"actuator_id": component_id, "device_id": device_id}
+            sql, values={"component_id": component_id, "device_id": device_id}
         )
         return ComponentSql.parse_obj(result)
 

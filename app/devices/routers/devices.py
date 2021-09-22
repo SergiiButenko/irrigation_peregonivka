@@ -1,4 +1,4 @@
-from devices.models.devices import Message
+from devices.schemas.schema import Message
 from fastapi import APIRouter, Depends, status, Response
 from fastapi.params import Header
 from pydantic import Required

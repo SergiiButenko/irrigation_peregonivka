@@ -1,6 +1,6 @@
 from devices.commands.events import EventsCMD
 from devices.queries.devices import DeviceSQL
-from devices.models.devices import DeviceExpectedState
+from devices.schemas.schema import DeviceExpectedState
 from fastapi import APIRouter, Depends
 
 from devices.dependencies import get_logger

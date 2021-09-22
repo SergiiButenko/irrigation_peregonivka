@@ -6,3 +6,4 @@ httpx==0.18.2
 motor==2.5.1
 PyYAML==5.4.1
 pyTelegramBotAPI==4.0.1
+celery==5.1.2

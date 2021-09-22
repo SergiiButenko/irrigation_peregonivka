@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 import uuid
 from datetime import datetime
 from pydantic import BaseModel, Field
@@ -22,15 +22,8 @@ class ComponentSql(BaseModel):
     category: str
     type: str
     version: str
+    usage_type: str
     settings: Optional[dict] = None
-
-
-class Message(BaseModel):
-    message: str
-
-
-class DeviceExpectedState(BaseModel):
-    expected_state: str
 
 
 class PyObjectId(ObjectId):
@@ -48,10 +41,6 @@ class PyObjectId(ObjectId):
     @classmethod
     def __modify_schema__(cls, field_schema):
         field_schema.update(type='string')
-
-
-class SensorValue(BaseModel):
-    data: dict
 
 
 class SensorValueNSQL(BaseModel):
@@ -72,12 +61,3 @@ class TelegramUser(BaseModel):
     id: str = Field(alias='telegram_user')
 
 
-class RulesActuators(BaseModel):
-    device_id: str
-    actuator_id: int
-    settings: dict
-
-
-class RulesActuatorsList(BaseModel):
-    actuators: List[RulesActuators]
-    hours_delay: int

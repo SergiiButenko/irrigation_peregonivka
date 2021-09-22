@@ -1,4 +1,4 @@
-from devices.models.telegram import TelegramMessage
+from devices.schemas.schema import TelegramMessage
 from fastapi import APIRouter, Depends
 
 from devices.dependencies import get_logger, get_telegram_bot

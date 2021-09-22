@@ -13,23 +13,20 @@ class RulesQRS:
         self.service_logger = service_logger
         self.psql_db = psql_db
 
-    async def create_rule(self, rule: Rule) -> None:
+    async def create_rule(self, rule: Rule):
         sql = """
-        INSERT INTO rules (type, next_rule, device_id, actuator_id, expected_state,
-        execution_time, state) VALUES (
-            :type, :next_rule, :device_id, :actuator_id, :expected_state, :execution_time, :state
-        ) RETURNING id, type, next_rule, device_id, actuator_id, expected_state, execution_time, state
-        )
+        INSERT INTO rules (
+            id, interval_uuid, device_id, actuator_id, expected_state, execution_time, state
+        ) VALUES (
+            :id, :interval_uuid, :device_id, :actuator_id, :expected_state, :execution_time, :state
+        ) RETURNING *
         """
-        self.service_logger.info(f"Executing {sql}")
-        result = await self.psql_db.execute(
-            sql, values=rule.to_dict()
+        return await self.psql_db.execute(
+            sql, values=rule.dict()
         )
-
-        return Rule.parse_obj(result) 
 
     async def get_rule(self, rule_id: uuid.UUID) -> Rule:
-        sql = """SELECT id, type, next_rule, device_id, actuator_id, 
+        sql = """SELECT id, interval_uuid, device_id, actuator_id, 
         expected_state, execution_time, state
         FROM rules WHERE id=:rule_id
         """
@@ -39,7 +36,7 @@ class RulesQRS:
         return Rule.parse_obj(result)
 
     async def get_last_irrigation_rule(self) -> Rule:
-        sql = """SELECT id, type, next_rule, device_id, actuator_id, 
+        sql = """SELECT id, next_rule, device_id, actuator_id, 
         expected_state, execution_time, state
         FROM rules
         WHERE type = 'irrigation' and state = 'new'

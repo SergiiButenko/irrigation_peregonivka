@@ -1,6 +1,7 @@
 from starlette.routing import NoMatchFound
 from devices.libraries.device_library.sensors.sensor_factory import SensorFactory
-from devices.models.devices import ComponentSql, DeviceExpectedState
+from devices.models.devices import ComponentSql
+from devices.schemas.schema import DeviceExpectedState
 from devices.libraries.device_library.actuators.actuator_factory import ActuatorFactory
 from devices.enums.devices import SensorEnum, ActuatorsEnum
 from devices.dependencies import get_logger

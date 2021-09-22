@@ -1,7 +1,7 @@
 from devices.queries.devices import DeviceSQL
 from devices.queries.sensors import SensorQRS
 from devices.commands.events import EventsCMD
-from devices.models.devices import SensorValue
+from devices.schemas.schema import SensorValue
 from fastapi import APIRouter, Depends
 from typing import Optional
 

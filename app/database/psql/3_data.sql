@@ -153,7 +153,8 @@ INSERT INTO
         category,
         type,
         version,
-        settings
+        settings,
+        usage_type
     )
 VALUES
     (
@@ -164,7 +165,8 @@ VALUES
         'actuator',
         'relay',
         'v1',
-        NULL
+        NULL,
+        'irrigation'
     );
 
 INSERT INTO
