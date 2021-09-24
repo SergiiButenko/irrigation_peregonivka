@@ -1,12 +1,9 @@
 from starlette.routing import NoMatchFound
 from devices.libraries.device_library.sensors.sensor_factory import SensorFactory
 from devices.models.devices import ComponentSql
-from devices.schemas.schema import DeviceExpectedState
 from devices.libraries.device_library.actuators.actuator_factory import ActuatorFactory
 from devices.enums.devices import SensorEnum, ActuatorsEnum
-from devices.dependencies import get_logger
 from devices.service_providers.sql_db import psql_db
-from fastapi import Depends
 
 
 class Device:
@@ -14,19 +11,16 @@ class Device:
     def __init__(
         self,
         device_id,
-        # service_logger=Depends(service_logger),
-        # database=Depends(get_db)
     ) -> None:
         self.device_id = device_id
         self.components = {}
         self.database = psql_db
-        self.logger = get_logger()
 
-    async def _set_actuator_state(self, actuator_id: int, state: DeviceExpectedState) -> dict:
-        return f"NEW STATE for {actuator_id}: {state.expected_state}"
+    async def _set_actuator_state(self, actuator_id: int, state: str) -> dict:
+        return state
 
     async def _get_actuator_state(self, actuator_id: int) -> dict:
-        return f"OLD STATE for {actuator_id}"
+        return 1
 
     async def _get_sensor_data(self, sensor_id: int) -> dict:
         return "{data: {temp: 27}"

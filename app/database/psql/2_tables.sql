@@ -36,6 +36,7 @@ CREATE TABLE public.components (
     type TEXT NOT NULL,
     version TEXT NOT NULL,
     settings jsonb,
+    telegram_notify BOOL NOT NULL,
     telegram_user TEXT DEFAULT '-315337397',
     usage_type TEXT,
     --  //time integer NOT NULL DEFAULT 10,

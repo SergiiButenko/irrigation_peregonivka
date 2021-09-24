@@ -154,7 +154,8 @@ INSERT INTO
         type,
         version,
         settings,
-        usage_type
+        usage_type,
+        telegram_notify
     )
 VALUES
     (
@@ -166,7 +167,8 @@ VALUES
         'relay',
         'v1',
         NULL,
-        'irrigation'
+        'irrigation',
+        true
     );
 
 INSERT INTO
@@ -178,7 +180,8 @@ INSERT INTO
         category,
         type,
         version,
-        settings
+        settings,
+        telegram_notify
     )
 VALUES
     (
@@ -189,7 +192,8 @@ VALUES
         'sensor',
         'POWER_CURRENT',
         'v1',
-        NULL
+        NULL,
+        false
     );
 
 INSERT INTO
@@ -201,7 +205,8 @@ INSERT INTO
         category,
         type,
         version,
-        settings
+        settings,
+        telegram_notify
     )
 VALUES
     (
@@ -212,5 +217,6 @@ VALUES
         'sensor',
         'POWER_CURRENT',
         'v1',
-        NULL
+        NULL,
+        false
     );

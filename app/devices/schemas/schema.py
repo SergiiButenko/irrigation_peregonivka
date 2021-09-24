@@ -6,6 +6,10 @@ class Message(BaseModel):
     message: str
 
 
+class RuleState(BaseModel):
+    expected_state: str
+
+
 class DeviceExpectedState(BaseModel):
     expected_state: str
 

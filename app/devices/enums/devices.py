@@ -4,3 +4,4 @@ class SensorEnum:
 
 class ActuatorsEnum:
     category = 'actuator'
+

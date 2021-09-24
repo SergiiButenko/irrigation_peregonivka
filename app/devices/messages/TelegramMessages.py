@@ -5,4 +5,8 @@ class TelegramMessages:
     WATER_LEVEL_BECAME_FULL = "Рівень води в септику став вище норми"
     WATER_LEVEL_FULL = "Рівень води в септику все ще вище норми"
     WATER_LEVEL_BECAME_EMPTY = "Рівень води в септику в нормі"
+    IRRIGATION_PLANNED = "{} буде полито через {} хв"
+    IRRIGATION_PLANNED_NOW = "{} буде полито зараз"
+    LIGHTING_PLANNED = "{} буде включено через {} хв"
+    LIGHTING_PLANNED_NOW = "{} буде включено зараз"
     SENSOR_OUT_OF_SERVICE = "Увага! Даних для датчика {0} не знайшлося. Можливо він несправний."

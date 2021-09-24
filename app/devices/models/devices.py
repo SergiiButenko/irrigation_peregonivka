@@ -24,6 +24,7 @@ class ComponentSql(BaseModel):
     version: str
     usage_type: str
     settings: Optional[dict] = None
+    telegram_notify: bool
 
 
 class PyObjectId(ObjectId):

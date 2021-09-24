@@ -1,11 +1,16 @@
 from datetime import datetime, timedelta
 from devices.service_providers.telegram_bot import telegram_bot
 from devices.messages.TelegramMessages import TelegramMessages
+from devices.service_providers.device_logger import logger
+from devices.queries.devices import DeviceSQL
+from devices.queries.sensors import SensorQRS
 
 
 class CesspollRelaySensor1:
     class WaterLevel:
-        async def analyse(device, sensors_id, deviceCMD, DeviceSQL, sensor_qrs, logger):
+        
+        @staticmethod
+        async def analyse(device, sensors_id, *args, **kwargs):
             telegram_user = await DeviceSQL.get_linked_telegram_user(
                 device.device_id, sensors_id
             )
@@ -16,7 +21,7 @@ class CesspollRelaySensor1:
                 "date": {"$gte": datetime.now() - timedelta(minutes=minutes_from_now)}
             }
 
-            data = await sensor_qrs.get_sensor_values_by_id(
+            data = await SensorQRS.get_sensor_values_by_id(
                 device.device_id, sensors_id, filter, sorting
             )
 
@@ -64,7 +69,9 @@ class CesspollRelaySensor1:
                 )
 
     class PumpStarter:
-        async def analyse(device, sensors_id, deviceCMD, DeviceSQL, sensor_qrs, logger):
+        
+        @staticmethod
+        async def analyse(device, sensors_id, *args, **kwargs):
             telegram_user = await DeviceSQL.get_linked_telegram_user(
                 device.device_id, sensors_id
             )
@@ -75,7 +82,7 @@ class CesspollRelaySensor1:
                 "date": {"$gte": datetime.now() - timedelta(minutes=minutes_from_now)}
             }
 
-            data = await sensor_qrs.get_sensor_values_by_id(
+            data = await SensorQRS.get_sensor_values_by_id(
                 device.device_id, sensors_id, filter, sorting
             )
 

@@ -9,8 +9,8 @@ router = APIRouter(
 )
 
 
-@router.post("", name="Get sensor model")
-async def get_sensor(
+@router.post("", name="Send message to telegram")
+async def send_message(
     user_id: str,
     message: TelegramMessage,
     telegram_bot=Depends(get_telegram_bot),
@@ -18,6 +18,6 @@ async def get_sensor(
 ):
     """In order to keep device status"""
     logger.info(f"Sending '{message}' to {user_id}")
-    telegram_bot.send_message(user_id, message)
+    # telegram_bot.send_message(user_id, message)
 
     return "OK"
