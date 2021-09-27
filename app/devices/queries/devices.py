@@ -37,7 +37,7 @@ class DeviceSQL:
         device_id: str, component_id: int
     ) -> ComponentSql:
         sql = """
-        SELECT id, device_id, name, group_id, category, type, version, settings, usage_type FROM components 
+        SELECT id, device_id, name, group_id, category, type, version, settings, usage_type, telegram_notify FROM components 
         WHERE id=:component_id AND device_id=:device_id;
         """
         result = await psql_db.fetch_one(

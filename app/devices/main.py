@@ -1,3 +1,4 @@
+from devices.commands.rules import RulesCMD
 from fastapi import FastAPI
 
 from devices.service_providers.sql_db import psql_db
@@ -8,6 +9,8 @@ from devices.routers import (
     telegram,
     rules
 )
+from devices.service_providers.device_logger import logger
+from devices.service_providers.celery import celery_app
 
 app = FastAPI(
     title="Irrigation Device Discovery API",
@@ -18,11 +21,17 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup():
+    logger.info("Deleting queued messaged")
+    celery_app.control.purge()
     await psql_db.connect()
+    logger.info("Analysing rules to enqueu")
+    RulesCMD.analyse_and_enqueue()
 
 
 @app.on_event("shutdown")
 async def shutdown():
+    logger.info("Deleting queued messaged")
+    celery_app.control.purge()
     await psql_db.disconnect()
 
 

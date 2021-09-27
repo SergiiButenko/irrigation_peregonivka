@@ -8,6 +8,7 @@ from devices.service_providers.httpx_client import HttpxClient
 from devices.config.config import Config
 from devices.models.rules import Rule
 from devices.models.devices import ComponentSql
+from devices.service_providers.device_logger import logger
 
 
 async def execute_rule(rule_id: str) -> None:
@@ -39,18 +40,21 @@ async def notify_rule(rule_id: str) -> None:
 
     now = datetime.now()
     diff = rule.execution_time - now
-    minutes = divmod(diff.total_seconds(), 60)
-     
-    if minutes <= 2 and actuator.type == 'irrigation':
-        message = TelegramMessages.IRRIGATION_PLANNED_NOW.format(actuator.name)
-    elif minutes > 2 and actuator.type == 'irrigation':
-        message = TelegramMessages.IRRIGATION_PLANNED.format(actuator.name, minutes[0])
-    elif minutes <= 2 and actuator.type == 'lighting':
-        message = TelegramMessages.LIGHTING_PLANNED_NOW.format(actuator.name)
-    elif minutes > 2 and actuator.type == 'lighting':
-        message = TelegramMessages.LIGHTING_PLANNED.format(actuator.name, minutes[0])
+    minutes = int(divmod(diff.total_seconds(), 60)[0]) + 1
 
-    await HttpxClient.put(
+    if minutes <= 2:
+        if actuator.usage_type == 'irrigation':
+            message = TelegramMessages.IRRIGATION_PLANNED_NOW.format(actuator.name)
+        elif actuator.usage_type == 'lighting':
+            message = TelegramMessages.LIGHTING_PLANNED_NOW.format(actuator.name)
+
+    elif minutes > 2:
+        if actuator.usage_type == 'irrigation':
+            message = TelegramMessages.IRRIGATION_PLANNED.format(actuator.name, minutes)
+        elif actuator.usage_type == 'lighting':
+            message = TelegramMessages.LIGHTING_PLANNED.format(actuator.name, minutes)
+
+    await HttpxClient.post(
         url=f"{Config.DEVICES_URL}/telegram/{Config.TELEGRAM_CHAT_ID_COTTAGE}/message",
         json={'message': message}
         )

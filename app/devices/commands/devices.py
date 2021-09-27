@@ -14,7 +14,7 @@ class DeviceCMD:
         await HttpxClient.post(url="http://" + device.ip + "/register")
 
     @staticmethod
-    async def ping_to_register_devices(self):
+    async def ping_to_register_devices():
         devices = await DeviceSQL.get_all_devices()
         for device in devices:
             await HttpxClient.post(
@@ -23,7 +23,6 @@ class DeviceCMD:
     
     @staticmethod
     async def register_device_by_id(
-        self,
         device_id: str,
         device_ip: str
     ) -> bool:
@@ -39,9 +38,9 @@ class DeviceCMD:
 
     @staticmethod
     async def get_component_by_id(
-        device_id: str, component_id: str
+        device_id: str, component_id: int
     ) -> ComponentSql:
-        _component = await DeviceSQL.get_component_by_id(component_id)
+        _component = await DeviceSQL.get_component_by_id(device_id, component_id)
         if _component.device_id != device_id:
             raise ValueError(
                 f"Device id '{device_id}' is not expected \
