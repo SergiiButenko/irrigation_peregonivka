@@ -1,3 +1,5 @@
+from devices.dependencies import get_current_active_user
+from fastapi.param_functions import Depends
 from devices.commands.rules import RulesCMD
 from fastapi import FastAPI
 
@@ -7,7 +9,8 @@ from devices.routers import (
     actuators,
     sensors,
     telegram,
-    rules
+    rules,
+    users
 )
 from devices.service_providers.device_logger import logger
 from devices.service_providers.celery import celery_app
@@ -16,6 +19,7 @@ app = FastAPI(
     title="Irrigation Device Discovery API",
     description="The Device Discovery API register and renew IP of devices.",
     version="1.0.0",
+    dependencies=[Depends(get_current_active_user)]
 )
 
 
@@ -25,7 +29,7 @@ async def startup():
     celery_app.control.purge()
     await psql_db.connect()
     logger.info("Analysing rules to enqueu")
-    RulesCMD.analyse_and_enqueue()
+    await RulesCMD.analyse_and_enqueue()
 
 
 @app.on_event("shutdown")
@@ -40,3 +44,4 @@ app.include_router(actuators.router)
 app.include_router(sensors.router)
 app.include_router(telegram.router)
 app.include_router(rules.router)
+app.include_router(users.router)

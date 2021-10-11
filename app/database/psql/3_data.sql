@@ -1,5 +1,15 @@
 \connect smart_house
 INSERT INTO
+    public.users (id, username, hashed_password)
+VALUES
+    (
+        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf33',
+        'serbut',
+        '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'
+    );
+
+
+INSERT INTO
     public.components_groups (id, name)
 VALUES
     (

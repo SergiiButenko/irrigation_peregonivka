@@ -1,6 +1,17 @@
 \connect smart_house
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 
+-- users section
+CREATE TABLE public.users(
+    id TEXT NOT NULL PRIMARY KEY,
+    username TEXT NOT NULL,
+    hashed_password TEXT NOT NULL,
+    email TEXT,
+    full_name TEXT,
+    disabled BOOL DEFAULT false
+);
+
+
 -- device SECTION 
 CREATE TABLE public.devices(
     id TEXT NOT NULL PRIMARY KEY,

@@ -1,5 +1,25 @@
 version: "3.7"
 services:
+    frontend:
+        container_name: frontend
+        build:
+            context: ./frontend
+        # depends_on:
+        # - devices
+        ports: 
+            - 8008:8008
+        expose:
+            - 8008
+        volumes:
+            - ./frontend:/opt/app
+        command: sh -c "yarn && yarn start"
+        # command: sh -c "yarn build && yarn start-prod"
+        healthcheck:
+            test: ["CMD", "curl", "--fail", "http://localhost:8008"]
+            interval: 1m30s
+            timeout: 10s
+            retries: 3
+
     devices:
         build:
             context: ./
