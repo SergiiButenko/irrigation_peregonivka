@@ -1,11 +1,12 @@
 from devices.schemas.schema import TelegramMessage
 from fastapi import APIRouter, Depends
 
-from devices.dependencies import get_logger, get_telegram_bot
+from devices.dependencies import get_current_active_user, get_logger, get_telegram_bot
 
 router = APIRouter(
     prefix="/telegram/{user_id}/message",
-    tags=["telegram"]
+    tags=["telegram"],
+    dependencies=[Depends(get_current_active_user)]
 )
 
 

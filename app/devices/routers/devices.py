@@ -3,10 +3,14 @@ from fastapi import APIRouter, Depends, status, Response
 from fastapi.params import Header
 from pydantic import Required
 
-from devices.dependencies import get_logger
+from devices.dependencies import get_current_active_user, get_logger
 from devices.commands.devices import DeviceCMD
 
-router = APIRouter(prefix="/devices/{device_id}", tags=["registration"])
+router = APIRouter(
+    prefix="/devices/{device_id}",
+    tags=["registration"],
+    dependencies=[Depends(get_current_active_user)],
+)
 
 
 @router.post(
@@ -33,7 +37,7 @@ async def register(
     "/message",
     name="Send message to device",
     status_code=status.HTTP_204_NO_CONTENT,
-    response_class=Response
+    response_class=Response,
 )
 async def send_message_to_device(
     device_id: str,

@@ -3,13 +3,13 @@ from devices.queries.sensors import SensorQRS
 from devices.commands.events import EventsCMD
 from devices.schemas.schema import SensorValue
 from fastapi import APIRouter, Depends
-from typing import Optional
 
-from devices.dependencies import get_logger
+from devices.dependencies import get_current_active_user, get_logger
 
 router = APIRouter(
     prefix="/devices/{device_id}/sensors/{sensor_id}",
-    tags=["sensors"]
+    tags=["sensors"],
+    dependencies=[Depends(get_current_active_user)]
 )
 
 

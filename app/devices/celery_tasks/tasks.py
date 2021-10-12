@@ -4,39 +4,32 @@ from datetime import datetime
 
 from devices.service_providers.celery import celery_app
 from devices.enums.rules import RulesState
-from devices.service_providers.httpx_client import HttpxClient
 from devices.config.config import Config
-from devices.models.rules import Rule
-from devices.models.devices import ComponentSql
-from devices.service_providers.device_logger import logger
+from devices.clients.devices import DevicesClient
 
 
 async def execute_rule(rule_id: str) -> None:
-    _rule = await HttpxClient.get(Config.DEVICES_URL + '/rules/' + rule_id)
-    rule = Rule.parse_obj(_rule.json())
+    device_client = DevicesClient()
+    await device_client.login(Config.SERVICE_USERNAME, Config.SERVICE_PASSWORD)
 
-    await HttpxClient.put(
-        url=f"{Config.DEVICES_URL}/rules/{rule.id}/state",
-        json={'expected_state': RulesState.IN_PROGRESS}
-        )
+    rule = await device_client.get_rule(rule_id)
 
-    await HttpxClient.put(
-        url=f"{Config.DEVICES_URL}/devices/{rule.device_id}/actuators/{rule.actuator_id}/state",
-        json={'expected_state': rule.expected_state}
-        )
+    await device_client.update_rule_state(rule.id, RulesState.IN_PROGRESS)
 
-    await HttpxClient.put(
-        url=f"{Config.DEVICES_URL}/rules/{rule.id}/state",
-        json={'expected_state': RulesState.SUCCESSFUL}
-        )
+    await device_client.update_actuator_state(
+        rule.device_id,
+        rule.actuator_id,
+        rule.expected_state)
+
+    await device_client.update_rule_state(rule.id, RulesState.SUCCESSFUL)
 
 
 async def notify_rule(rule_id: str) -> None:
-    _rule = await HttpxClient.get(Config.DEVICES_URL + '/rules/' + rule_id)
-    rule = Rule.parse_obj(_rule.json())
+    device_client = DevicesClient()
+    await device_client.login(Config.SERVICE_USERNAME, Config.SERVICE_PASSWORD)
 
-    _actuator = await HttpxClient.get(f"{Config.DEVICES_URL}/devices/{rule.device_id}/actuators/{rule.actuator_id}")
-    actuator = ComponentSql.parse_obj(_actuator.json())
+    rule = await device_client.get_rule(rule_id)
+    actuator = await device_client.get_actuator(rule.device_id, rule.actuator_id)
 
     now = datetime.now()
     diff = rule.execution_time - now
@@ -54,10 +47,7 @@ async def notify_rule(rule_id: str) -> None:
         elif actuator.usage_type == 'lighting':
             message = TelegramMessages.LIGHTING_PLANNED.format(actuator.name, minutes)
 
-    await HttpxClient.post(
-        url=f"{Config.DEVICES_URL}/telegram/{Config.TELEGRAM_CHAT_ID_COTTAGE}/message",
-        json={'message': message}
-        )
+    await device_client.send_message(message)
 
 
 @celery_app.task(acks_late=True)

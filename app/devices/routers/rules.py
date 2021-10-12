@@ -2,11 +2,12 @@ from devices.schemas.schema import RulesActuatorsList, RuleState
 from devices.commands.rules import RulesCMD
 from devices.queries.rules import RulesQRS
 from fastapi import APIRouter, Depends
-from devices.dependencies import get_logger
+from devices.dependencies import get_current_active_user, get_logger
 
 router = APIRouter(
     prefix="/rules",
-    tags=["rules"]
+    tags=["rules"],
+    dependencies=[Depends(get_current_active_user)]
 )
 
 

@@ -1,12 +1,15 @@
-from devices.commands.events import EventsCMD
-from devices.queries.devices import DeviceSQL
-from devices.schemas.schema import DeviceExpectedState
 from fastapi import APIRouter, Depends
 
-from devices.dependencies import get_logger
+from devices.commands.events import EventsCMD
+from devices.dependencies import get_current_active_user, get_logger
+from devices.queries.devices import DeviceSQL
+from devices.schemas.schema import DeviceExpectedState
 
-
-router = APIRouter(prefix="/devices/{device_id}", tags=["actuator"])
+router = APIRouter(
+    prefix="/devices/{device_id}",
+    tags=["actuator"],
+    dependencies=[Depends(get_current_active_user)],
+)
 
 
 @router.get("/actuators/{actuator_id}", name="Get specific actuator of device")

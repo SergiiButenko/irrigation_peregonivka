@@ -4,10 +4,10 @@ from devices.service_providers.sql_db import psql_db
 
 class UsersQRS:
     @staticmethod
-    async def get_user(email: str):
-        sql = "SELECT * FROM users WHERE email=:email"
+    async def get_user(username: str):
+        sql = "SELECT * FROM users WHERE username=:username"
         result = await psql_db.fetch_one(
-            sql, values={'email': email}
+            sql, values={'username': username}
         )
         
         return User.parse_obj(result)

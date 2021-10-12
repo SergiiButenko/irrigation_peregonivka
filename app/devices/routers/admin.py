@@ -1,19 +1,18 @@
-from fastapi import APIRouter, Depends, status, Response
+from fastapi import APIRouter, Depends, Response, status
 
-from devices.dependencies import get_logger
 from devices.commands.devices import DeviceCMD
+from devices.dependencies import get_current_active_user, get_logger
 
 router = APIRouter(
-    prefix='/admin',
-    tags=["admin_api"]
-    )
+    prefix="/admin", tags=["admin_api"], dependencies=[Depends(get_current_active_user)]
+)
 
 
 @router.get(
     "/devices/register",
     name="Reregister all devices IP",
     status_code=status.HTTP_204_NO_CONTENT,
-    response_class=Response
+    response_class=Response,
 )
 async def pingalltoregister(
     cmds: DeviceCMD = Depends(DeviceCMD),

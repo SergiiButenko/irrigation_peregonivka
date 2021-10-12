@@ -18,8 +18,7 @@ from devices.service_providers.celery import celery_app
 app = FastAPI(
     title="Irrigation Device Discovery API",
     description="The Device Discovery API register and renew IP of devices.",
-    version="1.0.0",
-    dependencies=[Depends(get_current_active_user)]
+    version="1.0.0"
 )
 
 
