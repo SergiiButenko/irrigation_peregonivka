@@ -1,5 +1,3 @@
-from devices.dependencies import get_current_active_user
-from fastapi.param_functions import Depends
 from devices.commands.rules import RulesCMD
 from fastapi import FastAPI
 
@@ -10,7 +8,7 @@ from devices.routers import (
     sensors,
     telegram,
     rules,
-    users
+    auth
 )
 from devices.service_providers.device_logger import logger
 from devices.service_providers.celery import celery_app
@@ -43,4 +41,4 @@ app.include_router(actuators.router)
 app.include_router(sensors.router)
 app.include_router(telegram.router)
 app.include_router(rules.router)
-app.include_router(users.router)
+app.include_router(auth.router)

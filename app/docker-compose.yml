@@ -1,5 +1,20 @@
 version: "3.7"
 services:
+    nginx:
+        image: nginx:latest
+        container_name: nginx
+        ports:
+        - 80:80
+        - 443:443
+        volumes:
+        - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        - ./services/frontend/app/404.html:/etc/nginx/404.html
+        - ./services/frontend/app/404.html:/usr/share/nginx/html/404.html
+        depends_on:
+        - devices
+        - frontend
+        - postgres-admin
+
     frontend:
         container_name: frontend
         build:
@@ -14,6 +29,9 @@ services:
             - ./frontend:/opt/app
         command: sh -c "yarn && yarn start"
         # command: sh -c "yarn build && yarn start-prod"
+        depends_on:
+        - devices
+
         healthcheck:
             test: ["CMD", "curl", "--fail", "http://localhost:8008"]
             interval: 1m30s
@@ -79,6 +97,8 @@ services:
         ports:
             - 5433:80
         restart: unless-stopped
+        depends_on: 
+            - postgres
 
     queue:
         image: rabbitmq:3-management
