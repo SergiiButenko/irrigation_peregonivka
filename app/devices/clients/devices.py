@@ -5,10 +5,18 @@ from devices.config.config import Config
 
 
 class DevicesClient:
-    def __init__(self) -> None:
+    def __init__(self, username, password) -> None:
+        self.username = username
+        self.password = password
         self.headers = None
 
-    async def login(self, username, password):
+    async def login(self, username=None, password=None):
+        if not username:
+            username = self.username
+
+        if not password:
+            password = self.password
+
         res = await HttpxClient.post_with_raise(
             data={"username": username, "password": password}
         )
