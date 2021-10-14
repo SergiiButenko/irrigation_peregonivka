@@ -8,7 +8,8 @@ from devices.routers import (
     sensors,
     telegram,
     rules,
-    auth
+    auth,
+    websockets
 )
 from devices.service_providers.device_logger import logger
 from devices.service_providers.celery import celery_app
@@ -42,3 +43,5 @@ app.include_router(sensors.router)
 app.include_router(telegram.router)
 app.include_router(rules.router)
 app.include_router(auth.router)
+app.include_router(websockets.router)
+

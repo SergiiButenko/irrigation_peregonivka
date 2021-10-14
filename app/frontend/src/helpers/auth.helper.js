@@ -30,7 +30,7 @@ export const userIsAdmin = connectedRouterRedirect({
 });
 
 export const isAdmin = (user={}) => {
-    return hasRole(user, ROLES.admin) && 'sdfsdf';
+    return hasRole(user, ROLES.admin);
 };
 
 export const hasRole = (user, roles) =>

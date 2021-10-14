@@ -21,16 +21,24 @@ class SmartSystemApi {
     }
 
     async login(username, password, options = {}) {
+        // Build formData object.
+        let formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+        
+        const data = new URLSearchParams(formData);
+        options.headers = {...options.headers, 'Content-Type': 'application/x-www-form-urlencoded'}
+        
         const {access_token, refresh_token} = await this.provider.post(
             apiUri.AUTH(),
-            JSON.stringify({username, password}),
+            data,
             options,
         );
 
         let jwt = parseJwt(access_token);
 
         const user = {
-            name: jwt.identity,
+            name: jwt.sub,
             accessToken: access_token,
             refreshToken: refresh_token,
             roles: jwt.user_claims.roles
