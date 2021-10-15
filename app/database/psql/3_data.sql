@@ -10,11 +10,12 @@ VALUES
 
 
 INSERT INTO
-    public.components_groups (id, name)
+    public.components_groups (id, name, user_id)
 VALUES
     (
         'ae9f4b91-8ee5-4939-a30c-4204bcb0cf32',
-        'Полив'
+        'Полив',
+        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf33',
     );
 
 INSERT INTO
@@ -86,41 +87,6 @@ VALUES
         'Relay2ch',
         'v1'
     );
-
-INSERT INTO
-    public.components_groups(name)
-VALUES
-    ('Насоси');
-
-INSERT INTO
-    public.components_groups(name)
-VALUES
-    ('Полив з бочки');
-
-INSERT INTO
-    public.components_groups(name)
-VALUES
-    ('Полив з системи');
-
-INSERT INTO
-    public.components_groups(name)
-VALUES
-    ('Теплиця');
-
-INSERT INTO
-    public.components_groups(name)
-VALUES
-    ('Теплиця Датчики');
-
-INSERT INTO
-    public.components_groups(name)
-VALUES
-    ('Двір');
-
-INSERT INTO
-    public.components_groups(name)
-VALUES
-    ('Сад');
 
 INSERT INTO
     public.components_categories(name, description)

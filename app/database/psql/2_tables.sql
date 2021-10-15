@@ -11,7 +11,6 @@ CREATE TABLE public.users(
     disabled BOOL DEFAULT false
 );
 
-
 -- device SECTION 
 CREATE TABLE public.devices(
     id TEXT NOT NULL PRIMARY KEY,
@@ -25,7 +24,10 @@ CREATE TABLE public.devices(
 --  Line groups
 CREATE TABLE public.components_groups (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name text NOT NULL
+    name text NOT NULL,
+    description text,
+    user_id uuid NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
 CREATE TABLE public.components_types(

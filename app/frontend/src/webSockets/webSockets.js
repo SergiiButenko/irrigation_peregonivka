@@ -1,10 +1,7 @@
-import io from 'socket.io-client';
+import { io } from "socket.io-client";
 import {ACTION_TYPES} from '../constants/websocket';
-import lines from '../actions/device';
-import config from 'config';
 
-const {endpoints: {ws_uri}} = config;
-const socket = io(ws_uri);
+const socket = io();
 
 export const websocketInit = (store) => {
     socket.on(ACTION_TYPES.error, (payload) => {
