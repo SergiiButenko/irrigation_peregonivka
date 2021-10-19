@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 
 from devices.commands.events import EventsCMD
 from devices.dependencies import get_current_active_user, get_logger
-from devices.queries.devices import DeviceSQL
+from devices.queries.devices import DeviceQRS
 from devices.schemas.schema import DeviceExpectedState
 
 router = APIRouter(
@@ -16,7 +16,7 @@ router = APIRouter(
 async def get_actuators(
     device_id: str,
     actuator_id: int,
-    device_sql: DeviceSQL = Depends(DeviceSQL),
+    device_sql: DeviceQRS = Depends(DeviceQRS),
     logger=Depends(get_logger),
 ):
     return await device_sql.get_component_by_id(device_id, actuator_id)
@@ -26,7 +26,7 @@ async def get_actuators(
 async def get_actuator_state(
     device_id: str,
     actuator_id: int,
-    device_sql: DeviceSQL = Depends(DeviceSQL),
+    device_sql: DeviceQRS = Depends(DeviceQRS),
     logger=Depends(get_logger),
 ):
     """Change state of actuator."""

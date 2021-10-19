@@ -9,7 +9,8 @@ from devices.routers import (
     telegram,
     rules,
     auth,
-    websockets
+    websockets,
+    groups
 )
 from devices.service_providers.device_logger import logger
 from devices.service_providers.celery import celery_app
@@ -44,4 +45,5 @@ app.include_router(telegram.router)
 app.include_router(rules.router)
 app.include_router(auth.router)
 app.include_router(websockets.router)
+app.include_router(groups.router)
 

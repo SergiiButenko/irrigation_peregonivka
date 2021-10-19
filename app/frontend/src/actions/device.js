@@ -67,20 +67,6 @@ export const fetchDeviceById = (deviceId) => {
     };
 };
 
-export const toggleLine = (deviceId, lineId) => {
-    return async (dispatch, getState) => {
-        try {
-            const _devices = getState().entity.devices.toJS();
-            const lineSelected = !!_devices[deviceId].lines[lineId].selected;
-
-            dispatch(entity.devices.updateIn([deviceId, 'lines', lineId, selectedKey], !lineSelected));
-        }
-        catch (e) {
-            console.log(e);
-        }
-    };
-};
-
 export const fetchDeviceTasks = (deviceId) => {
     return async dispatch => {
         dispatch(devices.loading(true));

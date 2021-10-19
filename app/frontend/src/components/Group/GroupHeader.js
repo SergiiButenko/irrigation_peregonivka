@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 import PageSpinner from '../shared/PageSpinner';
-import Settings from '@material-ui/icons/Settings';
 
 
 const styles = theme => ({
@@ -24,15 +23,11 @@ export default class GroupHeader extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         group: PropTypes.object.isRequired,
-        //loading: PropTypes.bool.isRequired,
+        loading: PropTypes.bool.isRequired,
     };
 
     static contextTypes = {
         router: PropTypes.object
-    };
-
-    redirectToSettings = (id) => (e) => {
-        console.log(this.context.router.history)
     };
 
     render() {
@@ -62,10 +57,6 @@ export default class GroupHeader extends React.Component {
                             {group.description}
                         </Typography>
                     </Grid>
-                    <Grid item xs={1} onClick={this.redirectToSettings(group.id)}>
-                        <Settings />
-                    </Grid>
-
                 </Grid>
             </Paper>
         );

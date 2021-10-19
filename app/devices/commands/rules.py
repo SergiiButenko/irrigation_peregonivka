@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from devices.config.config import Config
 from devices.celery_tasks.tasks import try_execure_rule, try_notify_rule
-from devices.queries.devices import DeviceSQL
+from devices.queries.devices import DeviceQRS
 from devices.commands.devices import DeviceCMD
 from devices.enums.rules import DiscreteActuatorsType, DiscreteStates, RulesState
 from devices.models.rules import Rule, Rules
@@ -36,7 +36,7 @@ class RulesCMD:
         for index, actuator in enumerate(rules.actuators):
             interval_uuid = uuid.uuid4()
 
-            _actuator = await DeviceSQL.get_component_by_id(
+            _actuator = await DeviceQRS.get_component_by_id(
                 actuator.device_id, actuator.actuator_id
             )
             intervals_quantity = actuator.rules.intervals or 1

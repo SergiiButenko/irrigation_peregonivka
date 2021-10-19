@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from devices.service_providers.telegram_bot import telegram_bot
 from devices.messages.TelegramMessages import TelegramMessages
 from devices.service_providers.device_logger import logger
-from devices.queries.devices import DeviceSQL
+from devices.queries.devices import DeviceQRS
 from devices.queries.sensors import SensorQRS
 
 
@@ -11,7 +11,7 @@ class CesspollRelaySensor1:
         
         @staticmethod
         async def analyse(device, sensors_id, *args, **kwargs):
-            telegram_user = await DeviceSQL.get_linked_telegram_user(
+            telegram_user = await DeviceQRS.get_linked_telegram_user(
                 device.device_id, sensors_id
             )
 
@@ -72,7 +72,7 @@ class CesspollRelaySensor1:
         
         @staticmethod
         async def analyse(device, sensors_id, *args, **kwargs):
-            telegram_user = await DeviceSQL.get_linked_telegram_user(
+            telegram_user = await DeviceQRS.get_linked_telegram_user(
                 device.device_id, sensors_id
             )
 

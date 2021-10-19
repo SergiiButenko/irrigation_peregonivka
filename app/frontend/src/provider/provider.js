@@ -124,9 +124,9 @@ class SmartSystemApi {
         );
     }
 
-    async getGroupLinesById(groupId, options = {}) {
+    async getGroupComponentsById(groupId, options = {}) {
         return this.provider.get(
-            apiUri.GROUPS(groupId),
+            apiUri.GROUPS_COMPONENTS(groupId),
             options,
         );
     }

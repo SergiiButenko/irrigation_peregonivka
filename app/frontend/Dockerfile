@@ -11,5 +11,5 @@ RUN if [ ! diff -q yarn.lock /tmp/yarn.lock > /dev/null  2>&1 ]; then cp /tmp/ya
 RUN cd /tmp && yarn
 RUN mkdir -p /opt/app && cd /opt/app && ln -s /tmp/node_modules
 
-COPY . /opt/app
+# COPY . /opt/app
 RUN rm -rf /opt/app/dist

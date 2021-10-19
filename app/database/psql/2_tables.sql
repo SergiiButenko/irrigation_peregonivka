@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 
 -- users section
 CREATE TABLE public.users(
-    id TEXT NOT NULL PRIMARY KEY,
+    id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     username TEXT NOT NULL,
     hashed_password TEXT NOT NULL,
     email TEXT,
@@ -22,8 +22,9 @@ CREATE TABLE public.devices(
 );
 
 --  Line groups
-CREATE TABLE public.components_groups (
+CREATE TABLE public.groups (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+    short_name NOT NULL,
     name text NOT NULL,
     description text,
     user_id uuid NOT NULL,
@@ -41,10 +42,10 @@ CREATE TABLE public.components_categories(
 );
 
 CREATE TABLE public.components (
-    id INTEGER NOT NULL,
+    id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     device_id TEXT,
+    component_id INTEGER NOT NULL,
     name text NOT NULL,
-    group_id uuid NOT NULL,
     category TEXT NOT NULL,
     type TEXT NOT NULL,
     version TEXT NOT NULL,
@@ -56,13 +57,19 @@ CREATE TABLE public.components (
     --  //intervals integer NOT NULL DEFAULT 2,
     --  //time_wait integer NOT NULL DEFAULT 15,
     --  //relay_num integer,
-    UNIQUE (device_id, id),
-    FOREIGN KEY(group_id) REFERENCES components_groups(id),
+    UNIQUE (device_id, component_id),
     FOREIGN KEY(device_id) REFERENCES devices(id),
     FOREIGN KEY(type) REFERENCES components_types(name),
     FOREIGN KEY(category) REFERENCES components_categories(name)
 );
 
+CREATE TABLE public.components_groups (
+    id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+    component_id uuid NOT NULL,
+    group_id uuid NOT NULL,
+    FOREIGN KEY(component_id) REFERENCES components(id),
+    FOREIGN KEY(group_id) REFERENCES groups(id)
+);
 
 -- Queue section
 CREATE TABLE public.rules (
@@ -73,5 +80,5 @@ CREATE TABLE public.rules (
     expected_state TEXT NOT NULL,
     execution_time timestamp without time zone NOT NULL,
     state TEXT NOT NULL DEFAULT 'new',
-    FOREIGN KEY(actuator_id, device_id) REFERENCES components(id, device_id)
+    FOREIGN KEY(actuator_id, device_id) REFERENCES components(component_id, device_id)
 );

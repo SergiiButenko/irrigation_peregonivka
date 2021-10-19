@@ -1,23 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import {connect} from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { Button } from '@material-ui/core';
 
-import {getGroups} from '../../selectors/groups';
-import {fetchGroupById} from '../../actions/group';
+import { getGroups } from '../../selectors/groups';
+import { fetchGroupComponentsById } from '../../actions/groups';
 import PageSpinner from '../shared/PageSpinner';
 import LoadingFailed from '../shared/LoadingFailed';
-import {webUri} from '../../constants/uri';
-import Link from 'react-router-dom/Link';
-import DeviceCard from '../shared/cards/DeviceCard';
 import GroupHeader from './GroupHeader';
+import IrrigationMaster from './library/Irrigation/index';
+import { webUri } from '../../constants/uri';
+import Typography from '@material-ui/core/Typography';
 
+import ArrowBackIosRounded from '@material-ui/icons/ArrowBackIosRounded';
 
 const styles = theme => ({
     root: {
@@ -33,7 +31,7 @@ const mapStateToProps = (state) => {
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps, {fetchGroupById})
+@connect(mapStateToProps, { fetchGroupComponentsById })
 export default class Group extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
@@ -42,37 +40,46 @@ export default class Group extends React.Component {
         groupFetchError: PropTypes.any,
     };
 
-    componentDidMount() {
-        this.props.fetchGroupById(this.props.match.params.groupId);
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    async componentDidMount() {
+        await this.props.fetchGroupComponentsById(this.props.match.params.groupId);
     }
 
+    redirectToGroups = () => (e) => {
+        this.context.router.history.push(webUri.GROUPS());
+    };
+
     render() {
-        const {classes, loading, groupFetchError, groups, match: {params}} = this.props;
+        const { classes, loading, groupFetchError, groups, match: { params } } = this.props;
         const group = groups[params.groupId];
 
         if (loading) {
-            return <PageSpinner/>;
+            return <PageSpinner />;
         }
 
         if (groupFetchError) {
-            return <LoadingFailed errorText={groupFetchError}/>;
+            return <LoadingFailed errorText={groupFetchError} />;
         }
 
         return (
             <>
-            <Grid container spacing={24}>
-                <Grid item xs={12}>
-                    <GroupHeader group={group} key={group.id}/>
+                <Grid container spacing={24}>
+                    <Grid item xs={12} onClick={this.redirectToGroups()}>
+                        <Typography variant="h5" component="h3">
+                            <ArrowBackIosRounded /> На попередню сторінку
+                        </Typography>
+                    </Grid>
+                    {/* <Grid item xs={12}>
+                        <GroupHeader group={group} />
+                    </Grid> */}
+                    <Grid item xs={12}>
+                        <IrrigationMaster group={group} key={groups.id} />
+                    </Grid>
+
                 </Grid>
-                {group.devices.map((device, i) => {
-                    return (
-                        <Grid item xs={12}>
-                            <DeviceCard device={device} key={device.id}/>
-                        </Grid>
-                    );
-                })}
-            
-            </Grid>
             </>
         );
     }

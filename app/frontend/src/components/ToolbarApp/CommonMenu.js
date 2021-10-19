@@ -32,7 +32,7 @@ export default class CommonMenu extends Component {
                     <ListItemIcon>
                         <DashboardIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Зони"/>
+                    <ListItemText primary="Простір"/>
                 </ListItem>
 
                 <ListItem component={Link} to="/devices" button>

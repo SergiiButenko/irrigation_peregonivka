@@ -30,8 +30,6 @@ services:
         container_name: frontend
         build:
             context: ./frontend
-        # depends_on:
-        # - devices
         expose: 
             - 8008
         volumes:
@@ -39,7 +37,7 @@ services:
         command: sh -c "yarn && yarn start"
         # command: sh -c "yarn build && yarn start-prod"
         depends_on:
-        - devices
+            - devices
 
         healthcheck:
             test: ["CMD", "curl", "--fail", "http://localhost:8008"]
@@ -99,8 +97,8 @@ services:
         container_name: postgres-admin
         env_file:
         - .env
-        expose:
-            - 80
+        ports:
+            - 5433:80
         restart: unless-stopped
         depends_on: 
             - postgres

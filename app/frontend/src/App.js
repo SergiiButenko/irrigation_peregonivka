@@ -9,7 +9,6 @@ import SignInPage from './components/SignInPage';
 import DevicesPage from './components/DevicesPage';
 import GroupsPage from './components/GroupsPage';
 import CssBaseline from '@material-ui/core/CssBaseline/CssBaseline';
-import DevicePage from './components/DevicePage';
 import GroupPage from './components/GroupPage';
 
 const App = () => {
@@ -22,7 +21,6 @@ const App = () => {
                 <Route exact path="/groups" component={ userIsAuthenticated(GroupsPage) }/>
                 <Route exact path="/groups/:groupId" component={ userIsAuthenticated(GroupPage) }/>
                 <Route exact path="/devices" component={ userIsAuthenticated(DevicesPage) }/>
-                <Route path="/devices/:deviceId" component={userIsAuthenticated(DevicePage)}/>
             </div>
         </BrowserRouter>
     );

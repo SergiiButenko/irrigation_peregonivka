@@ -1,4 +1,4 @@
-from devices.queries.devices import DeviceSQL
+from devices.queries.devices import DeviceQRS
 from devices.queries.sensors import SensorQRS
 from devices.commands.events import EventsCMD
 from devices.schemas.schema import SensorValue
@@ -17,7 +17,7 @@ router = APIRouter(
 async def get_sensor(
     device_id: str,
     sensor_id: int,
-    device_sql: DeviceSQL = Depends(DeviceSQL),
+    device_sql: DeviceQRS = Depends(DeviceQRS),
     logger=Depends(get_logger),
 ):
     """In order to keep device status"""

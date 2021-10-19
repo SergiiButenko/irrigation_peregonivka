@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 import uuid
 from datetime import datetime
 from pydantic import BaseModel, Field
@@ -15,16 +15,20 @@ class DeviceSql(BaseModel):
 
 
 class ComponentSql(BaseModel):
-    id: int
+    id: uuid.UUID
     device_id: str
+    component_id: int
     name: str
-    group_id: uuid.UUID
     category: str
     type: str
     version: str
-    usage_type: str
+    usage_type: Optional[str] = None
     settings: Optional[dict] = None
     telegram_notify: bool
+
+
+class ComponentsSql(BaseModel):
+    __root__: List[ComponentSql]
 
 
 class PyObjectId(ObjectId):
@@ -60,5 +64,3 @@ class SensorValueNSQL(BaseModel):
 
 class TelegramUser(BaseModel):
     id: str = Field(alias='telegram_user')
-
-

@@ -10,12 +10,13 @@ VALUES
 
 
 INSERT INTO
-    public.components_groups (id, name, user_id)
+    public.groups (id, short_name, name, user_id)
 VALUES
     (
-        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf32',
+        'ae9f4b91-8ee5-4939-a31c-4204bcb0cf32',
+        'irrigation'
         'Полив',
-        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf33',
+        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf33'
     );
 
 INSERT INTO
@@ -123,9 +124,9 @@ VALUES
 INSERT INTO
     public.components(
         id,
+        component_id,
         device_id,
         name,
-        group_id,
         category,
         type,
         version,
@@ -135,10 +136,10 @@ INSERT INTO
     )
 VALUES
     (
+        'b98d7199-cea3-43a8-a615-940b3a59ffa4',
         1,
         'irrigation_relay1',
         'Томати',
-        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf32',
         'actuator',
         'relay',
         'v1',
@@ -150,9 +151,9 @@ VALUES
 INSERT INTO
     public.components(
         id,
+        component_id,
         device_id,
         name,
-        group_id,
         category,
         type,
         version,
@@ -161,10 +162,10 @@ INSERT INTO
     )
 VALUES
     (
+        '59551dc9-fa3f-4362-8a18-7678fd98c67b',
         1,
         'cesspoll_relay_sensor1',
         'Датчик рівня води в септику',
-        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf32',
         'sensor',
         'POWER_CURRENT',
         'v1',
@@ -175,9 +176,9 @@ VALUES
 INSERT INTO
     public.components(
         id,
+        component_id,
         device_id,
         name,
-        group_id,
         category,
         type,
         version,
@@ -186,13 +187,25 @@ INSERT INTO
     )
 VALUES
     (
+        '53dd36aa-fe23-4d48-ac0e-08948f122e09',
         2,
         'cesspoll_relay_sensor1',
         'Датчик увімкнення насосу в септику',
-        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf32',
         'sensor',
         'POWER_CURRENT',
         'v1',
         NULL,
         false
+    );
+
+
+INSERT INTO
+    public.components_groups(
+        component_id,
+        group_id
+    )
+VALUES
+    (
+        '53dd36aa-fe23-4d48-ac0e-08948f122e09',
+        'ae9f4b91-8ee5-4939-a31c-4204bcb0cf32'
     );

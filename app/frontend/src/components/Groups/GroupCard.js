@@ -9,7 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import PageSpinner from '../shared/PageSpinner';
 import {webUri} from '../../constants/uri';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
-import Settings from '@material-ui/icons/Settings';
 
 const styles = theme => ({
     root: {
@@ -36,10 +35,6 @@ export default class GroupCard extends React.Component {
         this.context.router.history.push(webUri.GROUPS(id));
     };
 
-    redirectToSettings = (id) => (e) => {
-        console.log(this.router.history)
-    };
-
     render() {
         const {classes, loading, group} = this.props;
 
@@ -51,6 +46,7 @@ export default class GroupCard extends React.Component {
             <Paper
                 className={classes.root}
                 elevation={1}
+                onClick={this.redirectToGroup(group.id)}
             >
                 <Grid
                     container
@@ -59,7 +55,7 @@ export default class GroupCard extends React.Component {
                     justify="space-between"
                     alignItems="center"
                 >
-                    <Grid item xs={8} onClick={this.redirectToGroup(group.id)}>
+                    <Grid item xs={8}>
                         <Typography variant="h5" component="h3">
                             {group.name}
                         </Typography>
@@ -67,11 +63,8 @@ export default class GroupCard extends React.Component {
                             {group.description}
                         </Typography>
                     </Grid>
-                    <Grid item xs={1} onClick={this.redirectToGroup(group.id)}>
+                    <Grid item xs={1}>
                         <ArrowForwardIos />
-                    </Grid>
-                    <Grid item xs={1} onClick={this.redirectToSettings(group.id)}>
-                        <Settings />
                     </Grid>
                 </Grid>
             </Paper>

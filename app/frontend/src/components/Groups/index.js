@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 
 import {getGroups} from '../../selectors/groups';
-import {fetchGroups} from '../../actions/group';
+import {fetchGroups} from '../../actions/groups';
 import PageSpinner from '../shared/PageSpinner';
 import LoadingFailed from '../shared/LoadingFailed';
 import GroupCard from './GroupCard';
@@ -52,11 +52,6 @@ export default class Groups extends React.Component {
         return (
             <>
                 <Grid container spacing={8}>
-                    <Grid item xs={12}>
-                        <Button>
-                            Назад
-                        </Button>
-                    </Grid>
                     {
                         Object.keys(groups).map(function (id, index) {
                             return (

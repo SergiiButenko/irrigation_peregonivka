@@ -1,10 +1,10 @@
-from devices.models.devices import ComponentSql, DeviceSql, TelegramUser
+from devices.models.devices import ComponentSql, ComponentsSql, DeviceSql, TelegramUser
 from devices.schemas.schema import DeviceExpectedState
 from devices.service_providers.sql_db import psql_db
 from devices.service_providers.device_logger import logger
 
 
-class DeviceSQL:
+class DeviceQRS:
 
     @staticmethod
     async def set_device_ip(device_id: str, device_ip: str) -> None:
@@ -37,13 +37,25 @@ class DeviceSQL:
         device_id: str, component_id: int
     ) -> ComponentSql:
         sql = """
-        SELECT id, device_id, name, group_id, category, type, version, settings, usage_type, telegram_notify FROM components 
+        SELECT * FROM components 
         WHERE id=:component_id AND device_id=:device_id;
         """
         result = await psql_db.fetch_one(
             sql, values={"component_id": component_id, "device_id": device_id}
         )
         return ComponentSql.parse_obj(result)
+
+    @staticmethod
+    async def get_components_by_group_id(group_id: str, user_id: str):
+        sql = """SELECT c.* FROM public.components AS c
+        JOIN public.components_groups AS cg ON c.id = cg.component_id 
+        JOIN public.groups AS g ON g.id = cg.group_id 
+        WHERE g.user_id=:user_id and g.id=:group_id"""
+        result = await psql_db.fetch_all(
+            sql, values={'user_id': user_id, 'group_id': group_id}
+        )
+
+        return ComponentsSql.parse_obj(result)
 
     @staticmethod
     async def get_expected_actuator_state(device_id: str, actuator_id: int) -> DeviceExpectedState:

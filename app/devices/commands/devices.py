@@ -2,7 +2,7 @@ from devices.libraries.device_library.devices.device_factory import DeviceFactor
 from devices.libraries.device_library.devices.base_class_device import Device
 from devices.models.devices import DeviceSql, ComponentSql
 from starlette.routing import NoMatchFound
-from devices.queries.devices import DeviceSQL
+from devices.queries.devices import DeviceQRS
 from devices.service_providers.httpx_client import HttpxClient
 
 
@@ -10,12 +10,12 @@ class DeviceCMD:
 
     @staticmethod
     async def ping_to_register_device_by_id(device_id: str) -> None:
-        device = await DeviceSQL.get_device(device_id)
+        device = await DeviceQRS.get_device(device_id)
         await HttpxClient.post(url="http://" + device.ip + "/register")
 
     @staticmethod
     async def ping_to_register_devices():
-        devices = await DeviceSQL.get_all_devices()
+        devices = await DeviceQRS.get_all_devices()
         for device in devices:
             await HttpxClient.post(
                 url="http://" + device.ip + "/register"
@@ -26,11 +26,11 @@ class DeviceCMD:
         device_id: str,
         device_ip: str
     ) -> bool:
-        return await DeviceSQL.set_device_ip(device_id, device_ip)
+        return await DeviceQRS.set_device_ip(device_id, device_ip)
 
     @staticmethod
     async def get_device_IP_by_id(device_id) -> DeviceSql:
-        _device = await DeviceSQL.get_device(device_id)
+        _device = await DeviceQRS.get_device(device_id)
         if _device is None:
             raise NoMatchFound(f"No device id {device_id} found")
 
@@ -40,7 +40,7 @@ class DeviceCMD:
     async def get_component_by_id(
         device_id: str, component_id: int
     ) -> ComponentSql:
-        _component = await DeviceSQL.get_component_by_id(device_id, component_id)
+        _component = await DeviceQRS.get_component_by_id(device_id, component_id)
         if _component.device_id != device_id:
             raise ValueError(
                 f"Device id '{device_id}' is not expected \
@@ -61,7 +61,7 @@ class DeviceCMD:
 
     @staticmethod
     async def get_device_by_id(device_id: str) -> Device:
-        _deviceSQL = await DeviceSQL.get_device(device_id)
+        _deviceSQL = await DeviceQRS.get_device(device_id)
         _device = DeviceFactory.get(_deviceSQL.type, _deviceSQL.version)
         return await _device(device_id).init_components()
 
