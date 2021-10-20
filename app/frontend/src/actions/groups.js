@@ -68,3 +68,14 @@ export const toggleSelection = (groupId, componentId) => {
         }
     };
 };
+
+export const setSelected = (groupId, componentId) => {
+    return async (dispatch) => {
+        try {
+            dispatch(entity.groups.updateIn([groupId, 'components', componentId, 'selected'], true));
+        }
+        catch (e) {
+            console.log(e);
+        }
+    };
+};

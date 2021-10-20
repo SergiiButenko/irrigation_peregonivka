@@ -6,8 +6,10 @@ import { withRouter } from 'react-router-dom';
 
 
 import NavigationIcon from '@material-ui/icons/Navigation';
+
 import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
+import Zoom from '@material-ui/core/Zoom';
 
 import { postDeviceTasks } from '../../../../actions/device';
 import PageSpinner from '../../../shared/PageSpinner';
@@ -20,6 +22,11 @@ const styles = theme => ({
         paddingTop: theme.spacing.unit * 2,
         paddingBottom: theme.spacing.unit * 2,
         width: '100%',
+    },
+    fab: {
+        position: 'absolute',
+        bottom: theme.spacing.unit * 2,
+        right: theme.spacing.unit * 2,
     },
 });
 
@@ -40,6 +47,11 @@ export default class IrrigationMaster extends React.Component {
 
     render() {
         const { classes, loading, groupFetchError, group, match: { params }, postDeviceTasks } = this.props;
+
+        const transitionDuration = {
+            enter: 100,
+            exit: 100,
+        };
 
         if (loading) {
             return <PageSpinner />;
@@ -64,20 +76,17 @@ export default class IrrigationMaster extends React.Component {
                             );
                         })
                     }
-
-
-                    <Grid item xs={12}>
-                        <Button 
-                        color="primary"
-                        variant="extendedFab"
-                        aria-label="Delete"
-                        className={classes.button}
-                        onClick={() => postDeviceTasks(device.id)}>
-                            <NavigationIcon className={classes.extendedIcon} />
-                            Почати полив
-                        </Button>
-                    </Grid>
                 </Grid>
+                <Zoom
+                    key="primary"
+                    in="true"
+                    timeout={transitionDuration}
+                    unmountOnExit
+                >
+                    <Button variant="fab" className={classes.fab} color="primary">
+                        <NavigationIcon />
+                    </Button>
+                </Zoom>
             </>
         );
     }

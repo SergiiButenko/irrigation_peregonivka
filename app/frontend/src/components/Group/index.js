@@ -72,9 +72,6 @@ export default class Group extends React.Component {
                             <ArrowBackIosRounded /> На попередню сторінку
                         </Typography>
                     </Grid>
-                    {/* <Grid item xs={12}>
-                        <GroupHeader group={group} />
-                    </Grid> */}
                     <Grid item xs={12}>
                         <IrrigationMaster group={group} key={groups.id} />
                     </Grid>

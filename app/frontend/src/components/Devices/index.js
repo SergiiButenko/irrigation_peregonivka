@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
 
-import ControlCard from '../ControlCard/index';
+import IrrigationCard from '../Group/shared/IrrigationCard';
 import {getDevices} from '../../selectors/devices';
 import {fetchDevices} from '../../actions/device';
 import PageSpinner from '../shared/PageSpinner';
