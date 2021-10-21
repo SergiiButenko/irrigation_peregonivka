@@ -5,14 +5,10 @@ import {connect} from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
 
-import IrrigationCard from '../Group/shared/IrrigationCard';
 import {getDevices} from '../../selectors/devices';
 import {fetchDevices} from '../../actions/device';
 import PageSpinner from '../shared/PageSpinner';
 import LoadingFailed from '../shared/LoadingFailed';
-import Link from 'react-router-dom/Link';
-import {webUri} from '../../constants/uri';
-import DeviceCard from '../shared/cards/DeviceCard';
 
 const styles = theme => ({
     card: {

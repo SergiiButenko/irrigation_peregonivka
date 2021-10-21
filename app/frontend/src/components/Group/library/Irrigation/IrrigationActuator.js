@@ -57,11 +57,11 @@ const mapStateToProps = (state) => {
 @withStyles(styles)
 @withRouter
 @connect(mapStateToProps, { toggleSelection, setSelected })
-export default class LineCard extends React.Component {
+export default class IrrigationActuator extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         groups: PropTypes.object.isRequired,
-        acuatorId: PropTypes.string.isRequired,
+        componentId: PropTypes.string.isRequired,
         groupId: PropTypes.string.isRequired,
     };
 
@@ -86,10 +86,10 @@ export default class LineCard extends React.Component {
 
 
     render() {
-        const { acuatorId, groupId, groups, classes, toggleSelection } = this.props;
+        const { componentId, groupId, groups, classes, toggleSelection } = this.props;
         const { value_minutes, value_qnt, collapsed } = this.state;
 
-        const actuator = groups[groupId].components[acuatorId];
+        const actuator = groups[groupId].components[componentId];
 
         actuator.selected = !!actuator.selected || false;
 
@@ -130,7 +130,7 @@ export default class LineCard extends React.Component {
                                     max={20}
                                     step={5}
                                     onChange={this.handleChangeMinutes}
-                                    onDragStart={() => setSelected(groupId, acuatorId)}
+                                    onDragStart={() => setSelected(groupId, componentId)}
                                 />
                             </Grid>
                         </Grid>
@@ -147,7 +147,7 @@ export default class LineCard extends React.Component {
                                     max={3}
                                     step={1}
                                     onChange={this.handleChangeQnt}
-                                    onDragStart={() => setSelected(groupId, acuatorId)}
+                                    onDragStart={() => setSelected(groupId, componentId)}
                                 />
                             </Grid>
                         </Grid>
@@ -155,7 +155,7 @@ export default class LineCard extends React.Component {
                 </CardContent>
 
                 <CardActions
-                    onClick={() => toggleSelection(groupId, acuatorId)}
+                    onClick={() => toggleSelection(groupId, componentId)}
                 >
                     <Button
                         color="primary"

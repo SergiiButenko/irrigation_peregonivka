@@ -14,7 +14,7 @@ import Zoom from '@material-ui/core/Zoom';
 import { postDeviceTasks } from '../../../../actions/device';
 import PageSpinner from '../../../shared/PageSpinner';
 import LoadingFailed from '../../../shared/LoadingFailed';
-import LineCard from './LineCard';
+import { components_mapping } from '../../../../constants/components_mapping';
 
 const styles = theme => ({
     root: {
@@ -66,10 +66,12 @@ export default class IrrigationMaster extends React.Component {
                 <Grid container spacing={24}>
                     {
                         Object.keys(group.components).map(function (id, index) {
+                            const component = group.components
+                            const Element = components_mapping[component.usage_type][component.category][component.version]
                             return (
                                 <Grid item xs={12}>
-                                    <LineCard
-                                        acuatorId={group.components[id].id}
+                                    <Element
+                                        componentId={group.components[id].id}
                                         groupId={group.id}
                                         key={group.components[id].id} />
                                 </Grid>
