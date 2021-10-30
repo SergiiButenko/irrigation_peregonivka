@@ -39,7 +39,7 @@ class RulesCMD:
             _actuator = await DeviceQRS.get_component_by_id(
                 actuator.device_id, actuator.actuator_id
             )
-            intervals_quantity = actuator.rules.intervals or 1
+            intervals_quantity = actuator.rules.intervals
             time_wait = actuator.rules.time_wait
             execution_minutes = actuator.rules.time
 

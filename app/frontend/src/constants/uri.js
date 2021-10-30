@@ -6,7 +6,7 @@ export const apiUri = {
     DEVICES: (deviceId='') => 'api/v1/devices' + (deviceId
     		? `/${deviceId}`
 	    	: ''),
-    TASKS: (deviceId) => `api/v1/tasks/${deviceId}`,
+    RULES: () => `api/v1/rules`,
     AUTH: () => 'api/v1/auth/login',
     AUTH_REFRESH: () => 'api/v1/auth/refreshToken',
     LOGOUT: () => 'api/v1/auth/logout',

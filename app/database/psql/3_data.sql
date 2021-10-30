@@ -14,7 +14,7 @@ INSERT INTO
 VALUES
     (
         'ae9f4b91-8ee5-4939-a31c-4204bcb0cf32',
-        'irrigation'
+        'irrigation',
         'Полив',
         'ae9f4b91-8ee5-4939-a30c-4204bcb0cf33'
     );
@@ -25,7 +25,7 @@ INSERT INTO
 VALUES
     (
         '49394b91-8ee5-4939-a31c-4204bcb0cf32',
-        'cesspoll'
+        'cesspoll',
         'Септик',
         'ae9f4b91-8ee5-4939-a30c-4204bcb0cf33'
     );
@@ -175,7 +175,7 @@ INSERT INTO
 VALUES
     (
         'a6157199-cea3-43a8-a615-940b3a59ffa4',
-        1,
+        2,
         'irrigation_relay1',
         'Огірки',
         'actuator',
@@ -202,7 +202,7 @@ INSERT INTO
 VALUES
     (
         'cea37199-cea3-43a8-a615-940b3a59ffa4',
-        1,
+        3,
         'irrigation_relay1',
         'Полуниця Альтанка',
         'actuator',

@@ -10,7 +10,6 @@ import { getGroups } from '../../selectors/groups';
 import { fetchGroupComponentsById } from '../../actions/groups';
 import PageSpinner from '../shared/PageSpinner';
 import LoadingFailed from '../shared/LoadingFailed';
-import GroupHeader from './GroupHeader';
 import IrrigationMaster from './library/Irrigation/index';
 import { webUri } from '../../constants/uri';
 import Typography from '@material-ui/core/Typography';
@@ -73,7 +72,7 @@ export default class Group extends React.Component {
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <IrrigationMaster group={group} key={groups.id} />
+                        <IrrigationMaster group={group} key={group.id} />
                     </Grid>
 
                 </Grid>

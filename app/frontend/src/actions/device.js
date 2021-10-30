@@ -1,7 +1,6 @@
 import {createActions} from 'redux-actions';
 import {smartSystemApi} from '../provider';
 import {arrayToObj} from '../helpers/common.helper';
-import {filterSelectedLines, formLinesJson} from '../helpers/device.helper';
 
 const actions = createActions(
     {
@@ -90,26 +89,5 @@ export const fetchDeviceTasks = (deviceId) => {
             dispatch(devices.failure(e));
         }
         dispatch(devices.loading(false));
-    };
-};
-
-export const postDeviceTasks = (deviceId) => {
-    return async (dispatch, getState) => {
-        dispatch(devices.updating(true));
-
-        try {
-            const _devices = getState().entity.devices.toJS();
-            const lines = _devices[deviceId].lines;
-
-            const linesSelected = filterSelectedLines(lines);
-            await smartSystemApi.postDeviceTasks(deviceId,
-                {'lines': formLinesJson(linesSelected)}
-            );
-        }
-        catch (e) {
-            console.log(e);
-        }
-        
-        dispatch(devices.updating(false));
     };
 };

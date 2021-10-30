@@ -104,14 +104,14 @@ class SmartSystemApi {
 
     async getDeviceLatestTask(deviceId, options = {}) {
         return this.provider.get(
-            apiUri.TASKS(deviceId),
+            apiUri.RULES(deviceId),
             options,
         );
     }
 
-    async postDeviceTasks(deviceId, body, options = {}) {
+    async postDeviceTasks(body, options = {}) {
         return this.provider.post(
-            apiUri.TASKS(deviceId),
+            apiUri.RULES(),
             JSON.stringify(body),
             options,
         );

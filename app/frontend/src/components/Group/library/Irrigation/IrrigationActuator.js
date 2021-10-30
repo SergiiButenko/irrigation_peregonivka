@@ -107,11 +107,12 @@ export default class IrrigationActuator extends React.Component {
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item container direction="row" spacing={16} onClick={this.handleCollapse}>
+                    <Grid item container direction="row" spacing={16} onClick={this.handleCollapse} justify="flex-end">
                         <Grid item>
                             <Typography component="p">Полити {value_qnt} {value_qnt === 1 ? 'раз, ' : 'раза по'} {value_minutes} хв</Typography>
                         </Grid>
                         <Grid item xs>
+                            <Typography component="p">Налаштувати</Typography>
                             <ExpandMoreIcon
                                 className={collapsed ? classes.expandMore_selected : classes.expandMore} />
                         </Grid>
@@ -130,7 +131,7 @@ export default class IrrigationActuator extends React.Component {
                                     max={20}
                                     step={5}
                                     onChange={this.handleChangeMinutes}
-                                    onDragStart={() => setSelected(groupId, componentId)}
+                                    onDragStart={() => setSelected(groupId, componentId, value_minutes, value_qnt)}
                                 />
                             </Grid>
                         </Grid>
@@ -147,7 +148,7 @@ export default class IrrigationActuator extends React.Component {
                                     max={3}
                                     step={1}
                                     onChange={this.handleChangeQnt}
-                                    onDragStart={() => setSelected(groupId, componentId)}
+                                    onDragStart={() => setSelected(groupId, componentId, value_minutes, value_qnt)}
                                 />
                             </Grid>
                         </Grid>
@@ -155,7 +156,7 @@ export default class IrrigationActuator extends React.Component {
                 </CardContent>
 
                 <CardActions
-                    onClick={() => toggleSelection(groupId, componentId)}
+                    onClick={() => toggleSelection(groupId, componentId, value_minutes, value_qnt)}
                 >
                     <Button
                         color="primary"

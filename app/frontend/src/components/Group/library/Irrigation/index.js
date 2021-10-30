@@ -11,7 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
 import Zoom from '@material-ui/core/Zoom';
 
-import { postDeviceTasks } from '../../../../actions/device';
+import { postDeviceTasks } from '../../../../actions/groups';
 import PageSpinner from '../../../shared/PageSpinner';
 import LoadingFailed from '../../../shared/LoadingFailed';
 import { components_mapping } from '../../../../constants/components_mapping';
@@ -60,20 +60,20 @@ export default class IrrigationMaster extends React.Component {
         if (groupFetchError) {
             return <LoadingFailed errorText={groupFetchError} />;
         }
-
+        
         return (
             <>
                 <Grid container spacing={24}>
                     {
                         Object.keys(group.components).map(function (id, index) {
-                            const component = group.components
+                            const component = group.components[id]
                             const Element = components_mapping[component.usage_type][component.category][component.version]
                             return (
                                 <Grid item xs={12}>
                                     <Element
-                                        componentId={group.components[id].id}
+                                        componentId={component.id}
                                         groupId={group.id}
-                                        key={group.components[id].id} />
+                                        key={component.id} />
                                 </Grid>
                             );
                         })
@@ -85,7 +85,12 @@ export default class IrrigationMaster extends React.Component {
                     timeout={transitionDuration}
                     unmountOnExit
                 >
-                    <Button variant="fab" className={classes.fab} color="primary">
+                    <Button
+                    variant="fab"
+                    className={classes.fab}
+                    color="primary"
+                    onClick={() => postDeviceTasks(group.id, 0)}
+                    >
                         <NavigationIcon />
                     </Button>
                 </Zoom>

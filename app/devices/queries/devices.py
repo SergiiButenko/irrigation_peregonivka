@@ -38,7 +38,7 @@ class DeviceQRS:
     ) -> ComponentSql:
         sql = """
         SELECT * FROM components 
-        WHERE id=:component_id AND device_id=:device_id;
+        WHERE component_id=:component_id AND device_id=:device_id;
         """
         result = await psql_db.fetch_one(
             sql, values={"component_id": component_id, "device_id": device_id}

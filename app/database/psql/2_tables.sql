@@ -24,9 +24,9 @@ CREATE TABLE public.devices(
 --  Line groups
 CREATE TABLE public.groups (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-    short_name NOT NULL,
-    name text NOT NULL,
-    description text,
+    short_name TEXT NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
     user_id uuid NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
@@ -45,7 +45,7 @@ CREATE TABLE public.components (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     device_id TEXT,
     component_id INTEGER NOT NULL,
-    name text NOT NULL,
+    name TEXT NOT NULL,
     category TEXT NOT NULL,
     type TEXT NOT NULL,
     version TEXT NOT NULL,
