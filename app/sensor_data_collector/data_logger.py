@@ -154,12 +154,12 @@ def check_conditions():
         timeout = config.TIMEOUT_GRENHOUSE
         try_notify(message, key, timeout)
 
-    if inner_current_temp <= outer_current_temp:
+    if heat_on is True and inner_current_temp <= outer_current_temp:
         logging.warn(
             f"inner_current_temp:{inner_current_temp} < outer_current_temp:{outer_current_temp}. Sending message"
         )
         key = "below_outer_alert"
-        message = f"Зверніть увагу. Температура повітря в теплиці({inner_current_temp}) нижча температури повітря({outer_current_temp}). "
+        message = f"Зверніть увагу. Підігрів увімкнено, проте температура повітря в теплиці({inner_current_temp}) нижча температури повітря({outer_current_temp}). "
         timeout = config.TIMEOUT_GRENHOUSE
         try_notify(message, key, timeout)
 
