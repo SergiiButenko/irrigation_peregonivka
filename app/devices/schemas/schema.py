@@ -1,5 +1,6 @@
 from typing import List
 from pydantic import BaseModel
+import uuid
 
 
 class Message(BaseModel):
@@ -8,6 +9,10 @@ class Message(BaseModel):
 
 class RuleState(BaseModel):
     expected_state: str
+
+
+class IntervalState(RuleState):
+    pass
 
 
 class DeviceExpectedState(BaseModel):
@@ -28,6 +33,18 @@ class RulesActuators(BaseModel):
 
 class RulesActuatorsList(BaseModel):
     actuators: List[RulesActuators]
+    minutes_delay: int
+
+
+class RulesActuatorsIntervals(BaseModel):
+    device_id: str
+    actuator_id: int
+    interval_id: uuid.UUID
+    rules: Rules
+
+
+class RulesActuatorsIntervalsList(BaseModel):
+    actuators: List[RulesActuatorsIntervals]
     minutes_delay: int
 
 

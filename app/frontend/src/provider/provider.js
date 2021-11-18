@@ -49,19 +49,19 @@ class SmartSystemApi {
         return this;
     }
 
-    async loginWithRefreshToken(refreshToken, options = {}) {
-        const {access_token} = await this.provider.post(
-            apiUri.AUTH_REFRESH(),
-            {},
-            {headers: {'Authorization': `Bearer ${refreshToken}`}},
+    async setUserByAccessToken(accessToken, options = {}) {
+       
+        await this.provider.get(
+            apiUri.USER(),
+            {headers: {'Authorization': `Bearer ${accessToken}`}},
         );
 
-        let jwt = parseJwt(access_token);
+        let jwt = parseJwt(accessToken);
 
         const user = {
-            name: jwt.identity,
-            accessToken: access_token,
-            refreshToken: refreshToken,
+            name: jwt.sub,
+            accessToken: accessToken,
+            refreshToken: accessToken,
             roles: jwt.user_claims.roles
         };
 
@@ -129,6 +129,23 @@ class SmartSystemApi {
             apiUri.GROUPS_COMPONENTS(groupId),
             options,
         );
+    }
+
+    async getDashboard() {
+        let data = {
+            'irrigation_forecast': null,
+            'weather_forecast': null
+        };
+
+        data.weather_forecast = await this.provider.get(
+            apiUri.WEATHER_FORECAST()
+        );
+
+        data.irrigation_forecast = await this.provider.get(
+            apiUri.IRRIGATION_FORECAST()
+        );
+
+        return data;
     }
 }
 

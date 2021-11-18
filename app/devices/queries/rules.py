@@ -9,38 +9,29 @@ class RulesQRS:
     async def create_rule(rule: Rule):
         sql = """
         INSERT INTO rules (
-            id, interval_uuid, device_id, actuator_id, expected_state, execution_time, state
+            id, interval_id, device_component_id, expected_state, execution_time, state
         ) VALUES (
-            :id, :interval_uuid, :device_id, :actuator_id, :expected_state, :execution_time, :state
-        ) RETURNING id, interval_uuid, device_id, actuator_id, expected_state, execution_time, state
+            :id, :interval_id, :device_component_id, :expected_state, :execution_time, :state
+        ) RETURNING id, interval_id, device_component_id, expected_state, execution_time, state
         """
         result = await psql_db.fetch_one(
-            sql, values=rule.dict()
+            sql, values=rule.dict(exclude_none=True)
         )
-        
-        return Rule.parse_obj(result)
+        rule = Rule.parse_obj(result)
+
+        return await RulesQRS.get_rule(rule.id)
 
     @staticmethod
     async def get_rule(rule_id: uuid.UUID) -> Rule:
-        sql = """SELECT id, interval_uuid, device_id, actuator_id, 
-        expected_state, execution_time, state
-        FROM rules WHERE id=:rule_id
-        """
+        sql = """SELECT r.*, c.device_id, c.component_id
+        FROM rules r
+        JOIN device_components c ON r.device_component_id = c.id
+        WHERE r.id=:rule_id"""
+
         result = await psql_db.fetch_one(
             sql, values={'rule_id': rule_id}
         )
-        
-        return Rule.parse_obj(result)
 
-    @staticmethod
-    async def get_last_irrigation_rule() -> Rule:
-        sql = """SELECT id, next_rule, device_id, actuator_id, 
-        expected_state, execution_time, state
-        FROM rules
-        WHERE type = 'irrigation' and state = 'new'
-        ORDER BY execution_time DESC LIMIT 1
-        """
-        result = await psql_db.fetch_one(sql)
         return Rule.parse_obj(result)
 
     @staticmethod

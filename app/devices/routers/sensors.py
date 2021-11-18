@@ -22,7 +22,7 @@ async def get_sensor(
 ):
     """In order to keep device status"""
     logger.info("Asking all devices to register.")
-    return await device_sql.get_component_by_id(device_id, sensor_id)
+    return await device_sql.get_component_by_device_id(device_id, sensor_id)
 
 
 @router.get(

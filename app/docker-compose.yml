@@ -52,7 +52,9 @@ services:
         container_name: devices
         env_file:
         - .env
-        command: ["uvicorn", "devices.main:app", "--host", "0.0.0.0", "--port", "8020"]
+        volumes:
+        - ./devices:/app/devices
+        command: ["uvicorn", "devices.main:app", "--reload", "--host", "0.0.0.0", "--port", "8020"]
         expose:
             - 8020
         depends_on:    
@@ -106,6 +108,8 @@ services:
     queue:
         image: rabbitmq:3-management
         container_name: queue
+        volumes:
+            - ./conf/myrabbit.conf:/etc/rabbitmq/rabbitmq.config
     
     flower:
         image: mher/flower

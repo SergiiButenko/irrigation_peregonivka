@@ -1,6 +1,8 @@
+from devices.models.users import User
 from devices.schemas.schema import RulesActuatorsList, RuleState
 from devices.commands.rules import RulesCMD
 from devices.queries.rules import RulesQRS
+from devices.queries.intervals import IntervalsQRS
 from fastapi import APIRouter, Depends
 from devices.dependencies import get_current_active_user, get_logger
 
@@ -16,13 +18,18 @@ async def plan(
     actuators_rules: RulesActuatorsList,
     RulesCMD=Depends(RulesCMD),
     RulesQRS=Depends(RulesQRS),
+    IntervalsQRS=Depends(IntervalsQRS),
     logger=Depends(get_logger),
+    current_user: User = Depends(get_current_active_user),
 ):
     """In order to keep device status"""
     logger.info(f"Trying to plan '{actuators_rules}'")
-    rules = await RulesCMD.form_rules(actuators_rules)
+    intervals, rules = await RulesCMD.form_rules(actuators_rules, current_user)
     res_rules = []
     
+    for _interval in intervals:
+        await IntervalsQRS.create_interval(_interval)
+
     for _rule in rules:
         rule = await RulesQRS.create_rule(_rule)
         await RulesCMD.enqueue_notify(rule)
@@ -47,4 +54,4 @@ async def change_rule_state(
     RulesQRS=Depends(RulesQRS),
 ):
     await RulesQRS.set_rule_state(rule_id, rule_state.expected_state)
-    return {'status': 'Completed'}
+    return await RulesQRS.get_rule(rule_id)

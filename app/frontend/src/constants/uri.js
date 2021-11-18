@@ -9,7 +9,10 @@ export const apiUri = {
     RULES: () => `api/v1/rules`,
     AUTH: () => 'api/v1/auth/login',
     AUTH_REFRESH: () => 'api/v1/auth/refreshToken',
-    LOGOUT: () => 'api/v1/auth/logout',
+	LOGOUT: () => 'api/v1/auth/logout',
+	USER: () => 'api/v1/auth/me',
+	WEATHER_FORECAST: () => 'api/v1/dashboard/weather/forecast',
+	IRRIGATION_FORECAST: () => 'api/v1/dashboard/rules/irrigation/forecast',
 };
 
 export const webUri = {

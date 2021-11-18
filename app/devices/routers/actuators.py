@@ -19,7 +19,7 @@ async def get_actuators(
     device_sql: DeviceQRS = Depends(DeviceQRS),
     logger=Depends(get_logger),
 ):
-    return await device_sql.get_component_by_id(device_id, actuator_id)
+    return await device_sql.get_component_by_device_id(device_id, actuator_id)
 
 
 @router.get("/actuators/{actuator_id}/state", name="Get state of specific actuator")

@@ -1,7 +1,7 @@
-import {createActions} from 'redux-actions';
+import { createActions } from 'redux-actions';
 
-import {smartSystemApi} from '../provider';
-import {getTokensIntoLocalStorage, setTokensIntoLocalStorage} from '../helpers/auth.helper';
+import { smartSystemApi } from '../provider';
+import { getTokensIntoLocalStorage, isTokenExpired, setTokensIntoLocalStorage } from '../helpers/auth.helper';
 
 const actions = {
     AUTH: {
@@ -13,29 +13,10 @@ const actions = {
     }
 };
 
-const {auth} = createActions(actions);
+const { auth } = createActions(actions);
 
 
-export function loginByAccessToken(refreshToken = getTokensIntoLocalStorage().refreshToken) {
-    return async dispatch => {
-        if (!refreshToken)
-            return;
-
-        dispatch(auth.start());
-        try {
-            await smartSystemApi.loginWithRefreshToken(refreshToken);
-            
-            setTokensIntoLocalStorage(smartSystemApi.user);
-
-            dispatch(auth.success(smartSystemApi.user));
-        } catch (e) {
-            dispatch(auth.failure(e));
-        }
-    };
-
-}
-
-export function login(username, password) {
+export const login = (username, password) => {
     return async dispatch => {
         dispatch(auth.start());
         try {
@@ -48,13 +29,37 @@ export function login(username, password) {
             dispatch(auth.failure(e));
         }
     };
-}
+};
 
-export function logout() {
+export const logout = () => {
     return async dispatch => {
         await smartSystemApi.logout();
-        setTokensIntoLocalStorage({accessToken: '', refreshToken: ''});
         
+        setTokensIntoLocalStorage({ accessToken: '', refreshToken: '' });
+
         dispatch(auth.logout());
     };
-}
+};
+
+export const validateAccessToken = () => {
+    return async dispatch => {
+        const accessToken = getTokensIntoLocalStorage().accessToken
+
+        if (!accessToken && isTokenExpired(parseJwt(accessToken))) {
+            return;
+        }
+
+        try {
+            dispatch(auth.start());
+        
+            await smartSystemApi.setUserByAccessToken(accessToken);
+        
+            setTokensIntoLocalStorage(smartSystemApi.user);
+        
+            dispatch(auth.success(smartSystemApi.user));
+        } catch (e) {
+            dispatch(auth.failure(e));
+            return;
+        }
+    };
+};

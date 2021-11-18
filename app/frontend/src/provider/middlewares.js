@@ -1,6 +1,6 @@
+import { logout } from '../actions/auth';
 import {parseJwt, isTokenExpired} from '../helpers/auth.helper';
 import store from '../store';
-import {loginByAccessToken} from '../actions/auth';
 
 
 export const withAuth = token => (url, opts) => async next => {
@@ -28,11 +28,10 @@ export const tokenRefresh = (url, opts) => async next => {
     const auth = store.getState().auth
 
     const accessToken = auth.user && parseJwt(auth.user.accessToken);
-    let refreshing = auth.refreshing;
 
-    if ( !refreshing && accessToken && isTokenExpired(accessToken) ) {
-        let refreshToken = auth.user.refreshToken;
-        store.dispatch(loginByAccessToken(refreshToken));
+    if ( accessToken && isTokenExpired(accessToken) ) {
+        logout();
+        return;
     }
 
     return next(url, opts);

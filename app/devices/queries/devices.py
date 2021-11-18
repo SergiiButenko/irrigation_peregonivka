@@ -33,11 +33,11 @@ class DeviceQRS:
         return DeviceSql.parse_obj(result)
 
     @staticmethod
-    async def get_component_by_id(
+    async def get_component_by_device_id(
         device_id: str, component_id: int
     ) -> ComponentSql:
         sql = """
-        SELECT * FROM components 
+        SELECT * FROM device_components 
         WHERE component_id=:component_id AND device_id=:device_id;
         """
         result = await psql_db.fetch_one(
@@ -46,9 +46,39 @@ class DeviceQRS:
         return ComponentSql.parse_obj(result)
 
     @staticmethod
+    async def get_component_by_id(
+        component_id: str
+    ) -> ComponentSql:
+        sql = """
+        SELECT * FROM device_components 
+        WHERE id=:component_id;
+        """
+        result = await psql_db.fetch_one(
+            sql, values={"component_id": component_id}
+        )
+        return ComponentSql.parse_obj(result)
+
+
+    @staticmethod
+    async def get_components_by_device_id(
+        device_id: str
+    ) -> ComponentSql:
+        sql = """
+        SELECT * FROM device_components WHERE device_id=:device_id;
+        """
+        results = await psql_db.fetch_all(
+            sql,
+            values={"device_id": device_id}
+        )
+
+        return ComponentsSql.parse_obj(results)
+
+
+    @staticmethod
     async def get_components_by_group_id(group_id: str, user_id: str):
-        sql = """SELECT c.* FROM public.components AS c
-        JOIN public.components_groups AS cg ON c.id = cg.component_id 
+        sql = """SELECT c.* 
+        FROM public.device_components AS c
+        JOIN public.components_groups AS cg ON c.id = cg.device_component_id 
         JOIN public.groups AS g ON g.id = cg.group_id 
         WHERE g.user_id=:user_id and g.id=:group_id"""
         result = await psql_db.fetch_all(
@@ -68,7 +98,7 @@ class DeviceQRS:
 
     @staticmethod
     async def get_linked_telegram_user(device_id: str, component_id: int) -> TelegramUser:
-        sql = """SELECT telegram_user FROM components
+        sql = """SELECT telegram_user FROM device_components
         WHERE id=:component_id AND device_id=:device_id;
         """
         result = await psql_db.fetch_one(

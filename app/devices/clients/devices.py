@@ -1,7 +1,9 @@
+from devices.models.intervals import Interval
 from devices.models.devices import ComponentSql
 from devices.models.rules import Rule
 from devices.service_providers.httpx_client import HttpxClient
 from devices.config.config import Config
+from devices.service_providers.device_logger import logger
 
 
 class DevicesClient:
@@ -11,13 +13,11 @@ class DevicesClient:
         self.headers = None
 
     async def login(self, username=None, password=None):
-        if not username:
-            username = self.username
-
-        if not password:
-            password = self.password
+        username = username or self.username
+        password = password or self.password
 
         res = await HttpxClient.post_with_raise(
+            url=f"{Config.DEVICES_URL}/auth/login",
             data={"username": username, "password": password}
         )
 
@@ -26,7 +26,8 @@ class DevicesClient:
 
     async def get_rule(self, rule_id):
         _rule = await HttpxClient.get_with_raise(
-            url=Config.DEVICES_URL + "/rules/" + rule_id, headers=self.headers
+            url=f"{Config.DEVICES_URL}/rules/{rule_id}",
+            headers=self.headers
         )
 
         return Rule.parse_obj(_rule.json())
@@ -47,6 +48,23 @@ class DevicesClient:
             headers=self.headers,
         )
 
+    async def get_interval(self, interval_id):
+        interval = await HttpxClient.get_with_raise(
+            url=f"{Config.DEVICES_URL}/intervals/{interval_id}",
+            headers=self.headers
+        )
+
+        return Interval.parse_obj(interval.json())
+
+    async def update_interval_state(self, interval_id, state):
+        interval = await HttpxClient.put_with_raise(
+            url=f"{Config.DEVICES_URL}/intervals/{interval_id}/state",
+            json={"expected_state": state},
+            headers=self.headers
+        )
+
+        return Interval.parse_obj(interval.json())
+
     async def get_actuator(self, device_id, actuator_id):
         _actuator = await HttpxClient.get_with_raise(
             url=f"{Config.DEVICES_URL}/devices/{device_id}/actuators/{actuator_id}",
@@ -60,3 +78,4 @@ class DevicesClient:
             json={"message": message},
             headers=self.headers,
         )
+

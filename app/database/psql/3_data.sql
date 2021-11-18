@@ -133,7 +133,7 @@ VALUES
     );
 
 INSERT INTO
-    public.components(
+    public.device_components(
         id,
         component_id,
         device_id,
@@ -160,7 +160,7 @@ VALUES
     );
 
 INSERT INTO
-    public.components(
+    public.device_components(
         id,
         component_id,
         device_id,
@@ -187,7 +187,7 @@ VALUES
     );
 
 INSERT INTO
-    public.components(
+    public.device_components(
         id,
         component_id,
         device_id,
@@ -215,7 +215,7 @@ VALUES
 
 
 INSERT INTO
-    public.components(
+    public.device_components(
         id,
         component_id,
         device_id,
@@ -240,7 +240,7 @@ VALUES
     );
 
 INSERT INTO
-    public.components(
+    public.device_components(
         id,
         component_id,
         device_id,
@@ -267,7 +267,7 @@ VALUES
 
 INSERT INTO
     public.components_groups(
-        component_id,
+        device_component_id,
         group_id
     )
 VALUES
@@ -280,7 +280,7 @@ VALUES
 
 INSERT INTO
     public.components_groups(
-        component_id,
+        device_component_id,
         group_id
     )
 VALUES
@@ -292,7 +292,7 @@ VALUES
 
 INSERT INTO
     public.components_groups(
-        component_id,
+        device_component_id,
         group_id
     )
 VALUES
@@ -305,7 +305,7 @@ VALUES
 
 INSERT INTO
     public.components_groups(
-        component_id,
+        device_component_id,
         group_id
     )
 VALUES
@@ -317,7 +317,7 @@ VALUES
 
 INSERT INTO
     public.components_groups(
-        component_id,
+        device_component_id,
         group_id
     )
 VALUES

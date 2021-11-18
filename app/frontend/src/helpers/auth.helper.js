@@ -45,6 +45,7 @@ export const parseJwt = (token) => {
     return JSON.parse(window.atob(base64));
 };
 
+
 export const isTokenExpired = (accessToken) => {
     let now = new Date();
     let dt = Math.floor( (now.getTime() + now.getTimezoneOffset() * 60 ) / 1000 );

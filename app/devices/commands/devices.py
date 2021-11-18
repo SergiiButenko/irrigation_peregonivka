@@ -1,6 +1,6 @@
 from devices.libraries.device_library.devices.device_factory import DeviceFactory
 from devices.libraries.device_library.devices.base_class_device import Device
-from devices.models.devices import DeviceSql, ComponentSql
+from devices.models.devices import DeviceSql
 from starlette.routing import NoMatchFound
 from devices.queries.devices import DeviceQRS
 from devices.service_providers.httpx_client import HttpxClient
@@ -22,13 +22,6 @@ class DeviceCMD:
             )
     
     @staticmethod
-    async def register_device_by_id(
-        device_id: str,
-        device_ip: str
-    ) -> bool:
-        return await DeviceQRS.set_device_ip(device_id, device_ip)
-
-    @staticmethod
     async def get_device_IP_by_id(device_id) -> DeviceSql:
         _device = await DeviceQRS.get_device(device_id)
         if _device is None:
@@ -36,18 +29,6 @@ class DeviceCMD:
 
         return _device.ip
 
-    @staticmethod
-    async def get_component_by_id(
-        device_id: str, component_id: int
-    ) -> ComponentSql:
-        _component = await DeviceQRS.get_component_by_id(device_id, component_id)
-        if _component.device_id != device_id:
-            raise ValueError(
-                f"Device id '{device_id}' is not expected \
-                    '{_component.device_id}' one"
-            )
-
-        return _component
 
     @staticmethod
     async def send_message_to_device(
@@ -63,7 +44,7 @@ class DeviceCMD:
     async def get_device_by_id(device_id: str) -> Device:
         _deviceSQL = await DeviceQRS.get_device(device_id)
         _device = DeviceFactory.get(_deviceSQL.type, _deviceSQL.version)
-        return await _device(device_id).init_components()
+        return await _device.get_device(device_id)
 
     @staticmethod
     async def get_component_state(device_id: str, component_id: int) -> str:

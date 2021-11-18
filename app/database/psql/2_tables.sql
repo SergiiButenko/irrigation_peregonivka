@@ -41,7 +41,7 @@ CREATE TABLE public.components_categories(
     description TEXT
 );
 
-CREATE TABLE public.components (
+CREATE TABLE public.device_components (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     device_id TEXT,
     component_id INTEGER NOT NULL,
@@ -65,20 +65,30 @@ CREATE TABLE public.components (
 
 CREATE TABLE public.components_groups (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-    component_id uuid NOT NULL,
+    device_component_id uuid NOT NULL,
     group_id uuid NOT NULL,
-    FOREIGN KEY(component_id) REFERENCES components(id),
+    FOREIGN KEY(device_component_id) REFERENCES device_components(id),
     FOREIGN KEY(group_id) REFERENCES groups(id)
 );
 
 -- Queue section
+CREATE TABLE public.intervals (
+    id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+    device_component_id uuid NOT NULL,
+    execution_time timestamp without time zone NOT NULL,
+    state TEXT NOT NULL DEFAULT 'new',
+    user_id uuid NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(device_component_id) REFERENCES device_components(id)
+);
+
 CREATE TABLE public.rules (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-    interval_uuid uuid,
-    device_id TEXT NOT NULL,
-    actuator_id INTEGER NOT NULL,
+    interval_id uuid,
+    device_component_id uuid NOT NULL,
     expected_state TEXT NOT NULL,
     execution_time timestamp without time zone NOT NULL,
     state TEXT NOT NULL DEFAULT 'new',
-    FOREIGN KEY(actuator_id, device_id) REFERENCES components(component_id, device_id)
+    FOREIGN KEY(device_component_id) REFERENCES device_components(id),
+    FOREIGN KEY(interval_id) REFERENCES intervals(id)
 );

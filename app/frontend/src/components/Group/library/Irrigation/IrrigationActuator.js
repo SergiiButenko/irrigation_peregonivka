@@ -112,7 +112,6 @@ export default class IrrigationActuator extends React.Component {
                             <Typography component="p">Полити {value_qnt} {value_qnt === 1 ? 'раз, ' : 'раза по'} {value_minutes} хв</Typography>
                         </Grid>
                         <Grid item xs>
-                            <Typography component="p">Налаштувати</Typography>
                             <ExpandMoreIcon
                                 className={collapsed ? classes.expandMore_selected : classes.expandMore} />
                         </Grid>

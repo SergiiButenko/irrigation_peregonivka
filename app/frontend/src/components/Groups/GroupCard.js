@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -20,6 +21,7 @@ const styles = theme => ({
 });
 
 @withStyles(styles)
+@withRouter
 export default class GroupCard extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
@@ -32,7 +34,7 @@ export default class GroupCard extends React.Component {
     };
 
     redirectToGroup = (id) => (e) => {
-        this.context.router.history.push(webUri.GROUPS(id));
+        this.props.history.push(webUri.GROUPS(id));
     };
 
     render() {

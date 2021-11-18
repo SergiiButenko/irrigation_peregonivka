@@ -1,14 +1,15 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import Face from '@material-ui/icons/Face';
 
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import List from '@material-ui/core/List/List';
-import {isAdmin} from '../../helpers/auth.helper';
-import {getCurrentUser} from '../../selectors/auth';
+import { isAdmin } from '../../helpers/auth.helper';
+import { getCurrentUser } from '../../selectors/auth';
 import connect from 'react-redux/es/connect/connect';
 import PropTypes from 'prop-types';
 
@@ -22,24 +23,31 @@ export default class CommonMenu extends Component {
     };
 
     render() {
-        const {user} = this.props;
+        const { user } = this.props;
 
         const userAdmin = isAdmin(user);
 
         return (
             <List>
+                <ListItem component={Link} to="/" button>
+                    <ListItemIcon>
+                        <DashboardIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Головна" />
+                </ListItem>
+
                 <ListItem component={Link} to="/groups" button>
                     <ListItemIcon>
-                        <DashboardIcon/>
+                        <ViewModuleIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Простір"/>
+                    <ListItemText primary="Простір" />
                 </ListItem>
 
                 <ListItem component={Link} to="/devices" button>
                     <ListItemIcon>
-                        <Face/>
+                        <Face />
                     </ListItemIcon>
-                    <ListItemText primary="Пристрої"/>
+                    <ListItemText primary="Пристрої" />
                 </ListItem>
             </List>
         );

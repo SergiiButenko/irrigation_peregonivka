@@ -48,7 +48,7 @@ export default class Group extends React.Component {
     }
 
     redirectToGroups = () => (e) => {
-        this.context.router.history.push(webUri.GROUPS());
+        this.props.history.push(webUri.GROUPS());
     };
 
     render() {

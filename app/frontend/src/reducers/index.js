@@ -4,6 +4,7 @@ import entity from './entity';
 import devices from './devices';
 import auth from './auth';
 import groups from './groups';
+import dashboard from './dashboard';
 
 const createFilteredReducer = (reducerFunction, reducerPredicate) =>
     (state, action) => {
@@ -19,4 +20,5 @@ export default combineReducers({
     auth:            createFilteredReducer(auth,           filter('AUTH')),
     devices:         createFilteredReducer(devices,        filter('DEVICES')),
     groups:          createFilteredReducer(groups,         filter('GROUPS')),
+    dashboard:       createFilteredReducer(dashboard,      filter('DASHBOARD')),
 });
