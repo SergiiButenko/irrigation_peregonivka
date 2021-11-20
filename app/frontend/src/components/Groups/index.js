@@ -30,7 +30,6 @@ export default class Groups extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         groups: PropTypes.object.isRequired,
-        loading: PropTypes.bool.isRequired,
         groupFetchError: PropTypes.any,
     };
 

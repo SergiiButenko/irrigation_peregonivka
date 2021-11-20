@@ -38,7 +38,7 @@ const mapStateToProps = (state) => {
 @withStyles(styles)
 @withRouter
 @connect(mapStateToProps, { postDeviceTasks })
-export default class IrrigationMaster extends React.Component {
+export default class CesspoolMaster extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         group: PropTypes.object.isRequired,
@@ -47,11 +47,6 @@ export default class IrrigationMaster extends React.Component {
 
     render() {
         const { classes, loading, groupFetchError, group, match: { params }, postDeviceTasks } = this.props;
-
-        const transitionDuration = {
-            enter: 100,
-            exit: 100,
-        };
 
         if (loading) {
             return <PageSpinner />;
@@ -79,21 +74,6 @@ export default class IrrigationMaster extends React.Component {
                         })
                     }
                 </Grid>
-                <Zoom
-                    key="primary"
-                    in={true}
-                    timeout={transitionDuration}
-                    unmountOnExit
-                >
-                    <Button
-                    variant="fab"
-                    className={classes.fab}
-                    color="primary"
-                    onClick={() => postDeviceTasks(group.id, 0)}
-                    >
-                        <NavigationIcon />
-                    </Button>
-                </Zoom>
             </>
         );
     }

@@ -10,11 +10,11 @@ import { getGroups } from '../../selectors/groups';
 import { fetchGroupComponentsById } from '../../actions/groups';
 import PageSpinner from '../shared/PageSpinner';
 import LoadingFailed from '../shared/LoadingFailed';
-import IrrigationMaster from './library/Irrigation/index';
 import { webUri } from '../../constants/uri';
 import Typography from '@material-ui/core/Typography';
 
 import ArrowBackIosRounded from '@material-ui/icons/ArrowBackIosRounded';
+import { group_view_map } from '../../constants/components_mapping';
 
 const styles = theme => ({
     root: {
@@ -35,7 +35,6 @@ export default class Group extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         groups: PropTypes.object.isRequired,
-        loading: PropTypes.bool.isRequired,
         groupFetchError: PropTypes.any,
     };
 
@@ -43,11 +42,11 @@ export default class Group extends React.Component {
         router: PropTypes.object
     };
 
-    async componentDidMount() {
-        await this.props.fetchGroupComponentsById(this.props.match.params.groupId);
+    componentDidMount() {
+        this.props.fetchGroupComponentsById(this.props.match.params.groupId);
     }
 
-    redirectToGroups = () => (e) => {
+    redirectToGroups = () => {
         this.props.history.push(webUri.GROUPS());
     };
 
@@ -63,16 +62,17 @@ export default class Group extends React.Component {
             return <LoadingFailed errorText={groupFetchError} />;
         }
 
+        const Element = group_view_map[group.short_name];        
         return (
             <>
                 <Grid container spacing={24}>
-                    <Grid item xs={12} onClick={this.redirectToGroups()}>
+                    <Grid item xs={12} onClick={this.redirectToGroups}>
                         <Typography variant="h5" component="h3">
                             <ArrowBackIosRounded /> На попередню сторінку
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <IrrigationMaster group={group} key={group.id} />
+                        <Element group={group} key={group.id} />
                     </Grid>
 
                 </Grid>

@@ -4,17 +4,17 @@ services:
         image: nginx:latest
         container_name: nginx
         ports:
-        - 80:80
-        - 443:443
+            - 80:80
+            - 443:443
         volumes:
-        - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-        - ./frontend/app/404.html:/etc/nginx/404.html
-        - ./frontend/app/404.html:/usr/share/nginx/html/404.html
+            - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+            - ./frontend/app/404.html:/etc/nginx/404.html
+            - ./frontend/app/404.html:/usr/share/nginx/html/404.html
         depends_on:
-        - devices
-        - frontend
-        - postgres-admin
-        - notification-service
+            - devices
+            - frontend
+            - postgres-admin
+            - notification-service
 
     notification-service:
         container_name: notification-service
@@ -51,9 +51,9 @@ services:
             dockerfile: ./devices/dockerfiles/devices.dockerfile
         container_name: devices
         env_file:
-        - .env
+            - .env
         volumes:
-        - ./devices:/app/devices
+            - ./devices:/app/devices
         command: ["uvicorn", "devices.main:app", "--reload", "--host", "0.0.0.0", "--port", "8020"]
         expose:
             - 8020
@@ -98,7 +98,7 @@ services:
         image: dpage/pgadmin4
         container_name: postgres-admin
         env_file:
-        - .env
+            - .env
         ports:
             - 5433:80
         restart: unless-stopped
@@ -109,28 +109,28 @@ services:
         image: rabbitmq:3-management
         container_name: queue
         volumes:
-            - ./conf/myrabbit.conf:/etc/rabbitmq/rabbitmq.config
+            - ./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config
     
     flower:
         image: mher/flower
         container_name: flower
         env_file:
-        - .env
+            - .env
         environment:
-        - CELERY_BROKER_URL=amqp://guest@queue:5672//
-        - CELERY_BROKER_API_URL=http://guest:guest@queue:15672/api//
-        - FLOWER_PORT=8888
+            - CELERY_BROKER_URL=amqp://guest@queue:5672//
+            - CELERY_BROKER_API_URL=http://guest:guest@queue:15672/api//
+            - FLOWER_PORT=8888
         expose:  
-        - 8888  
+            - 8888  
         depends_on:    
             - queue
 
     celery_worker:
         container_name: celery_worker
         depends_on:
-        - queue
+            - queue
         env_file:
-        - .env
+            - .env
         build:
             context: ./
             dockerfile: ./devices/dockerfiles/celery_worker.dockerfile

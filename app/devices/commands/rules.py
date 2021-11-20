@@ -33,7 +33,7 @@ class RulesCMD:
             task_id=str(rule.id),
             args=[rule.id],
             eta=rule.execution_time
-            )
+        )
 
     @staticmethod
     async def form_rules(rules: RulesActuatorsIntervalsList, current_user: User) -> Rules:

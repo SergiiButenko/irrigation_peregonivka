@@ -33,7 +33,7 @@ export const login = (username, password) => {
 
 export const logout = () => {
     return async dispatch => {
-        await smartSystemApi.logout();
+        // await smartSystemApi.logout();
         
         setTokensIntoLocalStorage({ accessToken: '', refreshToken: '' });
 

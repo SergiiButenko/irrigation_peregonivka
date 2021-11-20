@@ -59,7 +59,6 @@ export default class Devices extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         devices: PropTypes.object.isRequired,
-        loading: PropTypes.bool.isRequired,
         deviceFetchError: PropTypes.any,
     };
 

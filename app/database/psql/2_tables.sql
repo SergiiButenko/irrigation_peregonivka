@@ -18,6 +18,7 @@ CREATE TABLE public.devices(
     type TEXT NOT NULL,
     version TEXT NOT NULL,
     last_known_ip TEXT,
+    settings jsonb,
     updated time without time zone
 );
 

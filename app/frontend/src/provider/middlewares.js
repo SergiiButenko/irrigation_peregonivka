@@ -30,7 +30,7 @@ export const tokenRefresh = (url, opts) => async next => {
     const accessToken = auth.user && parseJwt(auth.user.accessToken);
 
     if ( accessToken && isTokenExpired(accessToken) ) {
-        logout();
+        store.dispatch(logout());
         return;
     }
 

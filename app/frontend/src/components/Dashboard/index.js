@@ -41,7 +41,6 @@ export default class Dashboard extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         data: PropTypes.array.isRequired,
-        loading: PropTypes.bool.isRequired,
         dashboardFetchError: PropTypes.any,
     };
 

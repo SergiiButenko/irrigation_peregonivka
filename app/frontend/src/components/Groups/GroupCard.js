@@ -26,7 +26,6 @@ export default class GroupCard extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         group: PropTypes.object.isRequired,
-        loading: PropTypes.bool.isRequired,
     };
 
     static contextTypes = {

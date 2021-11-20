@@ -154,7 +154,7 @@ VALUES
         'actuator',
         'relay',
         'v1',
-        NULL,
+        '{"minutes": 15, "quantity": 2}',
         'irrigation',
         true
     );
@@ -181,7 +181,7 @@ VALUES
         'actuator',
         'relay',
         'v1',
-        NULL,
+        '{"minutes": 25, "quantity": 2}',
         'irrigation',
         true
     );
@@ -208,7 +208,7 @@ VALUES
         'actuator',
         'relay',
         'v1',
-        NULL,
+        '{"minutes": 25, "quantity": 2}',
         'irrigation',
         true
     );

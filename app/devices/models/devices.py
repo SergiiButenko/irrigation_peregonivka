@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from pydantic import BaseModel, Field
 from bson import ObjectId
+from pydantic.types import Json
 
 
 class DeviceSql(BaseModel):
@@ -23,7 +24,7 @@ class ComponentSql(BaseModel):
     type: str
     version: str
     usage_type: Optional[str] = None
-    settings: Optional[dict] = None
+    settings: Optional[Json] = None
     telegram_notify: bool
 
 
