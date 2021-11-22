@@ -13,13 +13,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTime from '@material-ui/icons/AccessTime';
 import Button from '@material-ui/core/Button';
 import PageSpinner from '../../shared/PageSpinner';
+import LoadingFailed from '../../shared/LoadingFailed';
 
 import connect from 'react-redux/es/connect/connect';
 import {
     changeSettings
 } from '../../../actions/groups';
 
-import { fetchActuatorState } from '../../../actions/device'
+import { initComponent, setComponentState } from '../../../actions/device'
 import { getDevices } from '../../../selectors/devices';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
@@ -38,8 +39,7 @@ const styles = theme => ({
         marginBottom: theme.spacing.unit,
     },
     cardOn: {
-        boxShadow: '0 0 0 3px #8dbdf7',
-        background: '#dae7f7',
+        boxShadow: '0 0 0 3px #008e21',
     },
     expandMore: {
         transform: 'rotate(360deg)',
@@ -62,7 +62,7 @@ const mapStateToProps = (state) => {
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps, { changeSettings, fetchActuatorState })
+@connect(mapStateToProps, { changeSettings, initComponent, setComponentState })
 export default class Switcher extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
@@ -73,11 +73,7 @@ export default class Switcher extends React.Component {
     };
 
     componentDidMount() {
-        const component = this.props.groups.groups[this.props.groupId].components[this.props.componentId];
-        this.props.fetchActuatorState(
-            component.device_id,
-            component.component_id
-        );
+        this.props.initComponent(this.props.componentId)
     }
 
     getMinutes = () => {
@@ -126,24 +122,24 @@ export default class Switcher extends React.Component {
     };
 
     render() {
-        const { componentId, groupId, groups: { groups }, classes, toggleSelection,
-                devices: { devices, loading } } = this.props;
+        const { componentId, groupId, groups: { groups }, classes, setComponentState, 
+                devices: { devices, loading, deviceFetchError}  } = this.props;
         const { collapsed, min_minutes, max_minutes, step_minutes } = this.state;
-        console.log(devices);
-        console.log(loading);
 
         if (loading) {
             return <PageSpinner />;
         }
+
+        if (deviceFetchError) {
+            return <LoadingFailed errorText={deviceFetchError} />;
+        }
         
         const actuator = groups[groupId].components[componentId];
-        const isON = devices[componentId].actuator.state == 1;
-        console.log(isON);
+        const isON = devices.components[componentId].state == 1;
         
         const minutes = actuator.settings.minutes;
-        
         return (
-            <Card className={classNames(classes.card, actuator.selected && classes.cardSelected)}>
+            <Card className={classNames(classes.card, isON && classes.cardOn)}>
                 <CardContent className={classes.content}>
                     <Grid item
                         container
@@ -186,13 +182,13 @@ export default class Switcher extends React.Component {
                 </CardContent>
 
                 <CardActions
-                    onClick={() => toggleSelection(groupI.id, componentId)}
                 >
                     <Button
                         color="primary"
                         className={classes.button}
+                        onClick={() => setComponentState(componentId, !isON)}
                     >
-                        {actuator.selected ? 'Не поливати' : 'Обрати'}
+                        {isON ? 'Виключити' : 'Включити'}
                     </Button>
                 </CardActions>
             </Card>

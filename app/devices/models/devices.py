@@ -26,6 +26,7 @@ class ComponentSql(BaseModel):
     purpose: Optional[str] = None
     settings: Optional[Json] = None
     telegram_notify: bool
+    default_state: Optional[str] = None
 
 
 class ComponentWebClient(BaseModel):

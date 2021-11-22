@@ -1,30 +1,28 @@
-import {createActions} from 'redux-actions';
-import {smartSystemApi} from '../provider';
-import {arrayToObj} from '../helpers/common.helper';
+import { createActions } from 'redux-actions';
+import { smartSystemApi } from '../provider';
+import { arrayToObj } from '../helpers/common.helper';
 
 const actions = createActions(
     {
-        ENTITY:{
+        ENTITY: {
             DEVICES: {
-                UPDATE_IN: (path, value) => ( {path, value} ),
+                UPDATE_IN: (path, value) => ({ path, value }),
                 UPDATE_BATCH: v => v,
                 SET: v => v,
-            }    
+            }
         },
         DEVICES: {
             LOADING: v => v,
             FAILURE: v => v,
             UPDATING: v => v,
-        }    
+        }
     }
 );
 
-export const {devices, entity} = actions;
+export const { devices, entity } = actions;
 
 const deviceKey = 'devices';
-const actuatorKey = 'actuator';
 const stateKey = 'state';
-const selectedKey = 'selected';
 const tasksKey = 'tasks';
 
 export const fetchDevices = () => {
@@ -101,24 +99,58 @@ export const initComponent = (componentId) => {
             const component = await smartSystemApi.getDeviceComponent(componentId);
             dispatch(entity.devices.updateIn(
                 [
-                    deviceId,
-                    actuatorKey,
-                    actuatorId
+                    'components',
+                    componentId,
                 ], component));
 
             const state = await smartSystemApi.getDeviceComponentState(componentId);
             dispatch(entity.devices.updateIn(
                 [
-                    deviceId,
-                    actuatorKey,
-                    actuatorId,
+                    'components',
+                    componentId,
                     stateKey
-                ], state));
+                ], state.expected_state));
         }
         catch (e) {
             dispatch(devices.failure(e));
         }
         dispatch(devices.loading(false));
     };
-    
-}
+};
+
+
+export const setComponentState = (componentId, state) => {
+    return async (dispatch, getState) => {
+        dispatch(devices.loading(true));
+        try {
+            const devices = getState().entity.devices.toJS();
+            const component = devices.components[componentId];
+            
+            let dataToSend = {
+                components: [{
+                    component_id: component.id,
+                    rules: {
+                        time: component.settings.minutes,
+                        intervals: component.settings.quantity,
+                        time_wait: component.settings.minutes * 1.5
+                    }
+                }],
+                minutes_delay: 0
+            };
+            
+            await smartSystemApi.postDeviceTasks(dataToSend);
+
+            const state = await smartSystemApi.getDeviceComponentState(componentId);
+            dispatch(entity.devices.updateIn(
+                [
+                    'components',
+                    componentId,
+                    stateKey
+                ], state.expected_state));
+        }
+        catch (e) {
+            dispatch(devices.failure(e));
+        }
+        dispatch(devices.loading(false));
+    };
+};

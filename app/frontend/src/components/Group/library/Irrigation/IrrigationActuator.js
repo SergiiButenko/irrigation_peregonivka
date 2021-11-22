@@ -21,10 +21,13 @@ import {
     setSelected,
     changeSettings
 } from '../../../../actions/groups';
+import { initComponent } from '../../../../actions/device'
 import { getGroups } from '../../../../selectors/groups';
+import { getDevices } from '../../../../selectors/devices';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-
+import PageSpinner from '../../../shared/PageSpinner';
+import LoadingFailed from '../../../shared/LoadingFailed';
 
 const styles = theme => ({
     root: {
@@ -41,6 +44,9 @@ const styles = theme => ({
         boxShadow: '0 0 0 3px #8dbdf7',
         background: '#dae7f7',
     },
+    cardOn: {
+        boxShadow: '0 0 0 3px #008e21',
+    },
     expandMore: {
         transform: 'rotate(360deg)',
         transition: '300ms transform',
@@ -55,21 +61,55 @@ const styles = theme => ({
     },
 });
 const mapStateToProps = (state) => {
-    return getGroups(state);
+    return {'groups': getGroups(state),
+            'devices': getDevices(state)};
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps, { toggleSelection, setSelected, changeSettings })
+@connect(mapStateToProps, { toggleSelection, setSelected, changeSettings, initComponent })
 export default class IrrigationActuator extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         groups: PropTypes.object.isRequired,
+        devices: PropTypes.object.isRequired,
         componentId: PropTypes.string.isRequired,
         groupId: PropTypes.string.isRequired,
     };
 
+    componentDidMount() {
+        this.props.initComponent(this.props.componentId)
+    }
+
+    getMinutes = () => {
+        const actuator = this.props.groups.groups[this.props.groupId].components[this.props.componentId];
+        return actuator.settings.minutes;
+    };
+    
+    calculate_min = () => {
+        const minutes = this.getMinutes();
+        return Math.round(minutes * 0.25);
+    };
+
+    calculate_max = () => {
+        const minutes = this.getMinutes();
+        return minutes * 2;
+
+    };
+
+    calculate_step = () => {
+        const minutes = this.getMinutes();
+        if (minutes >= 60) {
+            return 60;
+        }
+
+        return 5;
+    };
+
     state = {
         collapsed: false,
+        min_minutes: this.calculate_min(),
+        max_minutes: this.calculate_max(),
+        step_minutes: this.calculate_step(),
     };
 
     handleCollapse = () => {
@@ -104,17 +144,30 @@ export default class IrrigationActuator extends React.Component {
 
 
     render() {
-        const { componentId, groupId, groups, classes, toggleSelection } = this.props;
-        const { collapsed } = this.state;
+        const { componentId, groupId, groups: { groups }, classes, toggleSelection,
+                devices: { devices, loading, deviceFetchError}  } = this.props;
+        const { collapsed, min_minutes, max_minutes, step_minutes } = this.state;
 
+        if (loading) {
+            return <PageSpinner />;
+        }
+
+        if (deviceFetchError) {
+            return <LoadingFailed errorText={deviceFetchError} />;
+        }
+        
         const actuator = groups[groupId].components[componentId];
-
-        actuator.selected = !!actuator.selected || false;
+        const isON = devices.components[componentId].state == 1;
         const minutes = actuator.settings.minutes;
         const quantity = actuator.settings.quantity;
-
+        
+        actuator.selected = !!actuator.selected || false;
         return (
-            <Card className={classNames(classes.card, actuator.selected && classes.cardSelected)}>
+            <Card className={classNames(
+                classes.card,
+                actuator.selected && classes.cardSelected,
+                isON && classes.cardOn
+                )}>
                 <CardContent className={classes.content}>
                     <Grid item
                         container
@@ -146,9 +199,9 @@ export default class IrrigationActuator extends React.Component {
                                 <Slider
                                     classes={{ container: classes.slider }}
                                     value={minutes}
-                                    min={5}
-                                    max={30}
-                                    step={5}
+                                    min={min_minutes}
+                                    max={max_minutes}
+                                    step={step_minutes}
                                     onChange={this.handleChangeMinutes}
                                     onDragEnd={this.handleStartDrag}
                                 />

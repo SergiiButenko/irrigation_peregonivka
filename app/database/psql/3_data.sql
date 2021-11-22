@@ -160,7 +160,8 @@ INSERT INTO
         version,
         purpose,
         settings,
-        telegram_notify
+        telegram_notify,
+        default_state
     )
 VALUES
     (
@@ -173,7 +174,8 @@ VALUES
         'v1',
         'valve',
         '{"minutes": 15, "quantity": 2}',
-        true
+        true,
+        '0'
     );
 
 INSERT INTO
@@ -187,7 +189,8 @@ INSERT INTO
         version,
         purpose,
         settings,
-        telegram_notify
+        telegram_notify,
+        default_state
     )
 VALUES
     (
@@ -200,7 +203,8 @@ VALUES
         'v1',
         'valve',
         '{"minutes": 25, "quantity": 2}',
-        true
+        true,
+        '0'
     );
 
 INSERT INTO
@@ -214,7 +218,8 @@ INSERT INTO
         version,
         purpose,
         settings,
-        telegram_notify
+        telegram_notify,
+        default_state
     )
 VALUES
     (
@@ -227,7 +232,8 @@ VALUES
         'v1',
         'valve',
         '{"minutes": 25, "quantity": 2}',
-        true
+        true,
+        '0'
     );
 
 
@@ -289,7 +295,8 @@ INSERT INTO
         version,
         purpose,
         telegram_notify,
-        settings
+        settings,
+        default_state
     )
 VALUES
     (
@@ -302,7 +309,8 @@ VALUES
         'v1',
         'switcher',
         true,
-        '{"minutes": 360, "quantity": 1}'
+        '{"minutes": 360, "quantity": 1}',
+        '0'
     );
 
 

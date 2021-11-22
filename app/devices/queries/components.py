@@ -1,6 +1,8 @@
+from devices.enums.rules import DiscreteActuatorsType
 from devices.models.devices import ComponentSql, ComponentsSql
 from devices.schemas.schema import ComponentExpectedState
 from devices.service_providers.sql_db import psql_db
+from devices.service_providers.device_logger import logger
 
 
 class ComponentsQRS:
@@ -52,15 +54,46 @@ class ComponentsQRS:
 
     @staticmethod
     async def get_expected_component_state(component_id: str) -> ComponentExpectedState:
+        # Get Last executed rule
         sql = """
-        SELECT expected state
+        SELECT expected_state
         FROM rules
-        WHERE device_component_id=:component_id
+        WHERE device_component_id=:device_component_id
         AND state='completed'
+        AND execution_time < now()
         ORDER BY execution_time DESC
         LIMIT 1
         """
-        result = await psql_db.fetch_one(
-            sql, values={"actuator_id": actuator_id, "device_id": device_id}
+        last_executed_rule = await psql_db.fetch_one(
+            sql, values={"device_component_id": component_id}
         )
-        return ComponentExpectedState.parse_obj(result)
+
+        # Get Next executed rule
+        sql = """
+        SELECT expected_state
+        FROM rules
+        WHERE device_component_id=:device_component_id
+        AND state='new'
+        AND execution_time >= now()
+        ORDER BY execution_time ASC
+        LIMIT 1
+        """
+        next_rule = await psql_db.fetch_one(
+            sql, values={"device_component_id": component_id}
+        )
+
+        component = await ComponentsQRS.get_component_by_id(component_id)
+        if last_executed_rule is not None:
+            logger.info(ComponentExpectedState.parse_obj(last_executed_rule))
+            return ComponentExpectedState.parse_obj(last_executed_rule)
+
+        # if no last rule but next rule exists and components id discrete
+        if next_rule and DiscreteActuatorsType.has_value(component.purpose):
+            state = ComponentExpectedState.parse_obj(next_rule)
+            state.expected_state = 1 - int(state.expected_state)
+            return ComponentExpectedState.parse_obj(state)
+
+        # by default return default state
+        return ComponentExpectedState.parse_obj(
+            {'expected_state': component.default_state}
+        )

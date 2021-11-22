@@ -15,10 +15,10 @@ class EventFactory:
             'cea37199-cea3-43a8-a615-940b3a59ffa4': IrrigationRelay1.WaterLine,
         }
     }
-    
+
     @classmethod
     def get(cls, device: Device, component_id: str, event: str):
-        if cls.EVENTS[device.id][component_id] is not None:
+        try:
             return getattr(cls.EVENTS[device.id][component_id], event)
-
-        return getattr(device[component_id], event)
+        except KeyError:
+            return getattr(device[component_id], event)

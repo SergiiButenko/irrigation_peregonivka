@@ -1,5 +1,5 @@
 from pydantic.types import UUID4
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -16,7 +16,7 @@ class IntervalState(RuleState):
 
 
 class ComponentExpectedState(BaseModel):
-    expected_state: str
+    expected_state: Optional[str] = None
 
 
 class Rules(BaseModel):

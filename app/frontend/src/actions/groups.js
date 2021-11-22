@@ -115,7 +115,7 @@ export const postDeviceTasks = (groupId, minutes) => {
         try {
             const groups = getState().entity.groups.toJS();
             const group = groups[groupId];
-
+            
             const dataToSend = prepareComponentsTaskObject(group, minutes);
             await smartSystemApi.postDeviceTasks(dataToSend);
 

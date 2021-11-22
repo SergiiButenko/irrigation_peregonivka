@@ -59,6 +59,7 @@ CREATE TABLE public.device_components (
     settings jsonb,
     telegram_notify BOOL NOT NULL,
     telegram_user TEXT DEFAULT '-315337397',
+    default_state TEXT,
     UNIQUE (device_id, mapped_id),
     FOREIGN KEY(device_id) REFERENCES devices(id),
     FOREIGN KEY(type) REFERENCES components_types(name),
