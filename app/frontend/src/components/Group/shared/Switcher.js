@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -12,15 +11,19 @@ import Slider from '@material-ui/lab/Slider';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTime from '@material-ui/icons/AccessTime';
-import Iso from '@material-ui/icons/Iso';
 import Button from '@material-ui/core/Button';
-
+import PageSpinner from '../../shared/PageSpinner';
 
 import connect from 'react-redux/es/connect/connect';
-import { toggleSelection, setSelected } from '../../../../actions/groups';
-import { getGroups } from '../../../../selectors/groups';
+import {
+    changeSettings
+} from '../../../actions/groups';
+
+import { fetchActuatorState } from '../../../actions/device'
+import { getDevices } from '../../../selectors/devices';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
+import { getGroups } from '../../../selectors/groups';
 
 
 const styles = theme => ({
@@ -34,7 +37,7 @@ const styles = theme => ({
         minWidth: 275,
         marginBottom: theme.spacing.unit,
     },
-    cardSelected: {
+    cardOn: {
         boxShadow: '0 0 0 3px #8dbdf7',
         background: '#dae7f7',
     },
@@ -51,24 +54,62 @@ const styles = theme => ({
         marginRight: theme.spacing.unit * 2,
     },
 });
+
+
 const mapStateToProps = (state) => {
-    return getGroups(state);
+    return {'groups': getGroups(state),
+            'devices': getDevices(state)};
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps, { toggleSelection, setSelected })
-export default class IrrigationActuator extends React.Component {
+@connect(mapStateToProps, { changeSettings, fetchActuatorState })
+export default class Switcher extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         groups: PropTypes.object.isRequired,
+        devices: PropTypes.object.isRequired,
         componentId: PropTypes.string.isRequired,
         groupId: PropTypes.string.isRequired,
     };
 
+    componentDidMount() {
+        const component = this.props.groups.groups[this.props.groupId].components[this.props.componentId];
+        this.props.fetchActuatorState(
+            component.device_id,
+            component.component_id
+        );
+    }
+
+    getMinutes = () => {
+        const actuator = this.props.groups.groups[this.props.groupId].components[this.props.componentId];
+        return actuator.settings.minutes;
+    };
+    
+    calculate_min = () => {
+        const minutes = this.getMinutes();
+        return Math.round(minutes * 0.25);
+    };
+
+    calculate_max = () => {
+        const minutes = this.getMinutes();
+        return minutes * 2;
+
+    };
+
+    calculate_step = () => {
+        const minutes = this.getMinutes();
+        if (minutes >= 60) {
+            return 60;
+        }
+
+        return 5;
+    };
+
     state = {
-        value_minutes: 15,
-        value_qnt: 1,
         collapsed: false,
+        min_minutes: this.calculate_min(),
+        max_minutes: this.calculate_max(),
+        step_minutes: this.calculate_step(),
     };
 
     handleCollapse = () => {
@@ -76,23 +117,31 @@ export default class IrrigationActuator extends React.Component {
     };
 
     handleChangeMinutes = (event, value_minutes) => {
-        this.setState({ value_minutes });
+        this.props.changeSettings(
+            this.props.groupId,
+            this.props.componentId,
+            'minutes',
+            value_minutes
+            );
     };
-
-    handleChangeQnt = (event, value_qnt) => {
-        this.setState({ value_qnt });
-    };
-
-
 
     render() {
-        const { componentId, groupId, groups, classes, toggleSelection } = this.props;
-        const { value_minutes, value_qnt, collapsed } = this.state;
+        const { componentId, groupId, groups: { groups }, classes, toggleSelection,
+                devices: { devices, loading } } = this.props;
+        const { collapsed, min_minutes, max_minutes, step_minutes } = this.state;
+        console.log(devices);
+        console.log(loading);
 
+        if (loading) {
+            return <PageSpinner />;
+        }
+        
         const actuator = groups[groupId].components[componentId];
-
-        actuator.selected = !!actuator.selected || false;
-
+        const isON = devices[componentId].actuator.state == 1;
+        console.log(isON);
+        
+        const minutes = actuator.settings.minutes;
+        
         return (
             <Card className={classNames(classes.card, actuator.selected && classes.cardSelected)}>
                 <CardContent className={classes.content}>
@@ -109,7 +158,7 @@ export default class IrrigationActuator extends React.Component {
                     </Grid>
                     <Grid item container direction="row" spacing={16} onClick={this.handleCollapse} justify="flex-end">
                         <Grid item>
-                            <Typography component="p">Полити {value_qnt} {value_qnt === 1 ? 'раз, ' : 'раза по'} {value_minutes} хв</Typography>
+                            <Typography component="p">Включити на {minutes} хв</Typography>
                         </Grid>
                         <Grid item xs>
                             <ExpandMoreIcon
@@ -125,29 +174,11 @@ export default class IrrigationActuator extends React.Component {
                             <Grid item xs={10}>
                                 <Slider
                                     classes={{ container: classes.slider }}
-                                    value={value_minutes}
-                                    min={10}
-                                    max={20}
-                                    step={5}
+                                    value={minutes}
+                                    min={min_minutes}
+                                    max={max_minutes}
+                                    step={step_minutes}
                                     onChange={this.handleChangeMinutes}
-                                    onDragStart={() => setSelected(groupId, componentId, value_minutes, value_qnt)}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid item container direction="row" spacing={16} justify="center"
-                            alignItems="center">
-                            <Grid item xs>
-                                <Iso />
-                            </Grid>
-                            <Grid item xs={10}>
-                                <Slider
-                                    classes={{ container: classes.slider }}
-                                    value={value_qnt}
-                                    min={1}
-                                    max={3}
-                                    step={1}
-                                    onChange={this.handleChangeQnt}
-                                    onDragStart={() => setSelected(groupId, componentId, value_minutes, value_qnt)}
                                 />
                             </Grid>
                         </Grid>
@@ -155,7 +186,7 @@ export default class IrrigationActuator extends React.Component {
                 </CardContent>
 
                 <CardActions
-                    onClick={() => toggleSelection(groupId, componentId, value_minutes, value_qnt)}
+                    onClick={() => toggleSelection(groupI.id, componentId)}
                 >
                     <Button
                         color="primary"

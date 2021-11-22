@@ -1,9 +1,8 @@
 from devices.models.intervals import Interval
-from devices.models.devices import ComponentSql
+from devices.models.devices import ComponentWebClient
 from devices.models.rules import Rule
 from devices.service_providers.httpx_client import HttpxClient
 from devices.config.config import Config
-from devices.service_providers.device_logger import logger
 
 
 class DevicesClient:
@@ -41,9 +40,9 @@ class DevicesClient:
 
         return Rule.parse_obj(_rule.json())
 
-    async def update_actuator_state(self, device_id, actuator_id, state):
+    async def update_component_state(self, component_id, state):
         return await HttpxClient.put_with_raise(
-            url=f"{Config.DEVICES_URL}/devices/{device_id}/actuators/{actuator_id}/state",
+            url=f"{Config.DEVICES_URL}/components/{component_id}/state",
             json={"expected_state": state},
             headers=self.headers,
         )
@@ -65,12 +64,13 @@ class DevicesClient:
 
         return Interval.parse_obj(interval.json())
 
-    async def get_actuator(self, device_id, actuator_id):
-        _actuator = await HttpxClient.get_with_raise(
-            url=f"{Config.DEVICES_URL}/devices/{device_id}/actuators/{actuator_id}",
+    async def get_component(self, component_id):
+        component = await HttpxClient.get_with_raise(
+            url=f"{Config.DEVICES_URL}/components/{component_id}",
             headers=self.headers,
         )
-        return ComponentSql.parse_obj(_actuator.json())
+
+        return ComponentWebClient.parse_obj(component.json())
 
     async def send_message(self, message, user=Config.TELEGRAM_CHAT_ID_COTTAGE):
         return await HttpxClient.post_with_raise(

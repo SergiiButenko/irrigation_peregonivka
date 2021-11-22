@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Dict, List, Optional
 import uuid
 from datetime import datetime
 from pydantic import BaseModel, Field
@@ -18,13 +18,26 @@ class DeviceSql(BaseModel):
 class ComponentSql(BaseModel):
     id: uuid.UUID
     device_id: str
-    component_id: int
+    mapped_id: int
     name: str
     category: str
     type: str
     version: str
-    usage_type: Optional[str] = None
+    purpose: Optional[str] = None
     settings: Optional[Json] = None
+    telegram_notify: bool
+
+
+class ComponentWebClient(BaseModel):
+    id: uuid.UUID
+    device_id: str
+    mapped_id: int
+    name: str
+    category: str
+    type: str
+    version: str
+    purpose: Optional[str] = None
+    settings: Optional[Dict] = None
     telegram_notify: bool
 
 

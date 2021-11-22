@@ -1,4 +1,4 @@
-from devices.queries.devices import DeviceQRS
+from devices.queries.components import ComponentsQRS
 from devices.models.users import User
 from devices.queries.groups import GroupsQRS
 from fastapi import APIRouter, Depends
@@ -14,7 +14,6 @@ router = APIRouter(
 @router.get("")
 async def get_all_groups(
     current_user: User = Depends(get_current_active_user),
-    logger=Depends(get_logger),
 ):
     return await GroupsQRS.get_groups(current_user.id)
 
@@ -23,7 +22,6 @@ async def get_all_groups(
 async def get_group_by_id(
     group_id: str,
     current_user: User = Depends(get_current_active_user),
-    logger=Depends(get_logger),
 ):
     return await GroupsQRS.get_group_by_id(group_id, current_user.id)
 
@@ -33,6 +31,5 @@ async def get_rule_by_id(
     group_id: str,
     current_user: User = Depends(get_current_active_user),
     logger=Depends(get_logger),
-):  
-    logger.info(f"Getting components for user '{current_user.id}', group '{group_id}'")
-    return await DeviceQRS.get_components_by_group_id(group_id, current_user.id)
+):
+    return await ComponentsQRS.get_components_by_group_id(group_id, current_user.id)

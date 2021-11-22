@@ -1,6 +1,6 @@
+from pydantic.types import UUID4
 from typing import List
 from pydantic import BaseModel
-import uuid
 
 
 class Message(BaseModel):
@@ -15,7 +15,7 @@ class IntervalState(RuleState):
     pass
 
 
-class DeviceExpectedState(BaseModel):
+class ComponentExpectedState(BaseModel):
     expected_state: str
 
 
@@ -25,26 +25,24 @@ class Rules(BaseModel):
     time: int
 
 
-class RulesActuators(BaseModel):
-    device_id: str
-    actuator_id: int
+class RulesComponents(BaseModel):
+    component_id: UUID4
     rules: Rules
 
 
-class RulesActuatorsList(BaseModel):
-    actuators: List[RulesActuators]
+class RulesComponentsList(BaseModel):
+    components: List[RulesComponents]
     minutes_delay: int
 
 
-class RulesActuatorsIntervals(BaseModel):
-    device_id: str
-    actuator_id: int
-    interval_id: uuid.UUID
+class RulesComponentsIntervals(BaseModel):
+    component_id: UUID4
+    interval_id: UUID4
     rules: Rules
 
 
-class RulesActuatorsIntervalsList(BaseModel):
-    actuators: List[RulesActuatorsIntervals]
+class RulesComponentsIntervalsList(BaseModel):
+    components: List[RulesComponentsIntervals]
     minutes_delay: int
 
 

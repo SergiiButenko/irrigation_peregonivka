@@ -1,9 +1,9 @@
-const DEFAULT_POST_OPTIONS = {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
-};
+// const DEFAULT_POST_OPTIONS = {
+//     'Content-Type': 'application/json',
+//     'Access-Control-Allow-Origin': '*',
+//     "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
+//     "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+// };
 
 import {wrapFunctionWithMiddlewares} from './middlewares';
 
@@ -65,7 +65,6 @@ class _ProviderBase {
 
     async get(url, options = {}, reader = DEFAULT_READER) {
         options.method = 'GET';
-        // options.cache = 'no-cache';
         return this.doRequest(url, options, reader);
     }
 
@@ -73,10 +72,9 @@ class _ProviderBase {
         options = {
             ...options,
             body,
-            //mode: 'no-cors',
             method: 'POST',
             headers: {
-                ...DEFAULT_POST_OPTIONS,
+                // ...DEFAULT_POST_OPTIONS,
                 ...options.headers,
             }
         };
@@ -89,7 +87,7 @@ class _ProviderBase {
             body,
             method: 'PUT',
             headers: {
-                ...DEFAULT_POST_OPTIONS,
+                // ...DEFAULT_POST_OPTIONS,
                 ...options.headers,
             }
         };

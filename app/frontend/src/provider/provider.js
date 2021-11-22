@@ -102,14 +102,26 @@ class SmartSystemApi {
         );
     }
 
-    async getDeviceLatestTask(deviceId, options = {}) {
+    async getDeviceComponentState(componentId, options = {}) {
         return this.provider.get(
-            apiUri.RULES(deviceId),
+            apiUri.COMPONENT_STATE(componentId),
             options,
         );
     }
 
+    async getDeviceComponent(componentId, options = {}) {
+        return this.provider.get(
+            apiUri.COMPONENTS(componentId),
+            options,
+        );
+    }
+
+
     async postDeviceTasks(body, options = {}) {
+        options.headers = {
+            ...options.headers, "Content-Type": "application/json; charset=utf-8"
+        };
+        
         return this.provider.post(
             apiUri.RULES(),
             JSON.stringify(body),

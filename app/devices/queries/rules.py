@@ -23,10 +23,9 @@ class RulesQRS:
 
     @staticmethod
     async def get_rule(rule_id: uuid.UUID) -> Rule:
-        sql = """SELECT r.*, c.device_id, c.component_id
-        FROM rules r
-        JOIN device_components c ON r.device_component_id = c.id
-        WHERE r.id=:rule_id"""
+        sql = """SELECT *
+        FROM rules
+        WHERE id=:rule_id"""
 
         result = await psql_db.fetch_one(
             sql, values={'rule_id': rule_id}

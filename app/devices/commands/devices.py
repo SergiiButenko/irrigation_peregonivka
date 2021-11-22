@@ -4,7 +4,7 @@ from devices.models.devices import DeviceSql
 from starlette.routing import NoMatchFound
 from devices.queries.devices import DeviceQRS
 from devices.service_providers.httpx_client import HttpxClient
-
+from devices.service_providers.device_logger import logger
 
 class DeviceCMD:
 
@@ -44,7 +44,13 @@ class DeviceCMD:
     async def get_device_by_id(device_id: str) -> Device:
         _deviceSQL = await DeviceQRS.get_device(device_id)
         _device = DeviceFactory.get(_deviceSQL.type, _deviceSQL.version)
-        return await _device.get_device(device_id)
+        return await _device.init(device_id)
+
+    @staticmethod
+    async def get_device_by_component_id(component_id: str) -> Device:
+        _deviceSQL = await DeviceQRS.get_device_by_component_id(component_id)
+        _device = DeviceFactory.get(_deviceSQL.type, _deviceSQL.version)
+        return await _device.init(_deviceSQL.id)
 
     @staticmethod
     async def get_component_state(device_id: str, component_id: int) -> str:

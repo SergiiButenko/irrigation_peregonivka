@@ -4,13 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-
-import NavigationIcon from '@material-ui/icons/Navigation';
-
 import Grid from '@material-ui/core/Grid';
-import { Button } from '@material-ui/core';
-import Zoom from '@material-ui/core/Zoom';
-
 import { postDeviceTasks } from '../../../../actions/groups';
 import PageSpinner from '../../../shared/PageSpinner';
 import LoadingFailed from '../../../shared/LoadingFailed';
@@ -34,19 +28,18 @@ const styles = theme => ({
 const mapStateToProps = (state) => {
     return getGroups(state);
 };
-
 @withStyles(styles)
 @withRouter
 @connect(mapStateToProps, { postDeviceTasks })
 export default class CesspoolMaster extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        group: PropTypes.object.isRequired,
+        groupId: PropTypes.string.isRequired,
         groupFetchError: PropTypes.any,
     };
 
     render() {
-        const { classes, loading, groupFetchError, group, match: { params }, postDeviceTasks } = this.props;
+        const { classes, loading, groupFetchError, groups, groupId, match: { params }, postDeviceTasks } = this.props;
 
         if (loading) {
             return <PageSpinner />;
@@ -55,20 +48,25 @@ export default class CesspoolMaster extends React.Component {
         if (groupFetchError) {
             return <LoadingFailed errorText={groupFetchError} />;
         }
-        
+
+        const group = groups[groupId];
         return (
             <>
                 <Grid container spacing={24}>
                     {
                         Object.keys(group.components).map(function (id, index) {
-                            const component = group.components[id]
-                            const Element = components_mapping[component.usage_type][component.category][component.version]
+                            const component = group.components[id];
+                            const Element = components_mapping[group.short_name][component.category][component.version];
+                            if (!Element) {
+                                return;
+                            }
+                            
                             return (
-                                <Grid item xs={12}>
+                                <Grid item xs={12} key={component.id} >
                                     <Element
                                         componentId={component.id}
                                         groupId={group.id}
-                                        key={component.id} />
+                                    />
                                 </Grid>
                             );
                         })

@@ -49,7 +49,7 @@ class IntervalsQRS:
         FROM intervals i
         JOIN rules r ON r.interval_id = i.id
         JOIN device_components c ON i.device_component_id = c.id
-        WHERE c.usage_type = 'irrigation'
+        WHERE c.purpose = 'valve'
         AND r.state = 'new'
         AND r.execution_time > now()
         AND i.user_id = :user_id

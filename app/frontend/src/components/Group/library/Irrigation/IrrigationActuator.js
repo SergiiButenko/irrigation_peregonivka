@@ -150,7 +150,7 @@ export default class IrrigationActuator extends React.Component {
                                     max={30}
                                     step={5}
                                     onChange={this.handleChangeMinutes}
-                                    onDragStart={this.handleStartDrag}
+                                    onDragEnd={this.handleStartDrag}
                                 />
                             </Grid>
                         </Grid>
@@ -167,7 +167,7 @@ export default class IrrigationActuator extends React.Component {
                                     max={4}
                                     step={1}
                                     onChange={this.handleChangeQnt}
-                                    onDragStart={this.handleStartDrag}
+                                    onDragEnd={this.handleStartDrag}
                                 />
                             </Grid>
                         </Grid>

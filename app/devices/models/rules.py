@@ -7,8 +7,6 @@ from datetime import datetime
 class Rule(BaseModel):
     id: uuid.UUID
     interval_id: uuid.UUID
-    device_id: Optional[str] = None
-    component_id: Optional[int] = None
     device_component_id: uuid.UUID
     expected_state: str
     execution_time: datetime

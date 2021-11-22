@@ -59,7 +59,6 @@ export default class Dashboard extends React.Component {
             return <LoadingFailed errorText={dashboardFetchError} />;
         }
 
-        console.log(data);
         const weatherData = formWeatherData(data.weather_forecast.hourly);
         const irrigationData = formIrrigationData(data.irrigation_forecast);
 

@@ -1,5 +1,5 @@
 from devices.models.devices import ComponentSql, ComponentsSql, DeviceSql, TelegramUser
-from devices.schemas.schema import DeviceExpectedState
+from devices.schemas.schema import ComponentExpectedState
 from devices.service_providers.sql_db import psql_db
 from devices.service_providers.device_logger import logger
 
@@ -33,68 +33,17 @@ class DeviceQRS:
         return DeviceSql.parse_obj(result)
 
     @staticmethod
-    async def get_component_by_device_id(
-        device_id: str, component_id: int
-    ) -> ComponentSql:
+    async def get_device_by_component_id(component_id: str) -> DeviceSql:
         sql = """
-        SELECT * FROM device_components 
-        WHERE component_id=:component_id AND device_id=:device_id;
-        """
-        result = await psql_db.fetch_one(
-            sql, values={"component_id": component_id, "device_id": device_id}
-        )
-        return ComponentSql.parse_obj(result)
-
-    @staticmethod
-    async def get_component_by_id(
-        component_id: str
-    ) -> ComponentSql:
-        sql = """
-        SELECT * FROM device_components 
-        WHERE id=:component_id;
+        SELECT d.* FROM devices d
+        JOIN device_components dc ON d.id = dc.device_id
+        WHERE dc.id=:component_id;
         """
         result = await psql_db.fetch_one(
             sql, values={"component_id": component_id}
         )
-        return ComponentSql.parse_obj(result)
 
-
-    @staticmethod
-    async def get_components_by_device_id(
-        device_id: str
-    ) -> ComponentSql:
-        sql = """
-        SELECT * FROM device_components WHERE device_id=:device_id;
-        """
-        results = await psql_db.fetch_all(
-            sql,
-            values={"device_id": device_id}
-        )
-
-        return ComponentsSql.parse_obj(results)
-
-
-    @staticmethod
-    async def get_components_by_group_id(group_id: str, user_id: str):
-        sql = """SELECT c.* 
-        FROM public.device_components AS c
-        JOIN public.components_groups AS cg ON c.id = cg.device_component_id 
-        JOIN public.groups AS g ON g.id = cg.group_id 
-        WHERE g.user_id=:user_id and g.id=:group_id"""
-        result = await psql_db.fetch_all(
-            sql, values={'user_id': user_id, 'group_id': group_id}
-        )
-
-        return ComponentsSql.parse_obj(result)
-
-    @staticmethod
-    async def get_expected_actuator_state(device_id: str, actuator_id: int) -> DeviceExpectedState:
-        sql = """
-        """
-        result = await psql_db.fetch_one(
-            sql, values={"actuator_id": actuator_id, "device_id": device_id}
-        )
-        return DeviceExpectedState.parse_obj(result)
+        return DeviceSql.parse_obj(result)
 
     @staticmethod
     async def get_linked_telegram_user(device_id: str, component_id: int) -> TelegramUser:

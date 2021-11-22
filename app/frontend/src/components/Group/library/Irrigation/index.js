@@ -16,6 +16,7 @@ import PageSpinner from '../../../shared/PageSpinner';
 import LoadingFailed from '../../../shared/LoadingFailed';
 import { components_mapping } from '../../../../constants/components_mapping';
 import { getGroups } from '../../../../selectors/groups';
+import { filterSelectedComponents } from '../../../../helpers/groups.helper'
 
 const styles = theme => ({
     root: {
@@ -34,19 +35,19 @@ const styles = theme => ({
 const mapStateToProps = (state) => {
     return getGroups(state);
 };
-
 @withStyles(styles)
 @withRouter
 @connect(mapStateToProps, { postDeviceTasks })
 export default class IrrigationMaster extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        group: PropTypes.object.isRequired,
+        groupId: PropTypes.object.isRequired,
         groupFetchError: PropTypes.any,
+        loading: PropTypes.bool.isRequired, 
     };
 
     render() {
-        const { classes, loading, groupFetchError, group, match: { params }, postDeviceTasks } = this.props;
+        const { classes, loading, groupFetchError, groups, groupId, match: { params }, postDeviceTasks } = this.props;
 
         const transitionDuration = {
             enter: 100,
@@ -60,20 +61,26 @@ export default class IrrigationMaster extends React.Component {
         if (groupFetchError) {
             return <LoadingFailed errorText={groupFetchError} />;
         }
+
+        const group = groups[groupId];
         
+        const button_disabled = Object.keys(
+            filterSelectedComponents(group.components)
+            ).length == 0;
+
         return (
             <>
                 <Grid container spacing={24}>
                     {
                         Object.keys(group.components).map(function (id, index) {
                             const component = group.components[id]
-                            const Element = components_mapping[component.usage_type][component.category][component.version]
+                            const Element = components_mapping[group.short_name][component.category][component.version]
                             return (
-                                <Grid item xs={12}>
+                                <Grid item xs={12} key={component.id}>
                                     <Element
-                                        componentId={component.id}
                                         groupId={group.id}
-                                        key={component.id} />
+                                        componentId={component.id}
+                                        />
                                 </Grid>
                             );
                         })
@@ -86,6 +93,7 @@ export default class IrrigationMaster extends React.Component {
                     unmountOnExit
                 >
                     <Button
+                    disabled={button_disabled}
                     variant="fab"
                     className={classes.fab}
                     color="primary"

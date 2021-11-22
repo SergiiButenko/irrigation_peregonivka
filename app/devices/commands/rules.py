@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from devices.queries.components import ComponentsQRS
 from devices.models.users import User
 from devices.config.config import Config
 from devices.celery_tasks.tasks import try_execure_rule, try_notify_rule
@@ -6,7 +7,7 @@ from devices.queries.devices import DeviceQRS
 from devices.enums.rules import DiscreteActuatorsType, DiscreteStates, RulesState
 from devices.models.rules import Rule, Rules
 from devices.models.intervals import Interval
-from devices.schemas.schema import RulesActuatorsIntervalsList
+from devices.schemas.schema import RulesComponentsIntervalsList
 import uuid
 
 
@@ -18,11 +19,11 @@ class RulesCMD:
 
     @staticmethod
     async def enqueue_notify(rule: Rule) -> None:
-        actuator = await DeviceQRS.get_component_by_id(
+        component = await ComponentsQRS.get_component_by_id(
             rule.device_component_id
         )
 
-        if actuator.telegram_notify:
+        if component.telegram_notify:
             try_notify_rule.apply_async(
                 task_id=str(rule.id),
                 args=[rule.id],
@@ -36,37 +37,37 @@ class RulesCMD:
         )
 
     @staticmethod
-    async def form_rules(rules: RulesActuatorsIntervalsList, current_user: User) -> Rules:
+    async def form_rules(rules: RulesComponentsIntervalsList, current_user: User) -> Rules:
         res_rules = []
         res_intervals = []
-        
+
         execution_time = datetime.now() + timedelta(minutes=rules.minutes_delay)
-        for index, actuator in enumerate(rules.actuators):
+        for index, component in enumerate(rules.components):
             interval_id = uuid.uuid4()
 
-            _actuator = await DeviceQRS.get_component_by_device_id(
-                actuator.device_id, actuator.actuator_id
+            _component = await ComponentsQRS.get_component_by_id(
+                component.component_id
             )
-            intervals_quantity = actuator.rules.intervals
-            time_wait = actuator.rules.time_wait
-            execution_minutes = actuator.rules.time
+            intervals_quantity = component.rules.intervals
+            time_wait = component.rules.time_wait
+            execution_minutes = component.rules.time
 
             res_intervals.append(Interval.parse_obj(
                 dict(
                     id=interval_id,
-                    device_component_id=_actuator.id,
+                    device_component_id=_component.id,
                     execution_time=execution_time,
                     user_id=current_user.id
                 )
             ))
 
             for _ in range(intervals_quantity):
-                if DiscreteActuatorsType.has_value(_actuator.usage_type):
+                if DiscreteActuatorsType.has_value(_component.purpose):
                     on_rule = Rule.parse_obj(
                         dict(
                             id=uuid.uuid4(),
                             interval_id=interval_id,
-                            device_component_id=_actuator.id,
+                            device_component_id=_component.id,
                             expected_state=DiscreteStates.ON,
                             execution_time=execution_time,
                             state=RulesState.NEW,
@@ -81,7 +82,7 @@ class RulesCMD:
                         dict(
                             id=uuid.uuid4(),
                             interval_id=interval_id,
-                            device_component_id=_actuator.id,
+                            device_component_id=_component.id,
                             expected_state=DiscreteStates.OFF,
                             execution_time=execution_time,
                             state=RulesState.NEW,

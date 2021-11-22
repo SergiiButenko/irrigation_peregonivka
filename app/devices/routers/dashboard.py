@@ -20,7 +20,7 @@ async def get_weather_forecast(
     """Get latest updates on weather"""
     logger.info("Getting info from openweather.")
     data = (await client.get(
-        url=f"http://api.openweathermap.org/data/2.5/onecall?lat=50.11&lon=30.6227&appid={Config.OPENAPI_KEY}&lang=ua&units=metric&exclude=minutely,alerts,daily"
+        url=f"http://api.openweathermap.org/data/2.5/onecall?lat=50.11&lon=30.6227&appid={Config.OPENAPI_KEY}&lang=ua&units=metric&exclude=minutely,alerts"
         )).json()
 
     return data

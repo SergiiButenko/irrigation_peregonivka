@@ -132,17 +132,34 @@ VALUES
         'Вимірювач наявності напруги'
     );
 
+
+INSERT INTO
+    public.components_purpose(name, description)
+VALUES
+    (
+        'valve',
+        'Клапан'
+    );
+
+
+INSERT INTO
+    public.components_purpose(name, description)
+VALUES
+    (
+        'switcher',
+        'Вимикач'
+    );
 INSERT INTO
     public.device_components(
         id,
-        component_id,
+        mapped_id,
         device_id,
         name,
         category,
         type,
         version,
+        purpose,
         settings,
-        usage_type,
         telegram_notify
     )
 VALUES
@@ -154,22 +171,22 @@ VALUES
         'actuator',
         'relay',
         'v1',
+        'valve',
         '{"minutes": 15, "quantity": 2}',
-        'irrigation',
         true
     );
 
 INSERT INTO
     public.device_components(
         id,
-        component_id,
+        mapped_id,
         device_id,
         name,
         category,
         type,
         version,
+        purpose,
         settings,
-        usage_type,
         telegram_notify
     )
 VALUES
@@ -181,22 +198,22 @@ VALUES
         'actuator',
         'relay',
         'v1',
+        'valve',
         '{"minutes": 25, "quantity": 2}',
-        'irrigation',
         true
     );
 
 INSERT INTO
     public.device_components(
         id,
-        component_id,
+        mapped_id,
         device_id,
         name,
         category,
         type,
         version,
+        purpose,
         settings,
-        usage_type,
         telegram_notify
     )
 VALUES
@@ -208,8 +225,8 @@ VALUES
         'actuator',
         'relay',
         'v1',
+        'valve',
         '{"minutes": 25, "quantity": 2}',
-        'irrigation',
         true
     );
 
@@ -217,51 +234,75 @@ VALUES
 INSERT INTO
     public.device_components(
         id,
-        component_id,
+        mapped_id,
         device_id,
         name,
         category,
         type,
         version,
-        settings,
         telegram_notify
     )
 VALUES
     (
         '59551dc9-fa3f-4362-8a18-7678fd98c67b',
-        1,
+        3,
         'cesspoll_relay_sensor1',
         'Датчик рівня води в септику',
         'sensor',
         'POWER_CURRENT',
         'v1',
-        NULL,
         false
     );
 
 INSERT INTO
     public.device_components(
         id,
-        component_id,
+        mapped_id,
         device_id,
         name,
         category,
         type,
         version,
-        settings,
         telegram_notify
     )
 VALUES
     (
         '53dd36aa-fe23-4d48-ac0e-08948f122e09',
-        2,
+        4,
         'cesspoll_relay_sensor1',
         'Датчик увімкнення насосу в септику',
         'sensor',
         'POWER_CURRENT',
         'v1',
-        NULL,
         false
+    );
+
+
+INSERT INTO
+    public.device_components(
+        id,
+        mapped_id,
+        device_id,
+        name,
+        category,
+        type,
+        version,
+        purpose,
+        telegram_notify,
+        settings
+    )
+VALUES
+    (
+        '5e6d23d4-a4fd-45a0-ad30-45a8514728f6',
+        1,
+        'cesspoll_relay_sensor1',
+        'Насос септика',
+        'actuator',
+        'relay',
+        'v1',
+        'switcher',
+        true,
+        '{"minutes": 360, "quantity": 1}'
     );
 
 
@@ -323,5 +364,16 @@ INSERT INTO
 VALUES
     (
         '53dd36aa-fe23-4d48-ac0e-08948f122e09',
+        '49394b91-8ee5-4939-a31c-4204bcb0cf32'
+    );
+
+INSERT INTO
+    public.components_groups(
+        device_component_id,
+        group_id
+    )
+VALUES
+    (
+        '5e6d23d4-a4fd-45a0-ad30-45a8514728f6',
         '49394b91-8ee5-4939-a31c-4204bcb0cf32'
     );

@@ -28,8 +28,8 @@ async def execute_rule(rule_id: str) -> None:
 
     await device_client.update_rule_state(rule.id, RulesState.IN_PROGRESS)
 
-    await device_client.update_actuator_state(
-        rule.device_id, rule.component_id, rule.expected_state
+    await device_client.update_component_state(
+        rule.device_component_id, rule.expected_state
     )
 
     await device_client.update_rule_state(rule.id, RulesState.SUCCESSFUL)
@@ -49,23 +49,23 @@ async def notify_rule(rule_id: str) -> None:
     #####
 
     rule = await device_client.get_rule(rule_id)
-    actuator = await device_client.get_actuator(rule.device_id, rule.component_id)
+    component = await device_client.get_component(rule.device_component_id)
 
     now = datetime.now()
     diff = rule.execution_time - now
     minutes = int(divmod(diff.total_seconds(), 60)[0]) + 1
 
     if minutes <= 2:
-        if actuator.usage_type == "irrigation":
-            message = TelegramMessages.IRRIGATION_PLANNED_NOW.format(actuator.name)
-        elif actuator.usage_type == "lighting":
-            message = TelegramMessages.LIGHTING_PLANNED_NOW.format(actuator.name)
+        if component.purpose == "valve":
+            message = TelegramMessages.IRRIGATION_PLANNED_NOW.format(component.name)
+        elif component.purpose == "switcher":
+            message = TelegramMessages.LIGHTING_PLANNED_NOW.format(component.name)
 
     elif minutes > 2:
-        if actuator.usage_type == "irrigation":
-            message = TelegramMessages.IRRIGATION_PLANNED.format(actuator.name, minutes)
-        elif actuator.usage_type == "lighting":
-            message = TelegramMessages.LIGHTING_PLANNED.format(actuator.name, minutes)
+        if component.purpose == "valve":
+            message = TelegramMessages.IRRIGATION_PLANNED.format(component.name, minutes)
+        elif component.purpose == "switcher":
+            message = TelegramMessages.LIGHTING_PLANNED.format(component.name, minutes)
 
     await device_client.send_message(message)
 

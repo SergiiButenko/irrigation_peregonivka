@@ -109,7 +109,7 @@ services:
         image: rabbitmq:3-management
         container_name: queue
         volumes:
-            - ./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config
+            - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     
     flower:
         image: mher/flower

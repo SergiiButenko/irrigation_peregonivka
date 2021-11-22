@@ -1,7 +1,7 @@
 import { createActions } from 'redux-actions';
 import { smartSystemApi } from '../provider';
 import { arrayToObj } from "../helpers/common.helper";
-import { filterSelectedComponents, prepareComponentsTaskObject } from '../helpers/groups.helper';
+import { prepareComponentsTaskObject } from '../helpers/groups.helper';
 
 const actions = createActions(
     {
@@ -26,7 +26,6 @@ export const fetchGroups = () => {
         dispatch(groups.loading(true));
 
         try {
-            console.log("call fetch groups");
             let groups_input = arrayToObj(await smartSystemApi.getGroup());
             dispatch(entity.groups.updateBatch(groups_input));
         }
@@ -42,8 +41,8 @@ export const fetchGroupComponentsById = (groupId) => {
         dispatch(groups.loading(true));
 
         try {
-            console.log("called fetch group by id");
-            let groups_input = arrayToObj(await smartSystemApi.getGroup());
+            let groups_input = await smartSystemApi.getGroup();
+            groups_input = arrayToObj(groups_input);
             dispatch(entity.groups.updateBatch(groups_input));
 
             let components = await smartSystemApi.getGroupComponentsById(groupId);
@@ -53,6 +52,7 @@ export const fetchGroupComponentsById = (groupId) => {
         catch (e) {
             dispatch(groups.failure(e));
         }
+
         dispatch(groups.loading(false));
     };
 };

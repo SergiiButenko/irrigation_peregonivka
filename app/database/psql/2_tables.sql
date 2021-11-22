@@ -42,26 +42,28 @@ CREATE TABLE public.components_categories(
     description TEXT
 );
 
+CREATE TABLE public.components_purpose(
+    name TEXT NOT NULL PRIMARY KEY,
+    description TEXT
+);
+
 CREATE TABLE public.device_components (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     device_id TEXT,
-    component_id INTEGER NOT NULL,
+    mapped_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     category TEXT NOT NULL,
     type TEXT NOT NULL,
     version TEXT NOT NULL,
+    purpose TEXT,
     settings jsonb,
     telegram_notify BOOL NOT NULL,
     telegram_user TEXT DEFAULT '-315337397',
-    usage_type TEXT,
-    --  //time integer NOT NULL DEFAULT 10,
-    --  //intervals integer NOT NULL DEFAULT 2,
-    --  //time_wait integer NOT NULL DEFAULT 15,
-    --  //relay_num integer,
-    UNIQUE (device_id, component_id),
+    UNIQUE (device_id, mapped_id),
     FOREIGN KEY(device_id) REFERENCES devices(id),
     FOREIGN KEY(type) REFERENCES components_types(name),
-    FOREIGN KEY(category) REFERENCES components_categories(name)
+    FOREIGN KEY(category) REFERENCES components_categories(name),
+    FOREIGN KEY(purpose) REFERENCES components_purpose(name)
 );
 
 CREATE TABLE public.components_groups (

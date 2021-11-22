@@ -5,5 +5,5 @@ class Device8chV1(Device):
     __type__ = 'Relay8ch'
     __version__ = 'v1'
 
-    def __init__(self, device_id) -> None:
-        super().__init__(device_id)
+    def __init__(self, id) -> None:
+        super().__init__(id)

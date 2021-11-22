@@ -38,10 +38,6 @@ export default class Group extends React.Component {
         groupFetchError: PropTypes.any,
     };
 
-    static contextTypes = {
-        router: PropTypes.object
-    };
-
     componentDidMount() {
         this.props.fetchGroupComponentsById(this.props.match.params.groupId);
     }
@@ -71,10 +67,9 @@ export default class Group extends React.Component {
                             <ArrowBackIosRounded /> На попередню сторінку
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Element group={group} key={group.id} />
+                    <Grid item xs={12} key={group.id}>
+                        <Element groupId={group.id} loading={true}/>
                     </Grid>
-
                 </Grid>
             </>
         );

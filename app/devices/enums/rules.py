@@ -2,7 +2,8 @@ from enum import Enum
 
 
 class DiscreteActuatorsType(Enum):
-    irrigation = 'irrigation'
+    valve = 'valve'
+    switcher = 'switcher'
 
     @classmethod
     def has_value(cls, value):

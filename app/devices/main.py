@@ -3,8 +3,7 @@ from fastapi import FastAPI
 from devices.service_providers.sql_db import psql_db
 from devices.routers import (
     devices,
-    actuators,
-    sensors,
+    components,
     telegram,
     rules,
     auth,
@@ -31,8 +30,7 @@ async def shutdown():
 
 
 app.include_router(devices.router)
-app.include_router(actuators.router)
-app.include_router(sensors.router)
+app.include_router(components.router)
 app.include_router(telegram.router)
 app.include_router(rules.router)
 app.include_router(auth.router)

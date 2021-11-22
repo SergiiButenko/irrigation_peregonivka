@@ -22,6 +22,8 @@ const actions = createActions(
 export const {devices, entity} = actions;
 
 const deviceKey = 'devices';
+const actuatorKey = 'actuator';
+const stateKey = 'state';
 const selectedKey = 'selected';
 const tasksKey = 'tasks';
 
@@ -91,3 +93,32 @@ export const fetchDeviceTasks = (deviceId) => {
         dispatch(devices.loading(false));
     };
 };
+
+export const initComponent = (componentId) => {
+    return async (dispatch) => {
+        dispatch(devices.loading(true));
+        try {
+            const component = await smartSystemApi.getDeviceComponent(componentId);
+            dispatch(entity.devices.updateIn(
+                [
+                    deviceId,
+                    actuatorKey,
+                    actuatorId
+                ], component));
+
+            const state = await smartSystemApi.getDeviceComponentState(componentId);
+            dispatch(entity.devices.updateIn(
+                [
+                    deviceId,
+                    actuatorKey,
+                    actuatorId,
+                    stateKey
+                ], state));
+        }
+        catch (e) {
+            dispatch(devices.failure(e));
+        }
+        dispatch(devices.loading(false));
+    };
+    
+}

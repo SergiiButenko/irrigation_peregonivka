@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -10,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import PageSpinner from '../shared/PageSpinner';
 import {webUri} from '../../constants/uri';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
+import { getGroups } from '../../selectors/groups';
 
 const styles = theme => ({
     root: {
@@ -20,16 +22,16 @@ const styles = theme => ({
     },
 });
 
+const mapStateToProps = (state) => {
+    return getGroups(state);
+};
 @withStyles(styles)
 @withRouter
+@connect(mapStateToProps)
 export default class GroupCard extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        group: PropTypes.object.isRequired,
-    };
-
-    static contextTypes = {
-        router: PropTypes.object
+        groupId: PropTypes.string.isRequired,
     };
 
     redirectToGroup = (id) => (e) => {
@@ -37,12 +39,13 @@ export default class GroupCard extends React.Component {
     };
 
     render() {
-        const {classes, loading, group} = this.props;
+        const {classes, loading, groups, groupId} = this.props;
 
         if (loading) {
             return <PageSpinner/>;
         }
-
+        
+        const group = groups[groupId];
         return (
             <Paper
                 className={classes.root}

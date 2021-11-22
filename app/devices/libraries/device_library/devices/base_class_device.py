@@ -1,26 +1,25 @@
-from logging import log
+from devices.queries.components import ComponentsQRS
 from devices.queries.devices import DeviceQRS
 from starlette.routing import NoMatchFound
 from devices.libraries.device_library.sensors.sensor_factory import SensorFactory
 from devices.libraries.device_library.actuators.actuator_factory import ActuatorFactory
 from devices.enums.devices import SensorEnum, ActuatorsEnum
 from devices.service_providers.httpx_client import HttpxClient
-from devices.service_providers.device_logger import logger
 
 
 class Device:
 
     def __init__(
         self,
-        device_id,
+        id,
     ) -> None:
-        self.device_id = device_id
+        self.id = id
         self.components = {}
         self.device = {}
 
     @staticmethod
-    async def get_device(device_id: str):
-        _device = Device(device_id)
+    async def init(id: str):
+        _device = Device(id)
         await _device._init_device()
         return await _device._init_components()
 
@@ -41,12 +40,12 @@ class Device:
         )
 
     async def _init_device(self):
-        self.device = await DeviceQRS.get_device(self.device_id)
+        self.device = await DeviceQRS.get_device(self.id)
         return self
 
     async def _init_components(self) -> None:
-        components = await DeviceQRS.get_components_by_device_id(self.device_id)
-        
+        components = await ComponentsQRS.get_components_by_device_id(self.id)
+
         for c in components.__root__:
             if c.category == ActuatorsEnum.category:
                 _actuator = ActuatorFactory.get(c.type, c.version)
