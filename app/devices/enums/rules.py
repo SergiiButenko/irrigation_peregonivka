@@ -15,7 +15,7 @@ class DiscreteStates:
     OFF = 0
 
 
-class RulesState:
+class RulesPossibleState:
     NEW = 'new'
     IN_PROGRESS = 'in_progress'
     SUCCESSFUL = 'successful'

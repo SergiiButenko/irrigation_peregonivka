@@ -4,7 +4,7 @@ from asgiref.sync import async_to_sync
 from datetime import datetime
 
 from devices.service_providers.celery import celery_app
-from devices.enums.rules import RulesState
+from devices.enums.rules import RulesPossibleState
 from devices.enums.intervals import IntervalPossibleState
 from devices.config.config import Config
 from devices.clients.devices import DevicesClient
@@ -22,17 +22,17 @@ async def execute_rule(rule_id: str) -> None:
 
     if interval.state in INTERVAL_BLOCKED_STATE:
         logger.warning("Rule is not going to be executed since interval does not allowing it")
-        await device_client.update_rule_state(rule.id, RulesState.CANCELED)
+        await device_client.update_rule_state(rule.id, RulesPossibleState.CANCELED)
         return
     #####
 
-    await device_client.update_rule_state(rule.id, RulesState.IN_PROGRESS)
+    await device_client.update_rule_state(rule.id, RulesPossibleState.IN_PROGRESS)
 
     await device_client.update_component_state(
         rule.device_component_id, rule.expected_state
     )
 
-    await device_client.update_rule_state(rule.id, RulesState.SUCCESSFUL)
+    await device_client.update_rule_state(rule.id, RulesPossibleState.SUCCESSFUL)
 
 
 async def notify_rule(rule_id: str) -> None:

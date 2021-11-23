@@ -1,11 +1,14 @@
+from devices.models.users import User
+from devices.queries.intervals import IntervalsQRS
 from fastapi import APIRouter, Depends
-from pydantic.types import StrictStr, UUID4
+from pydantic.types import StrictStr
 
 from devices.commands.events import EventsCMD
 from devices.dependencies import get_current_active_user
 from devices.queries.components import ComponentsQRS
-from devices.schemas.schema import ComponentExpectedState, SensorValue
+from devices.schemas.schema import SensorValue, ComponentExpectedState
 from devices.queries.sensors import SensorQRS
+from devices.enums.intervals import IntervalPossibleState
 
 
 router = APIRouter(
@@ -28,20 +31,30 @@ async def get_components(
 @router.get("/state", name="Get state of specific component")
 async def get_component_state(
     component_id: str,
-    ComponentsQRS: ComponentsQRS = Depends(ComponentsQRS),
+    current_user: User = Depends(get_current_active_user),
 ):
-    """Change state of actuator."""
-    return await ComponentsQRS.get_expected_component_state(component_id)
+    """Get state of component."""
+    return {
+        'state': await ComponentsQRS.get_expected_component_state(component_id),
+        'interval': await IntervalsQRS.get_active_interval_by_component_id(component_id, current_user.id)
+    }
 
 
 @router.put("/state", name="Set state of specific component")
 async def set_component_state(
     component_id: str,
     state: ComponentExpectedState,
+    current_user: User = Depends(get_current_active_user),
     events_cmds: EventsCMD = Depends(EventsCMD),
 ):
     """Set state of actuator."""
-    await events_cmds.try_execute(component_id, "set_state", state)
+    if state.current_interval_id is not None:
+        await IntervalsQRS.set_interval_state(
+            state.current_interval_id,
+            IntervalPossibleState.CANCELED,
+            current_user.id)
+    
+    await events_cmds.try_execute(component_id, "set_state", state.expected_state)
     return {"message": "Change State event executed"}
 
 

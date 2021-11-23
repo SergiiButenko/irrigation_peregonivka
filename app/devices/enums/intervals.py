@@ -1,5 +1,5 @@
-from devices.enums.rules import RulesState
+from devices.enums.rules import RulesPossibleState
 
 
-class IntervalPossibleState(RulesState):
+class IntervalPossibleState(RulesPossibleState):
     pass

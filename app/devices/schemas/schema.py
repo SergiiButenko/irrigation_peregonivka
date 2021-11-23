@@ -16,7 +16,8 @@ class IntervalState(RuleState):
 
 
 class ComponentExpectedState(BaseModel):
-    expected_state: Optional[str] = None
+    expected_state: str
+    current_interval_id: Optional[str] = None
 
 
 class Rules(BaseModel):

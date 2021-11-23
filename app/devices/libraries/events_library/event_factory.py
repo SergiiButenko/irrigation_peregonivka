@@ -1,3 +1,4 @@
+from devices.service_providers.device_logger import logger
 from devices.libraries.device_library.devices.base_class_device import Device
 from devices.libraries.events_library.cesspoll_relay_sensor1 import CesspollRelaySensor1
 from devices.libraries.events_library.irrigation_relay1 import IrrigationRelay1
@@ -21,4 +22,4 @@ class EventFactory:
         try:
             return getattr(cls.EVENTS[device.id][component_id], event)
         except KeyError:
-            return getattr(device[component_id], event)
+            return getattr(device.components[component_id], event)

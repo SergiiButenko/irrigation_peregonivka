@@ -1,3 +1,5 @@
+from devices.enums.intervals import IntervalPossibleState
+from devices.enums.rules import RulesPossibleState
 from devices.models.rules import DashboardIrrigationRules
 from devices.service_providers.sql_db import psql_db
 from devices.service_providers.device_logger import logger
@@ -20,8 +22,8 @@ class IntervalsQRS:
         return Interval.parse_obj(result)
 
     @staticmethod
-    async def get_interval(interval_id: uuid.UUID, user_id: uuid.UUID) -> Interval:
-        sql = """SELECT id, device_component_id, execution_time, user_id, state
+    async def get_interval(interval_id: str, user_id: str) -> Interval:
+        sql = """SELECT *
         FROM intervals
         WHERE id=:interval_id
         AND user_id=:user_id
@@ -29,6 +31,32 @@ class IntervalsQRS:
         result = await psql_db.fetch_one(
             sql, values={"interval_id": interval_id, "user_id": user_id}
         )
+
+        return Interval.parse_obj(result)
+
+    @staticmethod
+    async def get_active_interval_by_component_id(component_id: str, user_id: str) -> Interval:
+        sql = """SELECT distinct on (i.id) i.*
+        FROM intervals i
+        JOIN rules r ON r.interval_id = i.id
+        AND r.device_component_id = :component_id
+        AND r.state = :rule_state
+        AND i.state = :interval_state
+        AND r.execution_time > now()
+        AND i.user_id = :user_id
+        ORDER BY i.id, r.execution_time DESC
+        """
+        result = await psql_db.fetch_one(
+            sql, values={
+                "component_id": component_id,
+                "user_id": user_id,
+                'rule_state': RulesPossibleState.NEW,
+                'interval_state': IntervalPossibleState.IN_PROGRESS
+                }
+        )
+
+        if result is None:
+            return None
 
         return Interval.parse_obj(result)
 
@@ -50,11 +78,14 @@ class IntervalsQRS:
         JOIN rules r ON r.interval_id = i.id
         JOIN device_components c ON i.device_component_id = c.id
         WHERE c.purpose = 'valve'
-        AND r.state = 'new'
+        AND r.state = :state
         AND r.execution_time > now()
         AND i.user_id = :user_id
         ORDER BY i.id, r.execution_time DESC
         """
-        results = await psql_db.fetch_all(sql, values={"user_id": user_id})
+        results = await psql_db.fetch_all(sql, values={
+            "user_id": user_id,
+            "state": RulesPossibleState.NEW
+            })
 
         return DashboardIrrigationRules.parse_obj(results)

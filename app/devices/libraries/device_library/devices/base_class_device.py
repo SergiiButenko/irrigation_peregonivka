@@ -49,10 +49,10 @@ class Device:
         for c in components.__root__:
             if c.category == ActuatorsEnum.category:
                 _actuator = ActuatorFactory.get(c.type, c.version)
-                self.components[c.id] = _actuator(self, c.id)
+                self.components[str(c.id)] = _actuator(self, c.id)
             elif c.category == SensorEnum.category:
                 _sensor = SensorFactory.get(c.type, c.version)
-                self.components[c.id] = _sensor(self, c.id)
+                self.components[str(c.id)] = _sensor(self, c.id)
             else:
                 raise NoMatchFound("No component type registered")
 

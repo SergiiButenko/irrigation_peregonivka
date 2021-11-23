@@ -109,7 +109,7 @@ export const initComponent = (componentId) => {
                     'components',
                     componentId,
                     stateKey
-                ], state.expected_state));
+                ], state));
         }
         catch (e) {
             dispatch(devices.failure(e));
@@ -146,7 +146,7 @@ export const setComponentState = (componentId, state) => {
                     'components',
                     componentId,
                     stateKey
-                ], state.expected_state));
+                ], state));
         }
         catch (e) {
             dispatch(devices.failure(e));

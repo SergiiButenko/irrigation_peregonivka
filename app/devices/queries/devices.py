@@ -1,5 +1,4 @@
-from devices.models.devices import ComponentSql, ComponentsSql, DeviceSql, TelegramUser
-from devices.schemas.schema import ComponentExpectedState
+from devices.models.devices import DeviceSql, TelegramUser
 from devices.service_providers.sql_db import psql_db
 from devices.service_providers.device_logger import logger
 

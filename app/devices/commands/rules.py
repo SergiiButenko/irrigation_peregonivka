@@ -4,7 +4,7 @@ from devices.models.users import User
 from devices.config.config import Config
 from devices.celery_tasks.tasks import try_execure_rule, try_notify_rule
 from devices.queries.devices import DeviceQRS
-from devices.enums.rules import DiscreteActuatorsType, DiscreteStates, RulesState
+from devices.enums.rules import DiscreteActuatorsType, DiscreteStates, RulesPossibleState
 from devices.models.rules import Rule, Rules
 from devices.models.intervals import Interval
 from devices.schemas.schema import RulesComponentsIntervalsList
@@ -70,7 +70,7 @@ class RulesCMD:
                             device_component_id=_component.id,
                             expected_state=DiscreteStates.ON,
                             execution_time=execution_time,
-                            state=RulesState.NEW,
+                            state=RulesPossibleState.NEW,
                         )
                     )
                     res_rules.append(on_rule)
@@ -85,7 +85,7 @@ class RulesCMD:
                             device_component_id=_component.id,
                             expected_state=DiscreteStates.OFF,
                             execution_time=execution_time,
-                            state=RulesState.NEW,
+                            state=RulesPossibleState.NEW,
                         )
                     )
                     res_rules.append(off_rule)

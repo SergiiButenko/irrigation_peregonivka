@@ -1,6 +1,6 @@
 from devices.enums.rules import DiscreteActuatorsType
 from devices.models.devices import ComponentSql, ComponentsSql
-from devices.schemas.schema import ComponentExpectedState
+from devices.models.components import ComponentExpectedState
 from devices.service_providers.sql_db import psql_db
 from devices.service_providers.device_logger import logger
 
