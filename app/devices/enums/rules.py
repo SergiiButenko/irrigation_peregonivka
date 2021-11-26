@@ -18,6 +18,6 @@ class DiscreteStates:
 class RulesPossibleState:
     NEW = 'new'
     IN_PROGRESS = 'in_progress'
-    SUCCESSFUL = 'successful'
+    COMPLETED = 'completed'
     ERROR = 'error'
     CANCELED = 'canceled'

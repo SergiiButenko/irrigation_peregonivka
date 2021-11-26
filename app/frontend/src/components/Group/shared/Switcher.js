@@ -135,7 +135,9 @@ export default class Switcher extends React.Component {
         }
         
         const actuator = groups[groupId].components[componentId];
-        const isON = devices.components[componentId].state == 1;
+        
+        const isON = parseInt(devices.components[componentId].state.state == 1);
+        const interval = devices.components[componentId].state.interval;
         
         const minutes = actuator.settings.minutes;
         return (
@@ -186,7 +188,7 @@ export default class Switcher extends React.Component {
                     <Button
                         color="primary"
                         className={classes.button}
-                        onClick={() => setComponentState(componentId, !isON)}
+                        onClick={() => setComponentState(componentId, !isON, interval)}
                     >
                         {isON ? 'Виключити' : 'Включити'}
                     </Button>

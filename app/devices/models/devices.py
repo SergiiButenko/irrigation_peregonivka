@@ -65,8 +65,7 @@ class PyObjectId(ObjectId):
 
 class SensorValueNSQL(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id')
-    device_id: str
-    sensor_id: int
+    component_id: str
     data: dict
     date: Optional[datetime] = Field(default_factory=datetime.now)
 

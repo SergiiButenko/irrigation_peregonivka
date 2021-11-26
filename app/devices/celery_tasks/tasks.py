@@ -25,14 +25,13 @@ async def execute_rule(rule_id: str) -> None:
         await device_client.update_rule_state(rule.id, RulesPossibleState.CANCELED)
         return
     #####
-
     await device_client.update_rule_state(rule.id, RulesPossibleState.IN_PROGRESS)
 
     await device_client.update_component_state(
         rule.device_component_id, rule.expected_state
     )
 
-    await device_client.update_rule_state(rule.id, RulesPossibleState.SUCCESSFUL)
+    await device_client.update_rule_state(rule.id, RulesPossibleState.COMPLETED)
 
 
 async def notify_rule(rule_id: str) -> None:

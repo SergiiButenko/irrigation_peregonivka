@@ -119,7 +119,7 @@ export const initComponent = (componentId) => {
 };
 
 
-export const setComponentState = (componentId, state) => {
+export const setComponentState = (componentId, state, interval) => {
     return async (dispatch, getState) => {
         dispatch(devices.loading(true));
         try {

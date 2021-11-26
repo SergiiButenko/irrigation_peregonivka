@@ -45,11 +45,11 @@ class DeviceQRS:
         return DeviceSql.parse_obj(result)
 
     @staticmethod
-    async def get_linked_telegram_user(device_id: str, component_id: int) -> TelegramUser:
+    async def get_linked_telegram_user(component_id: str) -> TelegramUser:
         sql = """SELECT telegram_user FROM device_components
-        WHERE id=:component_id AND device_id=:device_id;
+        WHERE id=:component_id;
         """
         result = await psql_db.fetch_one(
-            sql, values={"component_id": component_id, "device_id": device_id}
+            sql, values={"component_id": component_id}
         )
         return TelegramUser.parse_obj(result)

@@ -1,9 +1,13 @@
 from datetime import datetime, timedelta
+from devices.commands import intervals
+from devices.service_providers.device_logger import logger
+from devices.enums.intervals import IntervalPossibleState
+from devices.queries.intervals import IntervalsQRS
+from devices.queries.rules import RulesQRS
 from devices.queries.components import ComponentsQRS
 from devices.models.users import User
 from devices.config.config import Config
 from devices.celery_tasks.tasks import try_execure_rule, try_notify_rule
-from devices.queries.devices import DeviceQRS
 from devices.enums.rules import DiscreteActuatorsType, DiscreteStates, RulesPossibleState
 from devices.models.rules import Rule, Rules
 from devices.models.intervals import Interval
@@ -14,8 +18,40 @@ import uuid
 class RulesCMD:
 
     @staticmethod
-    async def analyse_and_enqueue() -> None:
-        pass
+    async def set_rule_state(rule_id: str, rule_state: str, user: User) -> None:
+        COMPLETED_STATES = [
+            RulesPossibleState.COMPLETED,
+            RulesPossibleState.ERROR,
+            RulesPossibleState.CANCELED,
+        ]
+
+        rule = await RulesQRS.set_rule_state(rule_id, rule_state)
+        active_interval_rules = await RulesQRS.get_rules_by_interval_id(
+            rule.interval_id, only_active=True)
+        active_interval_rules = active_interval_rules.__root__
+
+        if rule_state == RulesPossibleState.IN_PROGRESS:
+            logger.info("Rule is in progress. Updating interval to in_progres")
+            return await IntervalsQRS.set_interval_state(rule.interval_id, IntervalPossibleState.IN_PROGRESS, user)
+        elif len(active_interval_rules) > 0 and rule_state in COMPLETED_STATES:
+            logger.info("Rule completed. More rules left to execute. Interval state set to in_progress")
+            return await IntervalsQRS.set_interval_state(rule.interval_id, IntervalPossibleState.COMPLETED, user)
+        elif len(active_interval_rules) == 0 and rule_state in COMPLETED_STATES:
+            logger.info("Rule completed. No more rules left to execute. Interval state set to completed")
+            all_error = all(r.state == RulesPossibleState.ERROR for r in active_interval_rules) 
+            all_canceled = all(r.state == RulesPossibleState.CANCELED for r in active_interval_rules) 
+
+            if all_error:
+                logger.info("Updating interval to error")
+                return await IntervalsQRS.set_interval_state(rule.interval_id, IntervalPossibleState.ERROR, user)
+            elif all_canceled:
+                logger.info("Updating interval to canceled")
+                return await IntervalsQRS.set_interval_state(rule.interval_id, IntervalPossibleState.CANCELED, user)
+            else:
+                logger.info("Updating interval to completed")
+                return await IntervalsQRS.set_interval_state(rule.interval_id, IntervalPossibleState.COMPLETED, user)
+
+        raise Exception("Error during updating rule and interval state")
 
     @staticmethod
     async def enqueue_notify(rule: Rule) -> None:

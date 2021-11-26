@@ -4,7 +4,8 @@ from devices.commands.rules import RulesCMD
 from devices.queries.rules import RulesQRS
 from devices.queries.intervals import IntervalsQRS
 from fastapi import APIRouter, Depends
-from devices.dependencies import get_current_active_user, get_logger
+from devices.dependencies import get_current_active_user
+from devices.service_providers.device_logger import logger
 
 router = APIRouter(
     prefix="/rules",
@@ -16,10 +17,6 @@ router = APIRouter(
 @router.post("", name="Create set of rules")
 async def plan(
     components_rules: RulesComponentsList,
-    RulesCMD=Depends(RulesCMD),
-    RulesQRS=Depends(RulesQRS),
-    IntervalsQRS=Depends(IntervalsQRS),
-    logger=Depends(get_logger),
     current_user: User = Depends(get_current_active_user),
 ):
     """In order to keep device status"""
@@ -41,8 +38,6 @@ async def plan(
 @router.get("/{rule_id}")
 async def get_rule_by_id(
     rule_id: str,
-    RulesQRS=Depends(RulesQRS),
-    logger=Depends(get_logger),
 ):
     return await RulesQRS.get_rule(rule_id)
 
@@ -51,7 +46,7 @@ async def get_rule_by_id(
 async def change_rule_state(
     rule_id: str,
     rule_state: RuleState,
-    RulesQRS=Depends(RulesQRS),
+    current_user: User = Depends(get_current_active_user),
 ):
-    await RulesQRS.set_rule_state(rule_id, rule_state.expected_state)
+    await RulesCMD.set_rule_state(rule_id, rule_state.expected_state, current_user)
     return await RulesQRS.get_rule(rule_id)

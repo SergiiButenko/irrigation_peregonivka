@@ -32,4 +32,4 @@ async def get_rules_forecast(
     current_user: User = Depends(get_current_active_user),
 ):
     """Get latest updates on weather"""
-    return await IntervalsQRS.get_next_irrigation_rule(current_user.id)
+    return await IntervalsQRS.get_next_irrigation_rule(current_user)

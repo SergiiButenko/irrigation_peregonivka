@@ -1,5 +1,3 @@
-from devices.service_providers.device_logger import logger
-from devices.libraries.device_library.devices.base_class_device import Device
 from devices.libraries.events_library.cesspoll_relay_sensor1 import CesspollRelaySensor1
 from devices.libraries.events_library.irrigation_relay1 import IrrigationRelay1
 
@@ -18,8 +16,8 @@ class EventFactory:
     }
 
     @classmethod
-    def get(cls, device: Device, component_id: str, event: str):
+    def get(cls, device_id: str, component_id: str, event: str):
         try:
-            return getattr(cls.EVENTS[device.id][component_id], event)
+            return getattr(cls.EVENTS[device_id][component_id], event)
         except KeyError:
-            return getattr(device.components[component_id], event)
+            return None

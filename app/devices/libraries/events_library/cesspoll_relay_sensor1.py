@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from devices.models.devices import DeviceSql
 from devices.service_providers.telegram_bot import telegram_bot
 from devices.messages.TelegramMessages import TelegramMessages
 from devices.service_providers.device_logger import logger
@@ -10,9 +11,9 @@ class CesspollRelaySensor1:
     class WaterLevel:
         
         @staticmethod
-        async def analyse(device, sensors_id, *args, **kwargs):
+        async def analyse(device: DeviceSql, component_id: int):
             telegram_user = await DeviceQRS.get_linked_telegram_user(
-                device.device_id, sensors_id
+                component_id
             )
 
             sorting = [("date", "DESC")]
@@ -22,7 +23,7 @@ class CesspollRelaySensor1:
             }
 
             data = await SensorQRS.get_sensor_values_by_id(
-                device.device_id, sensors_id, filter, sorting
+                component_id, filter, sorting
             )
 
             if data is None:

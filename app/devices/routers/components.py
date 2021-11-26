@@ -1,3 +1,4 @@
+from devices.commands.intervals import IntervalsCMD
 from devices.models.users import User
 from devices.queries.intervals import IntervalsQRS
 from fastapi import APIRouter, Depends
@@ -13,7 +14,7 @@ from devices.enums.intervals import IntervalPossibleState
 
 router = APIRouter(
     prefix="/components/{component_id}",
-    tags=["actuator"],
+    tags=["components"],
     dependencies=[Depends(get_current_active_user)],
 )
 
@@ -34,9 +35,10 @@ async def get_component_state(
     current_user: User = Depends(get_current_active_user),
 ):
     """Get state of component."""
+    state = await ComponentsQRS.get_expected_component_state(component_id)
     return {
-        'state': await ComponentsQRS.get_expected_component_state(component_id),
-        'interval': await IntervalsQRS.get_active_interval_by_component_id(component_id, current_user.id)
+        'expected_state': state.expected_state,
+        'interval': await IntervalsQRS.get_active_interval_by_component_id(component_id, current_user)
     }
 
 
@@ -49,11 +51,12 @@ async def set_component_state(
 ):
     """Set state of actuator."""
     if state.current_interval_id is not None:
-        await IntervalsQRS.set_interval_state(
+        await IntervalsCMD.cancel_interval(
             state.current_interval_id,
             IntervalPossibleState.CANCELED,
-            current_user.id)
-    
+            current_user
+        )
+
     await events_cmds.try_execute(component_id, "set_state", state.expected_state)
     return {"message": "Change State event executed"}
 

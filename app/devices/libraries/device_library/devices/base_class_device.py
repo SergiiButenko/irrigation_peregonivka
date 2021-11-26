@@ -16,6 +16,7 @@ class Device:
         self.id = id
         self.components = {}
         self.device = {}
+        self._DUMMY_STATE = None
 
     @staticmethod
     async def init(id: str):
@@ -24,12 +25,15 @@ class Device:
         return await _device._init_components()
 
     async def _set_actuator_state(self, actuator_id: int, state: str) -> dict:
+        self._DUMMY_STATE = state
+        return self._DUMMY_STATE
         await HttpxClient.post_with_raise(
             url=f"{self.device.last_known_ip}/actuators/{actuator_id}",
             json={'expected_state': state}
         )
 
     async def _get_actuator_state(self, actuator_id: int) -> dict:
+        return self._DUMMY_STATE
         await HttpxClient.get_with_raise(
             url=f"{self.device.last_known_ip}/actuators/{actuator_id}"
         )

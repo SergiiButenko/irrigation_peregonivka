@@ -2,7 +2,6 @@ from fastapi import FastAPI
 
 from devices.service_providers.sql_db import psql_db
 from devices.routers import (
-    devices,
     components,
     telegram,
     rules,
@@ -10,7 +9,11 @@ from devices.routers import (
     groups,
     dashboard,
     intervals
-    )
+)
+
+from devices.routers.admin import (
+    devices
+)
 
 app = FastAPI(
     title="Irrigation Device Discovery API",

@@ -12,7 +12,7 @@ class RuleState(BaseModel):
 
 
 class IntervalState(RuleState):
-    pass
+    expected_state: str
 
 
 class ComponentExpectedState(BaseModel):

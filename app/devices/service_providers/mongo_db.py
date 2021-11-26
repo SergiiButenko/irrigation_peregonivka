@@ -43,17 +43,17 @@ class Mongo:
 
         return data
 
-    async def register_sensor_data(self, device_id, sensor_id, data):
+    async def register_sensor_data(self, component_id, data):
         await self._insert_document(
             self.sensors_collection,
-            SensorValueNSQL(device_id=device_id, sensor_id=sensor_id, data=data),
+            SensorValueNSQL(component_id=component_id, data=data),
         )
 
     async def get_latest_sensor_data(
-        self, device_id: str, sensor_id: str, filter: dict = None, sorting: list = None
+        self, component_id: str, filter: dict = None, sorting: list = None
     ):
 
-        query = {"device_id": device_id, "sensor_id": sensor_id, **filter}
+        query = {"component_id": component_id, **filter}
         return await self._find_document(
             self.sensors_collection,
             query,

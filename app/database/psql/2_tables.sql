@@ -8,8 +8,11 @@ CREATE TABLE public.users(
     hashed_password TEXT NOT NULL,
     email TEXT,
     full_name TEXT,
+    is_admin BOOL DEFAULT false,
     disabled BOOL DEFAULT false
 );
+
+
 
 -- device SECTION 
 CREATE TABLE public.devices(
