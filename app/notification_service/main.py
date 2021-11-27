@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_socketio import SocketIO, emit
 import logging
+import eventlet
+eventlet.monkey_patch()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -12,10 +14,9 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(
         app,
         async_mode="eventlet",
-        logger=True, engineio_logger=True
+        logger=True, engineio_logger=True,
+        message_queue='redis://'
     )
-# logging.getLogger("socketio").setLevel(logging.ERROR)
-# logging.getLogger("engineio").setLevel(logging.ERROR)
 
 
 @socketio.on('connect')
@@ -28,11 +29,7 @@ def test_disconnect():
     print('Client disconnected')
 
 
-@socketio.on("my event")
-def handle_my_custom_event(json):
-    print("received json: " + str(json))
-
-
 @app.route("/notify", methods=["POST"])
 def notify():
-    pass
+    emit('component_update', {'test': 'test'})
+    return 'ok'

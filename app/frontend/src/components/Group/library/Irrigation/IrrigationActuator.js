@@ -157,7 +157,7 @@ export default class IrrigationActuator extends React.Component {
         }
         
         const actuator = groups[groupId].components[componentId];
-        const isON = devices.components[componentId].state == 1;
+        const isON = devices.components[componentId].state.expected_state == 1;
         const minutes = actuator.settings.minutes;
         const quantity = actuator.settings.quantity;
         
