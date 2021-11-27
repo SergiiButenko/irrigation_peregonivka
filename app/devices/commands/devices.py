@@ -51,13 +51,3 @@ class DeviceCMD:
         _deviceSQL = await DeviceQRS.get_device_by_component_id(component_id)
         _device = DeviceFactory.get(_deviceSQL.type, _deviceSQL.version)
         return await _device.init(_deviceSQL.id)
-
-    @staticmethod
-    async def get_component_state(device_id: str, component_id: int) -> str:
-        device = await DeviceCMD.get_device_by_id(device_id)
-        return await device.components[component_id].get_state()
-
-    @staticmethod
-    async def set_component_state(device_id: str, component_id: int, state) -> str:
-        device = await DeviceCMD.get_device_by_id(device_id)
-        return await device.components[component_id].set_state(state)

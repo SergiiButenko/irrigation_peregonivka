@@ -1,6 +1,7 @@
 from fastapi import BackgroundTasks
 from devices.libraries.events_library.event_factory import EventFactory
 from devices.commands.devices import DeviceCMD
+from devices.service_providers.device_logger import logger
 
 
 class EventsCMD:
@@ -25,6 +26,6 @@ class EventsCMD:
 
         # otherwise execute default event
         self.background_tasks.add_task(
-            getattr(device.components[component_id], in_event),
+            getattr(device.components[str(component_id)], in_event),
             *args, **kwargs
         )

@@ -8,7 +8,9 @@ export const apiUri = {
 			: ''),
 	COMPONENT_STATE: (componentId) => `api/v1/components/${componentId}/state`,
 	COMPONENTS: (componentId) => `api/v1/components/${componentId}`,
-    RULES: () => `api/v1/rules`,
+    INTERVALS: (intervalId) => 'api/v1/intervals' + (intervalId
+		? `/${intervalId}`
+		: ''),
     AUTH: () => 'api/v1/auth/login',
 	LOGOUT: () => 'api/v1/auth/logout',
 	USER: () => 'api/v1/auth/me',

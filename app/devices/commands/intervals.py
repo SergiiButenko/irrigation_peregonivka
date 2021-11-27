@@ -13,7 +13,7 @@ class IntervalsCMD:
             IntervalPossibleState.CANCELED,
             current_user)
 
-        rules = await RulesQRS.get_rules_by_interval_id(interval_id)
+        rules = await RulesQRS.get_rules_by_interval_id(interval_id, only_active=True) 
 
         if rules is not None:
             for r in rules.__root__:

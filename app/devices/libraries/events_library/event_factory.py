@@ -18,6 +18,6 @@ class EventFactory:
     @classmethod
     def get(cls, device_id: str, component_id: str, event: str):
         try:
-            return getattr(cls.EVENTS[device_id][component_id], event)
+            return getattr(cls.EVENTS[device_id][str(component_id)], event)
         except KeyError:
             return None

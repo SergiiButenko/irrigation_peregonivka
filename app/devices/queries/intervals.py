@@ -53,7 +53,6 @@ class IntervalsQRS:
         values = {
             "component_id": component_id,
             "rule_state": RulesPossibleState.NEW,
-            #"interval_state": IntervalPossibleState.IN_PROGRESS,
         }
 
         if user.is_admin is False:

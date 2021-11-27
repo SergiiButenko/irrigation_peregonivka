@@ -23,8 +23,7 @@ export const prepareComponentsTaskObject = (group, minutes) => {
             component_id: component.id,
             rules: {
                 time: component.settings.minutes,
-                intervals: component.settings.quantity,
-                time_wait: component.settings.minutes * 1.5
+                intervals: component.settings.quantity
             }
         }   
         acc.push(v);

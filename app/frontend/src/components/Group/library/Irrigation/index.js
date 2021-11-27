@@ -11,7 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
 import Zoom from '@material-ui/core/Zoom';
 
-import { postDeviceTasks } from '../../../../actions/groups';
+import { createIntervals } from '../../../../actions/groups';
 import PageSpinner from '../../../shared/PageSpinner';
 import LoadingFailed from '../../../shared/LoadingFailed';
 import { components_mapping } from '../../../../constants/components_mapping';
@@ -37,7 +37,7 @@ const mapStateToProps = (state) => {
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps, { postDeviceTasks })
+@connect(mapStateToProps, { createIntervals })
 export default class IrrigationMaster extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
@@ -47,7 +47,7 @@ export default class IrrigationMaster extends React.Component {
     };
 
     render() {
-        const { classes, loading, groupFetchError, groups, groupId, match: { params }, postDeviceTasks } = this.props;
+        const { classes, loading, groupFetchError, groups, groupId, match: { params }, createIntervals } = this.props;
 
         const transitionDuration = {
             enter: 100,
@@ -97,7 +97,7 @@ export default class IrrigationMaster extends React.Component {
                     variant="fab"
                     className={classes.fab}
                     color="primary"
-                    onClick={() => postDeviceTasks(group.id, 0)}
+                    onClick={() => createIntervals(group.id, 0)}
                     >
                         <NavigationIcon />
                     </Button>

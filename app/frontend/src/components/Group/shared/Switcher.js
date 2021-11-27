@@ -16,15 +16,11 @@ import PageSpinner from '../../shared/PageSpinner';
 import LoadingFailed from '../../shared/LoadingFailed';
 
 import connect from 'react-redux/es/connect/connect';
-import {
-    changeSettings
-} from '../../../actions/groups';
 
-import { initComponent, setComponentState } from '../../../actions/device'
+import { initComponent, createIntervals, deleteInterval } from '../../../actions/device';
 import { getDevices } from '../../../selectors/devices';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import { getGroups } from '../../../selectors/groups';
 
 
 const styles = theme => ({
@@ -57,30 +53,24 @@ const styles = theme => ({
 
 
 const mapStateToProps = (state) => {
-    return {'groups': getGroups(state),
-            'devices': getDevices(state)};
+    return getDevices(state);
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps, { changeSettings, initComponent, setComponentState })
+@connect(mapStateToProps, { initComponent, createIntervals, deleteInterval })
 export default class Switcher extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        groups: PropTypes.object.isRequired,
         devices: PropTypes.object.isRequired,
         componentId: PropTypes.string.isRequired,
-        groupId: PropTypes.string.isRequired,
     };
-
-    componentDidMount() {
-        this.props.initComponent(this.props.componentId)
-    }
 
     getMinutes = () => {
-        const actuator = this.props.groups.groups[this.props.groupId].components[this.props.componentId];
+        console.log(this.props.devices);
+        const actuator = this.props.devices.components[this.props.componentId];
         return actuator.settings.minutes;
     };
-    
+
     calculate_min = () => {
         const minutes = this.getMinutes();
         return Math.round(minutes * 0.25);
@@ -103,28 +93,52 @@ export default class Switcher extends React.Component {
 
     state = {
         collapsed: false,
-        min_minutes: this.calculate_min(),
-        max_minutes: this.calculate_max(),
-        step_minutes: this.calculate_step(),
+        min_minutes: null,
+        max_minutes: null,
+        step_minutes: null,
+        component: null,
+        value_minutes: null
     };
+
+    componentDidMount() {
+        this.props.initComponent(this.props.componentId);
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.loading == false) {
+            this.setState({ min_minutes: this.calculate_min() });
+            this.setState({ max_minutes: this.calculate_max() });
+            this.setState({ step_minutes: this.calculate_step() });
+            this.setState({ component: this.props.devices.components[this.props.componentId] });
+            this.setState(state => ({ value_minutes: state.component.settings.minutes }));
+        }
+    }
 
     handleCollapse = () => {
         this.setState(state => ({ collapsed: !state.collapsed }));
     };
 
     handleChangeMinutes = (event, value_minutes) => {
-        this.props.changeSettings(
-            this.props.groupId,
-            this.props.componentId,
-            'minutes',
-            value_minutes
-            );
+        this.setState({ value_minutes });
+    };
+
+    toggleComponentState = () => {
+        const interval = this.state.component.state.interval;
+        
+        if (interval == null) {
+            return this.props.createIntervals(this.state.component, this.state.value_minutes);
+        }
+        
+        this.props.deleteInterval(
+            this.state.component.id,
+            interval.id,
+            this.state.component.default_state
+            )
     };
 
     render() {
-        const { componentId, groupId, groups: { groups }, classes, setComponentState, 
-                devices: { devices, loading, deviceFetchError}  } = this.props;
-        const { collapsed, min_minutes, max_minutes, step_minutes } = this.state;
+        const { classes, loading, deviceFetchError } = this.props;
+        const { collapsed, min_minutes, max_minutes, step_minutes, value_minutes, component } = this.state;
 
         if (loading) {
             return <PageSpinner />;
@@ -133,13 +147,9 @@ export default class Switcher extends React.Component {
         if (deviceFetchError) {
             return <LoadingFailed errorText={deviceFetchError} />;
         }
-        
-        const actuator = groups[groupId].components[componentId];
-        
-        const isON = parseInt(devices.components[componentId].state.state == 1);
-        const interval = devices.components[componentId].state.interval;
-        
-        const minutes = actuator.settings.minutes;
+
+        const isON = component.state.expected_state == 1;
+
         return (
             <Card className={classNames(classes.card, isON && classes.cardOn)}>
                 <CardContent className={classes.content}>
@@ -147,16 +157,16 @@ export default class Switcher extends React.Component {
                         container
                         direction="row"
                         spacing={16}
-                        >
+                    >
                         <Grid item>
                             <Typography gutterBottom variant="h5" component="h2">
-                                {actuator.name}
+                                {component.name}
                             </Typography>
                         </Grid>
                     </Grid>
                     <Grid item container direction="row" spacing={16} onClick={this.handleCollapse} justify="flex-end">
                         <Grid item>
-                            <Typography component="p">Включити на {minutes} хв</Typography>
+                            <Typography component="p">Включити на {value_minutes} хв</Typography>
                         </Grid>
                         <Grid item xs>
                             <ExpandMoreIcon
@@ -172,7 +182,7 @@ export default class Switcher extends React.Component {
                             <Grid item xs={10}>
                                 <Slider
                                     classes={{ container: classes.slider }}
-                                    value={minutes}
+                                    value={value_minutes}
                                     min={min_minutes}
                                     max={max_minutes}
                                     step={step_minutes}
@@ -188,7 +198,7 @@ export default class Switcher extends React.Component {
                     <Button
                         color="primary"
                         className={classes.button}
-                        onClick={() => setComponentState(componentId, !isON, interval)}
+                        onClick={this.toggleComponentState}
                     >
                         {isON ? 'Виключити' : 'Включити'}
                     </Button>

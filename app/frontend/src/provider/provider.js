@@ -109,6 +109,13 @@ class SmartSystemApi {
         );
     }
 
+    async setDeviceComponentState(componentId, options = {}) {
+        return this.provider.put(
+            apiUri.COMPONENT_STATE(componentId),
+            options,
+        );
+    }
+
     async getDeviceComponent(componentId, options = {}) {
         return this.provider.get(
             apiUri.COMPONENTS(componentId),
@@ -117,17 +124,30 @@ class SmartSystemApi {
     }
 
 
-    async postDeviceTasks(body, options = {}) {
+    async createIntervals(body, options = {}) {
         options.headers = {
             ...options.headers, "Content-Type": "application/json; charset=utf-8"
         };
         
         return this.provider.post(
-            apiUri.RULES(),
+            apiUri.INTERVALS(),
             JSON.stringify(body),
             options,
         );
-    }
+    };
+
+    async deleteInterval(intervalId, body, options = {}) {
+        options.headers = {
+            ...options.headers, "Content-Type": "application/json; charset=utf-8"
+        };
+
+        return this.provider.delete(
+            apiUri.INTERVALS(intervalId),
+            JSON.stringify(body),
+            options,
+        );
+    };
+
 
     async getGroup(options = {}) {
         return this.provider.get(

@@ -21,9 +21,6 @@ const actions = createActions(
 
 export const { devices, entity } = actions;
 
-const deviceKey = 'devices';
-const stateKey = 'state';
-const tasksKey = 'tasks';
 
 export const fetchDevices = () => {
     return async dispatch => {
@@ -31,11 +28,11 @@ export const fetchDevices = () => {
 
         try {
             let devices = await smartSystemApi.getDevice();
-            // for (let _device in devices[deviceKey]) {
+            // for (let _device in devices['devices]) {
             //     _device.lines = arrayToObj(devices.lines);
             // }
 
-            devices = arrayToObj(devices[deviceKey]);
+            devices = arrayToObj(devices['devices']);
 
             dispatch(entity.devices.updateBatch(devices));
         }
@@ -46,51 +43,6 @@ export const fetchDevices = () => {
     };
 };
 
-
-export const fetchDeviceById = (deviceId) => {
-    return async dispatch => {
-        dispatch(devices.loading(true));
-
-        try {
-
-            const _devices = await smartSystemApi.getDeviceById(deviceId);
-            let device = _devices[deviceKey][0];
-            // device.lines = arrayToObj(device.lines);
-
-            dispatch(entity.devices.set(device));
-        }
-        catch (e) {
-            dispatch(devices.failure(e));
-        }
-        dispatch(devices.loading(false));
-    };
-};
-
-export const fetchDeviceTasks = (deviceId) => {
-    return async dispatch => {
-        dispatch(devices.loading(true));
-
-        try {
-
-            const _devices = await smartSystemApi.getDeviceLatestTask(deviceId);
-            const tasks = _devices[tasksKey];
-
-            for (task in tasks) {
-                dispatch(entity.devices.updateIn(
-                    [
-                        deviceId,
-                        linesKey,
-                        task.line_id,
-                        tasksKey
-                    ], task.list));
-            }
-        }
-        catch (e) {
-            dispatch(devices.failure(e));
-        }
-        dispatch(devices.loading(false));
-    };
-};
 
 export const initComponent = (componentId) => {
     return async (dispatch) => {
@@ -108,7 +60,7 @@ export const initComponent = (componentId) => {
                 [
                     'components',
                     componentId,
-                    stateKey
+                    'state'
                 ], state));
         }
         catch (e) {
@@ -119,38 +71,57 @@ export const initComponent = (componentId) => {
 };
 
 
-export const setComponentState = (componentId, state, interval) => {
-    return async (dispatch, getState) => {
+export const createIntervals = (component) => {
+    return async (dispatch) => {
         dispatch(devices.loading(true));
         try {
-            const devices = getState().entity.devices.toJS();
-            const component = devices.components[componentId];
-            
-            let dataToSend = {
+            const dataToSend = {
                 components: [{
                     component_id: component.id,
                     rules: {
                         time: component.settings.minutes,
-                        intervals: component.settings.quantity,
-                        time_wait: component.settings.minutes * 1.5
+                        intervals: component.settings.quantity
                     }
-                }],
+                    }],
                 minutes_delay: 0
             };
-            
-            await smartSystemApi.postDeviceTasks(dataToSend);
+        
+            await smartSystemApi.createIntervals(dataToSend);
+
+            const state = await smartSystemApi.getDeviceComponentState(component.id);
+            dispatch(entity.devices.updateIn(
+                [
+                    'components',
+                    component.id,
+                    'state'
+                ], state));
+        }
+        catch (e) {
+            dispatch(devices.failure(e));
+        }
+        dispatch(devices.loading(false));
+    };
+};
+
+export const deleteInterval = (componentId, intervalId, expected_state) => {
+    return async (dispatch) => {
+        dispatch(devices.loading(true));
+        
+        try {
+            await smartSystemApi.deleteInterval(intervalId, {expected_state});
 
             const state = await smartSystemApi.getDeviceComponentState(componentId);
             dispatch(entity.devices.updateIn(
                 [
                     'components',
                     componentId,
-                    stateKey
+                    'state'
                 ], state));
         }
         catch (e) {
             dispatch(devices.failure(e));
         }
+        
         dispatch(devices.loading(false));
     };
 };

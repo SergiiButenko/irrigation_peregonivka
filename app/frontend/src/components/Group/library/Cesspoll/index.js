@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
-import { postDeviceTasks } from '../../../../actions/groups';
 import PageSpinner from '../../../shared/PageSpinner';
 import LoadingFailed from '../../../shared/LoadingFailed';
 import { components_mapping } from '../../../../constants/components_mapping';
@@ -30,7 +29,7 @@ const mapStateToProps = (state) => {
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps, { postDeviceTasks })
+@connect(mapStateToProps)
 export default class CesspoolMaster extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
@@ -39,7 +38,7 @@ export default class CesspoolMaster extends React.Component {
     };
 
     render() {
-        const { classes, loading, groupFetchError, groups, groupId, match: { params }, postDeviceTasks } = this.props;
+        const { classes, loading, groupFetchError, groups, groupId } = this.props;
 
         if (loading) {
             return <PageSpinner />;
@@ -65,7 +64,6 @@ export default class CesspoolMaster extends React.Component {
                                 <Grid item xs={12} key={component.id} >
                                     <Element
                                         componentId={component.id}
-                                        groupId={group.id}
                                     />
                                 </Grid>
                             );

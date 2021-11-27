@@ -1,38 +1,15 @@
 from devices.models.users import User
-from devices.schemas.schema import RulesComponentsList, RuleState
+from devices.schemas.schema import RuleState
 from devices.commands.rules import RulesCMD
 from devices.queries.rules import RulesQRS
-from devices.queries.intervals import IntervalsQRS
 from fastapi import APIRouter, Depends
 from devices.dependencies import get_current_active_user
-from devices.service_providers.device_logger import logger
 
 router = APIRouter(
     prefix="/rules",
     tags=["rules"],
     dependencies=[Depends(get_current_active_user)]
 )
-
-
-@router.post("", name="Create set of rules")
-async def plan(
-    components_rules: RulesComponentsList,
-    current_user: User = Depends(get_current_active_user),
-):
-    """In order to keep device status"""
-    logger.info(f"Trying to plan '{components_rules}'")
-    intervals, rules = await RulesCMD.form_rules(components_rules, current_user)
-    res_rules = []
-    
-    for _interval in intervals:
-        await IntervalsQRS.create_interval(_interval)
-
-    for _rule in rules:
-        rule = await RulesQRS.create_rule(_rule)
-        await RulesCMD.enqueue_notify(rule)
-        res_rules.append(rule.id)
-
-    return {'rules': res_rules}
 
 
 @router.get("/{rule_id}")

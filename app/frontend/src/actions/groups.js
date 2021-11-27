@@ -108,7 +108,7 @@ export const changeSettings = (groupId, componentId, key, val) => {
 };
 
 
-export const postDeviceTasks = (groupId, minutes) => {
+export const createIntervals = (groupId, minutes) => {
     return async (dispatch, getState) => {
         dispatch(groups.loading(true));
 
@@ -117,7 +117,7 @@ export const postDeviceTasks = (groupId, minutes) => {
             const group = groups[groupId];
             
             const dataToSend = prepareComponentsTaskObject(group, minutes);
-            await smartSystemApi.postDeviceTasks(dataToSend);
+            await smartSystemApi.createIntervals(dataToSend);
 
             Object.keys(group.components).map((componentId, index) => {
                 if (group.components[componentId].selected) {

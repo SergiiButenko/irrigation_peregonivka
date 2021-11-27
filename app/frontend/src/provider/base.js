@@ -1,10 +1,3 @@
-// const DEFAULT_POST_OPTIONS = {
-//     'Content-Type': 'application/json',
-//     'Access-Control-Allow-Origin': '*',
-//     "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
-//     "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
-// };
-
 import {wrapFunctionWithMiddlewares} from './middlewares';
 
 const DEFAULT_READER = d => d;
@@ -74,7 +67,6 @@ class _ProviderBase {
             body,
             method: 'POST',
             headers: {
-                // ...DEFAULT_POST_OPTIONS,
                 ...options.headers,
             }
         };
@@ -87,7 +79,6 @@ class _ProviderBase {
             body,
             method: 'PUT',
             headers: {
-                // ...DEFAULT_POST_OPTIONS,
                 ...options.headers,
             }
         };
@@ -95,8 +86,16 @@ class _ProviderBase {
         return this.doRequest(url, options, reader);
     }
 
-    async delete(url, options = {}, reader = DEFAULT_READER) {
-        options.method = 'DELETE';
+    async delete(url, body = {}, options = {}, reader = DEFAULT_READER) {
+        options = {
+            ...options,
+            body,
+            method: 'DELETE',
+            headers: {
+                ...options.headers,
+            }
+        };
+
         return this.doRequest(url, options, reader);
     }
 
