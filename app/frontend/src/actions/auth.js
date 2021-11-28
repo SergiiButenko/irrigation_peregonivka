@@ -1,7 +1,7 @@
 import { createActions } from 'redux-actions';
 
 import { smartSystemApi } from '../provider';
-import { getTokensIntoLocalStorage, isTokenExpired, setTokensIntoLocalStorage } from '../helpers/auth.helper';
+import { getTokensIntoLocalStorage, isTokenExpired, parseJwt, setTokensIntoLocalStorage } from '../helpers/auth.helper';
 
 const actions = {
     AUTH: {

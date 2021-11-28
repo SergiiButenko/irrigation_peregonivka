@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
+from devices.clients.notification_service import NotificationServiceClient
 from devices.models.devices import DeviceSql
-from devices.service_providers.telegram_bot import telegram_bot
 from devices.messages.TelegramMessages import TelegramMessages
 from devices.service_providers.device_logger import logger
 from devices.queries.devices import DeviceQRS
@@ -15,6 +15,7 @@ class CesspollRelaySensor1:
             telegram_user = await DeviceQRS.get_linked_telegram_user(
                 component_id
             )
+            notification_client = NotificationServiceClient()
 
             sorting = [("date", "DESC")]
             minutes_from_now = 60
@@ -30,7 +31,7 @@ class CesspollRelaySensor1:
                 logger.warn(
                     "No data to work with. Possibly sensors is out of duty. Please check"
                 )
-                telegram_bot.send_message(
+                notification_client.send_telegram_message(
                     telegram_user.id,
                     TelegramMessages.SENSOR_OUT_OF_SERVICE.format(device.device_id),
                 )
@@ -46,19 +47,19 @@ class CesspollRelaySensor1:
             prev_level = data[1].data["level"]
             if curr_level > prev_level:
                 logger.info("Cesspoll has became full. sending notifications")
-                telegram_bot.send_message(
+                notification_client.send_telegram_message(
                     telegram_user.id,
                     TelegramMessages.WATER_LEVEL_BECAME_FULL,
                 )
             elif curr_level < prev_level:
                 logger.info("Cesspoll has became empty. sending notifications")
-                telegram_bot.send_message(
+                notification_client.send_telegram_message(
                     telegram_user.id,
                     TelegramMessages.WATER_LEVEL_BECAME_EMPTY,
                 )
             elif curr_level == 1 and curr_level == prev_level:
                 logger.info("Cesspoll is still full. sending notifications")
-                telegram_bot.send_message(
+                notification_client.send_telegram_message(
                     telegram_user.id,
                     TelegramMessages.WATER_LEVEL_FULL,
                 )
@@ -76,6 +77,7 @@ class CesspollRelaySensor1:
             telegram_user = await DeviceQRS.get_linked_telegram_user(
                 device.device_id, sensors_id
             )
+            notification_client = NotificationServiceClient()
 
             sorting = [("date", "DESC")]
             minutes_from_now = 60
@@ -91,7 +93,7 @@ class CesspollRelaySensor1:
                 logger.warn(
                     "No data to work with. Possibly sensors is out of duty. Please check"
                 )
-                telegram_bot.send_message(
+                notification_client.send_telegram_message(
                     telegram_user.id,
                     TelegramMessages.SENSOR_OUT_OF_SERVICE.format(device.device_id),
                 )
@@ -107,19 +109,19 @@ class CesspollRelaySensor1:
             prev_level = data[1].data["level"]
             if curr_level > prev_level:
                 logger.info("Cesspoll pump has beed turned on. sending notifications")
-                telegram_bot.send_message(
+                notification_client.send_telegram_message(
                     telegram_user.id,
                     TelegramMessages.CESSPOLL_PUMP_TURNED_ON,
                 )
             elif curr_level < prev_level:
                 logger.info("Cesspoll pump has beed turned off. sending notifications")
-                telegram_bot.send_message(
+                notification_client.send_telegram_message(
                     telegram_user.id,
                     TelegramMessages.CESSPOLL_PUMP_TURNED_OFF,
                 )
             elif curr_level == 1 and curr_level == prev_level:
                 logger.info("Cesspoll pump is still on. sending notifications")
-                telegram_bot.send_message(
+                notification_client.send_telegram_message(
                     telegram_user.id,
                     TelegramMessages.CESSPOLL_PUMP_ON,
                 )

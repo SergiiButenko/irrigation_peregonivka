@@ -1,3 +1,4 @@
+from devices.clients.notification_service import NotificationServiceClient
 from devices.service_providers.device_logger import logger
 from devices.messages.TelegramMessages import TelegramMessages
 from asgiref.sync import async_to_sync
@@ -14,6 +15,7 @@ INTERVAL_BLOCKED_STATE = [IntervalPossibleState.CANCELED]
 
 async def execute_rule(rule_id: str) -> None:
     device_client = DevicesClient(Config.SERVICE_USERNAME, Config.SERVICE_PASSWORD)
+    
     await device_client.login()
 
     # Analyse if rule is active
@@ -37,7 +39,8 @@ async def execute_rule(rule_id: str) -> None:
 async def notify_rule(rule_id: str) -> None:
     device_client = DevicesClient(Config.SERVICE_USERNAME, Config.SERVICE_PASSWORD)
     await device_client.login()
-
+    notification_client = NotificationServiceClient()
+    
     # Analyse if rule is active
     rule = await device_client.get_rule(rule_id)
     interval = await device_client.get_interval(str(rule.interval_id))
@@ -66,7 +69,7 @@ async def notify_rule(rule_id: str) -> None:
         elif component.purpose == "switcher":
             message = TelegramMessages.LIGHTING_PLANNED.format(component.name, minutes)
 
-    await device_client.send_message(message)
+    await notification_client.send_telegram_message(message)
 
 
 @celery_app.task()
