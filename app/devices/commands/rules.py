@@ -50,21 +50,25 @@ class RulesCMD:
             logger.info(
                 "Rule completed. No more rules left to execute. Interval state set to completed"
             )
-            interval_rules = await RulesQRS.get_rules_by_interval_id(
-                rule.interval_id
-            )
+            interval_rules = await RulesQRS.get_rules_by_interval_id(rule.interval_id)
             interval_rules = interval_rules.__root__
             logger.info(interval_rules)
 
             all_error = all(r.state == RulesPossibleState.ERROR for r in interval_rules)
-            all_canceled = all(r.state == RulesPossibleState.CANCELED for r in interval_rules)
+            all_canceled = all(
+                r.state == RulesPossibleState.CANCELED for r in interval_rules
+            )
 
             if all_error:
                 logger.info("Updating interval to error")
-                return await IntervalsQRS.set_interval_state(rule.interval_id, IntervalPossibleState.ERROR, user)
+                return await IntervalsQRS.set_interval_state(
+                    rule.interval_id, IntervalPossibleState.ERROR, user
+                )
             elif all_canceled:
                 logger.info("Updating interval to canceled")
-                return await IntervalsQRS.set_interval_state(rule.interval_id, IntervalPossibleState.CANCELED, user)
+                return await IntervalsQRS.set_interval_state(
+                    rule.interval_id, IntervalPossibleState.CANCELED, user
+                )
             else:
                 logger.info("Updating interval to completed")
                 return await IntervalsQRS.set_interval_state(

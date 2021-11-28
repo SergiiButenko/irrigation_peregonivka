@@ -17,7 +17,7 @@ class DevicesClient:
 
         res = await HttpxClient.post_with_raise(
             url=f"{Config.DEVICES_URL}/auth/login",
-            data={"username": username, "password": password}
+            data={"username": username, "password": password},
         )
 
         token = res.json()["access_token"]
@@ -25,8 +25,7 @@ class DevicesClient:
 
     async def get_rule(self, rule_id):
         _rule = await HttpxClient.get_with_raise(
-            url=f"{Config.DEVICES_URL}/rules/{rule_id}",
-            headers=self.headers
+            url=f"{Config.DEVICES_URL}/rules/{rule_id}", headers=self.headers
         )
 
         return Rule.parse_obj(_rule.json())
@@ -49,8 +48,7 @@ class DevicesClient:
 
     async def get_interval(self, interval_id):
         interval = await HttpxClient.get_with_raise(
-            url=f"{Config.DEVICES_URL}/intervals/{interval_id}",
-            headers=self.headers
+            url=f"{Config.DEVICES_URL}/intervals/{interval_id}", headers=self.headers
         )
 
         return Interval.parse_obj(interval.json())
@@ -59,7 +57,7 @@ class DevicesClient:
         interval = await HttpxClient.put_with_raise(
             url=f"{Config.DEVICES_URL}/intervals/{interval_id}/state",
             json={"expected_state": state},
-            headers=self.headers
+            headers=self.headers,
         )
 
         return Interval.parse_obj(interval.json())
@@ -78,4 +76,3 @@ class DevicesClient:
             json={"message": message},
             headers=self.headers,
         )
-

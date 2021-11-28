@@ -1,23 +1,14 @@
 from fastapi import FastAPI
 
 from devices.service_providers.sql_db import psql_db
-from devices.routers import (
-    components,
-    rules,
-    auth,
-    groups,
-    dashboard,
-    intervals
-)
+from devices.routers import components, rules, auth, groups, dashboard, intervals
 
-from devices.routers.admin import (
-    devices
-)
+from devices.routers.admin import devices
 
 app = FastAPI(
     title="Irrigation Device Discovery API",
     description="The Device Discovery API register and renew IP of devices.",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 

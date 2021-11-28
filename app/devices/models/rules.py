@@ -12,6 +12,7 @@ class Rule(BaseModel):
     execution_time: datetime
     state: str
 
+
 class Rules(BaseModel):
     __root__: List[Rule]
 

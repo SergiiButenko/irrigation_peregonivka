@@ -5,7 +5,5 @@ TIME_TO_RUN_SCHEDULER = str(os.environ["TIME_TO_RUN_SCHEDULER"])
 CITY = os.environ["CITY"]
 HOURS_AFTER_SUNSET = int(os.environ["HOURS_AFTER_SUNSET"])
 USERS = [{"name": "Cottage", "id": os.environ["TELEGRAM_CHAT_ID_COTTAGE"]}]
-SCHEDULER_DEBUG_MODE = bool(
-    int(os.environ.get("SCHEDULER_DEBUG_MODE", 0))
-    )
+SCHEDULER_DEBUG_MODE = bool(int(os.environ.get("SCHEDULER_DEBUG_MODE", 0)))
 WEBHOOK_URL_BASE = os.environ["WEBHOOK_URL_BASE"]

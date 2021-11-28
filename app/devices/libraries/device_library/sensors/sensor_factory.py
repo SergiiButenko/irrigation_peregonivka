@@ -9,7 +9,10 @@ class SensorFactory:
     @classmethod
     def get(cls, type: str, version: str) -> Sensor:
         for ac in cls.SENSORS:
-            if ac.__type__.lower() == type.lower() and ac.__version__.lower() == version.lower():
+            if (
+                ac.__type__.lower() == type.lower()
+                and ac.__version__.lower() == version.lower()
+            ):
                 return ac
 
         raise LookupError(f"No matching sensor '{type}':'{version}' found in codebase")

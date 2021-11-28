@@ -6,8 +6,8 @@ from devices.queries.devices import DeviceQRS
 from devices.service_providers.httpx_client import HttpxClient
 from devices.service_providers.device_logger import logger
 
-class DeviceCMD:
 
+class DeviceCMD:
     @staticmethod
     async def ping_to_register_device_by_id(device_id: str) -> None:
         device = await DeviceQRS.get_device(device_id)
@@ -17,10 +17,8 @@ class DeviceCMD:
     async def ping_to_register_devices():
         devices = await DeviceQRS.get_all_devices()
         for device in devices:
-            await HttpxClient.post(
-                url="http://" + device.ip + "/register"
-            )
-    
+            await HttpxClient.post(url="http://" + device.ip + "/register")
+
     @staticmethod
     async def get_device_IP_by_id(device_id) -> DeviceSql:
         _device = await DeviceQRS.get_device(device_id)
@@ -29,12 +27,8 @@ class DeviceCMD:
 
         return _device.ip
 
-
     @staticmethod
-    async def send_message_to_device(
-        device_id: str,
-        message: dict
-    ) -> bool:
+    async def send_message_to_device(device_id: str, message: dict) -> bool:
         base_url = DeviceCMD.get_device_IP_by_id(device_id)
         HttpxClient.post(url="http://" + base_url + "/messages", json=message)
 

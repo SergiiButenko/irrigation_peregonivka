@@ -61,10 +61,7 @@ class IntervalsQRS:
 
         sql += order_by
 
-        result = await psql_db.fetch_one(
-            sql,
-            values
-        )
+        result = await psql_db.fetch_one(sql, values)
 
         if result is None:
             return None
@@ -84,9 +81,7 @@ class IntervalsQRS:
             sql += "AND user_id=:user_id"
             values["user_id"] = user.id
 
-        await psql_db.execute(
-            sql, values={"interval_id": interval_id, "state": state}
-        )
+        await psql_db.execute(sql, values={"interval_id": interval_id, "state": state})
 
     @staticmethod
     async def get_next_irrigation_rule(user: User) -> DashboardIrrigationRules:

@@ -44,7 +44,9 @@ async def set_component_state(
     current_user: User = Depends(get_current_active_user),
 ):
     """Set state of actuator."""
-    await events_cmds.try_execute(component_id, "set_state", state.expected_state, current_user)
+    await events_cmds.try_execute(
+        component_id, "set_state", state.expected_state, current_user
+    )
     return {"message": "Change State event executed"}
 
 
@@ -69,8 +71,6 @@ async def register_value(
     sensor_qrs: SensorQRS = Depends(SensorQRS),
 ):
     """To register sensor values"""
-    await sensor_qrs.register_sensor_value_by_id(
-        component_id, sensor_value.data
-    )
+    await sensor_qrs.register_sensor_value_by_id(component_id, sensor_value.data)
     await events_cmds.try_execute(component_id, "analyse")
     return {"message": "Data registered"}

@@ -8,7 +8,7 @@ from devices.dependencies import ahttp_client, get_current_active_user, get_logg
 router = APIRouter(
     prefix="/dashboard",
     tags=["dashboard"],
-    dependencies=[Depends(get_current_active_user)]
+    dependencies=[Depends(get_current_active_user)],
 )
 
 
@@ -19,9 +19,11 @@ async def get_weather_forecast(
 ):
     """Get latest updates on weather"""
     logger.info("Getting info from openweather.")
-    data = (await client.get(
-        url=f"http://api.openweathermap.org/data/2.5/onecall?lat=50.11&lon=30.6227&appid={Config.OPENAPI_KEY}&lang=ua&units=metric&exclude=minutely,alerts"
-        )).json()
+    data = (
+        await client.get(
+            url=f"http://api.openweathermap.org/data/2.5/onecall?lat=50.11&lon=30.6227&appid={Config.OPENAPI_KEY}&lang=ua&units=metric&exclude=minutely,alerts"
+        )
+    ).json()
 
     return data
 

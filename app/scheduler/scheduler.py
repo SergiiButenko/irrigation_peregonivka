@@ -38,7 +38,7 @@ def get_sunset_time():
         f'Dusk:    {s["dusk"]}\n'
     )
 
-    return s['sunset']
+    return s["sunset"]
 
 
 def with_logging(func):
@@ -48,6 +48,7 @@ def with_logging(func):
         result = func(*args, **kwargs)
         LOGGER.info('Job "%s" completed' % func.__name__)
         return result
+
     return wrapper
 
 
@@ -59,11 +60,11 @@ def add_rule():
     )
     r.raise_for_status()
 
-    lines = r.json()['line_settings']
+    lines = r.json()["line_settings"]
     LOGGER.info(str(lines))
 
     lines_to_fire = [
-        line for line in list(lines.values()) if line['start_mode'] == 'auto'
+        line for line in list(lines.values()) if line["start_mode"] == "auto"
     ]
 
     if len(lines_to_fire) == 0:
@@ -73,31 +74,32 @@ def add_rule():
     LOGGER.info(f"Lines to be scheduled: {lines_to_fire}")
 
     rules = dict(rules=[])
-    message = {
-        "users": config.USERS,
-        "message": ''
-    }
+    message = {"users": config.USERS, "message": ""}
 
     start_time = get_sunset_time() + datetime.timedelta(hours=config.HOURS_AFTER_SUNSET)
 
     for line in lines_to_fire:
-        rules['rules'].append({
-            "line_id": int(line["branch_id"]),
-            "time": int(line["time"]),
-            "intervals": int(line["intervals"]),
-            "time_wait": int(line["time_wait"]),
-            "repeat_value": 4,  # comes from ongoing rule. equal to ONE TIME
-            "date_start": str(start_time),
-            "time_start": str(start_time),
-            "date_time_start": str(start_time),
-            "end_date": str(start_time),
-            "active": 1,
-            "rule_id": str(uuid.uuid4()),
-            "days": -1,
-            "line_name": line["name"],
-        })
+        rules["rules"].append(
+            {
+                "line_id": int(line["branch_id"]),
+                "time": int(line["time"]),
+                "intervals": int(line["intervals"]),
+                "time_wait": int(line["time_wait"]),
+                "repeat_value": 4,  # comes from ongoing rule. equal to ONE TIME
+                "date_start": str(start_time),
+                "time_start": str(start_time),
+                "date_time_start": str(start_time),
+                "end_date": str(start_time),
+                "active": 1,
+                "rule_id": str(uuid.uuid4()),
+                "days": -1,
+                "line_name": line["name"],
+            }
+        )
 
-        message['message'] += f"""'{line['name']}' з групи '{line['group_name']}' буде включено сьогодні о {start_time:%H:%M}. \n"""
+        message[
+            "message"
+        ] += f"""'{line['name']}' з групи '{line['group_name']}' буде включено сьогодні о {start_time:%H:%M}. \n"""
 
     LOGGER.info(f"Rules to be planned: {rules}")
     r = requests.post(
@@ -116,14 +118,13 @@ def add_rule():
     r.raise_for_status()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if config.SCHEDULER_DEBUG_MODE is True:
         LOGGER.warning("Running in DEBUG mode")
         add_rule()
         exit(0)
 
-    LOGGER.info(
-        f"Scheduler start time is set to {config.TIME_TO_RUN_SCHEDULER}")
+    LOGGER.info(f"Scheduler start time is set to {config.TIME_TO_RUN_SCHEDULER}")
     schedule.every().day.at(config.TIME_TO_RUN_SCHEDULER).do(add_rule)
     while True:
         schedule.run_pending()

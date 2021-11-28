@@ -6,38 +6,26 @@ from devices.service_providers.device_logger import logger
 
 
 class ComponentsQRS:
-
     @staticmethod
-    async def get_component_by_id(
-        id: str
-    ) -> ComponentSql:
+    async def get_component_by_id(id: str) -> ComponentSql:
         sql = """
         SELECT *
         FROM device_components
         WHERE id=:id;
         """
-        result = await psql_db.fetch_one(
-            sql, values={"id": id}
-        )
+        result = await psql_db.fetch_one(sql, values={"id": id})
         return ComponentSql.parse_obj(result)
 
-
     @staticmethod
-    async def get_components_by_device_id(
-        device_id: str
-    ) -> ComponentSql:
+    async def get_components_by_device_id(device_id: str) -> ComponentSql:
         sql = """
         SELECT * 
         FROM device_components
         WHERE device_id=:device_id;
         """
-        results = await psql_db.fetch_all(
-            sql,
-            values={"device_id": device_id}
-        )
+        results = await psql_db.fetch_all(sql, values={"device_id": device_id})
 
         return ComponentsSql.parse_obj(results)
-
 
     @staticmethod
     async def get_components_by_group_id(group_id: str, user_id: str):
@@ -47,7 +35,7 @@ class ComponentsQRS:
         JOIN public.groups AS g ON g.id = cg.group_id
         WHERE g.user_id=:user_id and g.id=:group_id"""
         result = await psql_db.fetch_all(
-            sql, values={'user_id': user_id, 'group_id': group_id}
+            sql, values={"user_id": user_id, "group_id": group_id}
         )
 
         return ComponentsSql.parse_obj(result)
@@ -95,5 +83,5 @@ class ComponentsQRS:
 
         # by default return default state
         return ComponentExpectedState.parse_obj(
-            {'expected_state': component.default_state}
+            {"expected_state": component.default_state}
         )

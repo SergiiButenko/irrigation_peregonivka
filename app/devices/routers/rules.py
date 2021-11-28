@@ -8,9 +8,7 @@ from fastapi import APIRouter, Depends
 from devices.dependencies import get_current_active_user, get_notification_service
 
 router = APIRouter(
-    prefix="/rules",
-    tags=["rules"],
-    dependencies=[Depends(get_current_active_user)]
+    prefix="/rules", tags=["rules"], dependencies=[Depends(get_current_active_user)]
 )
 
 
@@ -26,13 +24,13 @@ async def change_rule_state(
     rule_id: str,
     rule_state: RuleState,
     current_user: User = Depends(get_current_active_user),
-    notification_service: NotificationServiceClient = Depends(get_notification_service)
+    notification_service: NotificationServiceClient = Depends(get_notification_service),
 ):
     await RulesCMD.set_rule_state(rule_id, rule_state.expected_state, current_user)
     rule = await RulesQRS.get_rule(rule_id)
     await notification_service.send_ws_message(
-        'component_update',
-        await ComponentsCMD.get_component_state(rule.device_component_id, current_user)
+        "component_update",
+        await ComponentsCMD.get_component_state(rule.device_component_id, current_user),
     )
 
     return rule

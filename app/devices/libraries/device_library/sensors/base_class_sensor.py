@@ -1,5 +1,4 @@
 class Sensor:
-
     def __init__(self, device, sensor_id) -> None:
         self.sensor_id = sensor_id
         self.device = device

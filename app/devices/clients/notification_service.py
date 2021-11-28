@@ -2,6 +2,7 @@ from devices.service_providers.httpx_client import HttpxClient
 from devices.config.config import Config
 from fastapi.encoders import jsonable_encoder
 
+
 class NotificationServiceClient:
     async def send_telegram_message(
         self, message, user=Config.TELEGRAM_CHAT_ID_COTTAGE

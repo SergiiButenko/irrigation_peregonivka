@@ -1,6 +1,6 @@
 class SensorEnum:
-    category = 'sensor'
+    category = "sensor"
 
 
 class ActuatorsEnum:
-    category = 'actuator'
+    category = "actuator"

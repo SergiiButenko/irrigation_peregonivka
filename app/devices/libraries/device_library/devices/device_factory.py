@@ -10,7 +10,10 @@ class DeviceFactory:
     @classmethod
     def get(cls, type: str, version: str) -> Device:
         for ac in cls.DEVICES:
-            if ac.__type__.lower() == type.lower() and ac.__version__.lower() == version.lower():
+            if (
+                ac.__type__.lower() == type.lower()
+                and ac.__version__.lower() == version.lower()
+            ):
                 return ac
 
         raise LookupError(f"No matching device '{type}':'{version}' found in codebase")

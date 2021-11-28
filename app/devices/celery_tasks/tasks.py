@@ -15,7 +15,7 @@ INTERVAL_BLOCKED_STATE = [IntervalPossibleState.CANCELED]
 
 async def execute_rule(rule_id: str) -> None:
     device_client = DevicesClient(Config.SERVICE_USERNAME, Config.SERVICE_PASSWORD)
-    
+
     await device_client.login()
 
     # Analyse if rule is active
@@ -23,7 +23,9 @@ async def execute_rule(rule_id: str) -> None:
     interval = await device_client.get_interval(str(rule.interval_id))
 
     if interval.state in INTERVAL_BLOCKED_STATE:
-        logger.warning("Rule is not going to be executed since interval does not allowing it")
+        logger.warning(
+            "Rule is not going to be executed since interval does not allowing it"
+        )
         await device_client.update_rule_state(rule.id, RulesPossibleState.CANCELED)
         return
     #####
@@ -40,13 +42,15 @@ async def notify_rule(rule_id: str) -> None:
     device_client = DevicesClient(Config.SERVICE_USERNAME, Config.SERVICE_PASSWORD)
     await device_client.login()
     notification_client = NotificationServiceClient()
-    
+
     # Analyse if rule is active
     rule = await device_client.get_rule(rule_id)
     interval = await device_client.get_interval(str(rule.interval_id))
 
     if interval.state in INTERVAL_BLOCKED_STATE:
-        logger.warning("Rule is not going to be executed since interval does not allowing it")
+        logger.warning(
+            "Rule is not going to be executed since interval does not allowing it"
+        )
         return
     #####
 
@@ -65,7 +69,9 @@ async def notify_rule(rule_id: str) -> None:
 
     elif minutes > 2:
         if component.purpose == "valve":
-            message = TelegramMessages.IRRIGATION_PLANNED.format(component.name, minutes)
+            message = TelegramMessages.IRRIGATION_PLANNED.format(
+                component.name, minutes
+            )
         elif component.purpose == "switcher":
             message = TelegramMessages.LIGHTING_PLANNED.format(component.name, minutes)
 

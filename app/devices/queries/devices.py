@@ -4,7 +4,6 @@ from devices.service_providers.device_logger import logger
 
 
 class DeviceQRS:
-
     @staticmethod
     async def set_device_ip(device_id: str, device_ip: str) -> None:
         sql = """
@@ -38,9 +37,7 @@ class DeviceQRS:
         JOIN device_components dc ON d.id = dc.device_id
         WHERE dc.id=:component_id;
         """
-        result = await psql_db.fetch_one(
-            sql, values={"component_id": component_id}
-        )
+        result = await psql_db.fetch_one(sql, values={"component_id": component_id})
 
         return DeviceSql.parse_obj(result)
 
@@ -49,7 +46,5 @@ class DeviceQRS:
         sql = """SELECT telegram_user FROM device_components
         WHERE id=:component_id;
         """
-        result = await psql_db.fetch_one(
-            sql, values={"component_id": component_id}
-        )
+        result = await psql_db.fetch_one(sql, values={"component_id": component_id})
         return TelegramUser.parse_obj(result)

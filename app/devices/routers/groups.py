@@ -5,9 +5,7 @@ from fastapi import APIRouter, Depends
 from devices.dependencies import get_current_active_user, get_logger
 
 router = APIRouter(
-    prefix="/groups",
-    tags=["groups"],
-    dependencies=[Depends(get_current_active_user)]
+    prefix="/groups", tags=["groups"], dependencies=[Depends(get_current_active_user)]
 )
 
 

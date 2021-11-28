@@ -9,12 +9,9 @@ from devices.queries.sensors import SensorQRS
 
 class CesspollRelaySensor1:
     class WaterLevel:
-        
         @staticmethod
         async def analyse(device: DeviceSql, component_id: int):
-            telegram_user = await DeviceQRS.get_linked_telegram_user(
-                component_id
-            )
+            telegram_user = await DeviceQRS.get_linked_telegram_user(component_id)
             notification_client = NotificationServiceClient()
 
             sorting = [("date", "DESC")]
@@ -38,9 +35,7 @@ class CesspollRelaySensor1:
                 return
 
             if len(data) == 1:
-                logger.warn(
-                    "Too few data to analyze"
-                )
+                logger.warn("Too few data to analyze")
                 return
 
             curr_level = data[0].data["level"]
@@ -71,7 +66,6 @@ class CesspollRelaySensor1:
                 )
 
     class PumpStarter:
-        
         @staticmethod
         async def analyse(device, sensors_id, *args, **kwargs):
             telegram_user = await DeviceQRS.get_linked_telegram_user(
@@ -100,9 +94,7 @@ class CesspollRelaySensor1:
                 return
 
             if len(data) == 1:
-                logger.warn(
-                    "Too few data to analyze"
-                )
+                logger.warn("Too few data to analyze")
                 return
 
             curr_level = data[0].data["level"]

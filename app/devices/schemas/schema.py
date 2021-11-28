@@ -47,4 +47,3 @@ class RulesComponentsIntervalsList(BaseModel):
 
 class SensorValue(BaseModel):
     data: dict
-

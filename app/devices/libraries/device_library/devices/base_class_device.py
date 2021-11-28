@@ -9,7 +9,6 @@ from devices.service_providers.httpx_client import HttpxClient
 
 
 class Device:
-
     def __init__(
         self,
         id,
@@ -26,12 +25,14 @@ class Device:
         await _device._init_device()
         return await _device._init_components()
 
-    async def _set_actuator_state(self, actuator_id: int, state: str, current_user) -> dict:
+    async def _set_actuator_state(
+        self, actuator_id: int, state: str, current_user
+    ) -> dict:
         self._DUMMY_STATE = state
         return self._DUMMY_STATE
         await HttpxClient.post_with_raise(
             url=f"{self.device.last_known_ip}/actuators/{actuator_id}",
-            json={'expected_state': state}
+            json={"expected_state": state},
         )
 
     async def _get_actuator_state(self, actuator_id: int) -> dict:

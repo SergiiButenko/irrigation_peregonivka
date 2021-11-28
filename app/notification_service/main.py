@@ -1,5 +1,5 @@
 from fastapi.applications import FastAPI
-from notification_service.routers import (telegram, ws)
+from notification_service.routers import telegram, ws
 
 app = FastAPI()
 

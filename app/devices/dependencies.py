@@ -3,7 +3,10 @@
 The idea is to support callable params for the Depends injections.
 """
 
-from devices.clients.notification_service import NotificationServiceClient, notification_service_client
+from devices.clients.notification_service import (
+    NotificationServiceClient,
+    notification_service_client,
+)
 from devices.routers.helpers.users import get_current_user
 from databases import Database
 from fastapi import Depends, HTTPException
