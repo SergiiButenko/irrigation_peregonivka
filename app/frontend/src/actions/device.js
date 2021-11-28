@@ -61,7 +61,11 @@ export const initComponent = (componentId) => {
                     'components',
                     componentId,
                     'state'
-                ], state));
+                ], {
+                'expected_state': state.expected_state,
+                'interval': state.interval
+            }
+            ));
         }
         catch (e) {
             dispatch(devices.failure(e));
@@ -82,19 +86,11 @@ export const createIntervals = (component) => {
                         time: component.settings.minutes,
                         intervals: component.settings.quantity
                     }
-                    }],
+                }],
                 minutes_delay: 0
             };
-        
-            await smartSystemApi.createIntervals(dataToSend);
 
-            const state = await smartSystemApi.getDeviceComponentState(component.id);
-            dispatch(entity.devices.updateIn(
-                [
-                    'components',
-                    component.id,
-                    'state'
-                ], state));
+            await smartSystemApi.createIntervals(dataToSend);
         }
         catch (e) {
             dispatch(devices.failure(e));
@@ -106,22 +102,14 @@ export const createIntervals = (component) => {
 export const deleteInterval = (componentId, intervalId, expected_state) => {
     return async (dispatch) => {
         dispatch(devices.loading(true));
-        
-        try {
-            await smartSystemApi.deleteInterval(intervalId, {expected_state});
 
-            const state = await smartSystemApi.getDeviceComponentState(componentId);
-            dispatch(entity.devices.updateIn(
-                [
-                    'components',
-                    componentId,
-                    'state'
-                ], state));
+        try {
+            await smartSystemApi.deleteInterval(intervalId, { expected_state });
         }
         catch (e) {
             dispatch(devices.failure(e));
         }
-        
+
         dispatch(devices.loading(false));
     };
 };

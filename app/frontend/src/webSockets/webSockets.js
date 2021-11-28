@@ -1,6 +1,5 @@
-// import { io } from "socket.io-client";
 import { ACTION_TYPES } from '../constants/websocket';
-
+import { entity, devices } from '../actions/device';
 const ws = new WebSocket('ws://localhost/notification/ws');
 
 export const websocketInit = (store) => {
@@ -18,14 +17,26 @@ export const websocketInit = (store) => {
     };
 
     ws.onmessage = (income_event) => {
-        console.log(income_event);
         const event = JSON.parse(income_event.data);
 
-        switch (event.type) {
+        switch (event.action) {
             case ACTION_TYPES.component_update:
-                const component = event.payload;
-                console.log(component);
-                // store.dispatch(entity.devices.updateIn(path, payload));
+                const component = event.payload.component;
+                const state = {
+                    'expected_state': event.payload.expected_state,
+                    'interval': event.payload.interval
+                };
+                console.log("updating from sockets")
+                console.log(state)
+                store.dispatch(devices.loading(true));
+                store.dispatch(entity.devices.updateIn(
+                    [
+                        'components',
+                        component.id,
+                        'state'
+                    ], state
+                ));
+                store.dispatch(devices.loading(false));
                 break;
             default:
                 break;

@@ -66,7 +66,6 @@ export default class Switcher extends React.Component {
     };
 
     getMinutes = () => {
-        console.log(this.props.devices);
         const actuator = this.props.devices.components[this.props.componentId];
         return actuator.settings.minutes;
     };
@@ -105,7 +104,7 @@ export default class Switcher extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.loading == false) {
+        if (this.props !== nextProps && nextProps.loading == false) {
             this.setState({ min_minutes: this.calculate_min() });
             this.setState({ max_minutes: this.calculate_max() });
             this.setState({ step_minutes: this.calculate_step() });

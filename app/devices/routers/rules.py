@@ -1,9 +1,11 @@
+from devices.commands.components import ComponentsCMD
+from devices.clients.notification_service import NotificationServiceClient
 from devices.models.users import User
 from devices.schemas.schema import RuleState
 from devices.commands.rules import RulesCMD
 from devices.queries.rules import RulesQRS
 from fastapi import APIRouter, Depends
-from devices.dependencies import get_current_active_user
+from devices.dependencies import get_current_active_user, get_notification_service
 
 router = APIRouter(
     prefix="/rules",
@@ -24,6 +26,13 @@ async def change_rule_state(
     rule_id: str,
     rule_state: RuleState,
     current_user: User = Depends(get_current_active_user),
+    notification_service: NotificationServiceClient = Depends(get_notification_service)
 ):
     await RulesCMD.set_rule_state(rule_id, rule_state.expected_state, current_user)
-    return await RulesQRS.get_rule(rule_id)
+    rule = await RulesQRS.get_rule(rule_id)
+    await notification_service.send_ws_message(
+        'component_update',
+        await ComponentsCMD.get_component_state(rule.device_component_id, current_user)
+    )
+
+    return rule

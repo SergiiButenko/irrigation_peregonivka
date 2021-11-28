@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 from pydantic.types import StrictStr
 
 from devices.commands.events import EventsCMD
+from devices.commands.components import ComponentsCMD
 from devices.dependencies import get_current_active_user
 from devices.queries.components import ComponentsQRS
 from devices.schemas.schema import SensorValue, ComponentExpectedState
@@ -32,11 +33,7 @@ async def get_component_state(
     current_user: User = Depends(get_current_active_user),
 ):
     """Get state of component."""
-    state = await ComponentsQRS.get_expected_component_state(component_id)
-    return {
-        'expected_state': state.expected_state,
-        'interval': await IntervalsQRS.get_active_interval_by_component_id(component_id, current_user)
-    }
+    return await ComponentsCMD.get_component_state(component_id, current_user)
 
 
 @router.put("/state", name="Set state of specific component")
@@ -44,9 +41,10 @@ async def set_component_state(
     component_id: str,
     state: ComponentExpectedState,
     events_cmds: EventsCMD = Depends(EventsCMD),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Set state of actuator."""
-    await events_cmds.try_execute(component_id, "set_state", state.expected_state)
+    await events_cmds.try_execute(component_id, "set_state", state.expected_state, current_user)
     return {"message": "Change State event executed"}
 
 

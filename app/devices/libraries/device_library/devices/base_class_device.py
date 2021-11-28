@@ -1,3 +1,4 @@
+from devices.clients.notification_service import NotificationServiceClient
 from devices.queries.components import ComponentsQRS
 from devices.queries.devices import DeviceQRS
 from starlette.routing import NoMatchFound
@@ -16,6 +17,7 @@ class Device:
         self.id = id
         self.components = {}
         self.device = {}
+        self.notification_service_client = NotificationServiceClient()
         self._DUMMY_STATE = None
 
     @staticmethod
@@ -24,7 +26,7 @@ class Device:
         await _device._init_device()
         return await _device._init_components()
 
-    async def _set_actuator_state(self, actuator_id: int, state: str) -> dict:
+    async def _set_actuator_state(self, actuator_id: int, state: str, current_user) -> dict:
         self._DUMMY_STATE = state
         return self._DUMMY_STATE
         await HttpxClient.post_with_raise(
