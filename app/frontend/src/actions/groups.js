@@ -15,6 +15,7 @@ const actions = createActions(
         GROUPS: {
             LOADING: v => v,
             FAILURE: v => v,
+            COMPONENTS_LOADING: v => v,
         }
     }
 );
@@ -36,9 +37,26 @@ export const fetchGroups = () => {
     };
 };
 
-export const fetchGroupComponentsById = (groupId) => {
+
+export const fetchGroupById = (groupId) => {
     return async dispatch => {
         dispatch(groups.loading(true));
+
+        try {
+            let groups_input = arrayToObj( [await smartSystemApi.getGroup(groupId)] )
+            dispatch(entity.groups.updateIn([groupId], groups_input[groupId]));
+        }
+        catch (e) {
+            dispatch(groups.failure(e));
+        }
+        dispatch(groups.loading(false));
+    };
+};
+
+
+export const fetchGroupComponentsById = (groupId) => {
+    return async dispatch => {
+        dispatch(groups.componentsLoading(true));
 
         try {
             let groups_input = await smartSystemApi.getGroup();
@@ -53,7 +71,7 @@ export const fetchGroupComponentsById = (groupId) => {
             dispatch(groups.failure(e));
         }
 
-        dispatch(groups.loading(false));
+        dispatch(groups.componentsLoading(false));
     };
 };
 

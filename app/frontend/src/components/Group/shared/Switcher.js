@@ -96,20 +96,28 @@ export default class Switcher extends React.Component {
         max_minutes: null,
         step_minutes: null,
         component: null,
-        value_minutes: null
+        value_minutes: null,
+        loading: true
     };
 
     componentDidMount() {
         this.props.initComponent(this.props.componentId);
     };
-
+    
     componentWillReceiveProps(nextProps) {
-        if (this.props !== nextProps && nextProps.loading == false) {
+        if (this.props !== nextProps
+            && nextProps.loading == false
+            && nextProps.devices.components
+            && nextProps.devices.components[this.props.componentId] != undefined
+            ) {
             this.setState({ min_minutes: this.calculate_min() });
             this.setState({ max_minutes: this.calculate_max() });
             this.setState({ step_minutes: this.calculate_step() });
+            this.setState({ loading: false });
             this.setState({ component: this.props.devices.components[this.props.componentId] });
             this.setState(state => ({ value_minutes: state.component.settings.minutes }));
+        } else {
+            return;
         }
     }
 
@@ -136,13 +144,13 @@ export default class Switcher extends React.Component {
     };
 
     render() {
-        const { classes, loading, deviceFetchError } = this.props;
-        const { collapsed, min_minutes, max_minutes, step_minutes, value_minutes, component } = this.state;
-
+        const { classes, deviceFetchError, componentId } = this.props;
+        const { loading, collapsed, min_minutes, max_minutes, step_minutes, value_minutes, component } = this.state;
+        console.log(loading)
         if (loading) {
             return <PageSpinner />;
         }
-
+        
         if (deviceFetchError) {
             return <LoadingFailed errorText={deviceFetchError} />;
         }

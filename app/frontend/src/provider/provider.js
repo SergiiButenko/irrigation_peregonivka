@@ -149,9 +149,9 @@ class SmartSystemApi {
     };
 
 
-    async getGroup(options = {}) {
+    async getGroup(groupId, options = {}) {
         return this.provider.get(
-            apiUri.GROUPS(),
+            apiUri.GROUPS(groupId),
             options,
         );
     }

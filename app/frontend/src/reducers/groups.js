@@ -2,6 +2,7 @@ import {handleActions} from 'redux-actions';
 
 const defaultState = {
     loading: true,
+    componentsLoading: true,
     groupFetchError: null,
 };
 
@@ -19,5 +20,12 @@ export default handleActions({
                 loading: action.payload,
             };
         },
+        COMPONENTS_LOADING: (state, action) => {
+            return {
+                ...state,
+                componentsLoading: action.payload,
+            };
+        },
+
     }
 }, defaultState);

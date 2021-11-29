@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Paper from '@material-ui/core/Paper';
@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 import PageSpinner from '../shared/PageSpinner';
-import {webUri} from '../../constants/uri';
+import { webUri } from '../../constants/uri';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 import { getGroups } from '../../selectors/groups';
 
@@ -39,39 +39,39 @@ export default class GroupCard extends React.Component {
     };
 
     render() {
-        const {classes, loading, groups, groupId} = this.props;
+        const { classes, loading, groups, groupId } = this.props;
 
         if (loading) {
-            return <PageSpinner/>;
+            return <PageSpinner />;
         }
-        
+
         const group = groups[groupId];
         return (
-            <Paper
-                className={classes.root}
-                elevation={1}
-                onClick={this.redirectToGroup(group.id)}
-            >
-                <Grid
-                    container
-                    spacing={24}
-                    direction="row"
-                    justify="space-between"
-                    alignItems="center"
+                <Paper
+                    className={classes.root}
+                    elevation={1}
+                    onClick={this.redirectToGroup(group.id)}
                 >
-                    <Grid item xs={8}>
-                        <Typography variant="h5" component="h3">
-                            {group.name}
-                        </Typography>
-                        <Typography component="p">
-                            {group.description}
-                        </Typography>
+                    <Grid
+                        container
+                        spacing={24}
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center"
+                    >
+                        <Grid item xs={8}>
+                            <Typography variant="h5" component="h3">
+                                {group.name}
+                            </Typography>
+                            <Typography component="p">
+                                {group.description}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <ArrowForwardIos />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={1}>
-                        <ArrowForwardIos />
-                    </Grid>
-                </Grid>
-            </Paper>
+                </Paper>
         );
     }
 }

@@ -9,6 +9,8 @@ import PageSpinner from '../../../shared/PageSpinner';
 import LoadingFailed from '../../../shared/LoadingFailed';
 import { components_mapping } from '../../../../constants/components_mapping';
 import { getGroups } from '../../../../selectors/groups';
+import { fetchGroupComponentsById } from '../../../../actions/groups';
+
 
 const styles = theme => ({
     root: {
@@ -29,26 +31,30 @@ const mapStateToProps = (state) => {
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps)
+@connect(mapStateToProps, { fetchGroupComponentsById })
 export default class CesspoolMaster extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        groupId: PropTypes.string.isRequired,
         groupFetchError: PropTypes.any,
     };
 
-    render() {
-        const { classes, loading, groupFetchError, groups, groupId } = this.props;
+    componentDidMount() {
+        this.props.fetchGroupComponentsById(this.props.match.params.groupId);
+    }
 
-        if (loading) {
+    render() {
+
+        const { classes, componentsLoading, groupFetchError, groups, match: { params } } = this.props;
+        
+        if (componentsLoading) {
             return <PageSpinner />;
         }
-
+        
         if (groupFetchError) {
             return <LoadingFailed errorText={groupFetchError} />;
         }
-
-        const group = groups[groupId];
+        
+        const group = groups[params.groupId];
         return (
             <>
                 <Grid container spacing={24}>

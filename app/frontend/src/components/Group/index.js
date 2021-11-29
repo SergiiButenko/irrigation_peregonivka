@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 
 import { getGroups } from '../../selectors/groups';
-import { fetchGroupComponentsById } from '../../actions/groups';
+import { fetchGroupById } from '../../actions/groups';
 import PageSpinner from '../shared/PageSpinner';
 import LoadingFailed from '../shared/LoadingFailed';
 import { webUri } from '../../constants/uri';
@@ -30,7 +30,7 @@ const mapStateToProps = (state) => {
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps, { fetchGroupComponentsById })
+@connect(mapStateToProps, { fetchGroupById })
 export default class Group extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
@@ -39,7 +39,7 @@ export default class Group extends React.Component {
     };
 
     componentDidMount() {
-        this.props.fetchGroupComponentsById(this.props.match.params.groupId);
+        this.props.fetchGroupById(this.props.match.params.groupId);
     }
 
     redirectToGroups = () => {
@@ -68,7 +68,7 @@ export default class Group extends React.Component {
                         </Typography>
                     </Grid>
                     <Grid item xs={12} key={group.id}>
-                        <Element groupId={group.id} loading={true}/>
+                        <Element loading={true}/>
                     </Grid>
                 </Grid>
             </>

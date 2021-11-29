@@ -1,9 +1,9 @@
 import React from 'react';
-import {Route, BrowserRouter} from 'react-router-dom';
+import { Route, BrowserRouter } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 import 'typeface-roboto';
 
-import {userIsAuthenticated, userIsNotAuthenticated} from './helpers/auth.helper';
+import { userIsAuthenticated, userIsNotAuthenticated } from './helpers/auth.helper';
 
 import SignInPage from './components/SignInPage';
 import DevicesPage from './components/DevicesPage';
@@ -16,12 +16,12 @@ const App = () => {
     return (
         <BrowserRouter>
             <div>
-                <CssBaseline/>
-                <Route exact path="/login" component={ userIsNotAuthenticated(SignInPage) }/>
-                <Route exact path="/" component={ userIsAuthenticated(DashboardPage) }/>
-                <Route exact path="/groups" component={ userIsAuthenticated(GroupsPage) }/>
-                <Route exact path="/groups/:groupId" component={ userIsAuthenticated(GroupPage) }/>
-                <Route exact path="/devices" component={ userIsAuthenticated(DevicesPage) }/>
+                <CssBaseline />
+                <Route exact path="/login" component={userIsNotAuthenticated(SignInPage)} />
+                <Route exact path="/" component={userIsAuthenticated(DashboardPage)} />
+                <Route exact path="/groups" component={userIsAuthenticated(GroupsPage)} />
+                <Route exact path="/groups/:groupId" component={userIsAuthenticated(GroupPage)} />
+                <Route exact path="/devices" component={userIsAuthenticated(DevicesPage)} />
             </div>
         </BrowserRouter>
     );
