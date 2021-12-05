@@ -1,5 +1,6 @@
 import { ACTION_TYPES } from '../constants/websocket';
 import { entity, devices } from '../actions/device';
+import { formSensorData } from '../helpers/components.helper';
 const ws = new WebSocket('ws://localhost/notification/ws');
 
 export const websocketInit = (store) => {
@@ -41,8 +42,7 @@ export const websocketInit = (store) => {
                 break;
 
             case ACTION_TYPES.sensor_update:
-                component.data = event.payload.data;
-                console.log(component.data)
+                component.data = formSensorData(event.payload.data);
                 store.dispatch(entity.devices.updateIn(
                     [
                         'components',

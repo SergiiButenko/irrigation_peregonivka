@@ -62,12 +62,12 @@ export default class PowerCurrentV1 extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps
             && nextProps.loading == false
+            && nextProps.componentId == this.props.componentId
             && nextProps.devices.components
             && nextProps.devices.components[this.props.componentId] != undefined
         ) {
             this.setState({ loading: false });
             this.setState({ component: nextProps.devices.components[this.props.componentId] });
-            console.log(nextProps)
         }
     }
 
@@ -82,13 +82,27 @@ export default class PowerCurrentV1 extends React.Component {
         }
 
         const difference = data[0].date - new Date();
-        if (Math.floor((difference/1000)/60) > -60) {
+        if (Math.floor((difference / 1000) / 60) > -60) {
             res.expired = true;
         } else {
             res.expired = false;
         }
 
-        return res
+        return res;
+    };
+
+    prepareData = (data) => {
+        const compare = (a, b) => {
+            if (a.date < b.date) {
+                return 1;
+            }
+            if (a.date > b.date) {
+                return -1;
+            }
+            return 0;
+        };
+
+        return data.sort(compare);
     };
 
     render() {
@@ -104,12 +118,12 @@ export default class PowerCurrentV1 extends React.Component {
         }
 
 
-        const data = component.data;
-        const isDataValid = this.validateData(data);
-        
+        const isDataValid = this.validateData(component.data);
+    
         let message = { 'text': '', classes: null };
-        
+
         if (isDataValid.exist == true) {
+            const data = this.prepareData(component.data);
             const levelHigh = data[0].data.level == 1;
             message.text = (levelHigh ? 'Рівень сигналу високий' : 'Рівень сигналу низький');
         } else if (isDataValid.exist == false) {
