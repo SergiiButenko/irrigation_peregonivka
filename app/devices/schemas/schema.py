@@ -1,3 +1,5 @@
+from bson.objectid import ObjectId
+from devices.models.devices import ComponentSql, SensorValueNSQL
 from pydantic.types import UUID4
 from typing import List
 from pydantic import BaseModel
@@ -47,3 +49,13 @@ class RulesComponentsIntervalsList(BaseModel):
 
 class SensorValue(BaseModel):
     data: dict
+
+
+class SensorData(BaseModel):
+    component: ComponentSql
+    data: List[SensorValueNSQL]
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+

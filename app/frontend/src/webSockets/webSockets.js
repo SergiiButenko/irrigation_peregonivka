@@ -18,17 +18,17 @@ export const websocketInit = (store) => {
 
     ws.onmessage = (income_event) => {
         const event = JSON.parse(income_event.data);
-
+        const component = event.payload.component;
+                
         switch (event.action) {
-            case ACTION_TYPES.component_update:
-                const component = event.payload.component;
+            case ACTION_TYPES.actuator_update:
+                store.dispatch(devices.updating(true));
+                
                 const state = {
                     'expected_state': event.payload.expected_state,
                     'interval': event.payload.interval
                 };
-                console.log("updating from sockets")
-                console.log(state)
-                store.dispatch(devices.loading(true));
+                
                 store.dispatch(entity.devices.updateIn(
                     [
                         'components',
@@ -36,8 +36,23 @@ export const websocketInit = (store) => {
                         'state'
                     ], state
                 ));
-                store.dispatch(devices.loading(false));
+                
+                store.dispatch(devices.updating(false));
                 break;
+
+            case ACTION_TYPES.sensor_update:
+                component.data = event.payload.data;
+                console.log(component.data)
+                store.dispatch(entity.devices.updateIn(
+                    [
+                        'components',
+                        component.id,
+                    ], component
+                ));
+                
+                store.dispatch(devices.updating(false));
+                break;
+
             default:
                 break;
         }

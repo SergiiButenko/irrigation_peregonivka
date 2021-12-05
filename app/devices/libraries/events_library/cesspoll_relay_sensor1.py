@@ -28,9 +28,9 @@ class CesspollRelaySensor1:
                 logger.warn(
                     "No data to work with. Possibly sensors is out of duty. Please check"
                 )
-                notification_client.send_telegram_message(
-                    telegram_user.id,
+                await notification_client.send_telegram_message(
                     TelegramMessages.SENSOR_OUT_OF_SERVICE.format(device.device_id),
+                    telegram_user.id,
                 )
                 return
 
@@ -42,21 +42,21 @@ class CesspollRelaySensor1:
             prev_level = data[1].data["level"]
             if curr_level > prev_level:
                 logger.info("Cesspoll has became full. sending notifications")
-                notification_client.send_telegram_message(
-                    telegram_user.id,
+                await notification_client.send_telegram_message(
                     TelegramMessages.WATER_LEVEL_BECAME_FULL,
+                    telegram_user.id,
                 )
             elif curr_level < prev_level:
                 logger.info("Cesspoll has became empty. sending notifications")
-                notification_client.send_telegram_message(
-                    telegram_user.id,
+                await notification_client.send_telegram_message(
                     TelegramMessages.WATER_LEVEL_BECAME_EMPTY,
+                    telegram_user.id,
                 )
             elif curr_level == 1 and curr_level == prev_level:
                 logger.info("Cesspoll is still full. sending notifications")
-                notification_client.send_telegram_message(
-                    telegram_user.id,
+                await notification_client.send_telegram_message(
                     TelegramMessages.WATER_LEVEL_FULL,
+                    telegram_user.id,
                 )
             elif curr_level == 0 and curr_level == prev_level:
                 logger.info("Cesspoll is empty. doing nothing")
@@ -87,9 +87,9 @@ class CesspollRelaySensor1:
                 logger.warn(
                     "No data to work with. Possibly sensors is out of duty. Please check"
                 )
-                notification_client.send_telegram_message(
-                    telegram_user.id,
+                await notification_client.send_telegram_message(
                     TelegramMessages.SENSOR_OUT_OF_SERVICE.format(device.device_id),
+                    telegram_user.id,
                 )
                 return
 
@@ -101,21 +101,21 @@ class CesspollRelaySensor1:
             prev_level = data[1].data["level"]
             if curr_level > prev_level:
                 logger.info("Cesspoll pump has beed turned on. sending notifications")
-                notification_client.send_telegram_message(
-                    telegram_user.id,
+                await notification_client.send_telegram_message(
                     TelegramMessages.CESSPOLL_PUMP_TURNED_ON,
+                    telegram_user.id,
                 )
             elif curr_level < prev_level:
                 logger.info("Cesspoll pump has beed turned off. sending notifications")
-                notification_client.send_telegram_message(
-                    telegram_user.id,
+                await notification_client.send_telegram_message(
                     TelegramMessages.CESSPOLL_PUMP_TURNED_OFF,
+                    telegram_user.id,
                 )
             elif curr_level == 1 and curr_level == prev_level:
                 logger.info("Cesspoll pump is still on. sending notifications")
-                notification_client.send_telegram_message(
-                    telegram_user.id,
+                await notification_client.send_telegram_message(
                     TelegramMessages.CESSPOLL_PUMP_ON,
+                    telegram_user.id,
                 )
             elif curr_level == 0 and curr_level == prev_level:
                 logger.info("Cesspoll pump is off. doing nothing")

@@ -11,7 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
 import Zoom from '@material-ui/core/Zoom';
 
-import { createIntervals } from '../../../../actions/groups';
+import { createIntervals, fetchGroupComponentsById } from '../../../../actions/groups';
 import PageSpinner from '../../../shared/PageSpinner';
 import LoadingFailed from '../../../shared/LoadingFailed';
 import { components_mapping } from '../../../../constants/components_mapping';
@@ -37,24 +37,29 @@ const mapStateToProps = (state) => {
 };
 @withStyles(styles)
 @withRouter
-@connect(mapStateToProps, { createIntervals })
+@connect(mapStateToProps, { createIntervals, fetchGroupComponentsById })
 export default class IrrigationMaster extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        groupId: PropTypes.object.isRequired,
         groupFetchError: PropTypes.any,
         loading: PropTypes.bool.isRequired, 
     };
 
-    render() {
-        const { classes, loading, groupFetchError, groups, groupId, match: { params }, createIntervals } = this.props;
+    componentDidMount() {
+        this.props.fetchGroupComponentsById(this.props.match.params.groupId);
+    }
 
+
+    render() {
+        const { classes, groupFetchError, groups, match: { params }, createIntervals } = this.props;
+        
         const transitionDuration = {
             enter: 100,
             exit: 100,
         };
-
-        if (loading) {
+        
+        const group = groups[params.groupId];
+        if (!group.components) {
             return <PageSpinner />;
         }
 
@@ -62,8 +67,7 @@ export default class IrrigationMaster extends React.Component {
             return <LoadingFailed errorText={groupFetchError} />;
         }
 
-        const group = groups[groupId];
-        
+
         const button_disabled = Object.keys(
             filterSelectedComponents(group.components)
             ).length == 0;
@@ -74,11 +78,10 @@ export default class IrrigationMaster extends React.Component {
                     {
                         Object.keys(group.components).map(function (id, index) {
                             const component = group.components[id]
-                            const Element = components_mapping[group.short_name][component.category][component.version]
+                            const Element = components_mapping[group.short_name][component.category][component.type][component.version]
                             return (
                                 <Grid item xs={12} key={component.id}>
                                     <Element
-                                        groupId={group.id}
                                         componentId={component.id}
                                         />
                                 </Grid>

@@ -1,3 +1,4 @@
+from devices.schemas.schema import SensorData
 from devices.service_providers.device_logger import logger
 from devices.service_providers.mongo_db import mongo_db
 
@@ -13,6 +14,7 @@ class SensorQRS:
         component_id: str,
         filter: dict = None,
         sorting: list = [("date", "DESC")],
-    ):
-        logger.info(f"Getting data for device_id:sensor_id '{device_id}:{sensor_id}'")
-        return await mongo_db.get_latest_sensor_data(component_id, filter, sorting)
+        limit: int = 10,
+    ) -> SensorData:
+        logger.info(f"Getting data for component id '{component_id}'")
+        return await mongo_db.get_latest_sensor_data(component_id, filter, sorting, limit)

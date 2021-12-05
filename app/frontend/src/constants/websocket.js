@@ -1,5 +1,6 @@
 export const ACTION_TYPES = {
-    component_update: 'component_update',
+    actuator_update: 'actuator_update',
+    sensor_update: 'sensor_update',
     connect: 'connect',
     error: 'error',
     message: 'message',

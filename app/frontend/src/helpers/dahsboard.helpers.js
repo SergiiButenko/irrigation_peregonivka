@@ -1,3 +1,5 @@
+import { localizeTime } from "./common.helper";
+
 export const formWeatherData = (data) => {
 	let hourlyArr =  data.reduce((acc, hourlyData) => {
             const date = new Date(hourlyData['dt']*1000);
@@ -22,9 +24,7 @@ export const formWeatherData = (data) => {
 
 export const formIrrigationData = (data) => {
     return data.reduce((acc, el) => {
-        const date = new Date(el['execution_time']);
-        const offset = date.getTimezoneOffset();
-        const newDate = new Date(date.getTime() - offset*60*1000);
+        const newDate = localizeTime(el['execution_time'])
 
         const time = newDate.toLocaleTimeString("uk-UA", {
             weekday: "long",

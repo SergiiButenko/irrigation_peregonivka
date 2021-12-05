@@ -20,8 +20,8 @@ class EventsCMD:
         event = EventFactory.get(device.id, component_id, in_event)
         if event is not None:
             self.background_tasks.add_task(event, device, component_id, *args, **kwargs)
-
-        # otherwise execute default event
-        self.background_tasks.add_task(
-            getattr(device.components[str(component_id)], in_event), *args, **kwargs
-        )
+        else:
+            # otherwise execute default event
+            self.background_tasks.add_task(
+                getattr(device.components[str(component_id)], in_event), *args, **kwargs
+            )

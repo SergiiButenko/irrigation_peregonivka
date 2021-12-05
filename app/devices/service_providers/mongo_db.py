@@ -1,7 +1,8 @@
-from devices.models.devices import SensorValueNSQL
-from motor.motor_asyncio import AsyncIOMotorClient
-from pymongo import DESCENDING, ASCENDING
 from devices.config.config import Config
+from devices.models.devices import SensorValueNSQL
+from devices.service_providers.device_logger import logger
+from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import ASCENDING, DESCENDING
 
 
 class Mongo:
@@ -27,7 +28,7 @@ class Mongo:
 
         return new_sort
 
-    async def _find_document(self, collection, query=None, sorting=None):
+    async def _find_document(self, collection, query=None, sorting=None, limit=100):
         """Function to retrieve single or multiple documents from a provided
         Collection using a dictionary containing a document's query.
         """
@@ -38,7 +39,7 @@ class Mongo:
             sorting = await self._transform_sort(sorting)
             cursor.sort(sorting)
 
-        for document in await cursor.to_list(length=500):
+        for document in await cursor.to_list(length=limit):
             data.append(SensorValueNSQL(**document))
 
         return data
@@ -50,15 +51,20 @@ class Mongo:
         )
 
     async def get_latest_sensor_data(
-        self, component_id: str, filter: dict = None, sorting: list = None
+        self,
+        component_id: str,
+        filter: dict = None,
+        sorting: list = None,
+        limit: int = 10,
     ):
 
-        query = {"component_id": component_id, **filter}
-        return await self._find_document(
-            self.sensors_collection,
-            query,
-            sorting,
-        )
+        query = {"component_id": component_id}
+
+        if filter is not None:
+            query = {**query, **filter}
+
+        data = await self._find_document(self.sensors_collection, query, sorting, limit)
+        return data
 
 
 mongo_db = Mongo()

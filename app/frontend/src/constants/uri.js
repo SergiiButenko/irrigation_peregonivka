@@ -8,6 +8,7 @@ export const apiUri = {
 			: ''),
 	COMPONENT_STATE: (componentId) => `api/v1/components/${componentId}/state`,
 	COMPONENTS: (componentId) => `api/v1/components/${componentId}`,
+	DATA: (componentId) => `api/v1/components/${componentId}/data`,
     INTERVALS: (intervalId) => 'api/v1/intervals' + (intervalId
 		? `/${intervalId}`
 		: ''),

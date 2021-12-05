@@ -29,7 +29,7 @@ async def change_rule_state(
     await RulesCMD.set_rule_state(rule_id, rule_state.expected_state, current_user)
     rule = await RulesQRS.get_rule(rule_id)
     await notification_service.send_ws_message(
-        "component_update",
+        "actuator_update",
         await ComponentsCMD.get_component_state(rule.device_component_id, current_user),
     )
 

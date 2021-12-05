@@ -1,6 +1,7 @@
 import { createActions } from 'redux-actions';
 import { smartSystemApi } from '../provider';
 import { arrayToObj } from '../helpers/common.helper';
+import { formSensorData } from '../helpers/components.helper';
 
 const actions = createActions(
     {
@@ -49,23 +50,39 @@ export const initComponent = (componentId) => {
         dispatch(devices.loading(true));
         try {
             const component = await smartSystemApi.getDeviceComponent(componentId);
+            const state = await smartSystemApi.getDeviceComponentState(componentId);
+            component.state = {
+                'expected_state': state.expected_state,
+                'interval': state.interval
+            };
+            
             dispatch(entity.devices.updateIn(
                 [
                     'components',
                     componentId,
                 ], component));
+        }
+        catch (e) {
+            dispatch(devices.failure(e));
+        }
+        dispatch(devices.loading(false));
+    };
+};
 
-            const state = await smartSystemApi.getDeviceComponentState(componentId);
+
+export const initSensor = (componentId) => {
+    return async (dispatch) => {
+        dispatch(devices.loading(true));
+        try {
+            const component = await smartSystemApi.getDeviceComponent(componentId);
+            const data = await smartSystemApi.getSendorData(componentId);
+            component.data = formSensorData(data.data);
+            
             dispatch(entity.devices.updateIn(
                 [
                     'components',
                     componentId,
-                    'state'
-                ], {
-                'expected_state': state.expected_state,
-                'interval': state.interval
-            }
-            ));
+                ], component));
         }
         catch (e) {
             dispatch(devices.failure(e));
@@ -77,7 +94,7 @@ export const initComponent = (componentId) => {
 
 export const createIntervals = (component) => {
     return async (dispatch) => {
-        dispatch(devices.loading(true));
+        dispatch(devices.updating(true));
         try {
             const dataToSend = {
                 components: [{
@@ -95,13 +112,12 @@ export const createIntervals = (component) => {
         catch (e) {
             dispatch(devices.failure(e));
         }
-        dispatch(devices.loading(false));
     };
 };
 
 export const deleteInterval = (componentId, intervalId, expected_state) => {
     return async (dispatch) => {
-        dispatch(devices.loading(true));
+        dispatch(devices.updating(true));
 
         try {
             await smartSystemApi.deleteInterval(intervalId, { expected_state });
@@ -109,7 +125,5 @@ export const deleteInterval = (componentId, intervalId, expected_state) => {
         catch (e) {
             dispatch(devices.failure(e));
         }
-
-        dispatch(devices.loading(false));
     };
 };

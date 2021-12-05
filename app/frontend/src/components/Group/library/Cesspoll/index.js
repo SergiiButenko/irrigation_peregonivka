@@ -44,9 +44,10 @@ export default class CesspoolMaster extends React.Component {
 
     render() {
 
-        const { classes, componentsLoading, groupFetchError, groups, match: { params } } = this.props;
+        const { classes, groupFetchError, groups, match: { params } } = this.props;
         
-        if (componentsLoading) {
+        const group = groups[params.groupId];
+        if (!group.components) {
             return <PageSpinner />;
         }
         
@@ -54,17 +55,13 @@ export default class CesspoolMaster extends React.Component {
             return <LoadingFailed errorText={groupFetchError} />;
         }
         
-        const group = groups[params.groupId];
         return (
             <>
                 <Grid container spacing={24}>
                     {
                         Object.keys(group.components).map(function (id, index) {
                             const component = group.components[id];
-                            const Element = components_mapping[group.short_name][component.category][component.version];
-                            if (!Element) {
-                                return;
-                            }
+                            const Element = components_mapping[group.short_name][component.category][component.type][component.version];
                             
                             return (
                                 <Grid item xs={12} key={component.id} >

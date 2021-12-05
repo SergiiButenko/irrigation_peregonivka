@@ -1,14 +1,14 @@
-from devices.models.users import User
-from devices.queries.intervals import IntervalsQRS
+from devices.clients.notification_service import NotificationServiceClient
 from fastapi import APIRouter, Depends
 from pydantic.types import StrictStr
 
-from devices.commands.events import EventsCMD
 from devices.commands.components import ComponentsCMD
-from devices.dependencies import get_current_active_user
+from devices.commands.events import EventsCMD
+from devices.dependencies import get_current_active_user, get_notification_service
+from devices.models.users import User
 from devices.queries.components import ComponentsQRS
-from devices.schemas.schema import SensorValue, ComponentExpectedState
 from devices.queries.sensors import SensorQRS
+from devices.schemas.schema import ComponentExpectedState, SensorValue
 
 router = APIRouter(
     prefix="/components/{component_id}",
@@ -53,14 +53,11 @@ async def set_component_state(
 @router.get("/data", name="Get sensor data")
 async def get_value(
     component_id: str,
-    minutes_from_now: int,
+    limit: int = 10,
     sensor_qrs: SensorQRS = Depends(SensorQRS),
 ):
     """In order to keep device status"""
-    return await sensor_qrs.get_sensor_values_by_id(
-        component_id,
-        minutes_from_now,
-    )
+    return await ComponentsCMD.get_component_data(component_id, limit=limit)
 
 
 @router.post("/data", name="Register sensor data")
@@ -68,9 +65,7 @@ async def register_value(
     component_id: StrictStr,
     sensor_value: SensorValue,
     events_cmds: EventsCMD = Depends(EventsCMD),
-    sensor_qrs: SensorQRS = Depends(SensorQRS),
+    notification_service: NotificationServiceClient = Depends(get_notification_service)
 ):
     """To register sensor values"""
-    await sensor_qrs.register_sensor_value_by_id(component_id, sensor_value.data)
-    await events_cmds.try_execute(component_id, "analyse")
-    return {"message": "Data registered"}
+    return await ComponentsCMD.register_component_data(component_id, sensor_value, events_cmds, notification_service)

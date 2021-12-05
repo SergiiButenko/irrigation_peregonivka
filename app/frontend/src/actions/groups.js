@@ -56,8 +56,6 @@ export const fetchGroupById = (groupId) => {
 
 export const fetchGroupComponentsById = (groupId) => {
     return async dispatch => {
-        dispatch(groups.componentsLoading(true));
-
         try {
             let groups_input = await smartSystemApi.getGroup();
             groups_input = arrayToObj(groups_input);
@@ -70,8 +68,6 @@ export const fetchGroupComponentsById = (groupId) => {
         catch (e) {
             dispatch(groups.failure(e));
         }
-
-        dispatch(groups.componentsLoading(false));
     };
 };
 

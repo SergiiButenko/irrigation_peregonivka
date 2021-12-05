@@ -121,6 +121,13 @@ class SmartSystemApi {
             apiUri.COMPONENTS(componentId),
             options,
         );
+    };
+
+    async getSendorData(componentId, options = {}) {
+        return this.provider.get(
+            apiUri.DATA(componentId),
+            options,
+        );
     }
 
 
