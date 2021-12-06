@@ -27,6 +27,7 @@ class ComponentSql(BaseModel):
     settings: Optional[Json] = None
     telegram_notify: bool
     default_state: Optional[str] = None
+    component_order: Optional[int] = 0
 
 
 class ComponentWebClient(BaseModel):
@@ -40,6 +41,8 @@ class ComponentWebClient(BaseModel):
     purpose: Optional[str] = None
     settings: Optional[Dict] = None
     telegram_notify: bool
+    default_state: Optional[str] = None
+    component_order: Optional[int] = 0
 
 
 class ComponentsSql(BaseModel):

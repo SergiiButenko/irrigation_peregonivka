@@ -58,12 +58,11 @@ export const fetchGroupComponentsById = (groupId) => {
     return async dispatch => {
         try {
             let groups_input = await smartSystemApi.getGroup();
-            groups_input = arrayToObj(groups_input);
-            dispatch(entity.groups.updateBatch(groups_input));
-
             let components = await smartSystemApi.getGroupComponentsById(groupId);
-            components = arrayToObj(components);
-            dispatch(entity.groups.updateIn([groupId, 'components'], components));
+            groups_input = arrayToObj(groups_input);
+            groups_input[groupId].components = arrayToObj(components)
+
+            dispatch(entity.groups.updateIn([groupId], groups_input[groupId]));
         }
         catch (e) {
             dispatch(groups.failure(e));

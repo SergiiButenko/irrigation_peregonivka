@@ -135,14 +135,14 @@ export default class relayV1 extends React.Component {
         }
         
         this.props.deleteInterval(
-            this.state.component.id,
+            this.state.component,
             interval.id,
             this.state.component.default_state
             )
     };
 
     render() {
-        const { classes, deviceFetchError, updating } = this.props;
+        const { classes, deviceFetchError } = this.props;
         const { loading, collapsed, min_minutes, max_minutes, step_minutes, value_minutes, component } = this.state;
 
         if (loading) {
@@ -154,6 +154,7 @@ export default class relayV1 extends React.Component {
         }
 
         const isON = component.state.expected_state == 1;
+        const updating = !!component.updating;
 
         return (
             <Card className={classNames(classes.card, isON && classes.cardOn)}>

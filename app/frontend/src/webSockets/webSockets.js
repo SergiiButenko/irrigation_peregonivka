@@ -23,8 +23,13 @@ export const websocketInit = (store) => {
                 
         switch (event.action) {
             case ACTION_TYPES.actuator_update:
-                store.dispatch(devices.updating(true));
-                
+                store.dispatch(entity.devices.updateIn(
+                    [
+                        'components',
+                        component.id,
+                        'updating'
+                    ], true));
+        
                 const state = {
                     'expected_state': event.payload.expected_state,
                     'interval': event.payload.interval
@@ -38,10 +43,22 @@ export const websocketInit = (store) => {
                     ], state
                 ));
                 
-                store.dispatch(devices.updating(false));
+                store.dispatch(entity.devices.updateIn(
+                    [
+                        'components',
+                        component.id,
+                        'updating'
+                    ], false));
                 break;
 
             case ACTION_TYPES.sensor_update:
+                store.dispatch(entity.devices.updateIn(
+                    [
+                        'components',
+                        component.id,
+                        'updating'
+                    ], true));
+        
                 component.data = formSensorData(event.payload.data);
                 store.dispatch(entity.devices.updateIn(
                     [
@@ -50,7 +67,12 @@ export const websocketInit = (store) => {
                     ], component
                 ));
                 
-                store.dispatch(devices.updating(false));
+                store.dispatch(entity.devices.updateIn(
+                    [
+                        'components',
+                        component.id,
+                        'updating'
+                    ], false));
                 break;
 
             default:

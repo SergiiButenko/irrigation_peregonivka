@@ -94,7 +94,12 @@ export const initSensor = (componentId) => {
 
 export const createIntervals = (component) => {
     return async (dispatch) => {
-        dispatch(devices.updating(true));
+        dispatch(entity.devices.updateIn(
+            [
+                'components',
+                component.id,
+                'updating'
+            ], true));        
         try {
             const dataToSend = {
                 components: [{
@@ -115,9 +120,15 @@ export const createIntervals = (component) => {
     };
 };
 
-export const deleteInterval = (componentId, intervalId, expected_state) => {
+export const deleteInterval = (component, intervalId, expected_state) => {
     return async (dispatch) => {
-        dispatch(devices.updating(true));
+        dispatch(entity.devices.updateIn(
+            [
+                'components',
+                component.id,
+                'updating'
+            ], true));
+
 
         try {
             await smartSystemApi.deleteInterval(intervalId, { expected_state });

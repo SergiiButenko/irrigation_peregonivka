@@ -60,7 +60,7 @@ CREATE TABLE public.device_components (
     version TEXT NOT NULL,
     purpose TEXT,
     settings jsonb,
-    telegram_notify BOOL NOT NULL,
+    telegram_notify BOOL NOT NULL DEFAULT false,
     telegram_user TEXT DEFAULT '-315337397',
     default_state TEXT,
     UNIQUE (device_id, mapped_id),
@@ -74,6 +74,7 @@ CREATE TABLE public.components_groups (
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     device_component_id uuid NOT NULL,
     group_id uuid NOT NULL,
+    component_order INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY(device_component_id) REFERENCES device_components(id),
     FOREIGN KEY(group_id) REFERENCES groups(id)
 );

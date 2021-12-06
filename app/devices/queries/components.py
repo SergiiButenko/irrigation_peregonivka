@@ -29,7 +29,7 @@ class ComponentsQRS:
 
     @staticmethod
     async def get_components_by_group_id(group_id: str, user_id: str):
-        sql = """SELECT c.* 
+        sql = """SELECT c.*, cg.component_order
         FROM public.device_components AS c
         JOIN public.components_groups AS cg ON c.id = cg.device_component_id
         JOIN public.groups AS g ON g.id = cg.group_id

@@ -32,6 +32,16 @@ VALUES
     );
 
 INSERT INTO
+    public.groups (id, short_name, name, user_id)
+VALUES
+    (
+        '1f88bae8-1a95-4cbe-8158-4d574d306d9e',
+        'greenhouse',
+        'Теплиця',
+        'ae9f4b91-8ee5-4939-a30c-4204bcb0cf33'
+    );
+
+INSERT INTO
     public.devices(id, description, type, version)
 VALUES
     (
@@ -133,6 +143,14 @@ VALUES
         'Вимірювач наявності напруги'
     );
 
+
+INSERT INTO
+    public.components_types(name, description)
+VALUES
+    (
+        'dht11',
+        'Вимірювач наявності напруги'
+    );
 
 INSERT INTO
     public.components_purpose(name, description)
@@ -313,6 +331,159 @@ VALUES
         '{"minutes": 360, "quantity": 1}',
         '0'
     );
+
+
+INSERT INTO
+    public.device_components(
+        id,
+        mapped_id,
+        device_id,
+        name,
+        category,
+        type,
+        version,
+        purpose,
+        telegram_notify,
+        settings,
+        default_state
+    )
+VALUES
+    (
+        '8d4e5fe6-0f48-4070-a83a-33fe2864eb24',
+        1,
+        'greenhouse_relay1',
+        'Підігрів',
+        'actuator',
+        'relay',
+        'v1',
+        'switcher',
+        true,
+        '{"minutes": 600, "quantity": 1}',
+        '0'
+    );
+
+
+
+INSERT INTO
+    public.device_components(
+        id,
+        mapped_id,
+        device_id,
+        name,
+        category,
+        type,
+        version,
+        purpose,
+        telegram_notify,
+        settings,
+        default_state
+    )
+VALUES
+    (
+        'c85f2085-5ee3-4ed4-896a-153f0a97b037',
+        1,
+        'greenhouse_relay2',
+        'Фітолампа',
+        'actuator',
+        'relay',
+        'v1',
+        'switcher',
+        true,
+        '{"minutes": 600, "quantity": 1}',
+        '0'
+    );
+
+
+INSERT INTO
+    public.device_components(
+        id,
+        mapped_id,
+        device_id,
+        name,
+        category,
+        type,
+        version,
+        purpose,
+        telegram_notify,
+        settings,
+        default_state
+    )
+VALUES
+    (
+        'efa28c89-0265-47cc-8466-6042e450753c',
+        2,
+        'greenhouse_relay2',
+        'Денне світло',
+        'actuator',
+        'relay',
+        'v1',
+        'switcher',
+        true,
+        '{"minutes": 15, "quantity": 1}',
+        '0'
+    );
+
+INSERT INTO
+    public.device_components(
+        id,
+        mapped_id,
+        device_id,
+        name,
+        category,
+        type,
+        version
+    )
+VALUES
+    (
+        'd87f5af8-b737-4751-8df6-626c5044823b',
+        3,
+        'greenhouse_relay2',
+        'Датчик температури',
+        'sensor',
+        'dht11',
+        'v1'
+    );
+
+INSERT INTO
+    public.components_groups(
+        device_component_id,
+        group_id,
+        component_order
+    )
+VALUES
+    (
+        'd87f5af8-b737-4751-8df6-626c5044823b',
+        '1f88bae8-1a95-4cbe-8158-4d574d306d9e',
+        0
+    );
+
+INSERT INTO
+    public.components_groups(
+        device_component_id,
+        group_id,
+        component_order
+    )
+VALUES
+    (
+        'efa28c89-0265-47cc-8466-6042e450753c',
+        '1f88bae8-1a95-4cbe-8158-4d574d306d9e',
+        1
+    );
+
+
+INSERT INTO
+    public.components_groups(
+        device_component_id,
+        group_id,
+        component_order
+    )
+VALUES
+    (
+        'c85f2085-5ee3-4ed4-896a-153f0a97b037',
+        '1f88bae8-1a95-4cbe-8158-4d574d306d9e',
+        2
+    );
+
 
 
 INSERT INTO

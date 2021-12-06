@@ -3,6 +3,7 @@ import httpx
 
 class HttpxClient:
     TIMEOUT = httpx.Timeout(10.0, connect=60.0)
+    # transport = httpx.HTTPTransport(retries=1)
 
     @staticmethod
     async def get(*args, **kwargs):
