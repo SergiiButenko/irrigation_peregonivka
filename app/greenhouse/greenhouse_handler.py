@@ -260,8 +260,8 @@ if __name__ == "__main__":
         if SERVICE_ENABLED:
             enable_rule()
             logging.info("Done!")
-        else: 
+        else:
             logging.info("Service is disabled. Please enable it")
-        
+
         logging.info("Sleeping for {} minutes".format(config.RESTART_INTERVAL_MIN))
         time.sleep(config.RESTART_INTERVAL_MIN)

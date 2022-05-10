@@ -81,7 +81,8 @@ def on(line_id):
         base_url = get_device_IP_by_line_id(line_id)
         response_on = requests.get(
             url="http://" + base_url + "/on",
-            params={"relay": relay}
+            params={"relay": relay},
+            timeout=(5, 10)
         )
         response_on.raise_for_status()
 
@@ -103,7 +104,8 @@ def off(line_id):
         base_url = get_device_IP_by_line_id(line_id)
         response_off = requests.get(
             url="http://" + base_url + "/off",
-            params={"relay": relay}
+            params={"relay": relay},
+            timeout=(5, 10)
         )
         response_off.raise_for_status()
 
@@ -124,6 +126,7 @@ def air_s(line_id):
             base_url = get_device_IP_by_line_id(line_id)
             response_air = requests.get(
                 url="http://" + base_url + "/air_temperature",
+                timeout=(5, 10)
             )
             response_air.raise_for_status()
 
@@ -148,6 +151,7 @@ def ground_s(line_id):
             base_url = get_device_IP_by_line_id(line_id)
             response_air = requests.get(
                 url="http://" + base_url + "/ground_temperature",
+                timeout=(5, 10)
             )
             response_air.raise_for_status()
 
@@ -243,7 +247,8 @@ def line_status(line_id):
         relay = LINES[line_id]["relay_num"]
 
         response = requests.get(
-            url="http://" + base_url + "/status"
+            url="http://" + base_url + "/status",
+            timeout=(5, 10)
         )
         response.raise_for_status()
 
@@ -269,7 +274,8 @@ def check_tank_status(line_id):
         linked_device_url = LINES[line_id]["linked_device_url"]
 
         response = requests.get(
-            url="http://" + linked_device_url
+            url="http://" + linked_device_url,
+            timeout=(5, 10)
         )
         response.raise_for_status()
 

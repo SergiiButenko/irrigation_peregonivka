@@ -154,7 +154,7 @@ def check_conditions():
         timeout = config.TIMEOUT_GRENHOUSE
         try_notify(message, key, timeout)
 
-    if heat_on is True and inner_current_temp <= outer_current_temp:
+    if heat_on is True and (inner_current_temp - 1) < outer_current_temp:
         logging.warn(
             f"inner_current_temp:{inner_current_temp} < outer_current_temp:{outer_current_temp}. Sending message"
         )
