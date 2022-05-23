@@ -819,15 +819,15 @@ def lighting_status():
 def linked_device_status():
     """Return status of lightingn relay."""
     try:
+        line_id = 26  # this is bulshit but no time to do it right
+
         lines = {}
-        for line_id, line in BRANCHES_SETTINGS.items():
-            if line["line_type"] == "tank":
-                response_status = remote_controller.check_tank_status(
-                    line_id=line_id)
-                lines[line_id] = dict(
-                    id=line_id,
-                    device_state=int(response_status[line_id]["device_state"]),
-                )
+        response_status = remote_controller.check_tank_status(
+            line_id=line_id)
+        lines[line_id] = dict(
+            id=line_id,
+            device_state=int(response_status[line_id]["device_state"]),
+        )
 
         return jsonify(devices=lines)
     except Exception as e:
