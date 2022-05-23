@@ -270,11 +270,11 @@ def check_tank_status(line_id):
     r_dict = {}
 
     try:
-        device_id = LINES[line_id]["device_id"]
-        linked_device_url = LINES[line_id]["linked_device_url"]
+        linked_device_id = LINES[line_id]["linked_device_id"]
+        base_url = get_device_IP_by_line_id(linked_device_id)
 
         response = requests.get(
-            url="http://" + linked_device_url,
+            url=f"http://{base_url}/status",
             timeout=(5, 10)
         )
         response.raise_for_status()
@@ -284,7 +284,7 @@ def check_tank_status(line_id):
         #tmp_fix = response.text.replace("upper_tank", '"upper_tank"')
 
         response = json.loads(response.text)
-        if response["device_id"] == device_id:
+        if response["device_id"] == linked_device_id:
             r_dict[line_id] = dict(id=line_id, device_state=1)
         else:
             r_dict[line_id] = dict(id=line_id, device_state=-1)

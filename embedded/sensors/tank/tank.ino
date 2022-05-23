@@ -6,6 +6,7 @@ byte GPIO_Pin = D6;
 int counter = 0;
 int counter_max = 300;
 int delay_for_counter_millis = 10;
+unsigned long current_time = 0;
 
 const char *host = "http://mozz.breeze.ua:9000";
 const char *serverIndex = "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>";
@@ -72,12 +73,15 @@ void loop()
   server.handleClient();
 
   count_signal(GPIO_Pin);
-  if (counter >= counter_max and send_request(host + String("/stop_filling?device_id=") + String(device_id)))
+  if (counter >= counter_max and send_request(host + String("/api/v1/stop_filling?device_id=") + String(device_id)))
   {
     counter = 0;
   }
 
   check_if_ping();
+  MDNS.update();
+  delay(1);
+
 }
 
 void increase_counter()
@@ -241,7 +245,6 @@ bool send_request(String req)
 
 void check_if_ping()
 {
-  unsigned long current_time = 0;
   if (int((millis() - current_time) / 60000) >= 30)
   {
     send_ping();
