@@ -61,10 +61,33 @@
                     {% endif %}
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-secondary cancel-filling" data-id={{n[ 'id']}} id="btn-cancel-{{n['id']}}">Скасувати наповнення</a>
-                    <a href="#" class="btn btn-secondary btn-open-modal disabled" data-id={{n[ 'id']}} id="btn-start-with-options-{{n['id']}}">Налаштувати і наповнити</a>
-                    <a href="#" class="btn btn-primary btn-start disabled" data-id={{n[ 'id']}} id="btn-start-{{n['id']}}">Наповнити зараз</a>
-                    <a href="#" class="btn btn-primary stop-tank disabled" data-id={{n[ 'id']}} id="btn-stop-{{n['id']}}">Зупинити наповнення</a>
+                    {% if n['id'] == 26 %}
+                    <a href="#" class="btn btn-secondary cancel-filling" data-id={{n[ 'id']}} id="btn-cancel-{{n['id']}}">
+                        Скасувати наповнення
+                    </a>
+                    {% endif %}
+                    
+                    {% if n['id'] == 26 %}
+                    <a href="#" class="btn btn-secondary btn-open-modal disabled" data-id={{n[ 'id']}} id="btn-start-with-options-{{n['id']}}">
+                        Налаштувати і полити
+                    </a>
+                    {% endif %}
+                    
+                    <a href="#" class="btn btn-primary btn-start disabled" data-id={{n[ 'id']}} id="btn-start-{{n['id']}}">
+                    {% if n['id'] == 26 %}
+                        Наповнити зараз
+                    {% else %}
+                        Почати полив
+                    {% endif %}
+                    </a>
+
+                    <a href="#" class="btn btn-primary stop-tank disabled" data-id={{n[ 'id']}} id="btn-stop-{{n['id']}}">
+                    {% if n['id'] == 26 %}
+                        Зупинити наповнення
+                    {% else %}
+                        Зупинити полив
+                    {% endif %}
+                    </a>
                     <span class="status-span">В системі помилка</span>
                 </div>
             </div>
