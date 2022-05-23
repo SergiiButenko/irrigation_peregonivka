@@ -48,6 +48,7 @@
             <div class="card card-tank" id="card-{{n['id']}}">
                 <div class="card-block">
                     <h4 class="card-title" id="title-{{n['id']}}">{{n['name']}}</h4>
+                    {% if n['id'] == 26 %}
                     <p class="card-text text-muted">
                         <span id="next-{{n['id']}}"></span>
                         <span id="device-error-{{n['id']}}" style="display: none; color:red">
@@ -57,6 +58,7 @@
                             Підключення до датчика вдале. Наповнення зупиниться автоматично.
                         </span>
                     </p>
+                    {% endif %}
                 </div>
                 <div class="card-footer">
                     <a href="#" class="btn btn-secondary cancel-filling" data-id={{n[ 'id']}} id="btn-cancel-{{n['id']}}">Скасувати наповнення</a>
