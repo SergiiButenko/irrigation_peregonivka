@@ -272,9 +272,10 @@ def check_tank_status(line_id):
     try:
         linked_device_id = LINES[line_id]["linked_device_id"]
         base_url = database.get_device_ip(linked_device_id)
+        ip = base_url['last_known_ip']
 
         response = requests.get(
-            url=f"http://{base_url['last_known_ip']}/status",
+            url=f"http://{ip}/status",
             timeout=(5, 10)
         )
         response.raise_for_status()
