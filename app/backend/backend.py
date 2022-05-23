@@ -1228,7 +1228,7 @@ def toogle_line():
                     "Can't turn on branch id={0}. Exception occured".format(
                         branch_id)
                 )
-                abort(500)
+                continue
 
             interval_id = str(uuid.uuid4())
             now = datetime.datetime.now()
