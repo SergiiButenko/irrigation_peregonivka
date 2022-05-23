@@ -122,32 +122,27 @@ $(document).ready(function() {
     });
 
     $(".btn-start").click(function() {
-        if (settings['greenhouse_auto']['enabled'] == "1") {
-            var returnVal = confirm("Автоматичне керування увімкнено. \nВимкнути і перейти до ручного керування?");
-            if (returnVal == false)
-                return;
 
-            var json = {
-                'list': { 'greenhouse_auto': { 'enabled': '0' } }
-            }
-            $.ajax({
-                url: API_ENDPOINT + '/set_settings',
-                type: "post",
-                data: JSON.stringify(json),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function(data) {
-                    settings = data['data'];
-                    console.log(settings);
-                    toggle_buttons();
-                },
-            error: function(data) {
-                console.error("Can't save settings");
-                console.error(data);
-                alert("Сталася помилка при збереженні параметрів. Спробуйте ще раз.")
-            }
-            });
+        var json = {
+            'list': { 'greenhouse_auto': { 'enabled': '0' } }
         }
+        $.ajax({
+            url: API_ENDPOINT + '/set_settings',
+            type: "post",
+            data: JSON.stringify(json),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data) {
+                settings = data['data'];
+                console.log(settings);
+                toggle_buttons();
+            },
+        error: function(data) {
+            console.error("Can't save settings");
+            console.error(data);
+            alert("Сталася помилка при збереженні параметрів. Спробуйте ще раз.")
+        }
+        });
 
 
         index = $(this).data('id');

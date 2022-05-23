@@ -271,7 +271,7 @@ def check_tank_status(line_id):
 
     try:
         linked_device_id = LINES[line_id]["linked_device_id"]
-        base_url = get_device_IP_by_line_id(linked_device_id)
+        base_url = database.get_device_ip(linked_device_id)
 
         response = requests.get(
             url=f"http://{base_url}/status",
