@@ -1376,7 +1376,7 @@ def stop_filling():
         _no_key = True
 
     delta = datetime.datetime.now() - last_time_sent
-    if delta.seconds > 60 * config.TANK_NOTIFICATION_MINUTES or _no_key is True:
+    if delta.seconds > 60 * int(config.TANK_NOTIFICATION_MINUTES) or _no_key is True:
         try:
             logging.info("Deactivating line '{0}'.".format(line_id))
             deactivate_branch(line_id=line_id, mode="manually")
