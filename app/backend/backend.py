@@ -1370,7 +1370,7 @@ def stop_filling():
     last_time_sent = redis_provider.get_time_last_notification(
         key=config.REDIS_KEY_FOR_UPPER_TANK)
     if last_time_sent is None:
-        redis_provider.set_time_last_notification(date=datetime.datetime.now())
+        redis_provider.set_time_last_notification(key=config.REDIS_KEY_FOR_UPPER_TANK)
         last_time_sent = redis_provider.get_time_last_notification(
             key=config.REDIS_KEY_FOR_UPPER_TANK)
         _no_key = True
@@ -1413,7 +1413,7 @@ def stop_filling():
 
             logging.info("Updating redis.")
             redis_provider.set_time_last_notification(
-                date=datetime.datetime.now())
+                key=config.REDIS_KEY_FOR_UPPER_TANK)
             logging.info("Redis updated")
         except Exception as e:
             logging.error(e)

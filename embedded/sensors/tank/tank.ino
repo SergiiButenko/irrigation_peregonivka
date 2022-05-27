@@ -136,7 +136,7 @@ void connect_to_wifi()
     {
       ESP.restart();
     }
-
+    Serial.print(".");
     delay(1000);
   }
 
